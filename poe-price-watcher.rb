@@ -41,17 +41,24 @@ def socket
 end
 
 
-def parse_socket_data_json socket_data
-  parse_item_data_html(socket_data["data"])
+def parse_socket_data_json(socket_data)
+  p "Warning: multiple live listings (#{socket_data['count']})" if socket_data['count'] > 1
+  puts get_whispers(socket_data['data'], socket_data['uniqs'])
 end
 
-def parse_item_data_html item_data
-  data_path = 'tbody#item-container-0'
-  html = Nokogiri::HTML(item_data)
-  p get_whisper(html.css(data_path)[0])
+def get_whispers(html_item_data, ids)
+  whispers = []
+  html = Nokogiri::HTML(html_item_data)
+
+  ids.each do |id|
+    data_path = "tbody.item-live-#{id}"
+    whispers << get_whisper(html.css(data_path)[0])
+  end
+
+  whispers
 end
 
-def get_whisper data
+def get_whisper(data)
   greeting = "@#{data['data-ign']} Hi, I would like to buy your "
   item = data['data-name']
   buyout = data['data-buyout'].empty? ? '' : " listed for #{data['data-buyout']}"
@@ -61,7 +68,7 @@ def get_whisper data
   greeting + item + buyout + league + location
 end
 
-def get_item_location data
+def get_item_location(data)
   message = " (stash tab #{data['data-tab']}"
   x = data['data-x'].to_i
   y = data['data-y'].to_i
