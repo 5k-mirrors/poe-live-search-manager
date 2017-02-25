@@ -50,7 +50,7 @@ def parse_socket_data_json(socket_data)
   
   puts whispers
 
-  show_notification("OP",whispers[4])) # TODO: remove
+  show_notification("OP",whispers[4]) # TODO: remove
 
   set_clipboard( whispers[4] ) #russian name test TODO: remove
 end
@@ -61,13 +61,17 @@ def get_whispers(html_item_data, ids)
 
   ids.each do |id|
     data_path = "tbody.item-live-#{id}"
-    whispers << get_whisper(get_data_attributes(html.css(data_path)[0]))
+    whispers << get_whisper(get_html_data_attributes(get_html_element_by_path(html, data_path)))
   end
 
   whispers
 end
 
-def get_data_attributes(tbody)
+def get_html_element_by_path(html, path)
+  html.css(path)[0]
+end
+
+def get_html_data_attributes(tbody)
   data = {}
   data_attributes = tbody.xpath("./@*[starts-with(name(), 'data-')]") # . relative path
   data_attributes.each { |x| data[x.name] = x.value }
