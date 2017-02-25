@@ -3,6 +3,9 @@ require 'json'
 require 'net/http'
 require 'uri'
 require 'nokogiri'
+require 'rb-notifu'
+require 'win32/clipboard' #gem install win32-clipboard
+include Win32
 
 uri = URI.parse("http://poe.trade/search/aasitahouokaka/live")
 
@@ -57,7 +60,12 @@ def parse_item_data_html item_data
     data_attributes.each { |x| item_dict[x.name] = x.value }
     data.push(item_dict)
   }
-  p get_whisper(data[0])
+
+  show_notification("OP",get_whisper(data[4])) # TODO: remove
+
+  set_clipboard( get_whisper(data[4]) ) #russian name test TODO: remove
+
+  data.each{ |x| p get_whisper(x) }
 end
 
 def get_whisper data
@@ -78,6 +86,15 @@ def get_item_location data
     message += "; position: left #{x+1}, top #{y+1})"
   end
   message
+end
+
+def show_notification title, message
+  Notifu::show :title => title, :message => message, :type => :info, :time => 0, :noquiet => true do |status|
+  end
+end
+
+def set_clipboard message
+  Clipboard.set_data(message, format = Clipboard::UNICODETEXT) # unicode for russian characters
 end
 
 parse_socket_data_json(JSON.parse(File.open('example_socket_data.json').read))
