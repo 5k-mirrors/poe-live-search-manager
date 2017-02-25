@@ -3,6 +3,9 @@ require 'json'
 require 'net/http'
 require 'uri'
 require 'nokogiri'
+require 'rb-notifu'
+require 'win32/clipboard' #gem install win32-clipboard
+include Win32
 
 uri = URI.parse("http://poe.trade/search/aasitahouokaka/live")
 
@@ -43,7 +46,13 @@ end
 
 def parse_socket_data_json(socket_data)
   p "Warning: multiple live listings (#{socket_data['count']})" if socket_data['count'] > 1
-  puts get_whispers(socket_data['data'], socket_data['uniqs'])
+  whispers = get_whispers(socket_data['data'], socket_data['uniqs'])
+  
+  puts whispers
+
+  show_notification("OP",whispers[4])) # TODO: remove
+
+  set_clipboard( whispers[4] ) #russian name test TODO: remove
 end
 
 def get_whispers(html_item_data, ids)
@@ -52,10 +61,17 @@ def get_whispers(html_item_data, ids)
 
   ids.each do |id|
     data_path = "tbody.item-live-#{id}"
-    whispers << get_whisper(html.css(data_path)[0])
+    whispers << get_whisper(get_data_attributes(html.css(data_path)[0]))
   end
 
   whispers
+end
+
+def get_data_attributes(tbody)
+  data = {}
+  data_attributes = tbody.xpath("./@*[starts-with(name(), 'data-')]") # . relative path
+  data_attributes.each { |x| data[x.name] = x.value }
+  data
 end
 
 def get_whisper(data)
@@ -76,6 +92,15 @@ def get_item_location(data)
     message += "; position: left #{x+1}, top #{y+1})"
   end
   message
+end
+
+def show_notification title, message
+  Notifu::show :title => title, :message => message, :type => :info, :time => 0, :noquiet => true do |status|
+  end
+end
+
+def set_clipboard message
+  Clipboard.set_data(message, format = Clipboard::UNICODETEXT) # unicode for russian characters
 end
 
 parse_socket_data_json(JSON.parse(File.open('example_socket_data.json').read))
