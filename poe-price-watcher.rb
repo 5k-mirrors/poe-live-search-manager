@@ -46,9 +46,18 @@ def parse_socket_data_json socket_data
 end
 
 def parse_item_data_html item_data
-  data_path = 'tbody#item-container-0'
   html = Nokogiri::HTML(item_data)
-  p get_whisper(html.css(data_path)[0])
+
+  data = Array.new
+  # // match everywhere, [] selector, / direct child
+  tbodys = html.xpath("//table[@class=\"search-results\"]/tbody") 
+  tbodys.each{ |tbody|
+    item_dict = Hash.new
+    data_attributes = tbody.xpath("./@*[starts-with(name(), 'data-')]") # . relative path
+    data_attributes.each { |x| item_dict[x.name] = x.value }
+    data.push(item_dict)
+  }
+  p get_whisper(data[0])
 end
 
 def get_whisper data
