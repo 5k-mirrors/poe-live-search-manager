@@ -7,6 +7,8 @@ require 'rb-notifu'
 require 'win32/clipboard' #gem install win32-clipboard
 include Win32
 
+NOTIFICATION_SECONDS = 10
+
 uri = URI.parse("http://poe.trade/search/aasitahouokaka/live")
 
 def socket
@@ -45,14 +47,7 @@ end
 
 
 def parse_socket_data_json(socket_data)
-  p "Warning: multiple live listings (#{socket_data['count']})" if socket_data['count'] > 1
-  whispers = get_whispers(socket_data['data'], socket_data['uniqs'])
-  
-  puts whispers
-
-  show_notification("OP",whispers[4]) # TODO: remove
-
-  set_clipboard( whispers[4] ) #russian name test TODO: remove
+  get_whispers(socket_data['data'], socket_data['uniqs'])
 end
 
 def get_whispers(html_item_data, ids)
@@ -98,13 +93,29 @@ def get_item_location(data)
   message
 end
 
-def show_notification title, message
-  Notifu::show :title => title, :message => message, :type => :info, :time => 0, :noquiet => true do |status|
+def alert(whispers)
+  cnt = whispers.length
+  whispers.each do |whisper|
+    title = 'New item listed'
+    title += " (#{cnt -1} more)" if cnt > 1
+    notification_thread = show_notification(title, whisper)
+    set_clipboard(whisper)
+    # TODO replace with wait until gem
+    while ['run', 'sleep'].include? notification_thread.status
+      sleep 0.1
+    end
+    cnt -= 1
   end
+end
+
+def show_notification title, message
+  Notifu::show :title => title, :message => message, :type => :info, :time => NOTIFICATION_SECONDS, :noquiet => true
 end
 
 def set_clipboard message
   Clipboard.set_data(message, format = Clipboard::UNICODETEXT) # unicode for russian characters
 end
 
-parse_socket_data_json(JSON.parse(File.open('example_socket_data.json').read))
+whispers = parse_socket_data_json(JSON.parse(File.open('example_socket_data.json').read))
+
+alert whispers[0..5]
