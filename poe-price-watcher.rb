@@ -14,7 +14,7 @@ OFFLINE_DEBUG = true
 def main
   parse_json('example_input.json').each do |search_url, name|
     search_id = get_search_id(URI.parse(search_url))
-    p search_id + ' => ' + name
+    socket_setup(get_api_search_url(search_id), name)
   end
 end
 
@@ -23,9 +23,9 @@ def get_search_id(url)
   path_parts.last.eql?('live') ? path_parts[-2] : path_parts[-1]
 end
 
-def socket
+def socket_setup(url, name)
   EM.run {
-    ws = Faye::WebSocket::Client.new('ws://live.poe.trade/aasitahouokaka')
+    ws = Faye::WebSocket::Client.new(url)
 
     ws.on :open do |event|
       p [:open]
@@ -55,6 +55,10 @@ def socket
       ws = nil
     end
   }
+end
+
+def get_api_search_url(search_id)
+  API_URL + search_id
 end
 
 def parse_socket_data_json(socket_data)
