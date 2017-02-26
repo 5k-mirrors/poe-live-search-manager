@@ -9,6 +9,7 @@ include Win32
 
 NOTIFICATION_SECONDS = 10
 API_URL = 'ws://live.poe.trade/'
+OFFLINE_DEBUG = true
 
 def main
   parse_json('example_input.json').each do |search_url, name|
@@ -130,7 +131,9 @@ def parse_json file_path
   JSON.parse(File.open(file_path).read)
 end
 
-# whispers = parse_socket_data_json(parse_json('example_socket_data.json'))
-# alert whispers[0..5]
-
-main
+if OFFLINE_DEBUG
+  whispers = parse_socket_data_json(parse_json('example_socket_data.json'))
+  alert whispers[0..5]
+else
+  main
+end
