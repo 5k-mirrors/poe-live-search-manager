@@ -8,8 +8,19 @@ require 'win32/clipboard' #gem install win32-clipboard
 include Win32
 
 NOTIFICATION_SECONDS = 10
+API_URL = 'ws://live.poe.trade/'
 
-uri = URI.parse("http://poe.trade/search/aasitahouokaka/live")
+def main
+  parse_json('example_input.json').each do |search_url, name|
+    search_id = get_search_id(URI.parse(search_url))
+    p search_id + ' => ' + name
+  end
+end
+
+def get_search_id(url)
+  path_parts = url.path.split '/'
+  path_parts.last.eql?('live') ? path_parts[-2] : path_parts[-1]
+end
 
 def socket
   EM.run {
@@ -44,7 +55,6 @@ def socket
     end
   }
 end
-
 
 def parse_socket_data_json(socket_data)
   get_whispers(socket_data['data'], socket_data['uniqs'])
@@ -116,6 +126,11 @@ def set_clipboard message
   Clipboard.set_data(message, format = Clipboard::UNICODETEXT) # unicode for russian characters
 end
 
-whispers = parse_socket_data_json(JSON.parse(File.open('example_socket_data.json').read))
+def parse_json file_path
+  JSON.parse(File.open(file_path).read)
+end
 
-alert whispers[0..5]
+# whispers = parse_socket_data_json(parse_json('example_socket_data.json'))
+# alert whispers[0..5]
+
+main
