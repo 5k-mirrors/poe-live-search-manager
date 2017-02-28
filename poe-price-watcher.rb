@@ -107,18 +107,31 @@ def get_item_location(data)
   message
 end
 
-def alert(whispers)
+def alert_next(whispers)
+  cnt = whispers.length
+  if cnt > 0
+    alert(whispers.shift, cnt)
+  end
+end
+
+def alert_all(whispers)
   cnt = whispers.length
   whispers.each do |whisper|
-    title = 'New item listed'
-    title += " (#{cnt -1} more)" if cnt > 1
-    notification_thread = show_notification(title, whisper)
-    set_clipboard(whisper)
-    # TODO replace with wait until gem
-    while ['run', 'sleep'].include? notification_thread.status
-      sleep 0.1
-    end
+    alert(whisper, cnt)
     cnt -= 1
+  end
+end
+
+def alert(whisper, cnt)
+  title = 'New item listed'
+  title += " (#{cnt -1} more)" if cnt > 1
+
+  notification_thread = show_notification(title, whisper)
+  set_clipboard(whisper)
+
+  # TODO replace with wait until gem
+  while ['run', 'sleep'].include? notification_thread.status
+    sleep 0.1
   end
 end
 
@@ -136,7 +149,7 @@ end
 
 if OFFLINE_DEBUG
   whispers = parse_socket_data_json(parse_json('example_socket_data.json'))
-  alert whispers[0..5]
+  alert_all whispers[0..5]
 else
   main
 end
