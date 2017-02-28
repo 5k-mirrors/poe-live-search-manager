@@ -13,8 +13,9 @@ OFFLINE_DEBUG = true
 
 def main
   parse_json('example_input.json').each do |search_url, name|
-    search_id = get_search_id(URI.parse(search_url))
-    socket_setup(get_api_search_url(search_id), name)
+    parsed_url = URI.parse(search_url)
+    search_id = get_search_id(parsed_url)
+    socket_setup(parsed_url, get_api_search_url(search_id), name)
   end
 end
 
@@ -23,9 +24,9 @@ def get_search_id(url)
   path_parts.last.eql?('live') ? path_parts[-2] : path_parts[-1]
 end
 
-def socket_setup(url, name)
+def socket_setup(search_url, live_url, name)
   EM.run {
-    ws = Faye::WebSocket::Client.new(url)
+    ws = Faye::WebSocket::Client.new(live_url)
 
     ws.on :open do |event|
       p [:open]
@@ -38,11 +39,11 @@ def socket_setup(url, name)
       p json
       case json['type']
         when 'pong'
-          p 'connection up'
+          p "connection up for url: #{live_url}"
         when 'notify'
           id = json['value']
-          res = Net::HTTP.post_form(url, 'id' => id)
-          parse_socket_data_json(res.body)
+          res = Net::HTTP.post_form(search_url, 'id' => id)
+          whispers = parse_socket_data_json(JSON.parse(res.body))
       end
     end
 
@@ -87,9 +88,9 @@ end
 def get_whisper(data)
   greeting = "@#{data['data-ign']} Hi, I would like to buy your "
   item = data['data-name']
-  buyout = data['data-buyout'].empty? ? '' : " listed for #{data['data-buyout']}"
+  buyout = data['data-buyout'].nil? ? '' : " listed for #{data['data-buyout']}"
   league = " in #{data['data-league']}"
-  location = data['data-tab'].empty? ? '' : get_item_location(data)
+  location = data['data-tab'].nil? ? '' : get_item_location(data)
 
   greeting + item + buyout + league + location
 end
