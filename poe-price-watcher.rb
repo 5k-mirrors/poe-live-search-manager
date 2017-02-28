@@ -14,6 +14,7 @@ OFFLINE_DEBUG = true
 @whispers = []
 
 def main
+  Thread.new {alert_loop}
   EM.run {
     parse_json('example_input.json').each do |search_url, name|
       parsed_url = URI.parse(search_url)
@@ -21,6 +22,12 @@ def main
       socket_setup(parsed_url, get_api_search_url(search_id), name)
     end
   }
+end
+
+def alert_loop
+  loop do
+    alert_next @whispers
+  end
 end
 
 def get_search_id(url)
