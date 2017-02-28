@@ -41,12 +41,8 @@ def socket_setup(url, name)
           p 'connection up'
         when 'notify'
           id = json['value']
-          res = Net::HTTP.post_form(uri, 'id' => id)
-          # puts res.body
+          res = Net::HTTP.post_form(url, 'id' => id)
           parse_socket_data_json(res.body)
-        # html = Nokogiri::HTML(res.body['data'])
-        # p html
-
       end
     end
 
