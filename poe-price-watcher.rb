@@ -46,10 +46,9 @@ def socket_setup(search_url, live_url, name)
 
   ws.on :message do |event|
     json = JSON.parse(event.data)
-    p json
     case json['type']
       when 'pong'
-        p "connection up for url: #{live_url}"
+        p "connected to: #{live_url}"
       when 'notify'
         id = json['value']
         res = Net::HTTP.post_form(search_url, 'id' => id)
