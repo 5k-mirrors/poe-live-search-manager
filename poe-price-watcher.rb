@@ -39,7 +39,6 @@ def socket_setup(search_url, live_url, name)
   ws = Faye::WebSocket::Client.new(live_url)
 
   ws.on :open do |event|
-    p [:open]
     ws.send '{"type": "version", "value": 3}'
     ws.send 'ping'
   end
