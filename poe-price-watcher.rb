@@ -11,12 +11,16 @@ NOTIFICATION_SECONDS = 10
 API_URL = 'ws://live.poe.trade/'
 OFFLINE_DEBUG = true
 
+@whispers = []
+
 def main
-  parse_json('example_input.json').each do |search_url, name|
-    parsed_url = URI.parse(search_url)
-    search_id = get_search_id(parsed_url)
-    socket_setup(parsed_url, get_api_search_url(search_id), name)
-  end
+  EM.run {
+    parse_json('example_input.json').each do |search_url, name|
+      parsed_url = URI.parse(search_url)
+      search_id = get_search_id(parsed_url)
+      socket_setup(parsed_url, get_api_search_url(search_id), name)
+    end
+  }
 end
 
 def get_search_id(url)
@@ -25,33 +29,31 @@ def get_search_id(url)
 end
 
 def socket_setup(search_url, live_url, name)
-  EM.run {
-    ws = Faye::WebSocket::Client.new(live_url)
+  ws = Faye::WebSocket::Client.new(live_url)
 
-    ws.on :open do |event|
-      p [:open]
-      ws.send '{"type": "version", "value": 3}'
-      ws.send 'ping'
-    end
+  ws.on :open do |event|
+    p [:open]
+    ws.send '{"type": "version", "value": 3}'
+    ws.send 'ping'
+  end
 
-    ws.on :message do |event|
-      json = JSON.parse(event.data)
-      p json
-      case json['type']
-        when 'pong'
-          p "connection up for url: #{live_url}"
-        when 'notify'
-          id = json['value']
-          res = Net::HTTP.post_form(search_url, 'id' => id)
-          whispers = parse_socket_data_json(JSON.parse(res.body))
-      end
+  ws.on :message do |event|
+    json = JSON.parse(event.data)
+    p json
+    case json['type']
+      when 'pong'
+        p "connection up for url: #{live_url}"
+      when 'notify'
+        id = json['value']
+        res = Net::HTTP.post_form(search_url, 'id' => id)
+        @whispers.concat(parse_socket_data_json(JSON.parse(res.body)))
     end
+  end
 
-    ws.on :close do |event|
-      p [:close, event.code, event.reason]
-      ws = nil
-    end
-  }
+  ws.on :close do |event|
+    p [:close, event.code, event.reason]
+    ws = nil
+  end
 end
 
 def get_api_search_url(search_id)
