@@ -9,7 +9,7 @@ include Win32
 
 NOTIFICATION_SECONDS = 10
 API_URL = 'ws://live.poe.trade/'
-OFFLINE_DEBUG = true
+OFFLINE_DEBUG = false
 
 @whispers = []
 
