@@ -11,7 +11,7 @@ NOTIFICATION_SECONDS = 10
 API_URL = 'ws://live.poe.trade/'
 OFFLINE_DEBUG = false
 
-@whispers = []
+@alerts = []
 
 def main
   Thread.new {alert_loop}
@@ -26,7 +26,7 @@ end
 
 def alert_loop
   loop do
-    alert_next @whispers
+    alert_next(@alerts)
   end
 end
 
@@ -35,7 +35,7 @@ def get_search_id(url)
   path_parts.last.eql?('live') ? path_parts[-2] : path_parts[-1]
 end
 
-def socket_setup(search_url, live_url, name)
+def socket_setup(search_url, live_url, search_name)
   ws = Faye::WebSocket::Client.new(live_url)
 
   ws.on :open do |event|
@@ -50,8 +50,14 @@ def socket_setup(search_url, live_url, name)
         p "connected to: #{live_url}"
       when 'notify'
         id = json['value']
-        res = Net::HTTP.post_form(search_url, 'id' => id)
-        @whispers.concat(parse_socket_data_json(JSON.parse(res.body)))
+        response = Net::HTTP.post_form(search_url, 'id' => id)
+        response_data = JSON.parse(response.body)
+        whispers = get_whispers(response_data['data'], response_data['uniqs'])
+        whispers.each do |whisper|
+          @alerts.push(get_alert(whisper, search_name))
+        end
+      else
+        p "WARNING: Unknown event type: #{json['type']}"
     end
   end
 
@@ -63,10 +69,6 @@ end
 
 def get_api_search_url(search_id)
   API_URL + search_id
-end
-
-def parse_socket_data_json(socket_data)
-  get_whispers(socket_data['data'], socket_data['uniqs'])
 end
 
 def get_whispers(html_item_data, ids)
@@ -112,27 +114,27 @@ def get_item_location(data)
   message
 end
 
-def alert_next(whispers)
-  cnt = whispers.length
+def alert_next(alerts)
+  cnt = alerts.length
   if cnt > 0
-    alert(whispers.shift, cnt)
+    alert(alerts.shift, cnt)
   end
 end
 
-def alert_all(whispers)
-  cnt = whispers.length
-  whispers.each do |whisper|
-    alert(whisper, cnt)
+def alert_all(alerts)
+  cnt = alerts.length
+  alerts.each do |alert|
+    alert(alert, cnt)
     cnt -= 1
   end
 end
 
 def alert(whisper, cnt)
-  title = 'New item listed'
+  title = "New #{whisper[:search_name]} listed"
   title += " (#{cnt -1} more)" if cnt > 1
 
-  notification_thread = show_notification(title, whisper)
-  set_clipboard(whisper)
+  notification_thread = show_notification(title, whisper[:whisper])
+  set_clipboard(whisper[:whisper])
 
   # TODO replace with wait until gem
   while ['run', 'sleep'].include? notification_thread.status
@@ -152,9 +154,17 @@ def parse_json file_path
   JSON.parse(File.open(file_path).read)
 end
 
+def get_alert(whisper, search_name)
+  Hash[:search_name => search_name, :whisper => whisper]
+end
+
 if OFFLINE_DEBUG
-  whispers = parse_socket_data_json(parse_json('example_socket_data.json'))
-  alert_all whispers[0..5]
+  example_data = parse_json('example_socket_data.json')
+  whispers = get_whispers(example_data['data'], example_data['uniqs'])
+  whispers.each do |whisper|
+    @alerts.push(get_alert(whisper, 'thing'))
+  end
+  alert_all(@alerts)
 else
   main
 end
