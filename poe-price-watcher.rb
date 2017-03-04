@@ -27,6 +27,7 @@ end
 def alert_loop
   loop do
     alert_next(@alerts)
+    sleep 0.1
   end
 end
 
