@@ -10,6 +10,7 @@ include Win32
 NOTIFICATION_SECONDS = 10
 API_URL = 'ws://live.poe.trade/'
 OFFLINE_DEBUG = false
+ITERATION_WAIT_TIME_SECONDS = 0.1
 
 @alerts = []
 
@@ -27,7 +28,7 @@ end
 def alert_loop
   loop do
     alert_next(@alerts)
-    sleep 0.1
+    sleep ITERATION_WAIT_TIME_SECONDS
   end
 end
 
@@ -139,7 +140,7 @@ def alert(whisper, cnt)
 
   # TODO replace with wait until gem
   while ['run', 'sleep'].include? notification_thread.status
-    sleep 0.1
+    sleep ITERATION_WAIT_TIME_SECONDS
   end
 end
 
