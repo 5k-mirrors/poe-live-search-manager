@@ -6,11 +6,14 @@ require 'nokogiri'
 require 'rb-notifu'
 require 'win32/clipboard'
 
+require_relative 'whisper'
+require_relative 'alert'
+
 include Win32
 
 NOTIFICATION_SECONDS = 10
 API_URL = 'ws://live.poe.trade/'
-OFFLINE_DEBUG = false
+OFFLINE_DEBUG = true
 ITERATION_WAIT_TIME_SECONDS = 0.1
 INPUT_FILE_PATH = 'example_input.json'
 
@@ -58,7 +61,7 @@ def socket_setup(search_url, live_url, search_name)
         response_data = JSON.parse(response.body)
         whispers = get_whispers(response_data['data'], response_data['uniqs'])
         whispers.each do |whisper|
-          @alerts.push(get_alert(whisper, search_name))
+          @alerts.push(Alert.new(whisper, search_name))
         end
       else
         p "WARNING: Unknown event type: #{json['type']}"
@@ -99,23 +102,16 @@ def get_html_data_attributes(tbody)
 end
 
 def get_whisper(data)
-  greeting = "@#{data['data-ign']} Hi, I would like to buy your "
-  item = data['data-name']
-  buyout = data['data-buyout'].nil? ? '' : " listed for #{data['data-buyout']}"
-  league = " in #{data['data-league']}"
-  location = data['data-tab'].nil? ? '' : get_item_location(data)
+  whisper = Whisper.new
+  whisper.ign = data['data-ign']
+  whisper.item = data['data-name']
+  whisper.buyout = data['data-buyout']
+  whisper.league = data['data-league']
+  whisper.tab = data['data-tab']
+  whisper.x = data['data-x'].to_i
+  whisper.y = data['data-y'].to_i
 
-  greeting + item + buyout + league + location
-end
-
-def get_item_location(data)
-  message = " (stash tab #{data['data-tab']}"
-  x = data['data-x'].to_i
-  y = data['data-y'].to_i
-  if x >= 0 and y >= 0
-    message += "; position: left #{x+1}, top #{y+1})"
-  end
-  message
+  whisper
 end
 
 def alert_next(alerts)
@@ -133,12 +129,12 @@ def alert_all(alerts)
   end
 end
 
-def alert(whisper, cnt)
-  title = "New #{whisper[:search_name]} listed"
+def alert(alert, cnt)
+  title = "New #{alert.search_name} listed"
   title += " (#{cnt -1} more)" if cnt > 1
 
-  notification_thread = show_notification(title, whisper[:whisper])
-  set_clipboard(whisper[:whisper])
+  notification_thread = show_notification(title, alert.whisper)
+  set_clipboard(alert.whisper.to_s)
 
   # TODO replace with wait until gem
   while ['run', 'sleep'].include? notification_thread.status
@@ -158,15 +154,11 @@ def parse_json file_path
   JSON.parse(File.open(file_path).read)
 end
 
-def get_alert(whisper, search_name)
-  Hash[:search_name => search_name, :whisper => whisper]
-end
-
 if OFFLINE_DEBUG
   example_data = parse_json('example_socket_data.json')
   whispers = get_whispers(example_data['data'], example_data['uniqs'])
   whispers.each do |whisper|
-    @alerts.push(get_alert(whisper, 'thing'))
+    @alerts.push(Alert.new(whisper, 'thing'))
   end
   alert_all(@alerts)
 else
