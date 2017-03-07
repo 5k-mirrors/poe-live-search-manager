@@ -11,13 +11,14 @@ NOTIFICATION_SECONDS = 10
 API_URL = 'ws://live.poe.trade/'
 OFFLINE_DEBUG = false
 ITERATION_WAIT_TIME_SECONDS = 0.1
+INPUT_FILE_PATH = 'example_input.json'
 
 @alerts = []
 
 def main
   Thread.new {alert_loop}
   EM.run {
-    parse_json('example_input.json').each do |search_url, name|
+    parse_json(INPUT_FILE_PATH).each do |search_url, name|
       parsed_url = URI.parse(search_url)
       search_id = get_search_id(parsed_url)
       socket_setup(parsed_url, get_api_search_url(search_id), name)
