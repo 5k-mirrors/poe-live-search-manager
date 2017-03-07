@@ -3,13 +3,10 @@ require 'json'
 require 'net/http'
 require 'uri'
 require 'nokogiri'
-require 'rb-notifu'
-require 'win32/clipboard'
 
 require_relative 'whisper'
 require_relative 'alert'
-
-include Win32
+require_relative 'alerts'
 
 NOTIFICATION_SECONDS = 10
 API_URL = 'ws://live.poe.trade/'
@@ -17,7 +14,7 @@ OFFLINE_DEBUG = true
 ITERATION_WAIT_TIME_SECONDS = 0.1
 INPUT_FILE_PATH = 'example_input.json'
 
-@alerts = []
+@alerts = Alerts.new(NOTIFICATION_SECONDS, ITERATION_WAIT_TIME_SECONDS)
 
 def main
   Thread.new {alert_loop}
@@ -32,7 +29,7 @@ end
 
 def alert_loop
   loop do
-    alert_next(@alerts)
+    @alerts.alert_next
     sleep ITERATION_WAIT_TIME_SECONDS
   end
 end
@@ -114,42 +111,6 @@ def get_whisper(data)
   whisper
 end
 
-def alert_next(alerts)
-  cnt = alerts.length
-  if cnt > 0
-    alert(alerts.shift, cnt)
-  end
-end
-
-def alert_all(alerts)
-  cnt = alerts.length
-  alerts.each do |alert|
-    alert(alert, cnt)
-    cnt -= 1
-  end
-end
-
-def alert(alert, cnt)
-  title = "New #{alert.search_name} listed"
-  title += " (#{cnt -1} more)" if cnt > 1
-
-  notification_thread = show_notification(title, alert.whisper)
-  set_clipboard(alert.whisper.to_s)
-
-  # TODO replace with wait until gem
-  while ['run', 'sleep'].include? notification_thread.status
-    sleep ITERATION_WAIT_TIME_SECONDS
-  end
-end
-
-def show_notification title, message
-  Notifu::show :title => title, :message => message, :type => :info, :time => NOTIFICATION_SECONDS, :noquiet => true
-end
-
-def set_clipboard message
-  Clipboard.set_data(message, format = Clipboard::UNICODETEXT) # unicode for russian characters
-end
-
 def parse_json file_path
   JSON.parse(File.open(file_path).read)
 end
@@ -160,7 +121,7 @@ if OFFLINE_DEBUG
   whispers.each do |whisper|
     @alerts.push(Alert.new(whisper, 'thing'))
   end
-  alert_all(@alerts)
+  @alerts.alert_all
 else
   main
 end
