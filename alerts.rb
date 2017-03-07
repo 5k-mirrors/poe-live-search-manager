@@ -1,3 +1,5 @@
+require 'wait_until'
+
 require_relative 'alert'
 
 class Alerts
@@ -7,6 +9,7 @@ class Alerts
     @alerts = []
     @iteration_wait_time_seconds = iteration_wait_time_seconds
     @notification_seconds = notification_seconds
+    @alert_wait_exceeded_meesage = "Notification didn't clear in configured time."
   end
 
   def push(alert)
@@ -37,10 +40,11 @@ private
     notification_thread = alert.show_notification(title, @notification_seconds)
     alert.to_clipboard
 
-    # TODO replace with wait until gem
-    while ['run', 'sleep'].include? notification_thread.status
-      sleep @iteration_wait_time_seconds
-    end
+    Wait.until_false!(timeout_in_seconds: @notification_seconds + 1, failure_message: @alert_wait_exceeded_meesage) { alive?(notification_thread) }
+  end
+
+  def alive?(thread)
+    ['run', 'sleep'].include? thread.status
   end
 
 end
