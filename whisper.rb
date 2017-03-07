@@ -2,8 +2,8 @@ class Whisper
   attr_accessor :ign, :item, :buyout, :league, :location, :tab, :x, :y
 
   def to_s
-    whisper = "@#{ign} Hi, I would like to buy your #{item} "
-    whisper += " listed for #{buyout}" unless buyout.nil?
+    whisper = "@#{ign} Hi, I would like to buy your #{item}"
+    whisper += " listed for #{buyout}" unless buyout.nil? or buyout.empty?
     whisper += " in #{league}"
     whisper += get_item_location unless tab.nil?
 
