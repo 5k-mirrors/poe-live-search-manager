@@ -4,7 +4,8 @@ require 'net/http'
 require 'uri'
 require 'nokogiri'
 require 'rb-notifu'
-require 'win32/clipboard' #gem install win32-clipboard
+require 'win32/clipboard'
+
 include Win32
 
 NOTIFICATION_SECONDS = 10
