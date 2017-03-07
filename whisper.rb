@@ -3,11 +3,15 @@ class Whisper
 
   def to_s
     whisper = "@#{ign} Hi, I would like to buy your #{item}"
-    whisper += " listed for #{buyout}" unless buyout.nil? or buyout.empty?
+    whisper += " listed for #{buyout}" if buyout?
     whisper += " in #{league}"
     whisper += get_item_location unless tab.nil?
 
     whisper
+  end
+
+  def buyout?
+    not (buyout.nil? or buyout.empty?)
   end
 
 private
