@@ -11,9 +11,11 @@ require_relative 'poe-trade-parser'
 require_relative 'json_helper'
 
 NOTIFICATION_SECONDS = 3
+ITERATION_WAIT_TIME_SECONDS = 0.1
+KEEPALIVE_TIMEFRAME_SECONDS = 60
+
 API_URL = 'ws://live.poe.trade/'
 OFFLINE_DEBUG = false
-ITERATION_WAIT_TIME_SECONDS = 0.1
 INPUT_FILE_PATH = 'example_input.json'
 
 @alerts = Alerts.new(NOTIFICATION_SECONDS, ITERATION_WAIT_TIME_SECONDS)
@@ -22,6 +24,7 @@ INPUT_FILE_PATH = 'example_input.json'
 
 def main
   Thread.new {@alerts.alert_loop}
+  Thread.new {@sockets.keepalive_loop(KEEPALIVE_TIMEFRAME_SECONDS)}
   EM.run {
     JsonHelper.parse(INPUT_FILE_PATH).each do |search_url, name|
       parsed_url = URI.parse(search_url)
