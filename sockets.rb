@@ -14,7 +14,6 @@ class Sockets
 
   def socket_setup(search_url, live_url, search_name)
     ws = Faye::WebSocket::Client.new(live_url)
-    @sockets.push(ws)
 
     ws.on :open do |event|
       ws.send '{"type": "version", "value": 3}'
@@ -43,6 +42,27 @@ class Sockets
       p [:close, event.code, event.reason]
       ws = nil
     end
+
+    @sockets.push(ws)
+  end
+
+  def keepalive_loop(keepalive_timeframe_seconds)
+    loop do
+      keepalive_all
+      sleep keepalive_timeframe_seconds
+    end
+  end
+
+private
+
+  def keepalive_all
+    @sockets.each do |socket|
+      send_keepalive(socket)
+    end
+  end
+
+  def send_keepalive(ws)
+    ws.send 'ping'
   end
 
 end
