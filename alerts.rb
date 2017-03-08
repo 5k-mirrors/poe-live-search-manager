@@ -16,6 +16,13 @@ class Alerts
     @alerts.push(alert)
   end
 
+  def alert_loop
+    loop do
+      alert_next
+      sleep @iteration_wait_time_seconds
+    end
+  end
+
   def alert_next
     cnt = @alerts.length
     if cnt > 0
