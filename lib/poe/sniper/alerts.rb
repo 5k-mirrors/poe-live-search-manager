@@ -1,4 +1,4 @@
-require 'wait_until'
+require 'waitutil'
 
 require_relative 'alert'
 
@@ -47,7 +47,9 @@ private
     notification_thread = alert.show_notification(title, @notification_seconds)
     alert.to_clipboard
 
-    Wait.until_false!(timeout_in_seconds: @notification_seconds + 1, failure_message: @alert_wait_exceeded_meesage) { alive?(notification_thread) }
+    WaitUtil.wait_for_condition("Notification to clear", :timeout_sec => @notification_seconds, :delay_sec => @iteration_wait_time_seconds) do
+      not alive?(notification_thread)
+    end
   end
 
   def alive?(thread)
