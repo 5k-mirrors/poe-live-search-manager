@@ -4,6 +4,7 @@ require 'net/http'
 
 require_relative 'whisper'
 require_relative 'alert'
+require_relative 'poe_trade_parser'
 
 class Sockets
 
