@@ -32,11 +32,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
 
-  spec.add_development_dependency "faye-websocket"
-  spec.add_development_dependency "json"
-  spec.add_development_dependency "nokogiri"
-  spec.add_development_dependency "rb-notifu"
-  spec.add_development_dependency "win32-clipboard"
-  spec.add_development_dependency "wait_until"
-  spec.add_development_dependency "parseconfig"
+  spec.add_dependency "faye-websocket"
+  spec.add_dependency "json"
+  spec.add_dependency "nokogiri"
+  spec.add_dependency "rb-notifu"
+  spec.add_dependency "win32-clipboard"
+  spec.add_dependency "wait_until"
+  spec.add_dependency "parseconfig"
 end

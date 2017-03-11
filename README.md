@@ -33,7 +33,7 @@ In project root directory:
 
 1, Set custom configuration in `config` file
 
-2, Run `ruby -e "require 'poe/sniper'; Poe::Sniper::PoeSniper.new('config')"`
+2, Run `ruby -e "require 'poe/sniper'; Poe::Sniper.run('config')"`
 
 3, Stop with CTRL+C
 
