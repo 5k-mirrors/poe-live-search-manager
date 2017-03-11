@@ -37,6 +37,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "nokogiri"
   spec.add_dependency "rb-notifu"
   spec.add_dependency "win32-clipboard"
-  spec.add_dependency "wait_until"
+  spec.add_dependency "waitutil"
   spec.add_dependency "parseconfig"
 end
