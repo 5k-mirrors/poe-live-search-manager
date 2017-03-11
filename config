@@ -1,0 +1,8 @@
+notification_seconds = 10
+iteration_wait_time_seconds = 0.1
+keepalive_timeframe_seconds = 60
+
+api_url = 'ws://live.poe.trade/'
+input_file_path = 'C:\poe\poe-sniper\input\example_input.json'
+
+offline_debug = false
