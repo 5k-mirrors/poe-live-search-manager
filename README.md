@@ -19,29 +19,29 @@
 
 2, Donwload and install Ruby Development Kit from http://rubyinstaller.org/downloads/ (follow instructions on https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#installation-instructions)
 
-3, Run `gem install bundler`
+3, Download the latest version of the gem from https://github.com/thisismydesign/poe-sniper/releases
 
-In project root directory:
-
-4, Run `bundle install` to install dependencies
-
-5, Run `rake install` to build and install gem
+4, Run `gem install <path to poe-sniper-*.gem>`
 
 ## Usage
 
-In project root directory:
+1, Create a local copy of [config](https://github.com/thisismydesign/poe-sniper/blob/master/config) and [input json](https://github.com/thisismydesign/poe-sniper/blob/master/input/example_input.json) files. Modify values accoding to your needs.
 
-1, Set custom configuration in `config` file
-
-2, Run `ruby -e "require 'poe/sniper'; Poe::Sniper.run('config')"`
+2, Run `ruby -e "require 'poe/sniper'; Poe::Sniper.run('<path to your config file>')"`
 
 3, Stop with CTRL+C
 
-## Development (on linux)
+You can also try the alerting functionality with test data without actually connecting to [poe.trade](poe.trade):
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+1, Create a local copy of [example_socket_data.json](https://github.com/thisismydesign/poe-sniper/blob/master/spec/example_socket_data.json).
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+2, Run ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('<path to your config file>', '<path to your your cope of example socket data>')"
+
+3, Stop with CTRL+C
+
+## Development
+
+This gem is developed using Bundler conventions. A good overview can be found [here](http://bundler.io/v1.14/guides/creating_gem.html).
 
 ## Contributing
 
