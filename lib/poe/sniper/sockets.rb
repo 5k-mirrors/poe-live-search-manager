@@ -24,7 +24,7 @@ class Sockets
       json = JSON.parse(event.data)
       case json['type']
         when 'pong'
-          p "connected to: #{live_url}"
+          # TODO put connected message once
         when 'notify'
           id = json['value']
           response = Net::HTTP.post_form(search_url, 'id' => id)
@@ -39,7 +39,7 @@ class Sockets
     end
 
     ws.on :close do |event|
-      p [:close, event.code, event.reason]
+      p ["Connection to #{live_url} closed", event.code, event.reason]
       ws = nil
     end
 

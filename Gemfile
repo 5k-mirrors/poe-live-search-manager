@@ -1,8 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
-gem 'faye-websocket'
-gem 'json'
-gem 'nokogiri'
-gem 'rb-notifu'
-gem 'win32-clipboard'
-gem 'wait_until'
+# Specify your gem's dependencies in poe-sniper.gemspec
+gemspec
