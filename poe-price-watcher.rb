@@ -16,7 +16,7 @@ KEEPALIVE_TIMEFRAME_SECONDS = 60
 
 API_URL = 'ws://live.poe.trade/'
 OFFLINE_DEBUG = false
-INPUT_FILE_PATH = 'input/example_input.json'
+INPUT_FILE_PATH = 'input/lhc.json'
 
 @alerts = Alerts.new(NOTIFICATION_SECONDS, ITERATION_WAIT_TIME_SECONDS)
 @sockets = Sockets.new(@alerts)
