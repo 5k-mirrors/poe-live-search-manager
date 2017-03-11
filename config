@@ -4,5 +4,3 @@ keepalive_timeframe_seconds = 60
 
 api_url = 'ws://live.poe.trade/'
 input_file_path = 'C:\poe\poe-sniper\input\example_input.json'
-
-offline_debug = false

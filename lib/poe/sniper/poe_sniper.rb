@@ -9,11 +9,12 @@ require_relative 'whisper'
 require_relative 'alert'
 require_relative 'alerts'
 require_relative 'sockets'
-require_relative 'poe-trade-parser'
+require_relative 'poe_trade_parser'
 require_relative 'json_helper'
 
 module Poe
   module Sniper
+
     class PoeSniper
 
       def initialize(config_path)
@@ -21,11 +22,9 @@ module Poe
         @alerts = Alerts.new(@config['notification_seconds'].to_f, @config['iteration_wait_time_seconds'].to_f)
         @sockets = Sockets.new(@alerts)
         @poe_trade_parser = PoeTradeParser.new(@config['api_url'])
-
-        run
       end
 
-      def main
+      def run
         Thread.new {@alerts.alert_loop}
         Thread.new {@sockets.keepalive_loop(@config['keepalive_timeframe_seconds'].to_f)}
         EM.run {
@@ -36,17 +35,13 @@ module Poe
         }
       end
 
-      def run
-        if YAML.load(@config['offline_debug'])
-          example_data = parse_json('example_socket_data.json')
-          whispers = PoeTradeParser.get_whispers(example_data['data'], example_data['uniqs'])
-          whispers.each do |whisper|
-            @alerts.push(Alert.new(whisper, 'thing'))
-          end
-          @alerts.alert_all
-        else
-          main
+      def offline_debug(socket_data_path)
+        example_data = JsonHelper.parse(socket_data_path)
+        whispers = PoeTradeParser.get_whispers(example_data['data'], example_data['uniqs'])
+        whispers.each do |whisper|
+          @alerts.push(Alert.new(whisper, 'thing'))
         end
+        @alerts.alert_all
       end
 
     end

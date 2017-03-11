@@ -1,7 +1,14 @@
-require "poe/sniper/version"
+require 'poe/sniper/version'
+require 'poe/sniper/poe_sniper'
 
 module Poe
   module Sniper
-    require 'poe/sniper/poe_sniper'
+    def self.run(config_path)
+      PoeSniper.new(config_path).run
+    end
+
+    def self.offline_debug(config_path, socket_data_path)
+      PoeSniper.new(config_path).offline_debug(socket_data_path)
+    end
   end
 end
