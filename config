@@ -1,6 +1,12 @@
-notification_seconds = 10
+# Technical settings below
+# Do not modify unless you know what you're doing
+
+api_url = 'ws://live.poe.trade/'
 iteration_wait_time_seconds = 0.1
 keepalive_timeframe_seconds = 60
 
-api_url = 'ws://live.poe.trade/'
-input_file_path = 'C:\poe\poe-sniper\input\example_input.json'
+# Personal settings below
+# Customize to your need
+
+notification_seconds = 10
+input_file_path = 'input/example_input.json'
