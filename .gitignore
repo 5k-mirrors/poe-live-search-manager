@@ -27,3 +27,7 @@
 *.exe
 *.out
 *.app
+
+# Custom
+Gemfile.lock
+*.gem
