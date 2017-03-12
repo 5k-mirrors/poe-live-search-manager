@@ -6,8 +6,8 @@ Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/l
 
 ## Features
 
-- Queries new listsings instantly via poe.trade live
-- Uses windows notifications which:
+- Queries new listsings instantly via poe.trade live mode
+- Uses Windows notifications which:
   - don't remove focus from the game
   - have a configurable timeout
   - are easily dismissable anytime
@@ -29,7 +29,7 @@ Run poe-sniper.exe
 
 You're all set. Enjoy your interrupt free PoE.
 
-Additionally [here's a modified version of Lutbot's ahk script](https://github.com/thisismydesign/poe-lutbot-ahk) where the 'Paste' option is added allowing you to hotkey sending messages from the clipboard. That's right. One click trade interaction. All there's left to do is wait for the invite go to the seller's hideout and accept the trade. Awesome, I know!
+Additionally [here's a modified version of Lutbot's ahk script](https://github.com/thisismydesign/poe-lutbot-ahk) where the 'Paste' option is added allowing you to hotkey sending messages from the clipboard. That's right. One click trade interaction. All there's left to do is wait for the invite and accept the trade. I know, it's awesome!
 
 ## Development
 
