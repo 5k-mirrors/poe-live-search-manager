@@ -6,6 +6,9 @@ class Alerts
   attr_accessor :alerts
 
   def initialize(notification_seconds, iteration_wait_time_seconds)
+    @logger = Logger.new(STDOUT)
+    @logger.level = Logger::INFO
+
     @alerts = []
     @iteration_wait_time_seconds = iteration_wait_time_seconds
     @notification_seconds = notification_seconds
@@ -46,8 +49,12 @@ private
     notification_thread = alert.show_notification(@notification_seconds)
     alert.to_clipboard
 
-    WaitUtil.wait_for_condition("Notification to clear", :timeout_sec => @notification_seconds, :delay_sec => @iteration_wait_time_seconds) do
-      not alive?(notification_thread)
+    begin
+      WaitUtil.wait_for_condition("Notification to clear", :timeout_sec => @notification_seconds + 0.5, :delay_sec => @iteration_wait_time_seconds) do
+        not alive?(notification_thread)
+      end
+    rescue WaitUtil::TimeoutError
+      @logger.warn("Notification timeout exceeded, something's not right. This will not cause immediate issues but threads might hang in the background.")
     end
   end
 
