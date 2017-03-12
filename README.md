@@ -1,8 +1,12 @@
 # Poe::Sniper
 
+### Utility to snipe items listed for trading in Path of Exile.
+
+Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/larsch/ocra/).
+
 ## Features
 
-- Queries new listsings instantly just like poe.trade
+- Queries new listsings instantly via poe.trade live
 - Uses windows notifications which:
   - don't remove focus from the game
   - have a configurable timeout
@@ -11,36 +15,21 @@
 - Consumes far less resources than running poe.trade in browser
 - Queues listings if more than one arrives within the configured notification timeframe (alerts that there are further items)
 
-## Installation
+## Installation and usage
 
-*To run commands in Windows use cmd or Powershell*
+Download the latest release (poe-sniper.zip) from the [releases page](https://github.com/thisismydesign/poe-sniper/releases).
+Extract it, inside the poe-sniper folder you will find 3 files:
+- poe-sniper.exe
+- config.ini
+- input/example_input.json
 
-1, Download and install Ruby from http://rubyinstaller.org/downloads/
+Modify `config.ini` and `example_input.json` according to your needs.
 
-2, Donwload and install Ruby Development Kit from http://rubyinstaller.org/downloads/ (follow instructions on https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#installation-instructions)
+Run poe-sniper.exe
 
-3, Download the latest version of the gem from https://github.com/thisismydesign/poe-sniper/releases
+You're all set. Enjoy your interrupt free PoE.
 
-4, Run `gem install <path to poe-sniper-*.gem>`
-
-## Usage
-
-1, Create a local copy of [config](https://github.com/thisismydesign/poe-sniper/blob/master/config) and [input json](https://github.com/thisismydesign/poe-sniper/blob/master/input/example_input.json) files. Modify values accoding to your needs.
-
-2, Run `ruby -e "require 'poe/sniper'; Poe::Sniper.run('< path to your config file >')"`
-
-E.g.
-`ruby -e "require 'poe/sniper'; Poe::Sniper.run('C:\poe-sniper\config')"`
-
-3, Stop with CTRL+C
-
-You can also try the alerting functionality with test data without actually connecting to [poe.trade](poe.trade):
-
-1, Create a local copy of [example_socket_data.json](https://github.com/thisismydesign/poe-sniper/blob/master/spec/example_socket_data.json).
-
-2, Run ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('< path to your config file >', '< path to your your cope of example socket data >')"
-
-3, Stop with CTRL+C
+Additionally [here's a modified version of Lutbot's ahk script](https://github.com/thisismydesign/poe-lutbot-ahk) where the 'Paste' option is added allowing you to hotkey sending messages from the clipboard. That's right. One click trade interaction. All there's left to do is wait for the invite go to the seller's hideout and accept the trade. Awesome, I know!
 
 ## Development
 
