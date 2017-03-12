@@ -15,6 +15,7 @@ class Sockets
 
   def socket_setup(search_url, live_url, search_name)
     ws = Faye::WebSocket::Client.new(live_url)
+    last_displayed_id = -1;
 
     ws.on :open do |event|
       ws.send '{"type": "version", "value": 3}'
@@ -27,9 +28,9 @@ class Sockets
         when 'pong'
           # TODO put connected message once
         when 'notify'
-          id = json['value']
-          response = Net::HTTP.post_form(search_url, 'id' => id)
+          response = Net::HTTP.post_form(search_url, 'id' => last_displayed_id)
           response_data = JSON.parse(response.body)
+          last_displayed_id = response_data['newid']
           whispers = PoeTradeParser.get_whispers(response_data['data'], response_data['uniqs'])
           whispers.each do |whisper|
             @alerts.push(Alert.new(whisper, search_name))
