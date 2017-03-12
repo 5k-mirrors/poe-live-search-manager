@@ -1,6 +1,6 @@
 # Poe::Sniper
 
-### Utility to snipe items listed for trading in Path of Exile.
+### Utility to snipe items listed for trading in Path of Exile without any interruptions to the game.
 
 Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/larsch/ocra/).
 
