@@ -29,7 +29,7 @@ Run poe-sniper.exe
 
 You're all set. Enjoy your interrupt free PoE.
 
-Additionally [here's a modified version of Lutbot's ahk script](https://github.com/thisismydesign/poe-lutbot-ahk) where the 'Paste' option is added allowing you to hotkey sending messages from the clipboard. That's right. One click trade interaction. All there's left to do is wait for the invite and accept the trade. I know, it's awesome!
+Additionally [here's a modified version of Lutbot's ahk script](https://github.com/thisismydesign/poe-lutbot-ahk) where the 'Paste' option is added allowing you to hotkey sending messages from the clipboard. That's right. One click to set up a trade. I know, it's awesome!
 
 ## Development
 
