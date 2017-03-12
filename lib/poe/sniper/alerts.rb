@@ -41,10 +41,9 @@ class Alerts
 private
 
   def alert(alert, cnt)
-    title = "New #{alert.search_name} listed"
-    title += " (#{cnt -1} more)" if cnt > 1
+    alert.notification_title += " (#{cnt -1} more)" if cnt > 1
 
-    notification_thread = alert.show_notification(title, @notification_seconds)
+    notification_thread = alert.show_notification(@notification_seconds)
     alert.to_clipboard
 
     WaitUtil.wait_for_condition("Notification to clear", :timeout_sec => @notification_seconds, :delay_sec => @iteration_wait_time_seconds) do

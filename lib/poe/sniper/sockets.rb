@@ -1,21 +1,27 @@
 require 'faye/websocket'
 require 'json'
 require 'net/http'
+require 'memoist'
+require 'logger'
 
 require_relative 'whisper'
 require_relative 'alert'
 require_relative 'poe_trade_parser'
 
-class Sockets
+class Sockets extend Memoist
 
   def initialize(alerts)
     @sockets = []
     @alerts = alerts
+    @logger = Logger.new(STDOUT)
+    @logger.level = Logger::INFO
   end
 
   def socket_setup(search_url, live_url, search_name)
     ws = Faye::WebSocket::Client.new(live_url)
     last_displayed_id = -1;
+
+    @logger.info("Opening connection to #{get_log_url_signature(live_url, search_name)}")
 
     ws.on :open do |event|
       ws.send '{"type": "version", "value": 3}'
@@ -23,25 +29,34 @@ class Sockets
     end
 
     ws.on :message do |event|
+      @logger.debug("Message received from #{get_log_url_signature(live_url, search_name)}")
       json = JSON.parse(event.data)
-      case json['type']
-        when 'pong'
-          # TODO put connected message once
-        when 'notify'
-          response = Net::HTTP.post_form(search_url, 'id' => last_displayed_id)
-          response_data = JSON.parse(response.body)
-          last_displayed_id = response_data['newid']
-          whispers = PoeTradeParser.get_whispers(response_data['data'], response_data['uniqs'])
-          whispers.each do |whisper|
-            @alerts.push(Alert.new(whisper, search_name))
-          end
-        else
-          p "WARNING: Unknown event type: #{json['type']}"
+      unless json.is_a?(Hash)
+        @logger.warn("Unexpected message format: #{json}")
+      else
+        @logger.debug("Message type: #{json['type']}")
+        case json['type']
+          when 'pong'
+            log_connection_open(live_url, search_name)
+          when 'notify'
+            response = Net::HTTP.post_form(search_url, 'id' => last_displayed_id)
+            response_data = JSON.parse(response.body)
+            last_displayed_id = response_data['newid']
+            if response_data['count'] == 0
+              @logger.warn("Zero event count received, something's not right (query too early?)")
+            end
+            whispers = PoeTradeParser.get_whispers(response_data['data'], response_data['uniqs'])
+            whispers.each do |whisper|
+              @alerts.push(Alert.new(whisper, search_name))
+            end
+          else
+            @logger.warn("Unknown event type: #{json['type']}")
+        end
       end
     end
 
     ws.on :close do |event|
-      p ["Connection to #{live_url} closed", event.code, event.reason]
+      log_connection_close(live_url, event)
       ws = nil
     end
 
@@ -56,6 +71,20 @@ class Sockets
   end
 
 private
+
+  def get_log_url_signature(live_url, search_name)
+    "#{live_url} (#{search_name})"
+  end
+
+  def log_connection_open(url, search_name)
+    @logger.info("Connected to #{url} (#{search_name})")
+  end
+  memoize :log_connection_open
+
+  def log_connection_close(live_url, event)
+    message = (event.reason.nil? or event.reason.empty?) ? "no reason specified" : event.reason
+    @logger.warn("Connection closed to #{live_url} (code #{event.code}): #{message}")
+  end
 
   def keepalive_all
     @sockets.each do |socket|
