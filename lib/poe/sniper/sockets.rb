@@ -19,7 +19,7 @@ class Sockets extend Memoist
 
   def socket_setup(search_url, live_url, search_name)
     ws = Faye::WebSocket::Client.new(live_url)
-    last_displayed_id = -1;
+    last_displayed_id = get_initial_id(search_url);
 
     @logger.info("Opening connection to #{get_log_url_signature(live_url, search_name)}")
 
@@ -71,6 +71,12 @@ class Sockets extend Memoist
   end
 
 private
+
+  def get_initial_id(search_url)
+    response = Net::HTTP.post_form(search_url, 'id' => -1)
+    response_data = JSON.parse(response.body)
+    response_data['newid']
+  end
 
   def get_log_url_signature(live_url, search_name)
     "#{live_url} (#{search_name})"
