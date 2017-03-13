@@ -57,6 +57,10 @@ We also have a feature in mind that would help fighting price fixers. Stay tuned
 
 We're currently using poe.trade's live API and hoping that issues if any will be resolved. In that case Poe::Sniper is your best bet out there. With that said we're looking into supporting other indexers or maybe writing our own one. If you're developing an indexer with an API that we could make use of don't hesitate to contact us!
 
+#### This has been a kind of hot topic on discord so here's another disclaimer until we clear some stuff:
+
+#### We've also talked with the dev of poe.trade about support for these kind of scripts. His understandable stance is that he will not support them as poe.trade revenue comes from ads on the site that we bypass while causing the same amount of load. We'd like to state that Poe::Sniper requires the same amount of interaction with poe.trade with the exception of idling on the live page. The load is also a lot less as we never query pictures and other resources, never subscribe to item updates, etc. With his support we would use less than 1% of current generated data and bandwidth.
+
 ## Development
 
 This gem is developed using Bundler conventions. A good overview can be found [here](http://bundler.io/v1.14/guides/creating_gem.html).
