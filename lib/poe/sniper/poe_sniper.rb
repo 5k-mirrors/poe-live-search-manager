@@ -29,6 +29,7 @@ module Poe
         Thread.new {@sockets.keepalive_loop(@config['keepalive_timeframe_seconds'].to_f)}
         EM.run {
           JsonHelper.parse(@config['input_file_path']).each do |search_url, name|
+            search_url += '/live'
             parsed_url = URI.parse(search_url)
             @sockets.socket_setup(parsed_url, @poe_trade_parser.get_api_search_url(parsed_url), name)
           end
