@@ -13,6 +13,7 @@ Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/l
 
 ## Features
 
+- 100% ToS compliant
 - Queries new listsings instantly via poe.trade live mode
 - Handles any custom search created via poe.trade
 - Uses Windows notifications which:
