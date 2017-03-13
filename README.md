@@ -7,6 +7,7 @@ Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/l
 ## Features
 
 - Queries new listsings instantly via poe.trade live mode
+- Handles any custom search created via poe.trade
 - Uses Windows notifications which:
   - don't remove focus from the game
   - have a configurable timeout
@@ -25,11 +26,15 @@ Extract it, inside the poe-sniper folder you will find 3 files:
 
 Modify `config.ini` and `example_input.json` according to your needs.
 
+[`example_input.json`](https://github.com/thisismydesign/poe-sniper/blob/master/input/example_input.json) contains links to the searches you want to be notified about and a custom name for each search in [JSON format](https://www.w3schools.com/js/js_json.asp). Assuming the linked example you will receive notifications like: `New OP HOWA listed. ~b/o 10 chaos`. Be sure to include links in the following format: `http://poe.trade/search/*/live`.
+
+[`config.ini`](https://github.com/thisismydesign/poe-sniper/blob/master/config.ini) contains Poe::Sniper's configuration such as how long the notifications should last, where is the input file located, etc.
+
 Run poe-sniper.exe
 
 You're all set. Enjoy your interrupt free PoE.
 
-Additionally [here's a modified version of the Lutbot AutoHotkey Macro](https://github.com/thisismydesign/poe-lutbot-ahk) where the 'Paste' option is added allowing you to hotkey sending messages from the clipboard. That's right. One click to set up a trade. I know, it's awesome!
+Additionally [here's a modified version of the Lutbot AutoHotkey Macro](https://github.com/thisismydesign/poe-lutbot-ahk) where the 'Paste' option is added allowing you to hotkey sending messages from the clipboard. That's right. One click to set up a trade. It's awesome, I know!
 
 ## Disclaimer
 
