@@ -4,6 +4,13 @@
 
 Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/larsch/ocra/).
 
+## How it works
+
+- Copy search links from poe.trade
+- [Wait for notification to appear while ingame](http://i.imgur.com/YiIIOca.png)
+- [Press button](http://i.imgur.com/vMI79wy.png)
+- Enjoy
+
 ## Features
 
 - Queries new listsings instantly via poe.trade live mode
