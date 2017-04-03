@@ -49,6 +49,16 @@ You're all set. Enjoy your interrupt free PoE.
 
 Additionally [here's a modified version of the Lutbot AutoHotkey Macro](https://github.com/thisismydesign/poe-lutbot-ahk) where the 'Paste' option is added allowing you to hotkey sending messages from the clipboard. That's right. One click to set up a trade. It's awesome, I know!
 
+## Debugging
+
+In project root
+
+`rake install`
+
+`ruby -e "require 'poe/sniper'; Poe::Sniper.run('config.ini')"`
+
+`ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('config.ini', 'spec/example_socket_data.json')"`
+
 ## Disclaimer
 
 This tool (just like trade indexers) was created to improve the trading experience. As we saw in the past these great things used by the wrong people can quickly turn into bad things. With that said we believe the solution is creating a fair competition by making the best technology available to everyone. This is why we're releasing this to the public.
