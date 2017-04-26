@@ -2,14 +2,6 @@ require 'nokogiri'
 
 class PoeTradeParser
 
-  def initialize(api_url)
-    @api_url = api_url
-  end
-
-  def get_api_search_url(url)
-    @api_url + self.class.get_search_id(url)
-  end
-
   def self.get_whispers(html_item_data, ids)
     whispers = []
     html = Nokogiri::HTML(html_item_data)
@@ -23,11 +15,6 @@ class PoeTradeParser
   end
 
 private
-
-  def self.get_search_id(url)
-    path_parts = url.path.split '/'
-    path_parts.last.eql?('live') ? path_parts[-2] : path_parts[-1]
-  end
 
   def self.get_html_element_by_path(html, path)
     html.css(path)[0]

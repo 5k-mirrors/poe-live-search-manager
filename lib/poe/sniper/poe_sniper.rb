@@ -9,7 +9,7 @@ require_relative 'whisper'
 require_relative 'alert'
 require_relative 'alerts'
 require_relative 'sockets'
-require_relative 'poe_trade_parser'
+require_relative 'poe_trade_helper'
 require_relative 'json_helper'
 require_relative 'runner'
 require_relative 'reflection_util'
@@ -23,7 +23,7 @@ module Poe
         @config = ParseConfig.new(config_path)
         @alerts = Alerts.new(@config['notification_seconds'].to_f, @config['iteration_wait_time_seconds'].to_f)
         @sockets = Sockets.new(@alerts)
-        @poe_trade_parser = PoeTradeParser.new(@config['api_url'])
+        @poe_trade_helper = PoeTradeHelper.new(@config['api_url'])
 
         start_alert_thread
       end
@@ -65,7 +65,7 @@ module Poe
           input_json.each do |search_url, name|
             search_url += '/live'
             parsed_url = URI.parse(search_url)
-            @sockets.socket_setup(parsed_url, @poe_trade_parser.get_api_search_url(parsed_url), name)
+            @sockets.socket_setup(parsed_url, @poe_trade_helper.get_api_search_url(parsed_url), name)
           end
         end unless input_json.nil?
       end
