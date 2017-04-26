@@ -57,7 +57,7 @@ In project root
 
 `ruby -e "require 'poe/sniper'; Poe::Sniper.run('config.ini')"`
 
-`ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('config.ini', 'spec/example_socket_data.json')"`
+`ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('config.ini', 'spec/resources/example_socket_data.json')"`
 
 ## Disclaimer
 
