@@ -50,7 +50,7 @@ module Poe
       end
 
       def start_offline_debug(socket_data_path:)
-        example_data = JsonHelper.parse(socket_data_path)
+        example_data = JsonHelper.parse_file(socket_data_path)
         whispers = PoeTradeParser.get_whispers(example_data['data'], example_data['uniqs'])
         whispers.each do |whisper|
           @alerts.push(Alert.new(whisper, 'thing'))
@@ -60,7 +60,7 @@ module Poe
       def start_online
         start_keepalive_thread
 
-        input_json = JsonHelper.parse(@config['input_file_path'])
+        input_json = JsonHelper.parse_file(@config['input_file_path'])
         EM.run do
           input_json.each do |search_url, name|
             search_url += '/live'

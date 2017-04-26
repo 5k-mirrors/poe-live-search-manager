@@ -1,5 +1,4 @@
 require 'faye/websocket'
-require 'json'
 require 'net/http'
 require 'memoist'
 require 'logger'
@@ -30,7 +29,7 @@ class Sockets extend Memoist
 
     ws.on :message do |event|
       @logger.debug("Message received from #{get_log_url_signature(live_url, search_name)}")
-      json = JSON.parse(event.data)
+      json = JsonHelper.parse(event.data)
       unless json.is_a?(Hash)
         @logger.warn("Unexpected message format: #{json}")
       else
@@ -40,7 +39,7 @@ class Sockets extend Memoist
             log_connection_open(live_url, search_name)
           when 'notify'
             response = Net::HTTP.post_form(search_url, 'id' => last_displayed_id)
-            response_data = JSON.parse(response.body)
+            response_data = JsonHelper.parse(response.body)
             last_displayed_id = response_data['newid']
             if response_data['count'] == 0
               @logger.warn("Zero event count received, something's not right (query too early?)")
@@ -74,7 +73,7 @@ private
 
   def get_initial_id(search_url)
     response = Net::HTTP.post_form(search_url, 'id' => -1)
-    response_data = JSON.parse(response.body)
+    response_data = JsonHelper.parse(response.body)
     response_data['newid']
   end
 
