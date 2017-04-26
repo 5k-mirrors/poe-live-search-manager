@@ -1,7 +1,9 @@
 require 'rb-notifu'
-require 'win32/clipboard'
 
-include Win32
+if Gem.win_platform?
+  require 'win32/clipboard'
+  include Win32
+end
 
 class Alert
   attr_accessor :whisper_message, :notification_message, :notification_title
@@ -22,7 +24,8 @@ class Alert
   end
 
   def to_clipboard
-    Clipboard.set_data(@whisper_message, format = Clipboard::UNICODETEXT) # unicode for russian characters
+    # unicode for russian characters
+    Clipboard.set_data(@whisper_message, format = Clipboard::UNICODETEXT) if Gem.win_platform?
   end
 
 private

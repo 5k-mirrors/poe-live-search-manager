@@ -27,6 +27,13 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  # Because of `Gem.win_platform?`
+  # http://stackoverflow.com/a/21468976
+  spec.required_ruby_version = '>= 1.9'
+
+  # Because of `require_relative`
+  spec.required_ruby_version = '>= 1.9.2'
+
   spec.add_development_dependency "bundler", "~> 1.14"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
