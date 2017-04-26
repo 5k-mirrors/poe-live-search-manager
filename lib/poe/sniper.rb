@@ -1,5 +1,4 @@
-require 'poe/sniper/version'
-require 'poe/sniper/poe_sniper'
+require_relative 'sniper/poe_sniper'
 
 module Poe
   module Sniper
