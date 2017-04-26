@@ -51,8 +51,8 @@ module Poe
 
       def start_offline_debug(socket_data_path:)
         example_data = JsonHelper.parse_file(socket_data_path)
-        whispers = PoeTradeParser.get_whispers(example_data['data'], example_data['uniqs'])
-        whispers.each do |whisper|
+        poe_trade_parser = PoeTradeParser.new(example_data)
+        poe_trade_parser.get_whispers.each do |whisper|
           @alerts.push(Alert.new(whisper, 'thing'))
         end
       end

@@ -39,13 +39,12 @@ class Sockets extend Memoist
             log_connection_open(live_url, search_name)
           when 'notify'
             response = Net::HTTP.post_form(search_url, 'id' => last_displayed_id)
-            response_data = JsonHelper.parse(response.body)
-            last_displayed_id = response_data['newid']
-            if response_data['count'] == 0
+            poe_trade_parser = PoeTradeParser.new(JsonHelper.parse(response.body))
+            last_displayed_id = poe_trade_parser.get_last_displayed_id
+            if poe_trade_parser.get_count == 0
               @logger.warn("Zero event count received, something's not right (query too early?)")
             end
-            whispers = PoeTradeParser.get_whispers(response_data['data'], response_data['uniqs'])
-            whispers.each do |whisper|
+            poe_trade_parser.get_whispers.each do |whisper|
               @alerts.push(Alert.new(whisper, search_name))
             end
           else
@@ -73,6 +72,7 @@ private
 
   def get_initial_id(search_url)
     response = Net::HTTP.post_form(search_url, 'id' => -1)
+    # TODO PoeTradeParser should parse it
     response_data = JsonHelper.parse(response.body)
     response_data['newid']
   end

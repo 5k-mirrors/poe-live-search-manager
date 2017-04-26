@@ -1,12 +1,26 @@
 require 'nokogiri'
 
+require_relative 'json_helper'
+
 class PoeTradeParser
 
-  def self.get_whispers(html_item_data, ids)
-    whispers = []
-    html = Nokogiri::HTML(html_item_data)
+  def initialize(socket_response_body_json)
+    @socket_response_body_json = socket_response_body_json
+  end
 
-    ids.each do |id|
+  def get_last_displayed_id
+    @socket_response_body_json['newid']
+  end
+
+  def get_count
+    @socket_response_body_json['count']
+  end
+
+  def get_whispers
+    whispers = []
+    html = Nokogiri::HTML(@socket_response_body_json['data'])
+
+    @socket_response_body_json['uniqs'].each do |id|
       data_path = "tbody.item-live-#{id}"
       whispers << get_whisper(get_html_data_attributes(get_html_element_by_path(html, data_path)))
     end
@@ -16,18 +30,18 @@ class PoeTradeParser
 
 private
 
-  def self.get_html_element_by_path(html, path)
+  def get_html_element_by_path(html, path)
     html.css(path)[0]
   end
 
-  def self.get_html_data_attributes(tbody)
+  def get_html_data_attributes(tbody)
     data = {}
     data_attributes = tbody.xpath("./@*[starts-with(name(), 'data-')]") # . relative path
     data_attributes.each { |x| data[x.name] = x.value }
     data
   end
 
-  def self.get_whisper(data)
+  def get_whisper(data)
     whisper = Whisper.new
     whisper.ign = data['data-ign']
     whisper.item = data['data-name']
