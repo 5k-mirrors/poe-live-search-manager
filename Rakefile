@@ -10,7 +10,11 @@ end
 
 desc "Create Windows executable"
 task :ocra do
-  sh "ocra #{File.dirname __FILE__}/ocra/poe-sniper.rb"
+  if Gem.win_platform?
+    sh "ocra #{File.dirname __FILE__}/ocra/poe-sniper.rb"
+  else
+    p 'Skipping OCRA build as system is not Windows'
+  end
 end
 
 task :default => [:require, :spec, :ocra]
