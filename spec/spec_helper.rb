@@ -1,4 +1,6 @@
 require "bundler/setup"
+require 'coveralls'
+Coveralls.wear!
 require "poe/sniper"
 
 RSPEC_ROOT = File.dirname __FILE__
