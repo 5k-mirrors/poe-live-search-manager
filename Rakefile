@@ -8,4 +8,9 @@ task :require do
   sh "ruby -e \"require '#{File.dirname __FILE__}/lib/poe/sniper'\""
 end
 
-task :default => [:require, :spec]
+desc "Create Windows executable"
+task :ocra do
+  sh "ocra #{File.dirname __FILE__}/ocra/poe-sniper.rb"
+end
+
+task :default => [:require, :spec, :ocra]
