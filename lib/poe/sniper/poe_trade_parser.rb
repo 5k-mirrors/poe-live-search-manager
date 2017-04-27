@@ -6,6 +6,8 @@ class PoeTradeParser
 
   def initialize(socket_response_body_json)
     @socket_response_body_json = socket_response_body_json
+    @logger = Logger.new(STDOUT)
+    @logger.level = Logger::INFO
   end
 
   def get_last_displayed_id
@@ -22,7 +24,12 @@ class PoeTradeParser
 
     @socket_response_body_json['uniqs'].each do |id|
       data_path = "tbody.item-live-#{id}"
-      whispers << get_whisper(get_html_data_attributes(get_html_element_by_path(html, data_path)))
+      tbody_element = get_html_element_by_path(html, data_path)
+      if not tbody_element.nil?
+        whispers << get_whisper(get_html_data_attributes(get_html_element_by_path(html, data_path)))
+      else
+        @logger.warn "Element with unique id #{id} not found"
+      end
     end
 
     whispers
