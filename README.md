@@ -1,5 +1,8 @@
 # Poe::Sniper
 
+[![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=master)](https://travis-ci.org/thisismydesign/poe-sniper)
+[![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=master)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=master)
+
 ### Utility to snipe items listed for trading in Path of Exile without any interruptions to the game.
 
 Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/larsch/ocra/).
