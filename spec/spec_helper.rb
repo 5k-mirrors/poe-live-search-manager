@@ -1,11 +1,6 @@
 require "bundler/setup"
-
-require 'simplecov'
-SimpleCov.start
-
-require 'codecov'
-SimpleCov.formatter = SimpleCov::Formatter::Codecov
-
+require 'coveralls'
+Coveralls.wear!
 require "poe/sniper"
 
 RSPEC_ROOT = File.dirname __FILE__
