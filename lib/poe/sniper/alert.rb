@@ -6,12 +6,10 @@ if Gem.win_platform?
 end
 
 class Alert
+  include EasyLogging
   attr_accessor :whisper_message, :notification_message, :notification_title
 
   def initialize whisper, search_name
-    @logger = Logger.new(STDOUT)
-    @logger.level = Logger::INFO
-
     @notification_title = get_notification_title(search_name)
     @notification_message = get_bo_message(whisper)
     @whisper_message = whisper.to_s
@@ -34,7 +32,7 @@ private
     message = "New altert created for: #{search_name} || "
     message += "Buyout: #{whisper.buyout} || " if whisper.buyout?
     message += "Whisper: #{@whisper_message}"
-    @logger.info(message)
+    logger.info(message)
   end
 
   def get_bo_message whisper

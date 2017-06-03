@@ -3,11 +3,10 @@ require 'nokogiri'
 require_relative 'json_helper'
 
 class PoeTradeParser
+  include EasyLogging
 
   def initialize(socket_response_body_json)
     @socket_response_body_json = socket_response_body_json
-    @logger = Logger.new(STDOUT)
-    @logger.level = Logger::INFO
   end
 
   def get_last_displayed_id
@@ -28,7 +27,7 @@ class PoeTradeParser
       if not tbody_element.nil?
         whispers << get_whisper(get_html_data_attributes(get_html_element_by_path(html, data_path)))
       else
-        @logger.warn "Element with unique id #{id} not found"
+        logger.warn "Element with unique id #{id} not found"
       end
     end
 

@@ -1,3 +1,5 @@
+require 'easy_logging'
+
 require_relative 'sniper/poe_sniper'
 
 module Poe

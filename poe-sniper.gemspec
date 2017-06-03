@@ -48,4 +48,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "waitutil"
   spec.add_dependency "parseconfig"
   spec.add_dependency "memoist"
+  spec.add_dependency "easy_logging"
 end

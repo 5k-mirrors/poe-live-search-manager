@@ -1,11 +1,13 @@
 require 'json'
 
 class JsonHelper
+  include EasyLogging
+
   def self.parse_file file_path
     begin
       JSON.parse(File.open(file_path).read)
     rescue JSON::ParserError, Errno::ENOENT => e
-      puts "Could not parse input JSON: #{e}"
+      logger.error "Could not parse input JSON: #{e}"
     end
   end
 
@@ -13,7 +15,7 @@ class JsonHelper
     begin
       JSON.parse(json)
     rescue JSON::ParserError => e
-      puts "Could not parse input JSON: #{e}"
+      logger.error "Could not parse input JSON: #{e}"
     end
   end
 end
