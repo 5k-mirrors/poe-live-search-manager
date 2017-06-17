@@ -3,6 +3,8 @@ require 'yaml'
 
 require 'parseconfig'
 require 'reflection_utils'
+require 'encapsulate'
+require 'encapsulators'
 
 # TODO remove this
 require 'faye/websocket'
@@ -13,7 +15,6 @@ require_relative 'alerts'
 require_relative 'sockets'
 require_relative 'poe_trade_helper'
 require_relative 'json_helper'
-require_relative 'runner'
 
 module Poe
   module Sniper
@@ -30,15 +31,14 @@ module Poe
       end
 
       def run
-        Runner.run_and_wait_for_interaction(
-          callback: Runner.method(:run_with_exception_handling), params: {
-            callback: method(:start_online)})
+        Encapsulate.run callback: method(:start_online),
+          with: [Encapsulators.method(:user_interaction_before_return), Encapsulators.method(:exception_handling)]
       end
 
       def offline_debug(socket_data_path)
-        Runner.run_and_wait_for_interaction(
-          callback: Runner.method(:run_with_exception_handling), params: {
-              callback: method(:start_offline_debug), params: {socket_data_path: socket_data_path}})
+        Encapsulate.run callback: method(:start_offline_debug), 
+          with: [Encapsulators.method(:user_interaction_before_return), Encapsulators.method(:exception_handling)], 
+          params: {socket_data_path: socket_data_path}
       end
 
     private
@@ -46,7 +46,7 @@ module Poe
       def start_alert_thread
         Thread.new do
           alert_loop_method = ReflectionUtils.get_bound_instance_method(instance: @alerts, method_name: :alert_loop)
-          Runner.run_with_exception_handling(callback: alert_loop_method)
+          Encapsulate.run callback: alert_loop_method, with: [Encapsulators.method(:exception_handling)]
         end
       end
 
@@ -74,7 +74,9 @@ module Poe
       def start_keepalive_thread
         Thread.new do
           keepalive_loop_method = ReflectionUtils.get_bound_instance_method(instance: @sockets, method_name: :keepalive_loop)
-          Runner.run_with_exception_handling(callback: keepalive_loop_method, params: @config['keepalive_timeframe_seconds'].to_f)
+          Encapsulate.run callback: keepalive_loop_method, 
+            with: [Encapsulators.method(:exception_handling)], 
+            params: @config['keepalive_timeframe_seconds'].to_f
         end
       end
 
