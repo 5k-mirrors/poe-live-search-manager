@@ -2,6 +2,8 @@ require 'uri'
 require 'yaml'
 
 require 'parseconfig'
+require 'reflection_utils'
+
 # TODO remove this
 require 'faye/websocket'
 
@@ -12,7 +14,6 @@ require_relative 'sockets'
 require_relative 'poe_trade_helper'
 require_relative 'json_helper'
 require_relative 'runner'
-require_relative 'reflection_util'
 
 module Poe
   module Sniper
@@ -44,7 +45,7 @@ module Poe
 
       def start_alert_thread
         Thread.new do
-          alert_loop_method = ReflectionUtil.get_bound_instance_method(instance: @alerts, method_name: :alert_loop)
+          alert_loop_method = ReflectionUtils.get_bound_instance_method(instance: @alerts, method_name: :alert_loop)
           Runner.run_with_exception_handling(callback: alert_loop_method)
         end
       end
@@ -72,7 +73,7 @@ module Poe
 
       def start_keepalive_thread
         Thread.new do
-          keepalive_loop_method = ReflectionUtil.get_bound_instance_method(instance: @sockets, method_name: :keepalive_loop)
+          keepalive_loop_method = ReflectionUtils.get_bound_instance_method(instance: @sockets, method_name: :keepalive_loop)
           Runner.run_with_exception_handling(callback: keepalive_loop_method, params: @config['keepalive_timeframe_seconds'].to_f)
         end
       end
