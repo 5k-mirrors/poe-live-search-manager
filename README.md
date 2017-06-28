@@ -10,7 +10,7 @@ Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/l
 ## How it works
 
 - Copy search links from poe.trade
-- [Wait for notification to appear while ingame](http://i.imgur.com/RkTK4DN.png)
+- [Wait for notification to appear ingame](http://i.imgur.com/RkTK4DN.png)
 - [Press button](http://i.imgur.com/QpZqHJD.png)
 - Enjoy
 
@@ -29,7 +29,7 @@ Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/l
 
 ## Side effects
 
-- PoE needs to run in windowed or windowed fullscreen mode for the notifications to show
+- PoE needs to run in windowed or windowed fullscreen mode for the notifications to show ingame
 - Your clipboard will be altered with every new notification regardless whether you have any other content on it
 
 ## Installation and usage
