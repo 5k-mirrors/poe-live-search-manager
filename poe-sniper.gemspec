@@ -51,5 +51,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "easy_logging"
   spec.add_dependency "reflection_utils"
   spec.add_dependency "encapsulate"
-  spec.add_dependency "encapsulators"
+  spec.add_dependency "encapsulators", ">=0.2.0"
 end

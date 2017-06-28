@@ -21,6 +21,8 @@ module Poe
 
     class PoeSniper
 
+      include Encapsulators::References
+
       def initialize(config_path)
         @config = ParseConfig.new(config_path)
         @alerts = Alerts.new(@config['notification_seconds'].to_f, @config['iteration_wait_time_seconds'].to_f)
@@ -32,12 +34,12 @@ module Poe
 
       def run
         Encapsulate.run callback: method(:start_online),
-          with: [Encapsulators.method(:user_interaction_before_return), Encapsulators.method(:exception_handling)]
+          with: [user_interaction_before_return, exception_handling]
       end
 
       def offline_debug(socket_data_path)
         Encapsulate.run callback: method(:start_offline_debug), 
-          with: [Encapsulators.method(:user_interaction_before_return), Encapsulators.method(:exception_handling)], 
+          with: [user_interaction_before_return, exception_handling], 
           params: {socket_data_path: socket_data_path}
       end
 
@@ -46,7 +48,7 @@ module Poe
       def start_alert_thread
         Thread.new do
           alert_loop_method = ReflectionUtils.get_bound_instance_method(instance: @alerts, method_name: :alert_loop)
-          Encapsulate.run callback: alert_loop_method, with: [Encapsulators.method(:exception_handling)]
+          Encapsulate.run callback: alert_loop_method, with: [exception_handling]
         end
       end
 
@@ -75,7 +77,7 @@ module Poe
         Thread.new do
           keepalive_loop_method = ReflectionUtils.get_bound_instance_method(instance: @sockets, method_name: :keepalive_loop)
           Encapsulate.run callback: keepalive_loop_method, 
-            with: [Encapsulators.method(:exception_handling)], 
+            with: [exception_handling], 
             params: @config['keepalive_timeframe_seconds'].to_f
         end
       end
