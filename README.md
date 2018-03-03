@@ -7,7 +7,7 @@
 
 Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/larsch/ocra/).
 
-*__We no longer maintain this project.__ It should still be functional but we have no plans for fixing current or future issues. Feel free to create a fork and make improvements, if you decide to continue the project I'm more than happy to reference it here.*
+*__We no longer maintain this project.__ It should still be functional but we have no plans for fixing current or future [issues](https://github.com/thisismydesign/poe-sniper/issues). Feel free to create a fork and make improvements, if you decide to continue the project I'm more than happy to reference it here.*
 
 ## How it works
 
