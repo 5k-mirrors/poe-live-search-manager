@@ -66,11 +66,7 @@ In project root
 
 ## Disclaimer
 
-This tool (just like trade indexers) was created to improve the trading experience. As we saw in the past these great things used by the wrong people can quickly turn into bad things. With that said we believe the solution is creating a fair competition by making the best technology available to everyone. This is why we're releasing this to the public.
-
-We also have a feature in mind that would help fighting price fixers. Stay tuned!
-
-We're currently using poe.trade's live API which is capable of processing new listings in real time. With that said we're looking into supporting other indexers or maybe writing our own one. If you're developing an indexer with an API that we could make use of don't hesitate to contact us!
+This tool was created to improve the trading experience. As we saw in the past these great things used by the wrong people can quickly turn into bad things. With that said we believe the solution is creating a fair competition by making the best technology available to everyone. This is why we're releasing this to the public.
 
 ## Development
 
