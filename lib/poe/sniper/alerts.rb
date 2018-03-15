@@ -57,7 +57,7 @@ private
   end
 
   def alive?(thread)
-    ['run', 'sleep'].include? thread.status
+    !thread.nil? && ['run', 'sleep'].include?(thread.status)
   end
 
 end

@@ -1,6 +1,5 @@
-require 'rb-notifu'
-
 if Gem.win_platform?
+  require 'rb-notifu'
   require 'win32/clipboard'
   include Win32
 end
@@ -18,7 +17,7 @@ class Alert
   end
 
   def show_notification length
-    Notifu::show :title => @notification_title, :message => @notification_message, :type => :info, :time => length, :noquiet => true
+    Notifu::show :title => @notification_title, :message => @notification_message, :type => :info, :time => length, :noquiet => true if Gem.win_platform?
   end
 
   def to_clipboard
