@@ -10,7 +10,6 @@ class Sockets extend Memoist
   include EasyLogging
 
   def initialize(alerts)
-    @sockets = []
     @alerts = alerts
   end
 
@@ -57,8 +56,6 @@ class Sockets extend Memoist
       log_connection_close(live_url, event)
       ws = nil
     end
-
-    @sockets.push(ws)
   end
 
 private
