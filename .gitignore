@@ -31,3 +31,6 @@
 # Custom
 Gemfile.lock
 *.gem
+
+.rspec_status
+coverage
