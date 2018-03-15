@@ -12,9 +12,17 @@ class Sockets
     @alerts = alerts
   end
 
-  def socket_setup(search_url, live_url, search_name, keepalive_timeframe_seconds)
+  def socket_setup(search_url, live_url, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
+    begin
+      last_displayed_id = get_initial_id(search_url);
+    rescue SocketError => e
+      log_connection_error(search_url, e)
+      # Try again
+      sleep(retry_timeframe_seconds)
+      return socket_setup(search_url, live_url, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
+    end
+
     ws = Faye::WebSocket::Client.new(live_url, nil, ping: keepalive_timeframe_seconds)
-    last_displayed_id = get_initial_id(search_url);
 
     logger.info("Opening connection to #{get_log_url_signature(live_url, search_name)}")
 
@@ -53,7 +61,12 @@ class Sockets
 
     ws.on :close do |event|
       log_connection_close(live_url, event)
-      ws = nil
+
+      # Reopen on close: https://stackoverflow.com/a/22997338/2771889
+      sleep(retry_timeframe_seconds)
+      # TODO: Canot do return here because of `LocalJumpError`.
+      # Does this lead to an inifitely deep stack on retries?
+      socket_setup(search_url, live_url, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
     end
   end
 
@@ -72,6 +85,10 @@ private
 
   def log_connection_open(url, search_name)
     logger.info("Connected to #{url} (#{search_name})")
+  end
+
+  def log_connection_error(url, error)
+    logger.warn("Could not connect to #{url}: #{error}")
   end
 
   def log_connection_close(live_url, event)

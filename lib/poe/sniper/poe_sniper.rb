@@ -7,6 +7,7 @@ require 'encapsulate'
 require 'encapsulators'
 
 # TODO remove this
+# `EM` comes from this
 require 'faye/websocket'
 
 require_relative 'whisper'
@@ -62,11 +63,13 @@ module Poe
 
       def start_online
         input_json = JsonHelper.parse_file(@config['input_file_path'])
+        # TODO: start separate thread per URL because retry_timeframe_seconds would block execution of other sockets
         EM.run do
           input_json.each do |search_url, name|
             search_url += '/live'
             parsed_url = URI.parse(search_url)
-            @sockets.socket_setup(parsed_url, @poe_trade_helper.get_api_search_url(parsed_url), name, @config['keepalive_timeframe_seconds'].to_i)
+            @sockets.socket_setup(parsed_url, @poe_trade_helper.get_api_search_url(parsed_url), name,
+              @config['keepalive_timeframe_seconds'].to_i, @config['retry_timeframe_seconds'].to_i)
           end
         end unless input_json.nil?
       end
