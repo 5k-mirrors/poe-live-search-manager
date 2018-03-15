@@ -5,8 +5,6 @@
 
 ### Make instant offers for items listed for trading in Path of Exile without any interruptions to the game
 
-Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/larsch/ocra/).
-
 ⚠️ *You are viewing the README of the development version. You can find the README of the latest release [here](https://github.com/thisismydesign/poe-sniper/blob/release/README.md).*
 
 ## How it works
@@ -54,26 +52,33 @@ You're all set. Enjoy your interrupt free PoE.
 
 Additionally [here's a modified version of the Lutbot AutoHotkey Macro](https://github.com/thisismydesign/poe-lutbot-ahk) where the 'Paste' option is added allowing you to hotkey sending messages from the clipboard. That's right. One click to set up a trade. It's awesome, I know!
 
-## Debugging
-
-In project root
-
-`rake install`
-
-### Start from source
-
-`ruby -e "require 'poe/sniper'; Poe::Sniper.run('input/config.ini')"`
-
-- Test socket connection retry by providing an incorrect `api_url` in `config.ini`
-- Test HTTP connection retry by going offline
-
-### Start in offline mode with example socket data
-
-`ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('input/config.ini', 'spec/resources/example_socket_data.json')"`
-
 ## Disclaimer
 
 This tool was created to improve the trading experience. As we saw in the past these great things used by the wrong people can quickly turn into bad things. With that said we believe the solution is creating a fair competition by making the best technology available to everyone. This is why we're releasing this to the public.
+
+## Technical details
+
+Written in Ruby, packaged as standalone Windows executable with [OCRA](https://github.com/larsch/ocra/).
+
+### Usage from source
+
+In project root
+
+```
+rake install
+ruby -e "require 'poe/sniper'; Poe::Sniper.run('input/config.ini')"
+```
+
+#### Start in offline mode with example socket data
+
+```
+ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('input/config.ini', 'spec/resources/example_socket_data.json')"
+```
+
+#### Debugging
+
+- Test socket connection retry by providing an incorrect `api_url` in `config.ini`
+- Test HTTP connection retry by going offline
 
 ## Development
 
