@@ -14,15 +14,17 @@ class Sockets extend Memoist
     @alerts = alerts
   end
 
-  def socket_setup(search_url, live_url, search_name)
-    ws = Faye::WebSocket::Client.new(live_url)
+  def socket_setup(search_url, live_url, search_name, keepalive_timeframe_seconds)
+    ws = Faye::WebSocket::Client.new(live_url, nil, ping: keepalive_timeframe_seconds)
     last_displayed_id = get_initial_id(search_url);
 
     logger.info("Opening connection to #{get_log_url_signature(live_url, search_name)}")
 
     ws.on :open do |event|
       ws.send '{"type": "version", "value": 3}'
-      ws.send 'ping'
+      ws.ping do
+        log_connection_open(live_url, search_name)
+      end
     end
 
     ws.on :message do |event|
@@ -34,7 +36,7 @@ class Sockets extend Memoist
         logger.debug("Message type: #{json['type']}")
         case json['type']
           when 'pong'
-            log_connection_open(live_url, search_name)
+            logger.warn("Unhandled `pong` received from server")
           when 'notify'
             response = Net::HTTP.post_form(search_url, 'id' => last_displayed_id)
             poe_trade_parser = PoeTradeParser.new(JsonHelper.parse(response.body))
@@ -59,13 +61,6 @@ class Sockets extend Memoist
     @sockets.push(ws)
   end
 
-  def keepalive_loop(keepalive_timeframe_seconds)
-    loop do
-      keepalive_all
-      sleep keepalive_timeframe_seconds
-    end
-  end
-
 private
 
   def get_initial_id(search_url)
@@ -88,15 +83,4 @@ private
     message = (event.reason.nil? or event.reason.empty?) ? "no reason specified" : event.reason
     logger.warn("Connection closed to #{live_url} (code #{event.code}): #{message}")
   end
-
-  def keepalive_all
-    @sockets.each do |socket|
-      send_keepalive(socket)
-    end
-  end
-
-  def send_keepalive(ws)
-    ws.send 'ping'
-  end
-
 end

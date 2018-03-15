@@ -38,8 +38,8 @@ module Poe
       end
 
       def offline_debug(socket_data_path)
-        Encapsulate.run callback: method(:start_offline_debug), 
-          with: [user_interaction_before_return, exception_handling], 
+        Encapsulate.run callback: method(:start_offline_debug),
+          with: [user_interaction_before_return, exception_handling],
           params: {socket_data_path: socket_data_path}
       end
 
@@ -61,27 +61,15 @@ module Poe
       end
 
       def start_online
-        start_keepalive_thread
-
         input_json = JsonHelper.parse_file(@config['input_file_path'])
         EM.run do
           input_json.each do |search_url, name|
             search_url += '/live'
             parsed_url = URI.parse(search_url)
-            @sockets.socket_setup(parsed_url, @poe_trade_helper.get_api_search_url(parsed_url), name)
+            @sockets.socket_setup(parsed_url, @poe_trade_helper.get_api_search_url(parsed_url), name, @config['keepalive_timeframe_seconds'].to_i)
           end
         end unless input_json.nil?
       end
-
-      def start_keepalive_thread
-        Thread.new do
-          keepalive_loop_method = ReflectionUtils.get_bound_instance_method(instance: @sockets, method_name: :keepalive_loop)
-          Encapsulate.run callback: keepalive_loop_method, 
-            with: [exception_handling], 
-            params: @config['keepalive_timeframe_seconds'].to_f
-        end
-      end
-
     end
   end
 end
