@@ -12,29 +12,29 @@ class Sockets
     @alerts = alerts
   end
 
-  def socket_setup(search_url, live_url, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
+  def socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
     begin
-      last_displayed_id = get_initial_id(search_url);
+      last_displayed_id = get_initial_id(live_search_uri);
     rescue SocketError => e
-      log_connection_error(search_url, e)
+      log_connection_error(live_search_uri, e)
       # Try again
       sleep(retry_timeframe_seconds)
-      return socket_setup(search_url, live_url, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
+      return socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
     end
 
-    ws = Faye::WebSocket::Client.new(live_url.to_s, nil, ping: keepalive_timeframe_seconds)
+    ws = Faye::WebSocket::Client.new(live_ws_uri.to_s, nil, ping: keepalive_timeframe_seconds)
 
-    logger.info("Opening connection to #{get_log_url_signature(live_url, search_name)}")
+    logger.info("Opening connection to #{get_log_url_signature(live_ws_uri, search_name)}")
 
     ws.on :open do |event|
       ws.send '{"type": "version", "value": 3}'
       ws.ping do
-        log_connection_open(live_url, search_name)
+        log_connection_open(live_ws_uri, search_name)
       end
     end
 
     ws.on :message do |event|
-      logger.debug("Message received from #{get_log_url_signature(live_url, search_name)}")
+      logger.debug("Message received from #{get_log_url_signature(live_ws_uri, search_name)}")
       json = JsonHelper.parse(event.data)
       unless json.is_a?(Hash)
         logger.warn("Unexpected message format: #{json}")
@@ -44,7 +44,7 @@ class Sockets
           when 'pong'
             logger.warn("Unhandled `pong` received from server")
           when 'notify'
-            response = Net::HTTP.post_form(search_url, 'id' => last_displayed_id)
+            response = Net::HTTP.post_form(live_search_uri, 'id' => last_displayed_id)
             poe_trade_parser = PoeTradeParser.new(JsonHelper.parse(response.body))
             last_displayed_id = poe_trade_parser.get_last_displayed_id
             if poe_trade_parser.get_count == 0
@@ -60,27 +60,27 @@ class Sockets
     end
 
     ws.on :close do |event|
-      log_connection_close(live_url, event)
+      log_connection_close(live_ws_uri, event)
 
       # Reopen on close: https://stackoverflow.com/a/22997338/2771889
       sleep(retry_timeframe_seconds)
       # TODO: Canot do return here because of `LocalJumpError`.
       # Does this lead to an inifitely deep stack on retries?
-      socket_setup(search_url, live_url, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
+      socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
     end
   end
 
 private
 
-  def get_initial_id(search_url)
-    response = Net::HTTP.post_form(search_url, 'id' => -1)
+  def get_initial_id(live_search_uri)
+    response = Net::HTTP.post_form(live_search_uri, 'id' => -1)
     # TODO PoeTradeParser should parse it
     response_data = JsonHelper.parse(response.body)
     response_data['newid']
   end
 
-  def get_log_url_signature(live_url, search_name)
-    "#{live_url} (#{search_name})"
+  def get_log_url_signature(live_ws_uri, search_name)
+    "#{live_ws_uri} (#{search_name})"
   end
 
   def log_connection_open(url, search_name)
@@ -91,8 +91,8 @@ private
     logger.warn("Could not connect to #{url}: #{error}")
   end
 
-  def log_connection_close(live_url, event)
+  def log_connection_close(live_ws_uri, event)
     message = (event.reason.nil? or event.reason.empty?) ? "no reason specified" : event.reason
-    logger.warn("Connection closed to #{live_url} (code #{event.code}): #{message}")
+    logger.warn("Connection closed to #{live_ws_uri} (code #{event.code}): #{message}")
   end
 end
