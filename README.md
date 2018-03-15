@@ -58,14 +58,14 @@ In project root
 
 `rake install`
 
-### Start `Poe::Sniper` from source
+### Start from source
 
 `ruby -e "require 'poe/sniper'; Poe::Sniper.run('input/config.ini')"`
 
 - Test socket connection retry by providing an incorrect `api_url` in `config.ini`
 - Test HTTP connection retry by going offline
 
-### Start `Poe::Sniper` in offline mode with example socket data
+### Start in offline mode with example socket data
 
 `ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('input/config.ini', 'spec/resources/example_socket_data.json')"`
 
