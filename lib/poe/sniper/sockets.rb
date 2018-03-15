@@ -1,12 +1,11 @@
 require 'faye/websocket'
 require 'net/http'
-require 'memoist'
 
 require_relative 'whisper'
 require_relative 'alert'
 require_relative 'poe_trade_parser'
 
-class Sockets extend Memoist
+class Sockets
   include EasyLogging
 
   def initialize(alerts)
@@ -74,7 +73,6 @@ private
   def log_connection_open(url, search_name)
     logger.info("Connected to #{url} (#{search_name})")
   end
-  memoize :log_connection_open
 
   def log_connection_close(live_url, event)
     message = (event.reason.nil? or event.reason.empty?) ? "no reason specified" : event.reason

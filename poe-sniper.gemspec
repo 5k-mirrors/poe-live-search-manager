@@ -47,7 +47,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "win32-clipboard"
   spec.add_dependency "waitutil"
   spec.add_dependency "parseconfig"
-  spec.add_dependency "memoist"
   spec.add_dependency "easy_logging"
   spec.add_dependency "reflection_utils"
   spec.add_dependency "encapsulate"
