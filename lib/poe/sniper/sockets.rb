@@ -64,8 +64,6 @@ class Sockets
 
       # Reopen on close: https://stackoverflow.com/a/22997338/2771889
       sleep(retry_timeframe_seconds)
-      # TODO: Canot do return here because of `LocalJumpError`.
-      # Does this lead to an inifitely deep stack on retries?
       socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
     end
   end
