@@ -22,7 +22,7 @@ class Sockets
       return socket_setup(search_url, live_url, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
     end
 
-    ws = Faye::WebSocket::Client.new(live_url, nil, ping: keepalive_timeframe_seconds)
+    ws = Faye::WebSocket::Client.new(live_url.to_s, nil, ping: keepalive_timeframe_seconds)
 
     logger.info("Opening connection to #{get_log_url_signature(live_url, search_name)}")
 

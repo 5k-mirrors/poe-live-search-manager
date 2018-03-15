@@ -1,4 +1,3 @@
-require 'uri'
 require 'yaml'
 
 require 'parseconfig'
@@ -28,7 +27,6 @@ module Poe
         @config = ParseConfig.new(config_path)
         @alerts = Alerts.new(@config['notification_seconds'].to_f, @config['iteration_wait_time_seconds'].to_f)
         @sockets = Sockets.new(@alerts)
-        @poe_trade_helper = PoeTradeHelper.new(@config['api_url'])
 
         start_alert_thread
       end
@@ -66,10 +64,13 @@ module Poe
         # TODO: start separate thread per URL because retry_timeframe_seconds would block execution of other sockets
         EM.run do
           input_json.each do |search_url, name|
-            search_url += '/live'
-            parsed_url = URI.parse(search_url)
-            @sockets.socket_setup(parsed_url, @poe_trade_helper.get_api_search_url(parsed_url), name,
-              @config['keepalive_timeframe_seconds'].to_i, @config['retry_timeframe_seconds'].to_i)
+            @sockets.socket_setup(
+              PoeTradeHelper.live_search_uri(search_url),
+              PoeTradeHelper.live_ws_uri(@config['api_url'], search_url),
+              name,
+              @config['keepalive_timeframe_seconds'].to_i,
+              @config['retry_timeframe_seconds'].to_i
+            )
           end
         end unless input_json.nil?
       end

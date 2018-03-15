@@ -1,16 +1,18 @@
+require 'uri'
+
 class PoeTradeHelper
 
-  def initialize(api_url)
-      @api_url = api_url
-    end
+  def self.live_search_uri(search_url)
+    URI.parse(search_url + '/live')
+  end
 
-  def get_api_search_url(url)
-    @api_url + self.class.get_search_id(url)
+  def self.live_ws_uri(api_url, search_url)
+    URI.parse(api_url + search_id(URI.parse(search_url)))
   end
 
 private
 
-  def self.get_search_id(url)
+  def self.search_id(url)
     path_parts = url.path.split '/'
     path_parts.last.eql?('live') ? path_parts[-2] : path_parts[-1]
   end
