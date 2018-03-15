@@ -7,6 +7,8 @@
 
 Written in Ruby, packaged as Windows executable with [OCRA](https://github.com/larsch/ocra/).
 
+⚠️ *You are viewing the README of the development version. You can find the README of the latest release [here](https://github.com/thisismydesign/poe-sniper/blob/release/README.md).*
+
 ## How it works
 
 - Copy search links from poe.trade
