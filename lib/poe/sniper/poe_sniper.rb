@@ -68,8 +68,8 @@ module Poe
               PoeTradeHelper.live_search_uri(search_url),
               PoeTradeHelper.live_ws_uri(@config['api_url'], search_url),
               name,
-              @config['keepalive_timeframe_seconds'].to_i,
-              @config['retry_timeframe_seconds'].to_i
+              @config['keepalive_timeframe_seconds'].to_f,
+              @config['retry_timeframe_seconds'].to_f
             )
           end
         end unless input_json.nil?
