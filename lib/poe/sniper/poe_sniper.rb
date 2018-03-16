@@ -1,9 +1,5 @@
 require 'yaml'
-
 require 'parseconfig'
-require 'reflection_utils'
-require 'encapsulate'
-require 'encapsulators'
 
 # TODO remove this
 # `EM` comes from this
@@ -15,13 +11,11 @@ require_relative 'alerts'
 require_relative 'sockets'
 require_relative 'poe_trade_helper'
 require_relative 'json_helper'
+require_relative 'encapsulators'
 
 module Poe
   module Sniper
-
     class PoeSniper
-
-      include Encapsulators::References
 
       def initialize(config_path)
         @config = ParseConfig.new(config_path)
@@ -32,22 +26,28 @@ module Poe
       end
 
       def run
-        Encapsulate.run callback: method(:start_online),
-          with: [user_interaction_before_return, exception_handling]
+        Encapsulators.user_interaction_before_return do
+          Encapsulators.exception_handling do
+            start_online
+          end
+        end
       end
 
       def offline_debug(socket_data_path)
-        Encapsulate.run callback: method(:start_offline_debug),
-          with: [user_interaction_before_return, exception_handling],
-          params: {socket_data_path: socket_data_path}
+        Encapsulators.user_interaction_before_return do
+          Encapsulators.exception_handling do
+            start_offline_debug(socket_data_path)
+          end
+        end
       end
 
     private
 
       def start_alert_thread
         Thread.new do
-          alert_loop_method = ReflectionUtils.get_bound_instance_method(instance: @alerts, method_name: :alert_loop)
-          Encapsulate.run callback: alert_loop_method, with: [exception_handling]
+          Encapsulators.exception_handling do
+            @alerts.alert_loop
+          end
         end
       end
 
