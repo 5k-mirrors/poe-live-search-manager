@@ -1,9 +1,6 @@
 require 'yaml'
 require 'parseconfig'
-
-# TODO remove this
-# `EM` comes from this
-require 'faye/websocket'
+require 'eventmachine'
 
 require_relative 'whisper'
 require_relative 'alert'

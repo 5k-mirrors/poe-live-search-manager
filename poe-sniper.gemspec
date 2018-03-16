@@ -40,6 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "ocra"
   spec.add_development_dependency "coveralls"
 
+  spec.add_dependency "eventmachine"
   spec.add_dependency "faye-websocket"
   spec.add_dependency "json"
   spec.add_dependency "nokogiri"
