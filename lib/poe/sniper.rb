@@ -5,7 +5,9 @@ require_relative 'sniper/poe_sniper'
 module Poe
   module Sniper
     def self.run(config_path)
-      PoeSniper.new(config_path).run
+      unless defined?(Ocra)
+        PoeSniper.new(config_path).run
+      end
     end
 
     def self.offline_debug(config_path, socket_data_path)

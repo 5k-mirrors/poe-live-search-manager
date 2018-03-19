@@ -13,8 +13,10 @@ require_relative 'encapsulators'
 module Poe
   module Sniper
     class PoeSniper
+      include EasyLogging
 
       def initialize(config_path)
+        ensure_config_file!(config_path)
         @config = ParseConfig.new(config_path)
         @alerts = Alerts.new(@config['notification_seconds'].to_f, @config['iteration_wait_time_seconds'].to_f)
         @sockets = Sockets.new(@alerts)
@@ -72,6 +74,15 @@ module Poe
             )
           end
         end unless input_json.nil?
+      end
+
+      def ensure_config_file!(config_path)
+        unless File.file?(config_path)
+          Encapsulators.user_interaction_before_return do
+            logger.error("Config file (#{config_path}) not found.")
+          end
+          exit
+        end
       end
     end
   end
