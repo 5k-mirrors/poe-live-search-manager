@@ -62,7 +62,9 @@ Written in Ruby, packaged as standalone Windows executable with [OCRA](https://g
 
 ### Usage from source
 
-In project root
+See default tasks in [`Rakefile`](Rakefile) for running tests and building the executable.
+
+#### Start in normal mode
 
 ```
 rake install
@@ -73,12 +75,6 @@ ruby -e "require 'poe/sniper'; Poe::Sniper.run('input/config.ini')"
 
 ```
 ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('input/config.ini', 'spec/resources/example_socket_data.json')"
-```
-
-#### Build executable
-
-```
-ocra ocra/poe-sniper.rb
 ```
 
 #### Debug
