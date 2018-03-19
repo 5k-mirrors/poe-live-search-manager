@@ -75,7 +75,13 @@ ruby -e "require 'poe/sniper'; Poe::Sniper.run('input/config.ini')"
 ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('input/config.ini', 'spec/resources/example_socket_data.json')"
 ```
 
-#### Debugging
+#### Build executable
+
+```
+ocra ocra/poe-sniper.rb
+```
+
+#### Debug
 
 - Test socket connection retry by providing an incorrect `api_url` in `config.ini`
 - Test HTTP connection retry by going offline
