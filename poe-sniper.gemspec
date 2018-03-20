@@ -43,10 +43,12 @@ Gem::Specification.new do |spec|
   spec.add_dependency "eventmachine"
   spec.add_dependency "faye-websocket"
   spec.add_dependency "json"
-  spec.add_dependency "nokogiri"
+  spec.add_dependency "nokogiri" # TODO: find an easier way to parse HTML
   spec.add_dependency "rb-notifu"
   spec.add_dependency "win32-clipboard"
   spec.add_dependency "waitutil"
   spec.add_dependency "parseconfig"
   spec.add_dependency "easy_logging"
+  spec.add_dependency "analytics-ruby", '~> 2.0.0'
+  spec.add_dependency "dotenv"
 end

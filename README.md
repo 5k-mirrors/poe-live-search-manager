@@ -60,13 +60,16 @@ This tool was created to improve the trading experience. As we saw in the past t
 
 Written in Ruby, packaged as standalone Windows executable with [OCRA](https://github.com/larsch/ocra/).
 
+*Please be aware that we're sending anonymous data to gather app usage statistics.*
+
 ### Usage from source
 
-See default tasks in [`Rakefile`](Rakefile) for running tests and building the executable.
+Create `.env` file as described in the [analytics chapter](#analytics). See default tasks in [`Rakefile`](Rakefile) for running tests and building the executable.
 
 #### Start in normal mode
 
 ```
+bundle
 rake install
 ruby -e "require 'poe/sniper'; Poe::Sniper.run('input/config.ini')"
 ```
@@ -81,6 +84,10 @@ ruby -e "require 'poe/sniper'; Poe::Sniper.offline_debug('input/config.ini', 'sp
 
 - Test socket connection retry by providing an incorrect `api_url` in `config.ini`
 - Test HTTP connection retry by going offline
+
+### Analytics
+
+The app is using [Segment](https://segment.com/) (via the [analytics-ruby](https://segment.com/docs/sources/server/ruby/) gem) to gather anonymous usage statistics. Open source client side key handling sucks, the current approach to maximize obscurity is to read the Base64 encoded write key from the `ANALYTICS_KEY` environment variable stored in a gitignored `.env` file which is packaged with the build.
 
 ## Development
 

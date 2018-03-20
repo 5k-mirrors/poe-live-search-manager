@@ -1,10 +1,13 @@
+require 'dotenv/load'
 require 'easy_logging'
 
 require_relative 'sniper/poe_sniper'
+require_relative 'sniper/analytics'
 
 module Poe
   module Sniper
     def self.run(config_path)
+      Analytics.ensure_analytics_key!
       unless defined?(Ocra)
         PoeSniper.new(config_path).run
       end

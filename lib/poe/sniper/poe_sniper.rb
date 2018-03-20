@@ -9,6 +9,7 @@ require_relative 'sockets'
 require_relative 'poe_trade_helper'
 require_relative 'json_helper'
 require_relative 'encapsulators'
+require_relative 'analytics'
 
 module Poe
   module Sniper
@@ -16,6 +17,9 @@ module Poe
       include EasyLogging
 
       def initialize(config_path)
+        @analytics = Analytics.new
+        @analytics.identify
+
         ensure_config_file!(config_path)
         @config = ParseConfig.new(config_path)
         @alerts = Alerts.new(@config['notification_seconds'].to_f, @config['iteration_wait_time_seconds'].to_f)
@@ -25,6 +29,7 @@ module Poe
       end
 
       def run
+        @analytics.track(event: 'App started')
         Encapsulators.user_interaction_before('exit') do
           Encapsulators.exception_handling do
             start_online
