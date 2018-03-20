@@ -25,7 +25,7 @@ module Poe
       end
 
       def run
-        Encapsulators.user_interaction_before_return do
+        Encapsulators.user_interaction_before('exit') do
           Encapsulators.exception_handling do
             start_online
           end
@@ -33,7 +33,7 @@ module Poe
       end
 
       def offline_debug(socket_data_path)
-        Encapsulators.user_interaction_before_return do
+        Encapsulators.user_interaction_before('exit') do
           Encapsulators.exception_handling do
             start_offline_debug(socket_data_path)
           end
@@ -78,7 +78,7 @@ module Poe
 
       def ensure_config_file!(config_path)
         unless File.file?(config_path)
-          Encapsulators.user_interaction_before_return do
+          Encapsulators.user_interaction_before('exit') do
             logger.error("Config file (#{config_path}) not found.")
           end
           exit

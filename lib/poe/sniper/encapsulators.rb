@@ -12,9 +12,9 @@ module Poe
         end
       end
 
-      def self.user_interaction_before_return
+      def self.user_interaction_before(event)
         yield
-        logger.info('Press any key to continue')
+        logger.info("Press any key to #{event}")
         gets
       end
 
