@@ -11,7 +11,7 @@ end
 desc "Create Windows executable"
 task :ocra do
   if Gem.win_platform?
-    sh "ocra #{File.dirname __FILE__}/ocra/poe-sniper.rb"
+    sh "ocra ocra/poe-sniper.rb .env config/cacert.pem"
   else
     p 'Skipping OCRA build as system is not Windows'
   end

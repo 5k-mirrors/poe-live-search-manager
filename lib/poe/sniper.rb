@@ -1,4 +1,10 @@
-require 'dotenv/load'
+require 'dotenv'
+# `$0` trick is needed because we need to reference files in OCRA temp directory
+# See: https://github.com/larsch/ocra#running-your-application
+# Files need to be referenced relative to this file
+Dotenv.load("#{File.dirname($0)}/../.env")
+ENV['SSL_CERT_FILE'] = "#{File.dirname($0)}/../#{ENV['SSL_CERT_FILE']}"
+
 require 'easy_logging'
 
 require_relative 'sniper/poe_sniper'
