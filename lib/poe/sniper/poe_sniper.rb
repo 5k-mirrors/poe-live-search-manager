@@ -24,20 +24,20 @@ module Poe
         @config = ParseConfig.new(config_path)
         @alerts = Alerts.new(@config['notification_seconds'].to_f, @config['iteration_wait_time_seconds'].to_f)
         @sockets = Sockets.new(@alerts)
-
-        start_alert_thread
       end
 
       def run
         @analytics.identify
+        start_alert_thread(@analytics)
         Encapsulators.user_interaction_before('exit') do
-          Encapsulators.exception_handling do
+          Encapsulators.exception_handling(@analytics) do
             start_online
           end
         end
       end
 
       def offline_debug(socket_data_path)
+        start_alert_thread
         Encapsulators.user_interaction_before('exit') do
           Encapsulators.exception_handling do
             start_offline_debug(socket_data_path)
@@ -47,9 +47,9 @@ module Poe
 
     private
 
-      def start_alert_thread
+      def start_alert_thread(analytics = nil)
         Thread.new do
-          Encapsulators.exception_handling do
+          Encapsulators.exception_handling(analytics) do
             @alerts.alert_loop
           end
         end

@@ -31,6 +31,10 @@ module Poe
         @api.track(options.merge({ user_id: @user.id }))
       end
 
+      def flush
+        @api.flush
+      end
+
       private
 
       def self.analytics_key
