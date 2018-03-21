@@ -1,8 +1,11 @@
+require_relative 'version'
+
 module Poe
   module Sniper
     class AnalyticsData
-      def self.input_data(input_hash)
+      def self.app_start(input_hash)
         {
+          version: Poe::Sniper::VERSION,
           search_provider: {
             'poetrade': {
               count: input_hash.size,

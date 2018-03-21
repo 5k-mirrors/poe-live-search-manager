@@ -65,8 +65,8 @@ module Poe
 
       def start_online
         input_hash = JsonHelper.parse_file(@config['input_file_path'])
-        @analytics.track(event: 'App started', properties: AnalyticsData.input_data(input_hash))
-        
+        @analytics.track(event: 'App started', properties: AnalyticsData.app_start(input_hash))
+
         # TODO: retry_timeframe_seconds blocks execution of other sockets
         # Multiple EMs in one process is not possible: https://stackoverflow.com/q/8247691/2771889
         # Alternatives would be iodine, plezi as pointed out here: https://stackoverflow.com/a/42522649/2771889
