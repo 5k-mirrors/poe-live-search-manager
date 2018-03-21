@@ -18,8 +18,6 @@ module Poe
       include EasyLogging
 
       def initialize(config_path)
-        @analytics = Analytics.new
-
         ensure_config_file!(config_path)
         @config = ParseConfig.new(config_path)
         @alerts = Alerts.new(@config['notification_seconds'].to_f, @config['iteration_wait_time_seconds'].to_f)
@@ -27,19 +25,19 @@ module Poe
       end
 
       def run
-        @analytics.identify
-        start_alert_thread(@analytics)
+        Analytics.instance.identify
+        start_alert_thread
         Encapsulators.user_interaction_before('exit') do
-          Encapsulators.exception_handling(@analytics) do
+          Encapsulators.exception_handling do
             start_online
           end
         end
       end
 
       def offline_debug(socket_data_path)
-        start_alert_thread
+        start_alert_thread(analytics: false)
         Encapsulators.user_interaction_before('exit') do
-          Encapsulators.exception_handling do
+          Encapsulators.exception_handling(analytics: false) do
             start_offline_debug(socket_data_path)
           end
         end
@@ -47,9 +45,9 @@ module Poe
 
     private
 
-      def start_alert_thread(analytics = nil)
+      def start_alert_thread(analytics: true)
         Thread.new do
-          Encapsulators.exception_handling(analytics) do
+          Encapsulators.exception_handling(analytics: analytics) do
             @alerts.alert_loop
           end
         end
@@ -65,7 +63,7 @@ module Poe
 
       def start_online
         input_hash = JsonHelper.parse_file(@config['input_file_path'])
-        @analytics.track(event: 'App started', properties: AnalyticsData.app_start(input_hash))
+        Analytics.instance.track(event: 'App started', properties: AnalyticsData.app_start(input_hash))
 
         # TODO: retry_timeframe_seconds blocks execution of other sockets
         # Multiple EMs in one process is not possible: https://stackoverflow.com/q/8247691/2771889

@@ -23,6 +23,15 @@ module Poe
         }
       end
 
+      def self.socket_closed(live_ws_uri, event)
+        {
+          search_provider: 'poetrade',
+          uri: live_ws_uri,
+          reason: event.reason,
+          code: event.code
+        }
+      end
+
       private
 
       def self.exception_origin(exception)

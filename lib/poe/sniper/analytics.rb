@@ -1,11 +1,14 @@
 require 'base64'
 require 'segment/analytics'
+require 'singleton'
 
 require_relative 'user'
 
 module Poe
   module Sniper
     class Analytics
+      include Singleton
+
       def self.ensure_analytics_key!
         raise 'Analytics key missing' unless encoded_analytics_key
         raise 'Analytics key not Base64 encoded' unless base64?(encoded_analytics_key)
