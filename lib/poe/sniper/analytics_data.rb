@@ -4,7 +4,7 @@ module Poe
       def self.input_data(input_hash)
         {
           search_provider: {
-            'poe.trade': {
+            'poetrade': {
               count: input_hash.size,
               items: input_hash.keys
             }
