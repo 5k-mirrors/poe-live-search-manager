@@ -18,7 +18,6 @@ module Poe
           yield
         ensure
           logger.info("Press any key to #{event}")
-          # TODO: `gets` fails: Input/output error @ io_fillbuf - fd:0 <STDIN> (Errno::EIO)
           gets
         end
       end
