@@ -10,6 +10,7 @@ require_relative 'poe_trade_helper'
 require_relative 'json_helper'
 require_relative 'encapsulators'
 require_relative 'analytics'
+require_relative 'analytics_data'
 
 module Poe
   module Sniper
@@ -29,7 +30,6 @@ module Poe
       end
 
       def run
-        @analytics.track(event: 'App started')
         Encapsulators.user_interaction_before('exit') do
           Encapsulators.exception_handling do
             start_online
@@ -64,12 +64,13 @@ module Poe
       end
 
       def start_online
-        input_json = JsonHelper.parse_file(@config['input_file_path'])
+        input_hash = JsonHelper.parse_file(@config['input_file_path'])
         # TODO: retry_timeframe_seconds blocks execution of other sockets
         # Multiple EMs in one process is not possible: https://stackoverflow.com/q/8247691/2771889
         # Alternatives would be iodine, plezi as pointed out here: https://stackoverflow.com/a/42522649/2771889
+        @analytics.track(event: 'App started', properties: AnalyticsData.input_data(input_hash))
         EM.run do
-          input_json.each do |search_url, name|
+          input_hash.each do |search_url, name|
             @sockets.socket_setup(
               PoeTradeHelper.live_search_uri(search_url),
               PoeTradeHelper.live_ws_uri(@config['api_url'], search_url),
@@ -78,7 +79,7 @@ module Poe
               @config['retry_timeframe_seconds'].to_f
             )
           end
-        end unless input_json.nil?
+        end unless input_hash.nil?
       end
 
       def ensure_config_file!(config_path)
