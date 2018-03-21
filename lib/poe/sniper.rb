@@ -8,6 +8,7 @@ module Poe
   module Sniper
     def self.run(config_path)
       Analytics.ensure_analytics_key!
+      Analytics.ensure_certificates!
       unless defined?(Ocra)
         PoeSniper.new(config_path).run
       end

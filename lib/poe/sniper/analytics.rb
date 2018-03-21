@@ -11,6 +11,10 @@ module Poe
         raise 'Analytics key not Base64 encoded' unless base64?(encoded_analytics_key)
       end
 
+      def self.ensure_certificates!
+        raise 'Certificates missing' unless certificates
+      end
+
       def initialize
         @api = Segment::Analytics.new({
             write_key: self.class.analytics_key,
@@ -35,6 +39,10 @@ module Poe
 
       def self.encoded_analytics_key
         ENV['ANALYTICS_KEY']
+      end
+
+      def self.certificates
+        ENV['SSL_CERT_FILE']
       end
 
       def self.base64?(value)
