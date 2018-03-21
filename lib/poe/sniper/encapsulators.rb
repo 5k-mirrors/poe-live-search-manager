@@ -5,7 +5,7 @@ module Poe
 
       def self.exception_handling(analytics = nil)
         begin
-          yield
+          yield if block_given?
         rescue Exception => e
           analytics.track(event: 'Exception occured', properties: AnalyticsData.exception(e)) if analytics
           analytics.flush if analytics
@@ -15,7 +15,7 @@ module Poe
 
       def self.user_interaction_before(event)
         begin
-          yield
+          yield if block_given?
         ensure
           logger.info("Press any key to #{event}")
           gets
