@@ -34,6 +34,3 @@ Gemfile.lock
 
 .rspec_status
 coverage
-
-# Contains sensitive information therefore will not be checked in
-.env
