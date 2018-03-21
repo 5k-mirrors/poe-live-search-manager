@@ -19,7 +19,6 @@ module Poe
 
       def initialize(config_path)
         @analytics = Analytics.new
-        @analytics.identify
 
         ensure_config_file!(config_path)
         @config = ParseConfig.new(config_path)
@@ -30,6 +29,7 @@ module Poe
       end
 
       def run
+        @analytics.identify
         Encapsulators.user_interaction_before('exit') do
           Encapsulators.exception_handling do
             start_online
