@@ -69,13 +69,13 @@ Create `.env` file as described in the [analytics chapter](#analytics). See defa
 #### Start in normal mode
 
 ```
-bundle && bundle exec rake start
+bundle && bundle exec ruby -e 'require "#{File.dirname __FILE__}/lib/poe/sniper"; Poe::Sniper.run("#{File.dirname __FILE__}/input/config.ini")'
 ```
 
 #### Start in offline mode with example socket data
 
 ```
-bundle && bundle exec rake start_offline_debug
+bundle && bundle exec ruby -e 'require "#{File.dirname __FILE__}/lib/poe/sniper"; Poe::Sniper.offline_debug("#{File.dirname __FILE__}/input/config.ini", "#{File.dirname __FILE__}/spec/resources/example_socket_data.json")'
 ```
 
 #### Debug
