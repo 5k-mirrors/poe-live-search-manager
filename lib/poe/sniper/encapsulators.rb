@@ -8,7 +8,7 @@ module Poe
           yield
         rescue Exception => e
           analytics.track(event: 'Exception occured', properties: AnalyticsData.exception(e)) if analytics
-          analytics.flush
+          analytics.flush if analytics
           logger.error(ruby_style_trace(e))
         end
       end
