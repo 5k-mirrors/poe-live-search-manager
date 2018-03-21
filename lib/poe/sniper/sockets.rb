@@ -16,24 +16,25 @@ module Poe
         @alerts = alerts
       end
 
-      def socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
+      def socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds, reconnect = false)
         begin
           last_displayed_id = get_initial_id(live_search_uri);
         rescue SocketError => e
           log_connection_error(live_search_uri, e)
           # Try again
           sleep(retry_timeframe_seconds)
-          return socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
+          reconnect = true
+          return socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds, reconnect)
         end
 
         ws = Faye::WebSocket::Client.new(live_ws_uri.to_s, nil, ping: keepalive_timeframe_seconds)
-
         logger.info("Opening connection to #{get_log_url_signature(live_ws_uri, search_name)}")
 
         ws.on :open do |event|
           ws.send '{"type": "version", "value": 3}'
           ws.ping do
             log_connection_open(live_ws_uri, search_name)
+            Analytics.instance.track(event: 'Socket reopened', properties: AnalyticsData.socket_reopened(live_ws_uri)) if reconnect
           end
         end
 
@@ -64,12 +65,14 @@ module Poe
         end
 
         ws.on :close do |event|
-          Analytics.instance.track(event: 'Socket closed', properties: AnalyticsData.socket_closed(live_ws_uri, event))
+          Analytics.instance.track(event: 'Socket closed', properties: AnalyticsData.socket_closed(live_ws_uri, event)) unless reconnect
           log_connection_close(live_ws_uri, event)
 
           # Reopen on close: https://stackoverflow.com/a/22997338/2771889
           sleep(retry_timeframe_seconds)
-          socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds)
+          log_connection_reconnect_attempt(live_ws_uri)
+          reconnect = true
+          socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds, reconnect)
         end
       end
 
@@ -97,6 +100,10 @@ module Poe
       def log_connection_close(live_ws_uri, event)
         message = (event.reason.nil? or event.reason.empty?) ? "no reason specified" : event.reason
         logger.warn("Connection closed to #{live_ws_uri} (code #{event.code}): #{message}")
+      end
+
+      def log_connection_reconnect_attempt(live_ws_uri)
+        logger.info("Trying to recconect to #{live_ws_uri}")
       end
     end
   end

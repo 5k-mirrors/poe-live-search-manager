@@ -32,6 +32,13 @@ module Poe
         }
       end
 
+      def self.socket_reopened(live_ws_uri)
+        {
+          search_provider: 'poetrade',
+          uri: live_ws_uri
+        }
+      end
+
       private
 
       def self.exception_origin(exception)
