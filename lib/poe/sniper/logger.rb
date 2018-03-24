@@ -1,3 +1,4 @@
+require 'forwardable'
 require 'singleton'
 require 'logger'
 # Alias so we can use `Logger` classname later
