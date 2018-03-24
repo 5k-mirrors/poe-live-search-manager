@@ -41,7 +41,7 @@ RSpec.describe Poe::Sniper::PoeSniper do
         described_class.new('config_path').run
       end
 
-      it "send error analytics" do
+      it "sends error analytics" do
         expect(Poe::Sniper::Analytics.instance).to receive(:track).with(hash_including({ event: 'Exception occured' }))
         described_class.new('config_path').run
       end
