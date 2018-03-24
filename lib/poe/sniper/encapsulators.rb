@@ -1,5 +1,6 @@
 require_relative 'analytics'
 require_relative 'analytics_data'
+require_relative 'logger'
 
 module Poe
   module Sniper
@@ -12,7 +13,7 @@ module Poe
         rescue Exception => e
           Analytics.instance.track(event: 'Exception occured', properties: AnalyticsData.exception(e)) if analytics
           Analytics.instance.flush if analytics
-          logger.error(ruby_style_trace(e))
+          Logger.instance.error(ruby_style_trace(e))
         end
       end
 
@@ -20,7 +21,7 @@ module Poe
         begin
           yield if block_given?
         ensure
-          logger.info("Press any key to #{event}")
+          Logger.instance.info("Press any key to #{event}")
           gets
         end
       end

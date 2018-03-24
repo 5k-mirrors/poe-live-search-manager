@@ -18,7 +18,7 @@ module Poe
       include EasyLogging
 
       def initialize(config_path)
-        ensure_config_file!(config_path)
+        self.class.ensure_config_file!(config_path)
         @config = ParseConfig.new(config_path)
         @alerts = Alerts.new(@config['notification_seconds'].to_f, @config['iteration_wait_time_seconds'].to_f)
         @sockets = Sockets.new(@alerts)
@@ -44,6 +44,15 @@ module Poe
       end
 
     private
+
+      def self.ensure_config_file!(config_path)
+        unless File.file?(config_path)
+          Encapsulators.user_interaction_before('exit') do
+            logger.error("Config file (#{config_path}) not found.")
+          end
+          exit
+        end
+      end
 
       def start_alert_thread(analytics: true)
         Thread.new do
@@ -79,15 +88,6 @@ module Poe
             )
           end
         end unless input_hash.nil?
-      end
-
-      def ensure_config_file!(config_path)
-        unless File.file?(config_path)
-          Encapsulators.user_interaction_before('exit') do
-            logger.error("Config file (#{config_path}) not found.")
-          end
-          exit
-        end
       end
     end
   end

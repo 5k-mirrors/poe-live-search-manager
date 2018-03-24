@@ -1,21 +1,27 @@
 require 'json'
 
-class JsonHelper
-  include EasyLogging
+require_relative 'logger'
 
-  def self.parse_file file_path
-    begin
-      JSON.parse(File.open(file_path).read)
-    rescue JSON::ParserError, Errno::ENOENT => e
-      logger.error "Could not parse input JSON: #{e}"
-    end
-  end
+module Poe
+  module Sniper
+    class JsonHelper
+      def self.parse_file(file_path)
+        begin
+          JSON.parse(File.open(file_path).read)
+        rescue JSON::ParserError, Errno::ENOENT => e
+          Logger.instance.error("File (#{file_path}) content format is incorrect or file cannot be accessed. Make sure that it is a valid JSON and accessible. You can use online validators such as jsonformatter.curiousconcept.com. Common mistakes: the last entry should not have a comma at the end, wrong file name in config.ini.")
+          raise e
+        end
+      end
 
-  def self.parse json
-    begin
-      JSON.parse(json)
-    rescue JSON::ParserError => e
-      logger.error "Could not parse input JSON: #{e}"
+      def self.parse(json)
+        begin
+          JSON.parse(json)
+        rescue JSON::ParserError => e
+          Logger.instance.error("Could not parse JSON #{json}: #{e}")
+          raise e
+        end
+      end
     end
   end
 end
