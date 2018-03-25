@@ -28,14 +28,6 @@ class Alerts
     end
   end
 
-  def alert_all
-    cnt = @alerts.length
-    @alerts.each do |alert|
-      alert(alert, cnt)
-      cnt -= 1
-    end
-  end
-
 private
 
   def alert(alert, cnt)
