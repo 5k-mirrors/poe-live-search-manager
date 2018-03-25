@@ -17,4 +17,16 @@ task :ocra do
   end
 end
 
+task :start do
+  puts "When started via rake task the 'user interaction before exit' functionality is broken upon interrupt because it also interrupts the rake task."
+  require_relative 'lib/poe/sniper'
+  Poe::Sniper.run('input/config.ini')
+end
+
+task :start_offline_debug do
+  puts "When started via rake task the 'user interaction before exit' functionality is broken upon interrupt because it also interrupts the rake task."
+  require_relative 'lib/poe/sniper'
+  Poe::Sniper.offline_debug('input/config.ini', 'spec/resources/example_socket_data.json')
+end
+
 task :default => [:require, :spec, :ocra]
