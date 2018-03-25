@@ -1,11 +1,12 @@
 require 'forwardable'
 require 'singleton'
 require 'logger'
-# Alias so we can use `Logger` classname later
-@@ruby_logger = Logger
 
 module Poe
   module Sniper
+    # Alias so we can use `Logger` classname later
+    @@ruby_logger = Logger
+
     class Logger
       include Singleton
       extend Forwardable
