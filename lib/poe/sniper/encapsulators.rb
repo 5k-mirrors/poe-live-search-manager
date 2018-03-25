@@ -5,8 +5,6 @@ require_relative 'logger'
 module Poe
   module Sniper
     class Encapsulators
-      include EasyLogging
-
       def self.exception_handling(analytics: true)
         begin
           yield if block_given?

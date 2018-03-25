@@ -5,7 +5,6 @@ require 'dotenv'
 Dotenv.load("#{File.dirname($0)}/../.env")
 ENV['SSL_CERT_FILE'] = "#{File.dirname($0)}/../#{ENV['SSL_CERT_FILE']}"
 
-require 'easy_logging'
 
 require_relative 'sniper/poe_sniper'
 require_relative 'sniper/analytics'

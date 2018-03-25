@@ -10,8 +10,6 @@ require_relative 'analytics_data'
 module Poe
   module Sniper
     class Sockets
-      include EasyLogging
-
       def initialize(alerts)
         @alerts = alerts
       end
@@ -28,7 +26,7 @@ module Poe
         end
 
         ws = Faye::WebSocket::Client.new(live_ws_uri.to_s, nil, ping: keepalive_timeframe_seconds)
-        logger.info("Opening connection to #{get_log_url_signature(live_ws_uri, search_name)}")
+        Logger.instance.info("Opening connection to #{get_log_url_signature(live_ws_uri, search_name)}")
 
         ws.on :open do |event|
           ws.send '{"type": "version", "value": 3}'
@@ -39,27 +37,27 @@ module Poe
         end
 
         ws.on :message do |event|
-          logger.debug("Message received from #{get_log_url_signature(live_ws_uri, search_name)}")
+          Logger.instance.debug("Message received from #{get_log_url_signature(live_ws_uri, search_name)}")
           json = JsonHelper.parse(event.data)
           unless json.is_a?(Hash)
-            logger.warn("Unexpected message format: #{json}")
+            Logger.instance.warn("Unexpected message format: #{json}")
           else
-            logger.debug("Message type: #{json['type']}")
+            Logger.instance.debug("Message type: #{json['type']}")
             case json['type']
               when 'pong'
-                logger.warn("Unhandled `pong` received from server")
+                Logger.instance.warn("Unhandled `pong` received from server")
               when 'notify'
                 response = Net::HTTP.post_form(live_search_uri, 'id' => last_displayed_id)
                 poe_trade_parser = PoeTradeParser.new(JsonHelper.parse(response.body))
                 last_displayed_id = poe_trade_parser.get_last_displayed_id
                 if poe_trade_parser.get_count == 0
-                  logger.warn("Zero event count received, something's not right (query too early?)")
+                  Logger.instance.warn("Zero event count received, something's not right (query too early?)")
                 end
                 poe_trade_parser.get_whispers.each do |whisper|
                   @alerts.push(Alert.new(whisper, search_name))
                 end
               else
-                logger.warn("Unknown event type: #{json['type']}")
+                Logger.instance.warn("Unknown event type: #{json['type']}")
             end
           end
         end
@@ -90,20 +88,20 @@ module Poe
       end
 
       def log_connection_open(url, search_name)
-        logger.info("Connected to #{url} (#{search_name})")
+        Logger.instance.info("Connected to #{url} (#{search_name})")
       end
 
       def log_connection_error(url, error)
-        logger.warn("Could not connect to #{url}: #{error}")
+        Logger.instance.warn("Could not connect to #{url}: #{error}")
       end
 
       def log_connection_close(live_ws_uri, event)
         message = (event.reason.nil? or event.reason.empty?) ? "no reason specified" : event.reason
-        logger.warn("Connection closed to #{live_ws_uri} (code #{event.code}): #{message}")
+        Logger.instance.warn("Connection closed to #{live_ws_uri} (code #{event.code}): #{message}")
       end
 
       def log_connection_reconnect_attempt(live_ws_uri)
-        logger.info("Trying to recconect to #{live_ws_uri}")
+        Logger.instance.info("Trying to recconect to #{live_ws_uri}")
       end
     end
   end

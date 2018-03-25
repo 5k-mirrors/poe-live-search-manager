@@ -10,10 +10,11 @@ module Poe
       include Singleton
       extend Forwardable
 
-      def_delegators :@logger, :info, :warn, :error
+      def_delegators :@logger, :info, :warn, :error, :debug
 
       def initialize
         @logger = @@ruby_logger.new(STDOUT)
+        @logger.level = @@ruby_logger::INFO
       end
     end
   end

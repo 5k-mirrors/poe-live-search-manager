@@ -1,9 +1,6 @@
 require 'waitutil'
 
-require_relative 'alert'
-
 class Alerts
-  include EasyLogging
   attr_accessor :alerts
 
   def initialize(notification_seconds, iteration_wait_time_seconds)
@@ -52,7 +49,7 @@ private
         not alive?(notification_thread)
       end
     rescue WaitUtil::TimeoutError
-      logger.warn("Notification timeout exceeded, something's not right. This will not cause immediate issues but threads might hang in the background.")
+      Logger.instance.warn("Notification timeout exceeded, something's not right. This will not cause immediate issues but threads might hang in the background.")
     end
   end
 

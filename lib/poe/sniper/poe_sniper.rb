@@ -11,12 +11,11 @@ require_relative 'json_helper'
 require_relative 'encapsulators'
 require_relative 'analytics'
 require_relative 'analytics_data'
+require_relative 'logger'
 
 module Poe
   module Sniper
     class PoeSniper
-      include EasyLogging
-
       def initialize(config_path)
         self.class.ensure_config_file!(config_path)
         @config = ParseConfig.new(config_path)
@@ -48,7 +47,7 @@ module Poe
       def self.ensure_config_file!(config_path)
         unless File.file?(config_path)
           Encapsulators.user_interaction_before('exit') do
-            logger.error("Config file (#{config_path}) not found.")
+            Logger.insatnce.error("Config file (#{config_path}) not found.")
           end
           exit
         end
