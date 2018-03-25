@@ -15,13 +15,27 @@ RSpec.describe Poe::Sniper::PoeSniper do
   end
 
   describe 'offline mode' do
-    it '' do
+    context 'main thread' do
+      before do
+        allow(Thread).to receive(:new) { double("thread", join: nil) }
+      end
+
+      it 'creates alerts' do
+        expect(logger).not_to receive(:error)
+        described_instance = described_class.new('config_path')
+
+        described_instance.offline_debug("#{RSPEC_ROOT}/resources/example_socket_data.json")
+
+        expect(described_instance.instance_variable_get(:@alerts).alerts.size).to eq(25)
+      end
+    end
+
+    it 'starts alert loop' do
       expect(logger).not_to receive(:error)
-
       described_instance = described_class.new('config_path')
-      described_instance.offline_debug("#{RSPEC_ROOT}/resources/example_socket_data.json")
+      expect(described_instance.instance_variable_get(:@alerts)).to receive(:alert_loop)
 
-      expect(described_instance.instance_variable_get(:@alerts).alerts.size).to eq(25)
+      described_instance.offline_debug("#{RSPEC_ROOT}/resources/example_socket_data.json")
     end
   end
 
