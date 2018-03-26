@@ -10,7 +10,12 @@ RSpec.describe Poe::Sniper::PoeSniper do
     allow(Poe::Sniper::Analytics.instance).to receive(:identify)
     allow(Poe::Sniper::Analytics.instance).to receive(:track)
     allow(described_class).to receive(:ensure_config_file!)
-    allow(ParseConfig).to receive(:new).and_return({ 'notification_seconds' => 1, 'iteration_wait_time_seconds' => 1, 'input_file_path' => 'input_file.json', 'api_url' => 'api' })
+    allow(ParseConfig).to receive(:new).and_return({ 'notification_seconds' => 1,
+                                                     'iteration_wait_time_seconds' => 1,
+                                                     'input_file_path' => 'input_file.json',
+                                                     'api_url' => 'ws://live.poe.trade/',
+                                                     'keepalive_timeframe_seconds' => 1,
+                                                     'retry_timeframe_seconds' => 1 })
     allow(Poe::Sniper::Encapsulators).to receive(:user_interaction_before).and_yield
     allow(Poe::Sniper::Logger).to receive(:instance).and_return(logger)
   end
@@ -68,7 +73,16 @@ RSpec.describe Poe::Sniper::PoeSniper do
           end
 
           it "calls socket setup for each input entry" do
-            expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).twice
+            expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).with(URI.parse('http://poe.trade/search/seridonomosure/live'),
+                                                                                                       URI.parse('ws://live.poe.trade/seridonomosure'),
+                                                                                                       'Everything on Standard',
+                                                                                                       1.0,
+                                                                                                       1.0)
+            expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).with(URI.parse('http://poe.trade/search/gomobatonotaas/live'),
+                                                                                                       URI.parse('ws://live.poe.trade/gomobatonotaas'),
+                                                                                                       'Tabula on BSC',
+                                                                                                       1.0,
+                                                                                                       1.0)
             described_instance.run
           end
         end
