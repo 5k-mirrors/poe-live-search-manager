@@ -3,10 +3,13 @@ require 'uri'
 class PoeTradeHelper
 
   def self.live_search_uri(search_url)
-    URI.parse(search_url + '/live')
+    search_url = search_url[0..-2] if search_url.end_with?('/')
+    search_url += '/live' unless search_url.end_with?('/live')
+    URI.parse(search_url)
   end
 
   def self.live_ws_uri(api_url, search_url)
+    search_url = search_url[0..-2] if search_url.end_with?('/')
     URI.parse(api_url + search_id(URI.parse(search_url)))
   end
 
