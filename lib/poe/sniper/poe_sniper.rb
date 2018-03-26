@@ -78,7 +78,7 @@ module Poe
         # Multiple EMs in one process is not possible: https://stackoverflow.com/q/8247691/2771889
         # Alternatives would be iodine, plezi as pointed out here: https://stackoverflow.com/a/42522649/2771889
         EM.run do
-          input_hash.each do |search_url, name|
+          ems = input_hash.map do |search_url, name|
             @sockets.socket_setup(
               PoeTradeHelper.live_search_uri(search_url),
               PoeTradeHelper.live_ws_uri(@config['api_url'], search_url),
@@ -87,6 +87,8 @@ module Poe
               @config['retry_timeframe_seconds'].to_f
             )
           end
+          ems.reject!(&:nil?)
+          EM.stop if ems.empty?
         end unless input_hash.nil?
       end
     end

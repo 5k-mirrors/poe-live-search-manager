@@ -2,6 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Poe::Sniper::PoeSniper do
   let(:logger) { double("logger", info: nil, warn: nil, error: nil, debug: nil) }
+  let(:described_instance) { described_class.new('config_path') }
 
   before do
     # We're essentially testing the application here so some initial setup is needed
@@ -9,7 +10,7 @@ RSpec.describe Poe::Sniper::PoeSniper do
     allow(Poe::Sniper::Analytics.instance).to receive(:identify)
     allow(Poe::Sniper::Analytics.instance).to receive(:track)
     allow(described_class).to receive(:ensure_config_file!)
-    allow(ParseConfig).to receive(:new).and_return({ 'notification_seconds' => 1, 'iteration_wait_time_seconds' => 1, 'input_file_path' => 'input_file.json' })
+    allow(ParseConfig).to receive(:new).and_return({ 'notification_seconds' => 1, 'iteration_wait_time_seconds' => 1, 'input_file_path' => 'input_file.json', 'api_url' => 'api' })
     allow(Poe::Sniper::Encapsulators).to receive(:user_interaction_before).and_yield
     allow(Poe::Sniper::Logger).to receive(:instance).and_return(logger)
   end
@@ -22,7 +23,6 @@ RSpec.describe Poe::Sniper::PoeSniper do
 
       it 'creates alerts' do
         expect(logger).not_to receive(:error)
-        described_instance = described_class.new('config_path')
 
         described_instance.offline_debug("#{RSPEC_ROOT}/resources/example_socket_data.json")
 
@@ -32,7 +32,6 @@ RSpec.describe Poe::Sniper::PoeSniper do
 
     it 'starts alert loop' do
       expect(logger).not_to receive(:error)
-      described_instance = described_class.new('config_path')
       expect(described_instance.instance_variable_get(:@alerts)).to receive(:alert_loop)
 
       described_instance.offline_debug("#{RSPEC_ROOT}/resources/example_socket_data.json")
@@ -40,21 +39,10 @@ RSpec.describe Poe::Sniper::PoeSniper do
   end
 
   describe 'live mode' do
-    let(:input_file) { Tempfile.new('input.json') }
-
-    before do
-      allow(File).to receive(:open).and_return(input_file)
-    end
-
-    after do
-      input_file.close
-      input_file.unlink
-    end
-
     describe 'input handling' do
       context 'invalid JSON' do
         before do
-          input_file.write("not a valid JSON")
+          allow(File).to receive(:open).and_return(double('file', read: "not a valid JSON"))
         end
 
         it "raises meaningful error" do
@@ -70,6 +58,30 @@ RSpec.describe Poe::Sniper::PoeSniper do
         it "sends error analytics" do
           expect(Poe::Sniper::Analytics.instance).to receive(:track).with(hash_including({ event: 'Exception occured' }))
           described_class.new('config_path').run
+        end
+      end
+
+      context "valid JSON" do
+        context "poe.trade search URL" do
+          before do
+            allow(File).to receive(:open).and_return(double('file', read: File.open("#{RSPEC_ROOT}/resources/example_input_poe_trade_search.json").read))
+          end
+
+          it "calls socket setup for each input entry" do
+            expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).twice
+            described_instance.run
+          end
+        end
+
+        context "poe.trade live search URL" do
+          before do
+            allow(File).to receive(:open).and_return(double('file', read: File.open("#{RSPEC_ROOT}/resources/example_input_poe_trade_live_search.json").read))
+          end
+
+          it "calls socket setup" do
+            expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).twice
+            described_instance.run
+          end
         end
       end
     end

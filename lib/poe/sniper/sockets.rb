@@ -72,6 +72,8 @@ module Poe
           reconnect = true
           socket_setup(live_search_uri, live_ws_uri, search_name, keepalive_timeframe_seconds, retry_timeframe_seconds, reconnect)
         end
+
+        ws
       end
 
     private
