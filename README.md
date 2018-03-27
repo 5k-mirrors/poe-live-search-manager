@@ -6,8 +6,10 @@ Poe::Sniper is a desktop app that notifies you in-game when items you’re looki
 
 *You are viewing the README of the development version. You can find the README of the 0.4.1 release [here](https://github.com/thisismydesign/poe-sniper/tree/v0.4.1).*
 
-[![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=master)](https://travis-ci.org/thisismydesign/poe-sniper)
-[![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=master)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=master)
+| Branch | Status |
+| ------ | ------ |
+| Release | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=release)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=release)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=release) |
+| Development | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=master)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=master)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=master) |
 
 ## How it works
 
