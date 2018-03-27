@@ -9,7 +9,7 @@ module Poe
         begin
           JSON.parse(File.open(file_path).read)
         rescue JSON::ParserError, Errno::ENOENT => e
-          Logger.instance.error("File (#{file_path}) content format is incorrect or file cannot be accessed. Make sure that it is a valid JSON and accessible. You can use online validators such as jsonformatter.curiousconcept.com. Common mistakes: the last entry should not have a comma at the end, wrong file name in config.ini.")
+          Logger.instance.error("File (#{file_path}) content format is incorrect or file cannot be accessed. Make sure that it is a valid JSON and accessible. You can use online validators such as jsonformatter.curiousconcept.com. Common mistakes: the last entry should not have a comma at the end, config.ini should point to correct file.")
           raise e
         end
       end

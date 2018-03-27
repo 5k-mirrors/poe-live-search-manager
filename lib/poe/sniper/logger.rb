@@ -25,6 +25,13 @@ module Poe
       def initialize
         @logger = Poe::Sniper.ruby_logger.new(STDOUT)
         @logger.level = Poe::Sniper.ruby_logger::INFO
+        @logger.formatter = proc do |severity, datetime, progname, msg|
+          unless msg.empty?
+            "#{severity} -- #{msg}\n"
+          else
+            "\n"
+          end
+        end
       end
     end
   end
