@@ -1,5 +1,7 @@
 require 'waitutil'
 
+require_relative 'logger'
+
 module Poe
   module Sniper
     class Alerts

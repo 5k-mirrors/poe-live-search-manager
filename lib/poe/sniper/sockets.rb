@@ -6,6 +6,7 @@ require_relative 'alert'
 require_relative 'poe_trade_parser'
 require_relative 'analytics'
 require_relative 'analytics_data'
+require_relative 'logger'
 
 module Poe
   module Sniper
