@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe PoeTradeHelper do
+RSpec.describe Poe::Sniper::PoeTradeHelper do
 
   describe '.live_search_uri' do
     context 'when provided with search URL' do

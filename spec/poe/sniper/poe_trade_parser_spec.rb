@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-# TODO Poe::Sniper::PoeTradeParser
-RSpec.describe PoeTradeParser do
+RSpec.describe Poe::Sniper::PoeTradeParser do
 
   before(:each) do
     @socket_data_path = "#{RSPEC_ROOT}/resources/example_socket_data.json"
@@ -11,7 +10,7 @@ RSpec.describe PoeTradeParser do
     context 'When provided with socket data in JSON format' do
       it 'should create `Whisper` object with corresponding fields' do
         example_data = Poe::Sniper::JsonHelper.parse_file("#{RSPEC_ROOT}/resources/socket_data_single_item.json")
-        whispers = PoeTradeParser.new(example_data).get_whispers
+        whispers = described_class.new(example_data).get_whispers
 
         expect(whispers.length).to eq(1)
 
@@ -32,7 +31,7 @@ RSpec.describe PoeTradeParser do
     context 'When provided with socket data in JSON format conataining multiple items' do
       it 'should create corresponding number of `Whisper` objects' do
         example_data = Poe::Sniper::JsonHelper.parse_file("#{RSPEC_ROOT}/resources/example_socket_data.json")
-        whispers = PoeTradeParser.new(example_data).get_whispers
+        whispers = described_class.new(example_data).get_whispers
         expect(whispers.length).to eq(25)
       end
     end
