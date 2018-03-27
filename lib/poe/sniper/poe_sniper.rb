@@ -87,8 +87,7 @@ module Poe
               @config['retry_timeframe_seconds'].to_f
             )
           end
-          ems.reject!(&:nil?)
-          EM.stop if ems.empty?
+          EM.stop if ems.reject(&:nil?).empty?
         end unless input_hash.nil?
       end
     end
