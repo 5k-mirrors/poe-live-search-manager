@@ -105,7 +105,7 @@ Certificates are stored in [config/cacert.pem](config/cacert.pem) and are refere
 
 ## Conventions
 
-This gem is developed using the following conventions:
+This app is developed using the following conventions:
 - [Bundler's guide for developing a gem](http://bundler.io/v1.14/guides/creating_gem.html)
 - [Better Specs](http://www.betterspecs.org/)
 - [Semantic versioning](http://semver.org/)
