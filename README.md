@@ -101,7 +101,6 @@ Certificates are stored in [config/cacert.pem](config/cacert.pem) and are refere
 - Use a non-EM solution for websokets
   - Run sockets on their separate threads
     - Increase retry timeout freely since other sockets are no longer blocked
-- Make module namespacing consistent
 - Make OCRA build work in CI ([AppVeyor issue](https://github.com/larsch/ocra/issues/134))
 
 ## Development
