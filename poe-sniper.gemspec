@@ -48,6 +48,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "win32-clipboard"
   spec.add_dependency "waitutil"
   spec.add_dependency "parseconfig"
-  spec.add_dependency "analytics-ruby", '~> 2.0.0'
+  spec.add_dependency "analytics-ruby", '~> 2.2.5'
   spec.add_dependency "dotenv"
 end
