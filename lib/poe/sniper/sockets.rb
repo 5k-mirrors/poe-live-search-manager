@@ -100,7 +100,7 @@ module Poe
 
       def log_connection_close(live_ws_uri, event)
         message = (event.reason.nil? or event.reason.empty?) ? "no reason specified" : event.reason
-        Logger.instance.warn("Connection closed to #{live_ws_uri} (code #{event.code}): #{message}")
+        Logger.instance.warn("Connection closed to #{live_ws_uri} (will try to reconnect) (code #{event.code}): #{message}")
       end
 
       def log_connection_reconnect_attempt(live_ws_uri)
