@@ -101,12 +101,17 @@ Certificates are stored in [config/cacert.pem](config/cacert.pem) and are refere
 - Use a non-EM solution for websokets
   - Run sockets on their separate threads
     - Increase retry timeout freely since other sockets are no longer blocked
-- Make module namespacing consistent
 - Make OCRA build work in CI ([AppVeyor issue](https://github.com/larsch/ocra/issues/134))
 
-## Development
+## Conventions
 
-This gem is developed using Bundler conventions. A good overview can be found [here](http://bundler.io/v1.14/guides/creating_gem.html).
+This app is developed using the following conventions:
+- [Bundler's guide for developing a gem](http://bundler.io/v1.14/guides/creating_gem.html)
+- [Better Specs](http://www.betterspecs.org/)
+- [Semantic versioning](http://semver.org/)
+- [RubyGems' guide on gem naming](http://guides.rubygems.org/name-your-gem/)
+- [RFC memo about key words used to Indicate Requirement Levels](https://tools.ietf.org/html/rfc2119)
+- [Bundler improvements](https://github.com/thisismydesign/bundler-improvements)
 
 ## Contributing
 
