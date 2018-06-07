@@ -5,7 +5,7 @@
 
 ### Make instant offers for items listed for trading in Path of Exile without any interruptions to the game
 
-*You are viewing the README of the 0.4.1 version. You can find the README of the 0.4.0 release [here](https://github.com/thisismydesign/poe-sniper/tree/v0.4.0).*
+*You are viewing the README of the 0.4.2 version. You can find the README of the 0.4.1 release [here](https://github.com/thisismydesign/poe-sniper/tree/v0.4.1).*
 
 ## How it works
 
