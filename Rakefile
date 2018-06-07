@@ -16,7 +16,7 @@ task :ocra do
 end
 
 def version
-  current_commit_tag = sh "git describe --tags --exact-match"
+  current_commit_tag = `git describe --tags --exact-match`
   current_commit_tag.empty? ? sh("git describe --tags") : current_commit_tag
 end
 
