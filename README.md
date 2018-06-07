@@ -97,10 +97,7 @@ Certificates are stored in [config/cacert.pem](config/cacert.pem) and are refere
 
 ### Known issues / Improvements / TODO
 
-- OCRA is pretty sensitive to Windows & Ruby installations:
-  - https://stackoverflow.com/q/44417611/2771889
-  - https://github.com/larsch/ocra/issues/99
-- Get rid of Nokogiri
+- Get rid of Nokogiri, find a non-native way to parse HTML
 - Use a non-EM solution for websokets
   - Run sockets on their separate threads
     - Increase retry timeout freely since other sockets are no longer blocked
