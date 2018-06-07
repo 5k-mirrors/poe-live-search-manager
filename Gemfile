@@ -19,6 +19,7 @@ gem "analytics-ruby", '~> 2.0.0'
 gem "dotenv"
 
 group :development, :test do
+  gem "rake", "~> 12.3"
   gem "rspec", "~> 3.0"
   gem "ocra"
   gem "coveralls"
