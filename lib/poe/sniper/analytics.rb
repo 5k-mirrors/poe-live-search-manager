@@ -53,7 +53,7 @@ module Poe
       end
 
       def self.base64?(value)
-        value.is_a?(String) && Base64.encode64(Base64.decode64(value)) == value
+        value.is_a?(String) && Base64.encode64(Base64.decode64(value)) == "#{value}\n"
       end
     end
   end
