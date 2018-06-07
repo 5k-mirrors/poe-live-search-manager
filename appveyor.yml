@@ -10,4 +10,4 @@ before_test:
   - bundle -v
 
 test_script:
-  - bundle exec rake require spec
+  - bundle exec rake
