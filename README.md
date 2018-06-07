@@ -9,7 +9,7 @@ Poe::Sniper is a desktop app that notifies you in-game when items you’re looki
 | Branch | Status |
 | ------ | ------ |
 | Release | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=release)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Build status](https://ci.appveyor.com/api/projects/status/7ft4qq0exr0nkr40/branch/master?svg=true)](https://ci.appveyor.com/project/thisismydesign/poe-sniper/branch/release)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=release)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=release) |
-| Development | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=master)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Build status](https://ci.appveyor.com/api/projects/status/7ft4qq0exr0nkr40/branch/master?svg=true)](https://ci.appveyor.com/project/thisismydesign/poe-sniper/branch/master)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=master)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=master) |
+| Development | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=master)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Build status](https://ci.appveyor.com/api/projects/status/7ft4qq0exr0nkr40/branch/master?svg=true)](https://ci.appveyor.com/project/thisismydesign/poe-sniper/branch/master)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=master)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=master)   [![Depfu](https://badges.depfu.com/badges/3e6a8a1eae324ce15a5e0f4d3dd81857/overview.svg)](https://depfu.com/github/thisismydesign/poe-sniper) |
 
 ## How it works
 
@@ -95,18 +95,26 @@ The app is using [Segment](https://segment.com/) (via the [analytics-ruby](https
 
 Certificates are stored in [config/cacert.pem](config/cacert.pem) and are referenced in the `SSL_CERT_FILE` env var in order to fix the `certificate verify failed` issue on Windows ([see](https://gist.github.com/fnichol/867550)).
 
-### Improvements / TODO
+### Known issues / Improvements / TODO
 
+- OCRA is pretty sensitive to Windows & Ruby installations:
+  - https://stackoverflow.com/q/44417611/2771889
+  - https://github.com/larsch/ocra/issues/99
 - Get rid of Nokogiri
 - Use a non-EM solution for websokets
   - Run sockets on their separate threads
     - Increase retry timeout freely since other sockets are no longer blocked
-- Make module namespacing consistent
 - Make OCRA build work in CI ([AppVeyor issue](https://github.com/larsch/ocra/issues/134))
 
-## Development
+## Conventions
 
-This gem is developed using Bundler conventions. A good overview can be found [here](http://bundler.io/v1.14/guides/creating_gem.html).
+This app is developed using the following conventions:
+- [Bundler's guide for developing a gem](http://bundler.io/v1.14/guides/creating_gem.html)
+- [Better Specs](http://www.betterspecs.org/)
+- [Semantic versioning](http://semver.org/)
+- [RubyGems' guide on gem naming](http://guides.rubygems.org/name-your-gem/)
+- [RFC memo about key words used to Indicate Requirement Levels](https://tools.ietf.org/html/rfc2119)
+- [Bundler improvements](https://github.com/thisismydesign/bundler-improvements)
 
 ## Contributing
 
