@@ -11,3 +11,7 @@ before_test:
 
 test_script:
   - bundle exec rake
+
+artifacts:
+  - path: poe-sniper.zip
+    name: release archive (x86 binary, config, example input)
