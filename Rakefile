@@ -9,12 +9,15 @@ end
 
 desc "Create Windows executable"
 task :ocra do
-  if Gem.win_platform?
-    sh "ocra ocra/poe-sniper.rb .env config/cacert.pem --output artifacts/poe-sniper.exe"
-    sh "cd artifacts && 7z a poe-sniper.zip *"
-  else
-    p 'Skipping OCRA build as system is not Windows'
-  end
+  p 'Skipping OCRA build as system is not Windows' && exit unless Gem.win_platform?
+
+  sh "ocra ocra/poe-sniper.rb .env config/cacert.pem --output artifacts/poe-sniper.exe"
+  sh "cd artifacts && 7z a poe-sniper.zip *"
+end
+
+def version
+  current_commit_tag = sh "git describe --tags --exact-match --abbrev=0"
+  current_commit_tag.empty? ? sh("git describe --tags") : current_commit_tag
 end
 
 task :start do
