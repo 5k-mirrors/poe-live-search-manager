@@ -42,13 +42,14 @@ Download the latest release (poe-sniper.zip) from the [releases page](https://gi
 Extract it, inside the poe-sniper folder you will find 3 files:
 - poe-sniper.exe
 - config.ini
-- input/example_input.json
+- input/example_input.yaml
+- input/example_input.json (deprecated)
 
-Modify `config.ini` and `example_input.json` according to your needs.
+Modify `config.ini` and `example_input.yaml` according to your needs. You can still use `json` format for input but it is no longer the default.
 
-[`example_input.json`](https://github.com/thisismydesign/poe-sniper/blob/master/input/example_input.json) contains links to the searches you want to be notified about and a custom name for each search in [JSON format](https://www.w3schools.com/js/js_json.asp). Assuming the linked example you will receive notifications like: `New Tabula on BSC listed. ~b/o 10 chaos`. Be sure to include links in the same format as the example.
+[`example_input.yaml`](https://github.com/thisismydesign/poe-sniper/blob/master/artifacts/input/example_input.yaml) contains links to the searches you want to be notified about and a custom name for each search. If you're unsure about the [YAML format]((https://learn.getgrav.org/advanced/yaml)) just follow the example. Assuming the linked example you will receive notifications like: `New Tabula on BSC listed. ~b/o 10 chaos`.
 
-[`config.ini`](https://github.com/thisismydesign/poe-sniper/blob/master/input/config.ini) contains Poe::Sniper's configuration such as how long the notifications should last, where the input file is located, etc.
+[`config.ini`](https://github.com/thisismydesign/poe-sniper/blob/master/artifacts/input/config.ini) contains Poe::Sniper's configuration such as how long the notifications should last, where the input file is located, etc.
 
 Run poe-sniper.exe
 
