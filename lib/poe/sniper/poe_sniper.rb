@@ -8,6 +8,7 @@ require_relative 'alerts'
 require_relative 'sockets'
 require_relative 'poe_trade_helper'
 require_relative 'json_helper'
+require_relative 'yaml_helper'
 require_relative 'encapsulators'
 require_relative 'analytics'
 require_relative 'analytics_data'
@@ -71,7 +72,7 @@ module Poe
       end
 
       def start_online
-        input_hash = JsonHelper.parse_file(@config['input_file_path'])
+        input_hash = load_input(@config['input_file_path'])
         Analytics.instance.track(event: 'App started', properties: AnalyticsData.app_start(input_hash))
 
         # TODO: retry_timeframe_seconds blocks execution of other sockets
@@ -89,6 +90,16 @@ module Poe
           end
           EM.stop if ems.reject(&:nil?).empty?
         end unless input_hash.nil?
+      end
+
+      def load_input(file_path)
+        if file_path.end_with?("json")
+          JsonHelper.parse_file(file_path)
+        elsif file_path.end_with?("yml") || file_path.end_with?("yaml")
+          YamlHelper.parse_file(file_path)
+        else
+          raise "Unknown input format #{file_path.split(".").last}"
+        end
       end
     end
   end
