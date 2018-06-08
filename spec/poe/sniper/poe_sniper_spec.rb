@@ -51,7 +51,7 @@ RSpec.describe Poe::Sniper::PoeSniper do
         end
 
         it "raises meaningful error" do
-          expect(logger).to receive(:error).with(/File (.+) content format is incorrect or file cannot be accessed. Make sure that it is a valid JSON and accessible. You can use online validators such as jsonformatter.curiousconcept.com. Common mistakes: the last entry should not have a comma at the end, config.ini should point to correct file./)
+          expect(logger).to receive(:error).with(/File (.+) content format is incorrect or file cannot be accessed. Make sure that it is a valid JSON and is accessible. You can use online validators such as jsonformatter.curiousconcept.com. Common mistakes: the last entry should not have a comma at the end, config.ini should point to correct file./)
           described_class.new('config_path').run
         end
 
