@@ -11,7 +11,7 @@ Poe::Sniper is a desktop app that notifies you in-game when items you’re looki
 | Release | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=release)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Build status](https://ci.appveyor.com/api/projects/status/7ft4qq0exr0nkr40/branch/master?svg=true)](https://ci.appveyor.com/project/thisismydesign/poe-sniper/branch/release)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=release)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=release) |
 | Development | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=master)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Build status](https://ci.appveyor.com/api/projects/status/7ft4qq0exr0nkr40/branch/master?svg=true)](https://ci.appveyor.com/project/thisismydesign/poe-sniper/branch/master)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=master)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=master)   [![Depfu](https://badges.depfu.com/badges/3e6a8a1eae324ce15a5e0f4d3dd81857/overview.svg)](https://depfu.com/github/thisismydesign/poe-sniper) |
 
-## How it works
+## How does it work
 
 - Copy search links from poe.trade
 - [Wait for notification to appear ingame](http://i.imgur.com/RkTK4DN.png)
