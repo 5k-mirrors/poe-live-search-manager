@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Ruby version to 2.3.3
 - Rake tasks for development
 - Own logger
+- Many more tests
+- Generation of release artifact in CI pipe
 
 ### Changed
 - Input format default to YAML
