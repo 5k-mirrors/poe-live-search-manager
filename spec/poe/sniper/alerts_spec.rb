@@ -2,8 +2,9 @@ require 'spec_helper'
 
 RSpec.describe Poe::Sniper::Alerts do
   describe '#alert_next' do
+    let (:described_instance) { described_class.new(1, 1) }
+
     it 'tells alert to show notification and copy itself to the clipboard' do
-      described_instance = described_class.new(1, 1)
       alert = double('alert')
       described_instance.push(alert)
 

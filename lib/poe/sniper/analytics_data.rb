@@ -15,11 +15,13 @@ module Poe
         }
       end
 
-      def self.exception(exception)
+      def self.exception(exception, description: nil, fatal: true)
         {
           type: exception.class,
           message: exception.message,
-          origin: exception_origin(exception)
+          origin: exception_origin(exception),
+          description: description,
+          fatal: fatal
         }
       end
 

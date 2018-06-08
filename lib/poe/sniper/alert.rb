@@ -5,6 +5,8 @@ if Gem.win_platform?
 end
 
 require_relative 'logger'
+require_relative 'analytics'
+require_relative 'analytics_data'
 
 module Poe
   module Sniper
@@ -24,8 +26,14 @@ module Poe
       end
 
       def to_clipboard
-        # unicode for russian characters
-        Clipboard.set_data(@whisper_message, format = Clipboard::UNICODETEXT) if Gem.win_platform?
+        begin
+          # unicode for russian characters
+          Clipboard.set_data(@whisper_message, format = Clipboard::UNICODETEXT) if Gem.win_platform?
+        rescue StandardError => e
+          error_description = "Could not place whisper on clipboard: #{@whisper_message}"
+          Logger.instance.warn error_description
+          Analytics.instance.track(event: 'Exception occured', properties: AnalyticsData.exception(e, description: error_description, fatal: false))
+        end
       end
 
     private
