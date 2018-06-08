@@ -58,7 +58,7 @@ Additionally [here's a modified version of the Lutbot AutoHotkey Macro](https://
 
 ## Disclaimer
 
-This tool was created to improve the trading experience. As we saw in the past these great things used by the wrong people can quickly turn into bad things. With that said we believe the solution is creating a fair competition by making the best technology available to everyone. This is why we're releasing this to the public.
+This tool was created to improve the trading experience. We believe in creating a fair competition by making the best tools available to everyone. This is why we're releasing it to the public.
 
 ## Technical details
 
