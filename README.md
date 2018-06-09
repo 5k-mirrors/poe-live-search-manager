@@ -92,7 +92,7 @@ bundle exec rake start_offline_debug
 
 ### Analytics
 
-The app is using [Segment](https://segment.com/) (via the [analytics-ruby](https://segment.com/docs/sources/server/ruby/) gem) to gather anonymous usage statistics. Open source client side key handling sucks, the current approach to maximize obscurity is to read the Base64 encoded write key from the uncommitted `ANALYTICS_KEY` environment variable stored in a `.env` file which is packaged with the build.
+The app is using [Segment](https://segment.com/) (via the [analytics-ruby](https://segment.com/docs/sources/server/ruby/) gem) to gather anonymous usage statistics. Open source client side key handling sucks, the current approach to maximize obscurity is to read the Base64 encoded write key from the uncommitted `ANALYTICS_KEY` environment variable stored in a `.env` file which is packaged with the build. This env var should be set when running the `ocra` Rake task and will be added to `.env` automatically during the build.
 
 Certificates are stored in [config/cacert.pem](config/cacert.pem) and are referenced in the `SSL_CERT_FILE` env var in order to fix the `certificate verify failed` issue on Windows ([see](https://gist.github.com/fnichol/867550)).
 
