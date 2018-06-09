@@ -53,6 +53,8 @@ Modify `config.ini` and `example_input.yaml` according to your needs. You can st
 
 Run poe-sniper.exe
 
+Certain versions of Windows might warn against running unverified apps. If prompted click `More info` and `Run anyway`.
+
 You're all set. Enjoy your interrupt free PoE.
 
 Additionally [here's a modified version of the Lutbot AutoHotkey Macro](https://github.com/thisismydesign/poe-lutbot-ahk) where the 'Paste' option is added allowing you to hotkey sending messages from the clipboard. That's right. One click to set up a trade. It's awesome, I know!
