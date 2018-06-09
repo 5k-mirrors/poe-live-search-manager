@@ -17,9 +17,11 @@ module Poe
     def self.run(config_path)
       Analytics.ensure_analytics_key!
       Analytics.ensure_certificates!
-      unless defined?(Ocra)
-        PoeSniper.new(config_path).run
-      end
+
+      # Do not start during Ocra build 
+      return if defined?(Ocra)
+
+      PoeSniper.new(config_path).run
     end
 
     def self.offline_debug(config_path, socket_data_path)
