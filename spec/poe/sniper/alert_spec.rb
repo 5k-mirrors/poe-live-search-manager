@@ -14,6 +14,7 @@ RSpec.describe Poe::Sniper::Alert do
 
         allow(Poe::Sniper::Logger.instance).to receive(:warn)
         allow(Poe::Sniper::Logger.instance).to receive(:info)
+        allow(Poe::Sniper::Analytics).to receive(:instance).and_return(double("alytics_instance", track: nil))
       end
 
       it "does not fail" do
