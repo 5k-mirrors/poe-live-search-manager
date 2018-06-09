@@ -27,4 +27,5 @@ group :development, :test do
   gem "rspec", "~> 3.0"
   gem "ocra", "~> 1.3", ">= 1.3.10" # https://github.com/larsch/ocra/issues/124
   gem "coveralls"
+  gem 'webmock' # Disable external connections
 end

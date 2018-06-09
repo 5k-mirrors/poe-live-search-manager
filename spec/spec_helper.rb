@@ -3,6 +3,8 @@ require 'coveralls'
 Coveralls.wear!
 require "poe/sniper"
 
+require 'webmock/rspec'
+
 RSPEC_ROOT = File.dirname __FILE__
 
 RSpec.configure do |config|
