@@ -16,8 +16,6 @@ require_relative 'sniper/analytics'
 module Poe
   module Sniper
     def self.run(config_path)
-      p ENV
-
       Analytics.ensure_analytics_key!
       Analytics.ensure_certificates!
 
