@@ -29,7 +29,6 @@
 *.app
 
 # Custom
-Gemfile.lock
 *.gem
 
 .rspec_status
