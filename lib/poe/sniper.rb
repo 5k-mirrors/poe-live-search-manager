@@ -3,11 +3,15 @@ require 'dotenv'
 # See: https://github.com/larsch/ocra#running-your-application
 # Files need to be referenced relative to entry point (ocra/poe-sniper.rb)
 if defined?(Ocra)
+  p 'ocra build.....'
   Dotenv.load("#{File.dirname($0)}/../.env")
   ENV['SSL_CERT_FILE'] = "#{File.dirname($0)}/../#{ENV['SSL_CERT_FILE']}"
 else
+  p 'non-ocra run'
   Dotenv.load(".env")
 end
+
+p ENV
 
 require_relative 'sniper/poe_sniper'
 require_relative 'sniper/analytics'
@@ -15,6 +19,7 @@ require_relative 'sniper/analytics'
 module Poe
   module Sniper
     def self.run(config_path)
+      p ENV
       Analytics.ensure_analytics_key!
       Analytics.ensure_certificates!
 
