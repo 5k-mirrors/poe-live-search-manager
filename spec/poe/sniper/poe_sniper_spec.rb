@@ -19,6 +19,7 @@ RSpec.describe Poe::Sniper::PoeSniper do
     ENV['ANALYTICS_KEY'] = Base64.encode64('key')
     allow(Poe::Sniper::Analytics.instance).to receive(:identify)
     allow(Poe::Sniper::Analytics.instance).to receive(:track)
+    allow(Poe::Sniper::Analytics.instance).to receive(:flush)
     allow(described_class).to receive(:ensure_config_file!)
     allow(ParseConfig).to receive(:new).and_return(config_hash)
     allow(Poe::Sniper::Encapsulators).to receive(:user_interaction_before).and_yield
