@@ -2,7 +2,7 @@
 
 Poe::Sniper is a desktop app that notifies you in-game when items you’re looking for are listed for trading in Path of Exile. It is an alternative to keeping several browser tabs open but it consumes far less resources and you don’t have to switch between the game and your browser all the time. You can use the same custom search criteria and can even message the seller instantly.
 
-*You are viewing the README of the development version. You can find the README of the 0.4.2 release [here](https://github.com/thisismydesign/poe-sniper/tree/v0.4.2).*
+*You are viewing the README of version [v0.5.0](https://github.com/thisismydesign/poe-sniper/releases/tag/v0.5.0). You can find other releases [here](https://github.com/thisismydesign/poe-sniper/releases).*
 
 | Branch | Status |
 | ------ | ------ |
