@@ -17,6 +17,7 @@ module Poe
 
       def self.exception(exception, description: nil, fatal: true)
         {
+          version: Poe::Sniper::VERSION,
           type: exception.class,
           message: exception.message,
           origin: exception_origin(exception),
@@ -27,6 +28,7 @@ module Poe
 
       def self.socket_closed(live_ws_uri, event)
         {
+          version: Poe::Sniper::VERSION,
           search_provider: 'poetrade',
           uri: live_ws_uri,
           reason: event.reason,
@@ -36,6 +38,7 @@ module Poe
 
       def self.socket_reopened(live_ws_uri)
         {
+          version: Poe::Sniper::VERSION,
           search_provider: 'poetrade',
           uri: live_ws_uri
         }
