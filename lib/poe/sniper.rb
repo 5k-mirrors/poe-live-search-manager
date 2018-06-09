@@ -15,13 +15,13 @@ require_relative 'sniper/analytics'
 module Poe
   module Sniper
     def self.run(config_path)
+      p ENV
+
       Analytics.ensure_analytics_key!
       Analytics.ensure_certificates!
 
       # Do not start during Ocra build 
       return if defined?(Ocra)
-
-      p ENV
 
       PoeSniper.new(config_path).run
     end
