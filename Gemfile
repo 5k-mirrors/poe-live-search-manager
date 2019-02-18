@@ -21,6 +21,7 @@ gem "waitutil"
 gem "parseconfig"
 gem "analytics-ruby", '~> 2.0.0'
 gem "dotenv"
+gem 'poe-sniper-pro', git: 'git@gitlab.com:5k-mirrors/poe-sniper-pro.git', glob: 'gem/poe-sniper-pro.gemspec'
 
 group :development, :test do
   gem "rake", "~> 12.3"
