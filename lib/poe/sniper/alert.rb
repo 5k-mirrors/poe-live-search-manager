@@ -39,7 +39,7 @@ module Poe
     private
 
       def log_alert_created(whisper, search_name)
-        message = "New alert created for: #{search_name} || "
+        message = "New snipe for #{search_name} || "
         message += "Buyout: #{whisper.buyout} || " if whisper.buyout?
         message += "Whisper: #{@whisper_message}"
         Logger.instance.info(message)

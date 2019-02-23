@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Poe::Sniper::PoeTradeParser do
+RSpec.describe Poe::Sniper::Poetrade::HttpResponseParser do
 
   before(:each) do
     @socket_data_path = "#{RSPEC_ROOT}/resources/example_socket_data.json"

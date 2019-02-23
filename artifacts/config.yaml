@@ -1,0 +1,9 @@
+notification_seconds: 10
+input_file_path: 'example_input.yaml'
+
+auth:
+  user_email: ""
+  user_password: ""
+
+pathofexilecom:
+  session_id: ""

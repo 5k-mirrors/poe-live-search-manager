@@ -11,16 +11,17 @@ ruby '>= 1.9.2'
 # https://stackoverflow.com/a/44446172/2771889
 ruby "2.3.3"
 
-gem "eventmachine"
+gem "eventmachine", "1.0.9.1", platforms: :ruby # https://github.com/eventmachine/eventmachine/issues/800
 gem "faye-websocket"
 gem "json"
 gem "nokogiri"
 gem "rb-notifu"
-gem "win32-clipboard"
+gem "win32-clipboard" # maybe change to https://github.com/janlelis/clipboard
 gem "waitutil"
-gem "parseconfig"
 gem "analytics-ruby", '~> 2.0.0'
 gem "dotenv"
+gem "permessage_deflate"
+gem 'poe-sniper-pro'
 
 group :development, :test do
   gem "rake", "~> 12.3"

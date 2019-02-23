@@ -10,7 +10,12 @@ RSpec.describe Poe::Sniper::PoeSniper do
         'input_file_path' => 'input_file.json',
         'api_url' => 'ws://live.poe.trade/',
         'keepalive_timeframe_seconds' => 1,
-        'retry_timeframe_seconds' => 1
+        'retry_timeframe_seconds' => 1,
+        'auth' => {
+          'user_email' => 'test@test.com',
+          "user_password" => "test",
+          "api_key" => "test",
+        }
       }
   end
 
@@ -21,7 +26,7 @@ RSpec.describe Poe::Sniper::PoeSniper do
     allow(Poe::Sniper::Analytics.instance).to receive(:track)
     allow(Poe::Sniper::Analytics.instance).to receive(:flush)
     allow(described_class).to receive(:ensure_config_file!)
-    allow(ParseConfig).to receive(:new).and_return(config_hash)
+    allow_any_instance_of(described_class).to receive(:parse_config).and_return(config_hash)
     allow(Poe::Sniper::Encapsulators).to receive(:user_interaction_before).and_yield
     allow(Poe::Sniper::Logger).to receive(:instance).and_return(logger)
   end
@@ -57,7 +62,7 @@ RSpec.describe Poe::Sniper::PoeSniper do
         end
 
         it "raises meaningful error" do
-          expect(logger).to receive(:error).with(/File (.+) content format is incorrect or file cannot be accessed. Make sure that it is a valid JSON and is accessible. You can use online validators such as jsonformatter.curiousconcept.com. Common mistakes: the last entry should not have a comma at the end, config.ini should point to correct file./)
+          expect(logger).to receive(:error).with(/File (.+) content format is incorrect or file cannot be accessed. Make sure that it is a valid JSON and is accessible. You can use online validators such as jsonformatter.curiousconcept.com. Common mistakes: the last entry should not have a comma at the end, config.yaml should point to correct file./)
           described_class.new('config_path').run
         end
 
@@ -78,17 +83,20 @@ RSpec.describe Poe::Sniper::PoeSniper do
             allow(File).to receive(:open).and_return(double('file', read: File.open("#{RSPEC_ROOT}/resources/example_input_poe_trade_search.json").read))
           end
 
-          it "calls socket setup for each input entry" do
-            expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).with(URI.parse('http://poe.trade/search/seridonomosure/live'),
-                                                                                                       URI.parse('ws://live.poe.trade/seridonomosure'),
-                                                                                                       'Everything on Standard',
-                                                                                                       1.0,
-                                                                                                       1.0)
-            expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).with(URI.parse('http://poe.trade/search/gomobatonotaas/live'),
-                                                                                                       URI.parse('ws://live.poe.trade/gomobatonotaas'),
-                                                                                                       'Tabula on BSC',
-                                                                                                       1.0,
-                                                                                                       1.0)
+          it "creates sockets for each input entry" do
+            expect(Poe::Sniper::Poetrade::Socket).to receive(:new).with( URI.parse('http://poe.trade/search/seridonomosure/live'),
+              URI.parse('ws://live.poe.trade/seridonomosure'), 'Everything on Standard', kind_of(Poe::Sniper::Alerts), Poe::Sniper::Alert)
+            expect(Poe::Sniper::Poetrade::Socket).to receive(:new).with(URI.parse('http://poe.trade/search/gomobatonotaas/live'),
+              URI.parse('ws://live.poe.trade/gomobatonotaas'), 'Tabula on BSC', kind_of(Poe::Sniper::Alerts), Poe::Sniper::Alert)
+
+            described_instance.run
+          end
+
+          it "sets up sockets" do
+            socket = double("Socket")
+            allow(Poe::Sniper::Poetrade::Socket).to receive(:new).and_return(socket)
+            expect(socket).to receive(:setup).with(1.0, 1.0).twice
+
             described_instance.run
           end
         end
@@ -98,23 +106,19 @@ RSpec.describe Poe::Sniper::PoeSniper do
             allow(File).to receive(:open).and_return(double('file', read: File.open("#{RSPEC_ROOT}/resources/example_input_poe_trade_live_search.json").read))
           end
 
-          it "calls socket setup" do
-            expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).twice
+          it "sets up sockets" do
+            socket = double("Socket")
+            allow(Poe::Sniper::Poetrade::Socket).to receive(:new).and_return(socket)
+            expect(socket).to receive(:setup).with(1.0, 1.0).twice
+
             described_instance.run
           end
         end
       end
 
       context "when YAML input" do
-        let(:config_hash) do
-          {
-            'notification_seconds' => 1,
-            'iteration_wait_time_seconds' => 1,
-            'input_file_path' => 'input_file.yaml',
-            'api_url' => 'ws://live.poe.trade/',
-            'keepalive_timeframe_seconds' => 1,
-            'retry_timeframe_seconds' => 1
-          }
+        before do
+          config_hash["input_file_path"] = 'input_file.yaml'
         end
 
         context 'when invalid YAML' do
@@ -144,28 +148,35 @@ RSpec.describe Poe::Sniper::PoeSniper do
               allow(File).to receive(:read).and_return(File.read("#{RSPEC_ROOT}/resources/example_input_poe_trade_search.yaml"))
             end
 
-            it "calls socket setup for each input entry" do
-              expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).with(URI.parse('http://poe.trade/search/seridonomosure/live'),
-                                                                                                        URI.parse('ws://live.poe.trade/seridonomosure'),
-                                                                                                        'Everything on Standard',
-                                                                                                        1.0,
-                                                                                                        1.0)
-              expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).with(URI.parse('http://poe.trade/search/gomobatonotaas/live'),
-                                                                                                        URI.parse('ws://live.poe.trade/gomobatonotaas'),
-                                                                                                        'Tabula on BSC',
-                                                                                                        1.0,
-                                                                                                        1.0)
+            it "creates sockets for each input entry" do
+              expect(Poe::Sniper::Poetrade::Socket).to receive(:new).with(URI.parse('http://poe.trade/search/seridonomosure/live'),
+                URI.parse('ws://live.poe.trade/seridonomosure'), 'Everything on Standard', kind_of(Poe::Sniper::Alerts), Poe::Sniper::Alert)
+              expect(Poe::Sniper::Poetrade::Socket).to receive(:new).with(URI.parse('http://poe.trade/search/gomobatonotaas/live'),
+                URI.parse('ws://live.poe.trade/gomobatonotaas'), 'Tabula on BSC', kind_of(Poe::Sniper::Alerts), Poe::Sniper::Alert)
+
+              described_instance.run
+            end
+
+            it "sets up sockets" do
+              socket = double("Socket")
+              allow(Poe::Sniper::Poetrade::Socket).to receive(:new).and_return(socket)
+              expect(socket).to receive(:setup).with(1.0, 1.0).twice
+
               described_instance.run
             end
           end
 
+          # TODO: merge live and non-live test cases? or create shared test cases for different kinds of input (input format, URL format, etc)
           context "poe.trade live search URL" do
             before do
               allow(File).to receive(:read).and_return(File.read("#{RSPEC_ROOT}/resources/example_input_poe_trade_live_search.yaml"))
             end
 
-            it "calls socket setup" do
-              expect(described_instance.instance_variable_get(:@sockets)).to receive(:socket_setup).twice
+            it "sets up sockets" do
+              socket = double("Socket")
+              allow(Poe::Sniper::Poetrade::Socket).to receive(:new).and_return(socket)
+              expect(socket).to receive(:setup).with(1.0, 1.0).twice
+
               described_instance.run
             end
           end

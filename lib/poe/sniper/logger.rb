@@ -27,7 +27,7 @@ module Poe
         @logger.level = Poe::Sniper.ruby_logger::INFO
         @logger.formatter = proc do |severity, datetime, progname, msg|
           unless msg.empty?
-            "#{severity} -- #{msg}\n"
+            "#{datetime.strftime("%H:%M")} #{severity} -- #{msg}\n"
           else
             "\n"
           end

@@ -12,7 +12,7 @@ module Poe
           Analytics.instance.track(event: 'Exception occured', properties: AnalyticsData.exception(e)) if analytics
           Analytics.instance.flush if analytics
           Logger.instance.error("")
-          Logger.instance.error("Something went wrong here, someone must've Vaal'd the app! No worries though. You might find some information above on how to fix this. If that's not the case please check out the issues for the project (github.com/thisismydesign/poe-sniper/issues) and create a new one if needed. You can find some gibberish below which you should include because it's helpful for developers.")
+          Logger.instance.error("Something went wrong here, someone must've Vaal'd the app! No worries though. You might find some information above on how to fix this. If that's not the case please check out the issues for the project (github.com/5k-mirrors/poe-sniper/issues) and create a new one if needed. You can find some gibberish below which you should include because it's helpful for developers.")
           Logger.instance.error("\"If you are going to lose, at least lose with style!\" - Vagan, Weaponmaster")
           sorround_gibberish do
             Logger.instance.error(ruby_style_trace(e))
