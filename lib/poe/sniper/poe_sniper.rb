@@ -89,6 +89,7 @@ module Poe
         Analytics.instance.track(event: 'App started', properties: AnalyticsData.app_start(input_hash))
 
         input_hash.each do |provider, input|
+          next unless input
           if provider.eql?("poetrade")
             input.each do |search_url, name|
               @sockets << Poetrade::Socket.new(
