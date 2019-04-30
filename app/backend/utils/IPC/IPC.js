@@ -1,9 +1,9 @@
 import { ipcMain, Notification } from "electron";
 import WebSocket from "ws";
 import { ipcEvents } from "../../../frontend/resources/IPCEvents/IPCEvents";
-import WsConnectionsStorage from "../../WsConnectionsStorage/WsConnectionsStorage";
+import ActiveWsConnections from "../../ActiveWsConnections/ActiveWsConnections";
 
-const wsConnectionsStorage = new WsConnectionsStorage();
+const activeWsConnections = new ActiveWsConnections();
 
 const doNotify = ({ notificationMessage }) => {
   new Notification({
@@ -14,7 +14,7 @@ const doNotify = ({ notificationMessage }) => {
 
 const setupWebSocketListeners = (webSocket, wsConnectionDetails) => {
   webSocket.on("open", () => {
-    wsConnectionsStorage.add(webSocket, wsConnectionDetails.id);
+    activeWsConnections.add(webSocket, wsConnectionDetails.id);
   });
 
   webSocket.on("close", () => {
@@ -36,6 +36,12 @@ export const setupEvents = () => {
   });
 
   ipcMain.on(ipcEvents.DISCONNECT_FROM_WS, (_, wsConnectionDetails) => {
-    wsConnectionsStorage.remove(wsConnectionDetails.id);
+    const connection = activeWsConnections.getConnection(
+      wsConnectionDetails.id
+    );
+
+    connection.webSocket.close();
+
+    activeWsConnections.remove(connection.id);
   });
 };
