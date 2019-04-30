@@ -34,7 +34,7 @@ class WsTable extends Component {
         wsConnections
       });
 
-      ipcRenderer.send(ipcEvents.CONNECT_TO_WS, {
+      ipcRenderer.send(ipcEvents.WS_CONNECT, {
         ...wsConnectionDataWithUniqueId,
         POESESSID: localStorage.getItem("poeSessionId")
       });
@@ -78,7 +78,7 @@ class WsTable extends Component {
         wsConnections
       });
 
-      ipcRenderer.send(ipcEvents.DISCONNECT_FROM_WS, wsConnectionData);
+      ipcRenderer.send(ipcEvents.WS_DISCONNECT, wsConnectionData);
 
       resolve();
     });

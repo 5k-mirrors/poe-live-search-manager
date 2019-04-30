@@ -14,7 +14,7 @@ import { app, BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
-import * as IPC from "./utils/IPC/IPC";
+import * as IPC from "./IPC/IPC";
 
 export default class AppUpdater {
   constructor() {
