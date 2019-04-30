@@ -1,6 +1,6 @@
 import { ipcMain, Notification } from "electron";
 import WebSocket from "ws";
-import { ipcEvents } from "../../frontend/resources/IPCEvents/IPCEvents";
+import { ipcEvents } from "../../IPCEvents/IPCEvents";
 import ActiveWsConnections from "../ActiveWsConnections/ActiveWsConnections";
 
 const activeWsConnections = new ActiveWsConnections();
