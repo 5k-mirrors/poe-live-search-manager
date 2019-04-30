@@ -14,6 +14,7 @@ import { app, BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
+import * as IPC from "./utils/IPC/IPC";
 
 export default class AppUpdater {
   constructor() {
@@ -106,3 +107,5 @@ app.on("ready", async () => {
   // eslint-disable-next-line
   new AppUpdater();
 });
+
+IPC.setupEvents();
