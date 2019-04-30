@@ -1,0 +1,100 @@
+{
+  "result": [
+    {
+      "id": "e836f15d3fce78613883f3f755257bcb9950d0540f722726a011daabf7bc10d1",
+      "listing": {
+        "method": "psapi",
+        "indexed": "2019-04-27T21:19:42Z",
+        "stash": {
+          "name": "sale 2",
+          "x": 6,
+          "y": 8
+        },
+        "whisper": "@freeze_madafakka Hi, I would like to buy your Tabula Rasa Simple Robe listed for 15 chaos in Synthesis (stash tab \"sale 2\"; position: left 7, top 9)",
+        "account": {
+          "name": "lorenzzo30",
+          "lastCharacterName": "freeze_madafakka",
+          "online": {
+            "league": "Synthesis"
+          },
+          "language": "en_US"
+        },
+        "price": {
+          "type": "~price",
+          "amount": 15,
+          "currency": "chaos"
+        }
+      },
+      "item": {
+        "verified": true,
+        "w": 2,
+        "h": 3,
+        "ilvl": 76,
+        "icon": "https://web.poecdn.com/image/Art/2DItems/Armours/BodyArmours/TabulaRasa.png?scale=1&w=2&h=3&v=c169e1ab88583925693bb3a35cc49b6b",
+        "league": "Synthesis",
+        "sockets": [
+          {
+            "group": 0,
+            "attr": "G",
+            "sColour": "W"
+          },
+          {
+            "group": 0,
+            "attr": "G",
+            "sColour": "W"
+          },
+          {
+            "group": 0,
+            "attr": "G",
+            "sColour": "W"
+          },
+          {
+            "group": 0,
+            "attr": "G",
+            "sColour": "W"
+          },
+          {
+            "group": 0,
+            "attr": "G",
+            "sColour": "W"
+          },
+          {
+            "group": 0,
+            "attr": "G",
+            "sColour": "W"
+          }
+        ],
+        "name": "",
+        "typeLine": "Simple Robe",
+        "identified": false,
+        "note": "~price 15 chaos",
+        "properties": [
+          {
+            "name": "Energy Shield",
+            "values": [["12", 0]],
+            "displayMode": 0,
+            "type": 18
+          }
+        ],
+        "requirements": [
+          {
+            "name": "Intelligence",
+            "values": [["17", 0]],
+            "displayMode": 1
+          }
+        ],
+        "frameType": 3,
+        "category": {
+          "armour": ["chest"]
+        },
+        "extended": {
+          "es": 14,
+          "es_aug": true,
+          "mods": {},
+          "hashes": {},
+          "text": "UmFyaXR5OiBVbmlxdWUNClNpbXBsZSBSb2JlDQotLS0tLS0tLQ0KRW5lcmd5IFNoaWVsZDogMTINCi0tLS0tLS0tDQpSZXF1aXJlbWVudHM6DQpJbnRlbGxpZ2VuY2U6IDE3DQotLS0tLS0tLQ0KU29ja2V0czogVy1XLVctVy1XLVcgDQotLS0tLS0tLQ0KSXRlbSBMZXZlbDogNzYNCi0tLS0tLS0tDQpVbmlkZW50aWZpZWQNCi0tLS0tLS0tDQpOb3RlOiB+cHJpY2UgMTUgY2hhb3MNCg=="
+        }
+      }
+    }
+  ]
+}

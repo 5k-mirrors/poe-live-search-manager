@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
 import WsTableColumns from "../../resources/WsTableColumns/WsTableColumns";
+import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
+import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
+
+// https://github.com/electron/electron/issues/7300#issuecomment-274269710
+const electron = window.require("electron");
+const { ipcRenderer } = electron;
 
 class WsTable extends Component {
   constructor(props) {
@@ -11,31 +17,44 @@ class WsTable extends Component {
     };
   }
 
-  addItem(itemData) {
+  addNewConnection(wsConnectionData) {
     return new Promise(resolve => {
       const {
         wsConnections: [...wsConnections]
       } = this.state;
 
-      wsConnections.push(itemData);
+      const wsConnectionDataWithUniqueId = {
+        id: uniqueIdGenerator(),
+        ...wsConnectionData
+      };
+
+      wsConnections.push(wsConnectionDataWithUniqueId);
 
       this.setState({
         wsConnections
+      });
+
+      ipcRenderer.send(ipcEvents.WS_CONNECT, {
+        ...wsConnectionDataWithUniqueId,
+        POESESSID: localStorage.getItem("poeSessionId")
       });
 
       resolve();
     });
   }
 
-  updateItem(updatedItemData, previousItemData) {
+  updateConnection(updatedWsConnectionData, previousWsConnectionData) {
     return new Promise(resolve => {
       const {
         wsConnections: [...wsConnections]
       } = this.state;
 
-      const previousItemDataIndex = wsConnections.indexOf(previousItemData);
-      wsConnections[previousItemDataIndex] = {
-        ...updatedItemData
+      const previousWsConnectionIndex = wsConnections.indexOf(
+        previousWsConnectionData
+      );
+      wsConnections[previousWsConnectionIndex] = {
+        ...previousWsConnectionData,
+        ...updatedWsConnectionData
       };
 
       this.setState({
@@ -46,18 +65,20 @@ class WsTable extends Component {
     });
   }
 
-  deleteItem(itemData) {
+  deleteConnection(wsConnectionData) {
     return new Promise(resolve => {
       const {
         wsConnections: [...wsConnections]
       } = this.state;
 
-      const itemDataIndex = wsConnections.indexOf(itemData);
-      wsConnections.splice(itemDataIndex, 1);
+      const wsConnectionDataIndex = wsConnections.indexOf(wsConnectionData);
+      wsConnections.splice(wsConnectionDataIndex, 1);
 
       this.setState({
         wsConnections
       });
+
+      ipcRenderer.send(ipcEvents.WS_DISCONNECT, wsConnectionData);
 
       resolve();
     });
@@ -69,22 +90,29 @@ class WsTable extends Component {
     } = this.state;
 
     return (
-      <MaterialTable
-        title="Connected WebSockets"
-        columns={WsTableColumns}
-        data={wsConnections}
-        editable={{
-          onRowAdd: itemData => this.addItem(itemData),
-          onRowUpdate: (updatedItemData, previousItemData) =>
-            this.updateItem(updatedItemData, previousItemData),
-          onRowDelete: itemData => this.deleteItem(itemData)
-        }}
-        options={{
-          rowStyle: {
-            backgroundColor: "#EEE"
-          }
-        }}
-      />
+      <div>
+        <MaterialTable
+          title="Connected WebSockets"
+          columns={WsTableColumns}
+          data={wsConnections}
+          editable={{
+            onRowAdd: wsConnectionData =>
+              this.addNewConnection(wsConnectionData),
+            onRowUpdate: (updatedWsConnectionData, previousWsConnectionData) =>
+              this.updateConnection(
+                updatedWsConnectionData,
+                previousWsConnectionData
+              ),
+            onRowDelete: wsConnectionData =>
+              this.deleteConnection(wsConnectionData)
+          }}
+          options={{
+            rowStyle: {
+              backgroundColor: "#EEE"
+            }
+          }}
+        />
+      </div>
     );
   }
 }
