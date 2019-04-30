@@ -1,4 +1,4 @@
-class WebSocketConnectionsStorage {
+class WsConnectionsStorage {
   constructor() {
     this.activeWsConnections = [];
   }
@@ -25,4 +25,4 @@ class WebSocketConnectionsStorage {
   }
 }
 
-export default WebSocketConnectionsStorage;
+export default WsConnectionsStorage;

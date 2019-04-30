@@ -1,9 +1,9 @@
 import { ipcMain, Notification } from "electron";
 import WebSocket from "ws";
 import { ipcEvents } from "../../../frontend/resources/IPCEvents/IPCEvents";
-import WebSocketConnectionsStorage from "../../WebSocketConnectionsStorage/WebSocketConnectionsStorage";
+import WsConnectionsStorage from "../../WsConnectionsStorage/WsConnectionsStorage";
 
-const webSocketConnectionsStorage = new WebSocketConnectionsStorage();
+const wsConnectionsStorage = new WsConnectionsStorage();
 
 const doNotify = ({ notificationMessage }) => {
   new Notification({
@@ -12,13 +12,13 @@ const doNotify = ({ notificationMessage }) => {
   }).show();
 };
 
-const setupWebSocketEventListeners = (webSocket, wsConnectionParams) => {
+const setupWebSocketListeners = (webSocket, wsConnectionDetails) => {
   webSocket.on("open", () => {
-    webSocketConnectionsStorage.add(webSocket, wsConnectionParams.id);
+    wsConnectionsStorage.add(webSocket, wsConnectionDetails.id);
   });
 
   webSocket.on("close", () => {
-    // console.log("[CONNECTION HAS BEEN CLOSED]");
+    console.log("[CONNECTION HAS BEEN CLOSED]");
   });
 
   webSocket.on("message", message => {
@@ -29,13 +29,13 @@ const setupWebSocketEventListeners = (webSocket, wsConnectionParams) => {
 };
 
 export const setupEvents = () => {
-  ipcMain.on(ipcEvents.CONNECT_TO_WS, (_, wsConnectionParams) => {
-    const webSocket = new WebSocket(wsConnectionParams.URI);
+  ipcMain.on(ipcEvents.CONNECT_TO_WS, (_, wsConnectionDetails) => {
+    const webSocket = new WebSocket(wsConnectionDetails.URI);
 
-    setupWebSocketEventListeners(webSocket, wsConnectionParams);
+    setupWebSocketListeners(webSocket, wsConnectionDetails);
   });
 
-  ipcMain.on(ipcEvents.DISCONNECT_FROM_WS, (_, wsConnectionParams) => {
-    webSocketConnectionsStorage.remove(wsConnectionParams.id);
+  ipcMain.on(ipcEvents.DISCONNECT_FROM_WS, (_, wsConnectionDetails) => {
+    wsConnectionsStorage.remove(wsConnectionDetails.id);
   });
 };
