@@ -114,8 +114,7 @@ class Input extends Component {
             },
             rowStyle: {
               backgroundColor: "#EEE"
-            },
-            searchFieldStyle: {}
+            }
           }}
         />
       </div>
