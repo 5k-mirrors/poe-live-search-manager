@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
-import WsTableColumns from "../../resources/WsTableColumns/WsTableColumns";
-import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
-import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import WsTableColumns from "../../../resources/WsTableColumns/WsTableColumns";
+import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
+import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 
 // https://github.com/electron/electron/issues/7300#issuecomment-274269710
 const electron = window.require("electron");
 const { ipcRenderer } = electron;
 
-class WsTable extends Component {
+class Input extends Component {
   constructor(props) {
     super(props);
 
@@ -92,7 +92,7 @@ class WsTable extends Component {
     return (
       <div>
         <MaterialTable
-          title="Connected WebSockets"
+          title="Active connections"
           columns={WsTableColumns}
           data={wsConnections}
           editable={{
@@ -107,6 +107,11 @@ class WsTable extends Component {
               this.deleteConnection(wsConnectionData)
           }}
           options={{
+            headerStyle: {
+              backgroundColor: "#01579b",
+              color: "#FFF",
+              fontWeight: "bold"
+            },
             rowStyle: {
               backgroundColor: "#EEE"
             }
@@ -117,4 +122,4 @@ class WsTable extends Component {
   }
 }
 
-export default WsTable;
+export default Input;
