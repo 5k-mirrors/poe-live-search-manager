@@ -92,7 +92,7 @@ class InputScreen extends Component {
     return (
       <div>
         <MaterialTable
-          title="Connected WebSockets"
+          title="Active connections"
           columns={WsTableColumns}
           data={wsConnections}
           editable={{
@@ -107,9 +107,15 @@ class InputScreen extends Component {
               this.deleteConnection(wsConnectionData)
           }}
           options={{
+            headerStyle: {
+              backgroundColor: "#01579b",
+              color: "#FFF",
+              fontWeight: "bold"
+            },
             rowStyle: {
               backgroundColor: "#EEE"
-            }
+            },
+            searchFieldStyle: {}
           }}
         />
       </div>
