@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
-import WsTableColumns from "../../resources/WsTableColumns/WsTableColumns";
-import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
-import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import WsTableColumns from "../../../resources/WsTableColumns/WsTableColumns";
+import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
+import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 
 // https://github.com/electron/electron/issues/7300#issuecomment-274269710
 const electron = window.require("electron");
 const { ipcRenderer } = electron;
 
-class InputScreen extends Component {
+class Input extends Component {
   constructor(props) {
     super(props);
 
@@ -123,4 +123,4 @@ class InputScreen extends Component {
   }
 }
 
-export default InputScreen;
+export default Input;
