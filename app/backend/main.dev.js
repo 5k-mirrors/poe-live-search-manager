@@ -71,8 +71,7 @@ app.on("ready", async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 728,
-    title: "WebSockets"
+    height: 728
   });
 
   mainWindow.loadURL(`file://${process.cwd()}/app/app.html`);
@@ -89,11 +88,6 @@ app.on("ready", async () => {
       mainWindow.show();
       mainWindow.focus();
     }
-  });
-
-  // https://github.com/electron/electron/issues/1594#issuecomment-419741626
-  mainWindow.on("page-title-updated", evt => {
-    evt.preventDefault();
   });
 
   mainWindow.on("closed", () => {
