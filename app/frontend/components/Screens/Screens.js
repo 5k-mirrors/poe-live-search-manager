@@ -8,7 +8,7 @@ const screens = () => (
   <Switch>
     <Route path="/input" component={Input} />
     <Route path="/trade" component={Trade} />
-    <Route path="/" component={Account} />
+    <Route path="/account" component={Account} />
   </Switch>
 );
 

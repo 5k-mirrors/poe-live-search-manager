@@ -18,6 +18,7 @@ const navigationBar = () => {
       <StyledItemsList>
         {routes.map(route => (
           <NavigationBarItem
+            key={route.displayName}
             displayName={route.displayName}
             routePath={route.routePath}
           />
