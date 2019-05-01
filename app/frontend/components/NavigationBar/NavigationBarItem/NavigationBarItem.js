@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Item } from "./NavigationBarItem.style";
 
 const navigationBarItem = ({ displayName, routePath }) => {
@@ -10,7 +10,7 @@ const navigationBarItem = ({ displayName, routePath }) => {
 
   return (
     <StyledItem>
-      <Link to={routePath}>{displayName}</Link>
+      <NavLink to={routePath}>{displayName}</NavLink>
     </StyledItem>
   );
 };
