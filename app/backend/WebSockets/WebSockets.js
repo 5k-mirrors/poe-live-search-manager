@@ -10,7 +10,7 @@ class WebSockets {
     });
   }
 
-  getWebSocket(webSocketId) {
+  getWebSocketById(webSocketId) {
     return this.wsStorage.find(webSocket => webSocket.id === webSocketId);
   }
 

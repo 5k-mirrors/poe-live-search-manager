@@ -14,7 +14,8 @@ import { app, BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
-import * as IPC from "./IPC/IPC";
+import setupIPCEvents from "./SetupIPCEvents/SetupIPCEvents";
+import * as WebSocketActions from "./WebSockets/Actions/Actions";
 
 export default class AppUpdater {
   constructor() {
@@ -87,6 +88,9 @@ app.on("ready", async () => {
     } else {
       mainWindow.show();
       mainWindow.focus();
+
+      setupIPCEvents();
+      WebSocketActions.reconnectToWebSockets();
     }
   });
 
@@ -101,5 +105,3 @@ app.on("ready", async () => {
   // eslint-disable-next-line
   new AppUpdater();
 });
-
-IPC.setupEvents();
