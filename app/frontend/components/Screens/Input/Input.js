@@ -16,7 +16,7 @@ class Input extends Component {
     this.store = new Store();
 
     this.state = {
-      wsConnections: this.store.get("wsConnectionsDetails") || []
+      wsConnections: this.store.get("wsConnections") || []
     };
   }
 
@@ -37,7 +37,7 @@ class Input extends Component {
         wsConnections
       });
 
-      this.store.set("wsConnectionsDetails", wsConnections);
+      this.store.set("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_CONNECT, {
         ...wsConnectionDataWithUniqueId
@@ -65,7 +65,7 @@ class Input extends Component {
         wsConnections
       });
 
-      this.store.set("wsConnectionsDetails", wsConnections);
+      this.store.set("wsConnections", wsConnections);
 
       resolve();
     });
@@ -84,7 +84,7 @@ class Input extends Component {
         wsConnections
       });
 
-      this.store.set("wsConnectionsDetails", wsConnections);
+      this.store.set("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_DISCONNECT, wsConnectionData);
 

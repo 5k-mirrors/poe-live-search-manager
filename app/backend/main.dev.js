@@ -94,9 +94,9 @@ app.on("ready", async () => {
 
       setupIPCEvents();
 
-      const wsConnectionsDetails = store.get("wsConnectionsDetails");
+      const wsConnections = store.get("wsConnections");
 
-      WebSocketActions.reconnectToWebSockets(wsConnectionsDetails);
+      WebSocketActions.reconnectToWebSockets(wsConnections);
     }
   });
 

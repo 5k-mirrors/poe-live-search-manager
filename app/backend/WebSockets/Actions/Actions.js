@@ -5,27 +5,27 @@ import setupWebSocketListeners from "../../utils/SetupWebSocketListeners/SetupWe
 
 const webSockets = new WebSockets();
 
-export const connectToNewWebSocket = wsConnectionDetails => {
-  const newWebSocket = new WebSocket(wsConnectionDetails.URI);
+export const connectToNewWebSocket = connectionDetails => {
+  const newWebSocket = new WebSocket(connectionDetails.URI);
 
   newWebSocket.on("open", () => {
-    webSockets.addNewWebSocket(newWebSocket, wsConnectionDetails.id);
+    webSockets.addNewWebSocket(newWebSocket, connectionDetails.id);
 
     setupWebSocketListeners(newWebSocket);
   });
 };
 
-export const disconnectFromWebSocket = wsConnectionDetails => {
-  const ws = webSockets.getWebSocketById(wsConnectionDetails.id);
+export const disconnectFromWebSocket = connectionDetails => {
+  const ws = webSockets.getWebSocketById(connectionDetails.id);
 
   ws.socket.close();
 
   webSockets.removeWebSocket(ws.id);
 };
 
-export const reconnectToWebSockets = wsConnectionsDetails => {
-  if (JavaScriptUtils.isDefined(wsConnectionsDetails)) {
-    wsConnectionsDetails.forEach(connectionDetails => {
+export const reconnectToWebSockets = wsConnections => {
+  if (JavaScriptUtils.isDefined(wsConnections)) {
+    wsConnections.forEach(connectionDetails => {
       connectToNewWebSocket(connectionDetails);
     });
   }
