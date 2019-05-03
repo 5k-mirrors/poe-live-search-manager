@@ -3,7 +3,7 @@ import MaterialTable from "material-table";
 import Store from "electron-store";
 import WsTableColumns from "../../../resources/WsTableColumns/WsTableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
-import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 
 // https://github.com/electron/electron/issues/7300#issuecomment-274269710
 const electron = window.require("electron");

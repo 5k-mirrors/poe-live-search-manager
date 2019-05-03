@@ -157,8 +157,7 @@
       "^.+\\.jsx?$": "babel-jest"
     },
     "setupFiles": [
-      "./internals/scripts/CheckBuiltsExist.js",
-      "<rootDir>/app/utils/SetupTests/SetupTests.js"
+      "./internals/scripts/CheckBuiltsExist.js"
     ]
   },
   "devDependencies": {
