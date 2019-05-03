@@ -6,7 +6,7 @@ class WebSockets {
   addNewWebSocket(webSocket, webSocketId) {
     this.wsStorage.push({
       id: webSocketId,
-      WS: webSocket
+      socket: webSocket
     });
   }
 

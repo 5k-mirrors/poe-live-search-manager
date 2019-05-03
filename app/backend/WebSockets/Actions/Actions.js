@@ -18,11 +18,11 @@ export const connectToNewWebSocket = wsConnectionDetails => {
 };
 
 export const disconnectFromWebSocket = wsConnectionDetails => {
-  const connection = webSockets.getWebSocketById(wsConnectionDetails.id);
+  const ws = webSockets.getWebSocketById(wsConnectionDetails.id);
 
-  connection.WS.close();
+  ws.socket.close();
 
-  webSockets.removeWebSocket(connection.id);
+  webSockets.removeWebSocket(ws.id);
 };
 
 export const reconnectToWebSockets = () => {
