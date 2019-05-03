@@ -54,15 +54,15 @@
       "git add"
     ]
   },
-  "main": "./app/backend/main.prod.js",
+  "main": "./app/main.prod.js",
   "build": {
     "productName": "ElectronReact",
     "appId": "org.develar.ElectronReact",
     "files": [
       "app/dist/",
       "app/app.html",
-      "app/backend/main.prod.js",
-      "app/backend/main.prod.js.map",
+      "app/main.prod.js",
+      "app/main.prod.js.map",
       "package.json"
     ],
     "dmg": {
