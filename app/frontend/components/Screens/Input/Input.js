@@ -106,11 +106,6 @@ class Input extends Component {
           editable={{
             onRowAdd: wsConnectionData =>
               this.addNewConnection(wsConnectionData),
-            onRowUpdate: (updatedWsConnectionData, previousWsConnectionData) =>
-              this.updateConnection(
-                updatedWsConnectionData,
-                previousWsConnectionData
-              ),
             onRowDelete: wsConnectionData =>
               this.deleteConnection(wsConnectionData)
           }}
