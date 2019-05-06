@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
+import Store from "electron-store";
 import WsTableColumns from "../../../resources/WsTableColumns/WsTableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
@@ -12,8 +13,10 @@ class Input extends Component {
   constructor(props) {
     super(props);
 
+    this.store = new Store();
+
     this.state = {
-      wsConnections: []
+      wsConnections: this.store.get("wsConnections") || []
     };
   }
 
@@ -34,9 +37,10 @@ class Input extends Component {
         wsConnections
       });
 
+      this.store.set("wsConnections", wsConnections);
+
       ipcRenderer.send(ipcEvents.WS_CONNECT, {
-        ...wsConnectionDataWithUniqueId,
-        POESESSID: localStorage.getItem("poeSessionId")
+        ...wsConnectionDataWithUniqueId
       });
 
       resolve();
@@ -61,6 +65,8 @@ class Input extends Component {
         wsConnections
       });
 
+      this.store.set("wsConnections", wsConnections);
+
       resolve();
     });
   }
@@ -77,6 +83,8 @@ class Input extends Component {
       this.setState({
         wsConnections
       });
+
+      this.store.set("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_DISCONNECT, wsConnectionData);
 
@@ -98,11 +106,6 @@ class Input extends Component {
           editable={{
             onRowAdd: wsConnectionData =>
               this.addNewConnection(wsConnectionData),
-            onRowUpdate: (updatedWsConnectionData, previousWsConnectionData) =>
-              this.updateConnection(
-                updatedWsConnectionData,
-                previousWsConnectionData
-              ),
             onRowDelete: wsConnectionData =>
               this.deleteConnection(wsConnectionData)
           }}
