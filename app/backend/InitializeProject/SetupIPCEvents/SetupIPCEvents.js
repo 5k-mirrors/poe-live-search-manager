@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import * as WebSocketActions from "../WebSockets/Actions/Actions";
+import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
+import * as WebSocketActions from "../../WebSockets/Actions/Actions";
 
 const setupIPCEvents = () => {
   ipcMain.on(ipcEvents.WS_CONNECT, (_, connectionDetails) => {

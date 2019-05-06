@@ -3,20 +3,20 @@ class WebSockets {
     this.wsStorage = [];
   }
 
-  addNewWebSocket(webSocket, webSocketId) {
+  add(webSocket, id) {
     this.wsStorage.push({
-      id: webSocketId,
+      id,
       socket: webSocket
     });
   }
 
-  getWebSocketById(webSocketId) {
-    return this.wsStorage.find(webSocket => webSocket.id === webSocketId);
+  get(id) {
+    return this.wsStorage.find(webSocket => webSocket.id === id);
   }
 
-  removeWebSocket(webSocketId) {
+  remove(id) {
     const webSocketIndex = this.wsStorage.findIndex(
-      webSocket => webSocket.id === webSocketId
+      webSocket => webSocket.id === id
     );
 
     this.wsStorage.splice(webSocketIndex, 1);

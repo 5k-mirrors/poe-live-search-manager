@@ -12,13 +12,9 @@
  */
 import { app, BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
-import Store from "electron-store";
 import log from "electron-log";
 import MenuBuilder from "./menu";
-import setupIPCEvents from "./SetupIPCEvents/SetupIPCEvents";
-import * as WebSocketActions from "./WebSockets/Actions/Actions";
-
-const store = new Store();
+import initializeProject from "./InitializeProject/InitializeProject";
 
 export default class AppUpdater {
   constructor() {
@@ -92,11 +88,7 @@ app.on("ready", async () => {
       mainWindow.show();
       mainWindow.focus();
 
-      setupIPCEvents();
-
-      const wsConnections = store.get("wsConnections");
-
-      WebSocketActions.reconnectToWebSockets(wsConnections);
+      initializeProject();
     }
   });
 
