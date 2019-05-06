@@ -8,16 +8,16 @@ export const connectToNewWebSocket = connectionDetails => {
   const newWebSocket = new WebSocket(connectionDetails.uri);
 
   newWebSocket.on("open", () => {
-    webSockets.addNewWebSocket(newWebSocket, connectionDetails.id);
+    webSockets.add(newWebSocket, connectionDetails.id);
 
     setupWebSocketListeners(newWebSocket);
   });
 };
 
 export const disconnectFromWebSocket = connectionDetails => {
-  const ws = webSockets.getWebSocketById(connectionDetails.id);
+  const ws = webSockets.get(connectionDetails.id);
 
   ws.socket.close();
 
-  webSockets.removeWebSocket(ws.id);
+  webSockets.remove(ws.id);
 };
