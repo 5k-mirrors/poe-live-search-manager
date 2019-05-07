@@ -1,4 +1,5 @@
-import { BrowserWindow, Notification } from "electron";
+import { Notification } from "electron";
+import getCurrentWindow from "../GetCurrentWindow/GetCurrentWindow";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
 
 const doNotify = ({ notificationMessage }) => {
@@ -6,13 +7,6 @@ const doNotify = ({ notificationMessage }) => {
     title: "PoE Sniper Pro",
     body: notificationMessage
   }).show();
-};
-
-// TODO: move it into a separated utils folder.
-const getCurrentWindow = () => {
-  const allWindows = BrowserWindow.getAllWindows();
-
-  return allWindows[0];
 };
 
 const setupWebSocketListeners = webSocket => {
