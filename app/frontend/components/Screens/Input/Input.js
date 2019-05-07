@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
 import Store from "electron-store";
-import WsTableColumns from "../../../resources/WsTableColumns/WsTableColumns";
+import * as MaterialTableColumns from "../../../resources/MaterialTableColumns/MaterialTableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 
@@ -98,29 +98,26 @@ class Input extends Component {
     } = this.state;
 
     return (
-      <div>
-        <MaterialTable
-          title="Active connections"
-          columns={WsTableColumns}
-          data={wsConnections}
-          editable={{
-            onRowAdd: wsConnectionData =>
-              this.addNewConnection(wsConnectionData),
-            onRowDelete: wsConnectionData =>
-              this.deleteConnection(wsConnectionData)
-          }}
-          options={{
-            headerStyle: {
-              backgroundColor: "#01579b",
-              color: "#FFF",
-              fontWeight: "bold"
-            },
-            rowStyle: {
-              backgroundColor: "#EEE"
-            }
-          }}
-        />
-      </div>
+      <MaterialTable
+        title="Active connections"
+        columns={MaterialTableColumns.inputScreen}
+        data={wsConnections}
+        editable={{
+          onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),
+          onRowDelete: wsConnectionData =>
+            this.deleteConnection(wsConnectionData)
+        }}
+        options={{
+          headerStyle: {
+            backgroundColor: "#01579b",
+            color: "#FFF",
+            fontWeight: "bold"
+          },
+          rowStyle: {
+            backgroundColor: "#EEE"
+          }
+        }}
+      />
     );
   }
 }
