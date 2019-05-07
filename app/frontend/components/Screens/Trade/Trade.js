@@ -13,7 +13,7 @@ class Trade extends Component {
     super(props);
 
     this.state = {
-      messages: StoreUtils.getItem("itemMessages")
+      messages: StoreUtils.getItem("messages")
     };
 
     this.addItemMessage = this.addItemMessage.bind(this);
@@ -28,15 +28,13 @@ class Trade extends Component {
   }
 
   addItemMessage(_, itemData) {
-    const {
-      messages: [...messages]
-    } = this.state;
+    const { messages } = this.state;
 
     const parsedItemData = JSON.parse(JSON.parse(itemData));
 
     messages.unshift(parsedItemData);
 
-    StoreUtils.setItem("itemMessages", messages);
+    StoreUtils.setItem("messages", messages);
 
     this.setState({
       messages
