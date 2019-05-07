@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
+import * as StoreUtils from "../../../../utils/StoreUtils/StoreUtils";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 
@@ -12,7 +13,7 @@ class Trade extends Component {
     super(props);
 
     this.state = {
-      messages: []
+      messages: StoreUtils.getItem("itemMessages")
     };
 
     this.addItemMessage = this.addItemMessage.bind(this);
@@ -34,6 +35,8 @@ class Trade extends Component {
     const parsedItemData = JSON.parse(JSON.parse(itemData));
 
     messages.unshift(parsedItemData);
+
+    StoreUtils.setItem("itemMessages", messages);
 
     this.setState({
       messages

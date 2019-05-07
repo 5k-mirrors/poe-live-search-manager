@@ -1,16 +1,14 @@
-import Store from "electron-store";
 import setupIpcEvents from "./SetupIPCEvents/SetupIPCEvents";
 import * as WebSocketActions from "../WebSockets/Actions/Actions";
-import * as JavaScriptUtils from "../utils/JavaScriptUtils/JavaScriptUtils";
-
-const store = new Store();
+import * as StoreUtils from "../../utils/StoreUtils/StoreUtils";
+import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const initializeProject = () => {
   setupIpcEvents();
 
-  const storedWsConnections = store.get("wsConnections");
+  const storedWsConnections = StoreUtils.getItem("wsConnections");
 
-  if (JavaScriptUtils.isDefined(storedWsConnections)) {
+  if (JavaScriptUtils.arrayIsNotEmpty(storedWsConnections)) {
     storedWsConnections.forEach(connectionDetails => {
       WebSocketActions.connectToNewWebSocket(connectionDetails);
     });

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
-import Store from "electron-store";
 import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import * as StoreUtils from "../../../../utils/StoreUtils/StoreUtils";
 
 // https://github.com/electron/electron/issues/7300#issuecomment-274269710
 const electron = window.require("electron");
@@ -13,10 +13,8 @@ class Input extends Component {
   constructor(props) {
     super(props);
 
-    this.store = new Store();
-
     this.state = {
-      wsConnections: this.store.get("wsConnections") || []
+      wsConnections: StoreUtils.getItem("wsConnections")
     };
   }
 
@@ -37,7 +35,7 @@ class Input extends Component {
         wsConnections
       });
 
-      this.store.set("wsConnections", wsConnections);
+      StoreUtils.setItem("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_CONNECT, {
         ...wsConnectionDataWithUniqueId
@@ -65,7 +63,7 @@ class Input extends Component {
         wsConnections
       });
 
-      this.store.set("wsConnections", wsConnections);
+      StoreUtils.setItem("wsConnections", wsConnections);
 
       resolve();
     });
@@ -84,7 +82,7 @@ class Input extends Component {
         wsConnections
       });
 
-      this.store.set("wsConnections", wsConnections);
+      StoreUtils.setItem("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_DISCONNECT, wsConnectionData);
 
