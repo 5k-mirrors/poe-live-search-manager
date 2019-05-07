@@ -1,7 +1,7 @@
 const wsTableColumns = [
   { field: "id", hidden: true },
   { title: "Item name", field: "name" },
-  { title: "URI", field: "URI" }
+  { title: "URI", field: "uri" }
 ];
 
 export default wsTableColumns;
