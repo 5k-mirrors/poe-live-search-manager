@@ -5,6 +5,6 @@ export const inputScreen = [
 ];
 
 export const tradeScreen = [
-  { title: "Item name", field: "itemName" },
-  { title: "Price", field: "price" }
+  { title: "Name", field: "itemName" },
+  { title: "Price", field: "itemPrice" }
 ];

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
 import MaterialTable from "material-table";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import * as TableColumns from "../../../resources/TableColumns/TableColumns";
@@ -7,36 +7,51 @@ import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 const electron = window.require("electron");
 const { ipcRenderer } = electron;
 
-const trade = () => {
-  const [messages, setMessages] = useState([]);
+class Trade extends Component {
+  constructor(props) {
+    super(props);
 
-  ipcRenderer.on(ipcEvents.ON_MESSAGE, (_, itemData) => {
-    const parsedData = JSON.parse(itemData);
+    this.state = {
+      messages: []
+    };
 
-    const currentMessages = [...messages];
+    this.addItemMessage = this.addItemMessage.bind(this);
+  }
 
-    currentMessages.push(parsedData);
+  componentDidMount() {
+    ipcRenderer.on(ipcEvents.ON_MESSAGE, this.addItemMessage);
+  }
 
-    setMessages(currentMessages);
-  });
+  componentWillUnmount() {
+    ipcRenderer.removeListener(ipcEvents.ON_MESSAGE, this.addItemMessage);
+  }
 
-  return (
-    <MaterialTable
-      title="Active connections"
-      columns={TableColumns.tradeScreen}
-      data={messages}
-      options={{
-        headerStyle: {
-          backgroundColor: "#01579b",
-          color: "#FFF",
-          fontWeight: "bold"
-        },
-        rowStyle: {
-          backgroundColor: "#EEE"
-        }
-      }}
-    />
-  );
-};
+  addItemMessage(_, itemData) {
+    const {
+      messages: [...messages]
+    } = this.state;
 
-export default trade;
+    const parsedItemData = JSON.parse(JSON.parse(itemData));
+
+    messages.unshift(parsedItemData);
+
+    this.setState({
+      messages
+    });
+  }
+
+  render() {
+    const {
+      messages: [...messages]
+    } = this.state;
+    return (
+      <MaterialTable
+        title="Active connections"
+        columns={TableColumns.tradeScreen}
+        data={messages}
+      />
+    );
+  }
+}
+
+export default Trade;
