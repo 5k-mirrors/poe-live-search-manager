@@ -80,6 +80,9 @@ app.on("ready", async () => {
     mainWindow.loadURL(`file://${__dirname}/app.html`);
   }
 
+  // https://stackoverflow.com/a/52195400/9599137 -> in order to make the notification messages work on Windows.
+  app.setAppUserModelId("org.develar.ElectronReact");
+
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on("did-finish-load", () => {
