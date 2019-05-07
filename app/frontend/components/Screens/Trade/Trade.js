@@ -10,8 +10,14 @@ const { ipcRenderer } = electron;
 const trade = () => {
   const [messages, setMessages] = useState([]);
 
-  ipcRenderer.on(ipcEvents.ON_MESSAGE, (_, msg) => {
-    console.log(`[Message received.] -> ${msg}`);
+  ipcRenderer.on(ipcEvents.ON_MESSAGE, (_, itemData) => {
+    const parsedData = JSON.parse(itemData);
+
+    const currentMessages = [...messages];
+
+    currentMessages.push(parsedData);
+
+    setMessages(currentMessages);
   });
 
   return (

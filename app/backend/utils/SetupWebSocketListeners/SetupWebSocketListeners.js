@@ -8,6 +8,7 @@ const doNotify = ({ notificationMessage }) => {
   }).show();
 };
 
+// TODO: move it into a separated utils folder.
 const getCurrentWindow = () => {
   const allWindows = BrowserWindow.getAllWindows();
 
@@ -22,7 +23,7 @@ const setupWebSocketListeners = webSocket => {
 
     const currentWindow = getCurrentWindow();
 
-    currentWindow.webContents.send(ipcEvents.ON_MESSAGE, "test");
+    currentWindow.webContents.send(ipcEvents.ON_MESSAGE, message);
   });
 };
 
