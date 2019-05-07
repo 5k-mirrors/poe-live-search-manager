@@ -1,14 +1,14 @@
 import setupIpcEvents from "./SetupIPCEvents/SetupIPCEvents";
 import * as WebSocketActions from "../WebSockets/Actions/Actions";
-import * as StoreUtils from "../../utils/StoreUtils/StoreUtils";
 import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import { store } from "../../resources/Store/Store";
 
 const initializeProject = () => {
   setupIpcEvents();
 
-  const storedWsConnections = StoreUtils.getItem("wsConnections");
+  const storedWsConnections = store.get("wsConnections");
 
-  if (JavaScriptUtils.arrayIsNotEmpty(storedWsConnections)) {
+  if (JavaScriptUtils.isDefined(storedWsConnections)) {
     storedWsConnections.forEach(connectionDetails => {
       WebSocketActions.connectToNewWebSocket(connectionDetails);
     });
