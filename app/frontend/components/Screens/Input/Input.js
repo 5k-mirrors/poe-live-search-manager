@@ -9,14 +9,14 @@ import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGene
 const electron = window.require("electron");
 const { ipcRenderer } = electron;
 
-const store = new Store();
-
 class Input extends Component {
   constructor(props) {
     super(props);
 
+    this.store = new Store();
+
     this.state = {
-      wsConnections: store.get("wsConnections") || []
+      wsConnections: this.store.get("wsConnections") || []
     };
   }
 
@@ -37,7 +37,7 @@ class Input extends Component {
         wsConnections
       });
 
-      store.set("wsConnections", wsConnections);
+      this.store.set("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_CONNECT, {
         ...wsConnectionDataWithUniqueId
@@ -65,7 +65,7 @@ class Input extends Component {
         wsConnections
       });
 
-      store.set("wsConnections", wsConnections);
+      this.store.set("wsConnections", wsConnections);
 
       resolve();
     });
@@ -84,7 +84,7 @@ class Input extends Component {
         wsConnections
       });
 
-      store.set("wsConnections", wsConnections);
+      this.store.set("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_DISCONNECT, wsConnectionData);
 

@@ -3,14 +3,14 @@ import MaterialTable from "material-table";
 import Store from "electron-store";
 import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 
-const store = new Store();
-
 class Trade extends Component {
   constructor(props) {
     super(props);
 
+    this.store = new Store();
+
     this.state = {
-      messages: store.get("messages") || []
+      messages: this.store.get("messages") || []
     };
 
     this.deleteMessage = this.deleteMessage.bind(this);
@@ -29,7 +29,7 @@ class Trade extends Component {
         messages
       });
 
-      store.set("messages", messages);
+      this.store.set("messages", messages);
 
       resolve();
     });
