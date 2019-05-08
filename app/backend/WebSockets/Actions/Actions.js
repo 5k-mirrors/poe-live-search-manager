@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 import WebSockets from "../WebSockets";
-import setupWebSocketListeners from "../../SetupWebSocketListeners/SetupWebSocketListeners";
+import * as Setup from "../../Setup/Setup";
 
 const webSockets = new WebSockets();
 
@@ -10,7 +10,7 @@ export const connectToNewWebSocket = connectionDetails => {
   newWebSocket.on("open", () => {
     webSockets.add(newWebSocket, connectionDetails.id);
 
-    setupWebSocketListeners(newWebSocket);
+    Setup.webSocketListeners(newWebSocket);
   });
 };
 
