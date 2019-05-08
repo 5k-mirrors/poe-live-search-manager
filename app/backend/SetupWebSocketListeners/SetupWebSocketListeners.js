@@ -1,5 +1,5 @@
 import { Notification } from "electron";
-import getCurrentWindow from "../utils/GetCurrentWindow/GetCurrentWindow";
+import getMainWindow from "../utils/GetMainWindow/GetMainWindow";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 
 const doNotify = ({ notificationMessage }) => {
@@ -15,9 +15,9 @@ const setupWebSocketListeners = webSocket => {
       notificationMessage: message
     });
 
-    const currentWindow = getCurrentWindow();
+    const mainWindow = getMainWindow();
 
-    currentWindow.webContents.send(ipcEvents.MESSAGE, message);
+    mainWindow.webContents.send(ipcEvents.MESSAGE, message);
   });
 };
 
