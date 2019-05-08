@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 import WebSockets from "../WebSockets";
-import setupWebSocketListeners from "../../utils/SetupWebSocketListeners/SetupWebSocketListeners";
+import setupWebSocketListeners from "../../SetupWebSocketListeners/SetupWebSocketListeners";
 
 const webSockets = new WebSockets();
 
