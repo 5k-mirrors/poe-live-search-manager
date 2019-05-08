@@ -81,7 +81,7 @@ app.on("ready", async () => {
   }
 
   // https://stackoverflow.com/a/52195400/9599137 -> in order to make the notification messages work on Windows.
-  app.setAppUserModelId("org.develar.ElectronReact");
+  app.setAppUserModelId("com.5k-mirrors.poe-sniper");
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event

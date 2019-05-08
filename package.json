@@ -56,8 +56,8 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "PoE Sniper",
+    "appId": "com.5k-mirrors.poe-sniper",
     "files": [
       "app/dist/",
       "app/app.html",
