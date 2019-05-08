@@ -9,14 +9,14 @@ import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGene
 const electron = window.require("electron");
 const { ipcRenderer } = electron;
 
+const store = new Store();
+
 class Input extends Component {
   constructor(props) {
     super(props);
 
-    this.store = new Store();
-
     this.state = {
-      wsConnections: this.store.get("wsConnections") || []
+      wsConnections: store.get("wsConnections") || []
     };
   }
 
@@ -37,7 +37,7 @@ class Input extends Component {
         wsConnections
       });
 
-      this.store.set("wsConnections", wsConnections);
+      store.set("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_CONNECT, {
         ...wsConnectionDataWithUniqueId
@@ -65,7 +65,7 @@ class Input extends Component {
         wsConnections
       });
 
-      this.store.set("wsConnections", wsConnections);
+      store.set("wsConnections", wsConnections);
 
       resolve();
     });
@@ -84,7 +84,7 @@ class Input extends Component {
         wsConnections
       });
 
-      this.store.set("wsConnections", wsConnections);
+      store.set("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_DISCONNECT, wsConnectionData);
 
@@ -98,29 +98,26 @@ class Input extends Component {
     } = this.state;
 
     return (
-      <div>
-        <MaterialTable
-          title="Active connections"
-          columns={WsTableColumns}
-          data={wsConnections}
-          editable={{
-            onRowAdd: wsConnectionData =>
-              this.addNewConnection(wsConnectionData),
-            onRowDelete: wsConnectionData =>
-              this.deleteConnection(wsConnectionData)
-          }}
-          options={{
-            headerStyle: {
-              backgroundColor: "#01579b",
-              color: "#FFF",
-              fontWeight: "bold"
-            },
-            rowStyle: {
-              backgroundColor: "#EEE"
-            }
-          }}
-        />
-      </div>
+      <MaterialTable
+        title="Active connections"
+        columns={WsTableColumns}
+        data={wsConnections}
+        editable={{
+          onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),
+          onRowDelete: wsConnectionData =>
+            this.deleteConnection(wsConnectionData)
+        }}
+        options={{
+          headerStyle: {
+            backgroundColor: "#01579b",
+            color: "#FFF",
+            fontWeight: "bold"
+          },
+          rowStyle: {
+            backgroundColor: "#EEE"
+          }
+        }}
+      />
     );
   }
 }
