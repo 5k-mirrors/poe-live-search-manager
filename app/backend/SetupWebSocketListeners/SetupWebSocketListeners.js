@@ -1,6 +1,6 @@
 import { Notification } from "electron";
-import getCurrentWindow from "../GetCurrentWindow/GetCurrentWindow";
-import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
+import getCurrentWindow from "../utils/GetCurrentWindow/GetCurrentWindow";
+import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 
 const doNotify = ({ notificationMessage }) => {
   new Notification({
