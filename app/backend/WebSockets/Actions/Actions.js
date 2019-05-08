@@ -1,6 +1,8 @@
 import { Notification } from "electron";
 import WebSocket from "ws";
 import WebSockets from "../WebSockets";
+import getMainWindow from "../../utils/GetMainWindow/GetMainWindow";
+import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
 
 const webSockets = new WebSockets();
 
@@ -16,6 +18,10 @@ const setupWebSocketListeners = webSocket => {
     doNotify({
       notificationMessage: message
     });
+
+    const mainWindow = getMainWindow();
+
+    mainWindow.webContents.send(ipcEvents.MESSAGE, message);
   });
 };
 
