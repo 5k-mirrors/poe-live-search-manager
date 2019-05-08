@@ -8,26 +8,29 @@ import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 const electron = window.require("electron");
 const { ipcRenderer } = electron;
 
+// TODO: messages can only be seen whenever the current path is `/trade`.
 class Trade extends Component {
   constructor(props) {
     super(props);
+
+    // store.clear();
 
     this.state = {
       messages: store.get("messages") || []
     };
 
-    this.addItemMessage = this.addItemMessage.bind(this);
+    this.storeMessage = this.storeMessage.bind(this);
   }
 
   componentDidMount() {
-    ipcRenderer.on(ipcEvents.ON_MESSAGE, this.addItemMessage);
+    ipcRenderer.on(ipcEvents.ON_MESSAGE, this.storeMessage);
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeListener(ipcEvents.ON_MESSAGE, this.addItemMessage);
+    ipcRenderer.removeListener(ipcEvents.ON_MESSAGE, this.storeMessage);
   }
 
-  addItemMessage(_, itemData) {
+  storeMessage(_, itemData) {
     const { messages } = this.state;
 
     const parsedItemData = JSON.parse(itemData);
@@ -41,6 +44,25 @@ class Trade extends Component {
     });
   }
 
+  deleteMessage(message) {
+    return new Promise(resolve => {
+      const {
+        messages: [...messages]
+      } = this.state;
+
+      const messageIndex = messages.indexOf(message);
+      messages.splice(messageIndex, 1);
+
+      this.setState({
+        messages
+      });
+
+      store.set("messages", messages);
+
+      resolve();
+    });
+  }
+
   render() {
     const {
       messages: [...messages]
@@ -50,6 +72,9 @@ class Trade extends Component {
         title="Active connections"
         columns={TableColumns.tradeScreen}
         data={messages}
+        editable={{
+          onRowDelete: message => this.deleteMessage(message)
+        }}
       />
     );
   }
