@@ -14,14 +14,6 @@ class Trade extends Component {
     this.deleteMessage = this.deleteMessage.bind(this);
   }
 
-  componentDidMount() {
-    store.onDidChange("messages", newMessages => {
-      this.setState({
-        messages: newMessages
-      });
-    });
-  }
-
   deleteMessage(message) {
     return new Promise(resolve => {
       const {
