@@ -6,7 +6,7 @@ import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const store = new Store();
 
-export const setupIPCListeners = () => {
+const setupIPCListeners = () => {
   ipcMain.on(ipcEvents.WS_CONNECT, (_, connectionDetails) => {
     WebSocketActions.connectToNewWebSocket(connectionDetails);
   });
