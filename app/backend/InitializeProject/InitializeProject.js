@@ -6,7 +6,7 @@ import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const store = new Store();
 
-const setupIPCListeners = () => {
+const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_CONNECT, (_, connectionDetails) => {
     WebSocketActions.connectToNewWebSocket(connectionDetails);
   });
@@ -17,7 +17,7 @@ const setupIPCListeners = () => {
 };
 
 const initializeProject = () => {
-  setupIPCListeners();
+  setupIpcEvents();
 
   const storedWsConnections = store.get("wsConnections");
 
