@@ -7,13 +7,19 @@ class Trade extends Component {
   constructor(props) {
     super(props);
 
-    // store.clear();
-
     this.state = {
       messages: store.get("messages") || []
     };
 
     this.deleteMessage = this.deleteMessage.bind(this);
+  }
+
+  componentDidMount() {
+    store.onDidChange("messages", newMessages => {
+      this.setState({
+        messages: newMessages
+      });
+    });
   }
 
   deleteMessage(message) {
@@ -41,7 +47,7 @@ class Trade extends Component {
     } = this.state;
     return (
       <MaterialTable
-        title="Active connections"
+        title="Messages"
         columns={TableColumns.tradeScreen}
         data={messages}
         editable={{
