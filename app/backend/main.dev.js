@@ -74,7 +74,14 @@ app.on("ready", async () => {
     height: 728
   });
 
-  mainWindow.loadURL(`file://${process.cwd()}/app/app.html`);
+  if (process.env.NODE_ENV === "development") {
+    mainWindow.loadURL(`file://${process.cwd()}/app/app.html`);
+  } else {
+    mainWindow.loadURL(`file://${__dirname}/app.html`);
+  }
+
+  // https://stackoverflow.com/a/52195400/9599137 -> in order to make the notification messages work on Windows.
+  app.setAppUserModelId("com.5k-mirrors.poe-sniper");
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
