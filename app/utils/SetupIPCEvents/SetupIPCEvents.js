@@ -4,7 +4,7 @@ import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import * as WebSocketActions from "../../backend/WebSockets/Actions/Actions";
 
 export const frontend = () => {
-  ipcRenderer.on(ipcEvents.ON_MESSAGE, (_, message) => {
+  ipcRenderer.on(ipcEvents.MESSAGE, (_, message) => {
     const parsedMessage = JSON.parse(message);
 
     const currentMessages = store.get("messages") || [];

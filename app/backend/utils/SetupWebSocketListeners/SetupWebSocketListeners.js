@@ -2,8 +2,6 @@ import { Notification } from "electron";
 import getCurrentWindow from "../GetCurrentWindow/GetCurrentWindow";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
 
-// TODO: shouldn't be stored within the `utils` folder.
-
 const doNotify = ({ notificationMessage }) => {
   new Notification({
     title: "PoE Sniper Pro",
@@ -19,7 +17,7 @@ const setupWebSocketListeners = webSocket => {
 
     const currentWindow = getCurrentWindow();
 
-    currentWindow.webContents.send(ipcEvents.ON_MESSAGE, message);
+    currentWindow.webContents.send(ipcEvents.MESSAGE, message);
   });
 };
 
