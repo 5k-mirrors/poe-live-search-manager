@@ -96,29 +96,26 @@ class Input extends Component {
     } = this.state;
 
     return (
-      <div>
-        <MaterialTable
-          title="Active connections"
-          columns={WsTableColumns}
-          data={wsConnections}
-          editable={{
-            onRowAdd: wsConnectionData =>
-              this.addNewConnection(wsConnectionData),
-            onRowDelete: wsConnectionData =>
-              this.deleteConnection(wsConnectionData)
-          }}
-          options={{
-            headerStyle: {
-              backgroundColor: "#01579b",
-              color: "#FFF",
-              fontWeight: "bold"
-            },
-            rowStyle: {
-              backgroundColor: "#EEE"
-            }
-          }}
-        />
-      </div>
+      <MaterialTable
+        title="Active connections"
+        columns={WsTableColumns}
+        data={wsConnections}
+        editable={{
+          onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),
+          onRowDelete: wsConnectionData =>
+            this.deleteConnection(wsConnectionData)
+        }}
+        options={{
+          headerStyle: {
+            backgroundColor: "#01579b",
+            color: "#FFF",
+            fontWeight: "bold"
+          },
+          rowStyle: {
+            backgroundColor: "#EEE"
+          }
+        }}
+      />
     );
   }
 }
