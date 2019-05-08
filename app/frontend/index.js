@@ -4,8 +4,11 @@ import { BrowserRouter } from "react-router-dom";
 import { AppContainer as ReactHotAppContainer } from "react-hot-loader";
 import App from "./containers/App/App";
 import "../app.global.css";
+import * as SetupIPCEvents from "../utils/SetupIPCEvents/SetupIPCEvents";
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
+
+SetupIPCEvents.frontend();
 
 render(
   <BrowserRouter>
