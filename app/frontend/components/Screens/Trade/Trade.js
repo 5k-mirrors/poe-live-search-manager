@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
-import { store } from "../../../../resources/Store/Store";
+import Store from "electron-store";
 import * as TableColumns from "../../../resources/TableColumns/TableColumns";
+
+const store = new Store();
 
 class Trade extends Component {
   constructor(props) {

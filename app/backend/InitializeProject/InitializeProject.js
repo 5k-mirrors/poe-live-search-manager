@@ -1,10 +1,23 @@
-import * as SetupIPCEvents from "../../utils/SetupIPCEvents/SetupIPCEvents";
+import { ipcMain } from "electron";
+import Store from "electron-store";
+import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import * as WebSocketActions from "../WebSockets/Actions/Actions";
 import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
-import { store } from "../../resources/Store/Store";
+
+const store = new Store();
+
+const setupIpcEvents = () => {
+  ipcMain.on(ipcEvents.WS_CONNECT, (_, connectionDetails) => {
+    WebSocketActions.connectToNewWebSocket(connectionDetails);
+  });
+
+  ipcMain.on(ipcEvents.WS_DISCONNECT, (_, connectionDetails) => {
+    WebSocketActions.disconnectFromWebSocket(connectionDetails);
+  });
+};
 
 const initializeProject = () => {
-  SetupIPCEvents.backend();
+  setupIpcEvents();
 
   const storedWsConnections = store.get("wsConnections");
 

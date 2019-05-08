@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
+import Store from "electron-store";
 import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
-import { store } from "../../../../resources/Store/Store";
 
 // https://github.com/electron/electron/issues/7300#issuecomment-274269710
 const electron = window.require("electron");
 const { ipcRenderer } = electron;
+
+const store = new Store();
 
 class Input extends Component {
   constructor(props) {

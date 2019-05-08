@@ -4,11 +4,29 @@ import { BrowserRouter } from "react-router-dom";
 import { AppContainer as ReactHotAppContainer } from "react-hot-loader";
 import App from "./containers/App/App";
 import "../app.global.css";
-import * as SetupIPCEvents from "../utils/SetupIPCEvents/SetupIPCEvents";
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
-SetupIPCEvents.frontend();
+/*
+import { ipcMain, ipcRenderer } from "electron";
+import Store from "electron-store";
+import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+import * as WebSocketActions from "../../backend/WebSockets/Actions/Actions";
+
+const store = new Store();
+
+export const frontend = () => {
+  ipcRenderer.on(ipcEvents.MESSAGE, (_, message) => {
+    const parsedMessage = JSON.parse(message);
+
+    const currentMessages = store.get("messages") || [];
+
+    currentMessages.unshift(parsedMessage);
+
+    store.set("messages", currentMessages);
+  });
+};
+*/
 
 render(
   <BrowserRouter>
