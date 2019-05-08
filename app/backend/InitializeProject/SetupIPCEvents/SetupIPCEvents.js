@@ -1,8 +1,8 @@
 import { ipcMain } from "electron";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import * as WebSocketActions from "../../backend/WebSockets/Actions/Actions";
+import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
+import * as WebSocketActions from "../../WebSockets/Actions/Actions";
 
-export const backend = () => {
+const setupIPCEvents = () => {
   ipcMain.on(ipcEvents.WS_CONNECT, (_, connectionDetails) => {
     WebSocketActions.connectToNewWebSocket(connectionDetails);
   });
@@ -11,3 +11,5 @@ export const backend = () => {
     WebSocketActions.disconnectFromWebSocket(connectionDetails);
   });
 };
+
+export default setupIPCEvents;
