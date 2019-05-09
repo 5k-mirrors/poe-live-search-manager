@@ -15,7 +15,7 @@ class Trade extends Component {
     this.onMessagesStateChange = this.onMessagesStateChange.bind(this);
     this.removeGlobalStateListener = globalStore.onDidChange(
       "messages",
-      this.onStateChange
+      this.onMessagesStateChange
     );
   }
 
