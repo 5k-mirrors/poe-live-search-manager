@@ -1,19 +1,29 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
-import Store from "electron-store";
+import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 
 class Trade extends Component {
   constructor(props) {
     super(props);
 
-    this.store = new Store();
-
     this.state = {
-      messages: this.store.get("messages") || []
+      messages: globalStore.get("messages", [])
     };
 
     this.deleteMessage = this.deleteMessage.bind(this);
+  }
+
+  componentDidMount() {
+    globalStore.onDidChange("messages", newMessages => {
+      this.setState({
+        messages: newMessages
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    /* store.onDidChange("messages", null?! => ()); */
   }
 
   deleteMessage(message) {
@@ -29,7 +39,7 @@ class Trade extends Component {
         messages
       });
 
-      this.store.set("messages", messages);
+      globalStore.set("messages", messages);
 
       resolve();
     });

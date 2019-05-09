@@ -1,10 +1,8 @@
 import { ipcMain } from "electron";
-import Store from "electron-store";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import * as WebSocketActions from "../WebSockets/Actions/Actions";
 import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
-
-const store = new Store();
+import { globalStore } from "../../GlobalStore/GlobalStore";
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_CONNECT, (_, connectionDetails) => {
@@ -19,7 +17,7 @@ const setupIpcEvents = () => {
 const initializeProject = () => {
   setupIpcEvents();
 
-  const storedWsConnections = store.get("wsConnections");
+  const storedWsConnections = globalStore.get("wsConnections");
 
   if (JavaScriptUtils.isDefined(storedWsConnections)) {
     storedWsConnections.forEach(connectionDetails => {
