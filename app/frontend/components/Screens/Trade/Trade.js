@@ -23,7 +23,7 @@ class Trade extends Component {
     this.removeGlobalStateListener();
   }
 
-  onStateChange(messages) {
+  onMessagesStateChange(messages) {
     this.setState({
       messages
     });
