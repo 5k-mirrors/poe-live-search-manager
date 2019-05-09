@@ -13,19 +13,19 @@ class Trade extends Component {
 
     this.deleteMessage = this.deleteMessage.bind(this);
     this.onMessagesStateChange = this.onMessagesStateChange.bind(this);
-    this.removeGlobalStateListener = globalStore.onDidChange(
+    this.removeMessagesListener = globalStore.onDidChange(
       "messages",
       this.onMessagesStateChange
     );
   }
 
   componentWillUnmount() {
-    this.removeGlobalStateListener();
+    this.removeMessagesListener();
   }
 
-  onMessagesStateChange(messages) {
+  onMessagesStateChange(updatedMessages) {
     this.setState({
-      messages
+      messages: updatedMessages
     });
   }
 
