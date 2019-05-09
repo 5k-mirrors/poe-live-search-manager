@@ -22,10 +22,6 @@ class Trade extends Component {
     });
   }
 
-  componentWillUnmount() {
-    /* store.onDidChange("messages", null?! => ()); */
-  }
-
   deleteMessage(message) {
     return new Promise(resolve => {
       const {
