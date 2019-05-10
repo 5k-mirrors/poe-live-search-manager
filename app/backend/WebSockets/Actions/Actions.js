@@ -1,6 +1,7 @@
-import { BrowserWindow, Notification } from "electron";
+import { Notification } from "electron";
 import WebSocket from "ws";
 import WebSockets from "../WebSockets";
+import getWindowByName from "../../utils/GetWindowByName/GetWindowByName";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
 
 const webSockets = new WebSockets();
@@ -12,21 +13,15 @@ const doNotify = ({ notificationMessage }) => {
   }).show();
 };
 
-const getMainWindow = () => {
-  const allWindows = BrowserWindow.getAllWindows();
-
-  return allWindows[0];
-};
-
 const setupWebSocketListeners = webSocket => {
   webSocket.on("message", message => {
     doNotify({
       notificationMessage: message
     });
 
-    const mainWindow = getMainWindow();
+    const window = getWindowByName("PoE Sniper");
 
-    mainWindow.webContents.send(ipcEvents.MESSAGE, message);
+    window.webContents.send(ipcEvents.MESSAGE, message);
   });
 };
 
