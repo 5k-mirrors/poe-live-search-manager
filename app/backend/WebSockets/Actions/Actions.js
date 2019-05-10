@@ -19,7 +19,7 @@ const setupWebSocketListeners = webSocket => {
       notificationMessage: message
     });
 
-    const window = getWindowByName("PoE Sniper Pro");
+    const window = getWindowByName("PoE Sniper");
 
     window.webContents.send(ipcEvents.MESSAGE, message);
   });
