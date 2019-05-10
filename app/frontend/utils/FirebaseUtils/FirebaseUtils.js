@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import * as Firebase from "../../resources/Firebase/Firebase";
+import * as FirebaseConfigs from "../../resources/FirebaseConfigs/FirebaseConfigs";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 
 export const initializeApp = () => {
@@ -8,7 +8,7 @@ export const initializeApp = () => {
     return firebase.apps[0];
   }
 
-  return firebase.initializeApp(Firebase.config);
+  return firebase.initializeApp(FirebaseConfigs.connection);
 };
 
 export const startAuthObserver = () =>
