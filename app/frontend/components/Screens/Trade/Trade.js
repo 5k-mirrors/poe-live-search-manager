@@ -13,6 +13,12 @@ class Trade extends Component {
     };
   }
 
+  onStoreUpdate(updatedMessages) {
+    this.setState({
+      messages: updatedMessages
+    });
+  }
+
   render() {
     const {
       messages: [...messages]
@@ -28,4 +34,4 @@ class Trade extends Component {
   }
 }
 
-export default withStoreListener(Trade, "messages", "messages");
+export default withStoreListener(Trade, "messages");

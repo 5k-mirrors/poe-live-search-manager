@@ -1,11 +1,11 @@
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 
-const withStoreListener = (WrappedComponent, storeKey, stateKey) => {
+const withStoreListener = (WrappedComponent, storeKey) => {
   return class extends WrappedComponent {
     constructor(props) {
       super(props);
 
-      this.onStoreUpdate = this.onStoreUpdate.bind(this);
+      this.onStoreUpdate = super.onStoreUpdate.bind(this);
       this.removeStoreListener = globalStore.onDidChange(
         storeKey,
         this.onStoreUpdate
@@ -14,12 +14,6 @@ const withStoreListener = (WrappedComponent, storeKey, stateKey) => {
 
     componentWillUnmount() {
       this.removeStoreListener();
-    }
-
-    onStoreUpdate(updatedData) {
-      this.setState({
-        [stateKey]: updatedData
-      });
     }
 
     render() {

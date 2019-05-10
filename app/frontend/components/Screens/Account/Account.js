@@ -13,6 +13,12 @@ class Account extends Component {
     };
   }
 
+  onStoreUpdate(updatedIsLoggedIn) {
+    this.setState({
+      isLoggedIn: updatedIsLoggedIn
+    });
+  }
+
   render() {
     const { isLoggedIn } = this.state;
 
@@ -24,4 +30,4 @@ class Account extends Component {
   }
 }
 
-export default withStoreListener(Account, "isLoggedIn", "isLoggedIn");
+export default withStoreListener(Account, "isLoggedIn");
