@@ -27,6 +27,7 @@ class Account extends Component {
   }
 
   // TODO: the state should also be updated whenever `isLoggedIn` is updated.
+  // Idea: how about creating a HOC?
 
   componentWillUnmount() {
     this.removeIsLoggedInListener();
@@ -42,6 +43,7 @@ class Account extends Component {
     const { isLoggedIn } = this.state;
 
     // TODO: create different components?
+    // E.g. sign-in + logged in.
     if (!isLoggedIn) {
       return (
         <div>
