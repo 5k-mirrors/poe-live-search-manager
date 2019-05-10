@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
-import withStoreListener from "../../../hoc/withStoreListener/withStoreListener";
+import withStoreListener from "../../withStoreListener/withStoreListener";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 

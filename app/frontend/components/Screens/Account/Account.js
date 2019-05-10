@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import SignIn from "./SignIn/SignIn";
 import LoggedIn from "./LoggedIn/LoggedIn";
-import withStoreListener from "../../../hoc/withStoreListener/withStoreListener";
+import withStoreListener from "../../withStoreListener/withStoreListener";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 
 class Account extends Component {
