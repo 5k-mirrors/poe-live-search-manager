@@ -90,7 +90,7 @@ app.on("ready", async () => {
       throw new Error('"mainWindow" is not defined');
     }
 
-    mainWindow.setTitle("PoE Sniper Pro");
+    mainWindow.setTitle("PoE Sniper");
 
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
