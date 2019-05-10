@@ -11,6 +11,7 @@ const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
 SetupIPCEvents();
 
+FirebaseUtils.initializeApp();
 FirebaseUtils.startAuthObserver();
 
 render(
