@@ -10,6 +10,7 @@ import * as FirebaseUtils from "./utils/FirebaseUtils/FirebaseUtils";
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
 SetupIPCEvents();
+
 FirebaseUtils.startAuthObserver();
 
 render(

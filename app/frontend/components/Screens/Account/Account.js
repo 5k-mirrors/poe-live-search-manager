@@ -1,13 +1,10 @@
 import React, { Component } from "react";
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-// https://github.com/firebase/firebaseui-web/issues/536#issuecomment-452486686
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+import SignIn from "./SignIn/SignIn";
+import LoggedIn from "./LoggedIn/LoggedIn";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import * as FirebaseUtils from "../../../utils/FirebaseUtils/FirebaseUtils";
-import * as Firebase from "../../../resources/Firebase/Firebase";
 
+// TODO: shouldn't it be moved to frontend/index.js?
 FirebaseUtils.initializeApp();
 
 class Account extends Component {
@@ -18,10 +15,9 @@ class Account extends Component {
       isLoggedIn: globalStore.get("isLoggedIn", false)
     };
 
-    // TODO: already used similarly in Trade.js -> create a separated function.
     this.onIsLoggedInChange = this.onIsLoggedInChange.bind(this);
     this.removeIsLoggedInListener = globalStore.onDidChange(
-      "messages",
+      "isLoggedIn",
       this.onIsLoggedInChange
     );
   }
@@ -42,28 +38,11 @@ class Account extends Component {
   render() {
     const { isLoggedIn } = this.state;
 
-    // TODO: create different components?
-    // E.g. sign-in + logged in.
     if (!isLoggedIn) {
-      return (
-        <div>
-          <h1>My App</h1>
-          <p>Please sign-in:</p>
-          <StyledFirebaseAuth
-            uiConfig={Firebase.uiConfig}
-            firebaseAuth={firebase.auth()}
-          />
-        </div>
-      );
+      return <SignIn />;
     }
-    return (
-      <div>
-        <h1>Account</h1>
-        <button type="button" onClick={() => firebase.auth().signOut()}>
-          Sign-out
-        </button>
-      </div>
-    );
+
+    return <LoggedIn />;
   }
 }
 
