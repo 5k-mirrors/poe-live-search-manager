@@ -1,22 +1,20 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
-import Store from "electron-store";
-import WsTableColumns from "../../../resources/WsTableColumns/WsTableColumns";
+import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import { globalStore } from "../../../../GlobalStore/GlobalStore";
 
 // https://github.com/electron/electron/issues/7300#issuecomment-274269710
 const electron = window.require("electron");
 const { ipcRenderer } = electron;
-
-const store = new Store();
 
 class Input extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      wsConnections: store.get("wsConnections") || []
+      wsConnections: globalStore.get("wsConnections", [])
     };
   }
 
@@ -37,7 +35,7 @@ class Input extends Component {
         wsConnections
       });
 
-      store.set("wsConnections", wsConnections);
+      globalStore.set("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_CONNECT, {
         ...wsConnectionDataWithUniqueId
@@ -65,7 +63,7 @@ class Input extends Component {
         wsConnections
       });
 
-      store.set("wsConnections", wsConnections);
+      globalStore.set("wsConnections", wsConnections);
 
       resolve();
     });
@@ -84,7 +82,7 @@ class Input extends Component {
         wsConnections
       });
 
-      store.set("wsConnections", wsConnections);
+      globalStore.set("wsConnections", wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_DISCONNECT, wsConnectionData);
 
@@ -100,7 +98,7 @@ class Input extends Component {
     return (
       <MaterialTable
         title="Active connections"
-        columns={WsTableColumns}
+        columns={TableColumns.inputScreen}
         data={wsConnections}
         editable={{
           onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),
