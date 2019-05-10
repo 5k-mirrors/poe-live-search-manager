@@ -1,33 +1,16 @@
-import React, { Component } from "react";
+import React from "react";
 import SignIn from "./SignIn/SignIn";
 import LoggedIn from "./LoggedIn/LoggedIn";
-import withStoreListener from "../../withStoreListener/withStoreListener";
-import { globalStore } from "../../../../GlobalStore/GlobalStore";
+import useStoreListener from "../../../utils/useStoreListener/useStoreListener";
 
-class Account extends Component {
-  constructor(props) {
-    super(props);
+const account = () => {
+  const [isLoggedIn] = useStoreListener("isLoggedIn") || false;
 
-    this.state = {
-      isLoggedIn: globalStore.get("isLoggedIn", false)
-    };
+  if (!isLoggedIn) {
+    return <SignIn />;
   }
 
-  onStoreUpdate(updatedIsLoggedIn) {
-    this.setState({
-      isLoggedIn: updatedIsLoggedIn
-    });
-  }
+  return <LoggedIn />;
+};
 
-  render() {
-    const { isLoggedIn } = this.state;
-
-    if (!isLoggedIn) {
-      return <SignIn />;
-    }
-
-    return <LoggedIn />;
-  }
-}
-
-export default withStoreListener(Account, "isLoggedIn");
+export default account;
