@@ -11,10 +11,10 @@ class Trade extends Component {
       messages: globalStore.get("messages", [])
     };
 
-    this.onMessagesStateChange = this.onMessagesStateChange.bind(this);
+    this.onMessagesChange = this.onMessagesChange.bind(this);
     this.removeMessagesListener = globalStore.onDidChange(
       "messages",
-      this.onMessagesStateChange
+      this.onMessagesChange
     );
   }
 
@@ -22,7 +22,7 @@ class Trade extends Component {
     this.removeMessagesListener();
   }
 
-  onMessagesStateChange(updatedMessages) {
+  onMessagesChange(updatedMessages) {
     this.setState({
       messages: updatedMessages
     });
