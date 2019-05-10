@@ -11,7 +11,6 @@ class Trade extends Component {
       messages: globalStore.get("messages", [])
     };
 
-    this.deleteMessage = this.deleteMessage.bind(this);
     this.onMessagesStateChange = this.onMessagesStateChange.bind(this);
     this.removeMessagesListener = globalStore.onDidChange(
       "messages",
@@ -29,25 +28,6 @@ class Trade extends Component {
     });
   }
 
-  deleteMessage(message) {
-    return new Promise(resolve => {
-      const {
-        messages: [...messages]
-      } = this.state;
-
-      const messageIndex = messages.indexOf(message);
-      messages.splice(messageIndex, 1);
-
-      this.setState({
-        messages
-      });
-
-      globalStore.set("messages", messages);
-
-      resolve();
-    });
-  }
-
   render() {
     const {
       messages: [...messages]
@@ -57,9 +37,6 @@ class Trade extends Component {
         title="Messages"
         columns={TableColumns.tradeScreen}
         data={messages}
-        editable={{
-          onRowDelete: message => this.deleteMessage(message)
-        }}
       />
     );
   }
