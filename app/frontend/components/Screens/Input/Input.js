@@ -6,6 +6,7 @@ import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGene
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 
 // https://github.com/electron/electron/issues/7300#issuecomment-274269710
+// TODO: is it needed? The app doesn't throw any error by using the ES6 import syntax.
 const electron = window.require("electron");
 const { ipcRenderer } = electron;
 
