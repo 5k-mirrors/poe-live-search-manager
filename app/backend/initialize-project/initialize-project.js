@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import * as WebSocketActions from "../WebSockets/Actions/Actions";
+import * as WebSocketActions from "../web-sockets/actions/actions";
 import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 
