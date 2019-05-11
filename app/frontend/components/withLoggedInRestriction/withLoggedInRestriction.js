@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 
-const withCheckLoggedIn = WrappedComponent => {
+const withLoggedInRestriction = WrappedComponent => {
   return class extends React.Component {
     constructor(props) {
       super(props);
@@ -20,4 +20,4 @@ const withCheckLoggedIn = WrappedComponent => {
   };
 };
 
-export default withCheckLoggedIn;
+export default withLoggedInRestriction;
