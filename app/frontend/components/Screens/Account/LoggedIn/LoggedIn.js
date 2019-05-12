@@ -2,8 +2,10 @@ import React from "react";
 import firebase from "firebase/app";
 
 const loggedIn = () => {
-  const welcomeMessage = `Logged in as ${firebase.auth().currentUser
-    .displayName || firebase.auth().currentUser.email}`;
+  const { currentUser } = firebase.auth();
+
+  const welcomeMessage = `Logged in as ${currentUser.displayName ||
+    currentUser.email}`;
 
   return (
     <div>
