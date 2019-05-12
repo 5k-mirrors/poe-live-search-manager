@@ -5,10 +5,14 @@ import { AppContainer as ReactHotAppContainer } from "react-hot-loader";
 import "../app.global.css";
 import App from "./containers/App/App";
 import SetupIPCEvents from "./SetupIPCEvents/SetupIPCEvents";
+import * as FirebaseUtils from "./utils/FirebaseUtils/FirebaseUtils";
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
 SetupIPCEvents();
+
+FirebaseUtils.initializeApp();
+FirebaseUtils.startAuthObserver();
 
 render(
   <BrowserRouter>

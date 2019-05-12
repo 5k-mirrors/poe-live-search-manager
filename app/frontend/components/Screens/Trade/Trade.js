@@ -1,67 +1,37 @@
-import React, { Component } from "react";
+import React from "react";
 import MaterialTable from "material-table";
+import useStoreListener from "../../../utils/useStoreListener/useStoreListener";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 
-class Trade extends Component {
-  constructor(props) {
-    super(props);
+const trade = () => {
+  const [messages, setMessages] = useStoreListener("messages") || [];
 
-    this.state = {
-      messages: globalStore.get("messages", [])
-    };
-
-    this.onMessagesChange = this.onMessagesChange.bind(this);
-    this.removeMessagesListener = globalStore.onDidChange(
-      "messages",
-      this.onMessagesChange
-    );
-  }
-
-  componentWillUnmount() {
-    this.removeMessagesListener();
-  }
-
-  onMessagesChange(updatedMessages) {
-    this.setState({
-      messages: updatedMessages
-    });
-  }
-
-  deleteMessage(message) {
+  function deleteMessage(message) {
     return new Promise(resolve => {
-      const {
-        messages: [...messages]
-      } = this.state;
+      const currentMessages = [...messages];
 
       const messageIndex = messages.indexOf(message);
-      messages.splice(messageIndex, 1);
+      currentMessages.splice(messageIndex, 1);
 
-      this.setState({
-        messages
-      });
+      setMessages(currentMessages);
 
-      globalStore.set("messages", messages);
+      globalStore.set("messages", currentMessages);
 
       resolve();
     });
   }
 
-  render() {
-    const {
-      messages: [...messages]
-    } = this.state;
-    return (
-      <MaterialTable
-        title="Messages"
-        columns={TableColumns.tradeScreen}
-        data={messages}
-        editable={{
-          onRowDelete: message => this.deleteMessage(message)
-        }}
-      />
-    );
-  }
-}
+  return (
+    <MaterialTable
+      title="Messages"
+      columns={TableColumns.tradeScreen}
+      data={messages}
+      editable={{
+        onRowDelete: message => deleteMessage(message)
+      }}
+    />
+  );
+};
 
-export default Trade;
+export default trade;
