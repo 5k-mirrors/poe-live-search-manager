@@ -1,7 +1,7 @@
 import React from "react";
 import MaterialTable from "material-table";
 import useStoreListener from "../../../utils/useStoreListener/useStoreListener";
-import withLoggedInRestriction from "../../withLoggedInRestriction/withLoggedInRestriction";
+import withLoggedInRedirection from "../../withLoggedInRedirection/withLoggedInRedirection";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import * as TableColumns from "../../../resources/TableColumns/TableColumns";
 
@@ -35,4 +35,4 @@ const trade = () => {
   );
 };
 
-export default withLoggedInRestriction(trade);
+export default withLoggedInRedirection(trade, "/account");

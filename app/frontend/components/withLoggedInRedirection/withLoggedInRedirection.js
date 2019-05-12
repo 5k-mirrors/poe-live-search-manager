@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 
-const withLoggedInRestriction = WrappedComponent => {
+const withLoggedInRedirection = (WrappedComponent, redirectTo) => {
   return class extends React.Component {
     constructor(props) {
       super(props);
@@ -12,7 +12,7 @@ const withLoggedInRestriction = WrappedComponent => {
 
     render() {
       if (!this.isLoggedIn) {
-        return <Redirect to="/account" />;
+        return <Redirect to={redirectTo} />;
       }
 
       return <WrappedComponent {...this.props} />;
@@ -20,4 +20,4 @@ const withLoggedInRestriction = WrappedComponent => {
   };
 };
 
-export default withLoggedInRestriction;
+export default withLoggedInRedirection;
