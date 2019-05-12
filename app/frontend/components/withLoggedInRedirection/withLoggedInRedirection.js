@@ -1,4 +1,5 @@
 import React from "react";
+import { remote } from "electron";
 import { Redirect } from "react-router-dom";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 
@@ -12,6 +13,11 @@ const withLoggedInRedirection = (WrappedComponent, redirectTo) => {
 
     render() {
       if (!this.isLoggedIn) {
+        remote.dialog.showErrorBox(
+          "Authentication is required",
+          "You must be logged in."
+        );
+
         return <Redirect to={redirectTo} />;
       }
 
