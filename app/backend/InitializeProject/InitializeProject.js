@@ -2,6 +2,7 @@ import { ipcMain } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import * as WebSocketActions from "../WebSockets/Actions/Actions";
 import { globalStore } from "../../GlobalStore/GlobalStore";
+import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const connectToStoredWebSockets = () => {
   const storedWsConnections = globalStore.get("wsConnections", []);
@@ -17,6 +18,16 @@ const disconnectFromStoredWebSockets = () => {
   storedWsConnections.forEach(connectionDetails => {
     WebSocketActions.disconnectFromWebSocket(connectionDetails);
   });
+};
+
+// GLOBAL @TODO: let's create constants to access the elements in the `globalStore`.
+
+const clearPoeSessionId = () => {
+  const poeSessionId = globalStore.get("POESESSID");
+
+  if (JavaScriptUtils.isDefined(poeSessionId)) {
+    globalStore.delete("");
+  }
 };
 
 const setupIpcEvents = () => {
@@ -41,6 +52,8 @@ const setupIpcEvents = () => {
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
+    clearPoeSessionId();
+
     disconnectFromStoredWebSockets();
   });
 };
