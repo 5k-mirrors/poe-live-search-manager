@@ -3,7 +3,6 @@ import firebase from "firebase/app";
 import { globalStore } from "../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../resources/StoreKeys/StoreKeys";
 
-// TODO: create a simple input field and also store the value into the `globalStore` -> button click. A simple `useState` hooks should be enough.
 const loggedIn = () => {
   const [poeSessionId, setPoeSessionId] = useState("");
   const { currentUser } = firebase.auth();
@@ -13,7 +12,6 @@ const loggedIn = () => {
   }
 
   function onSaveButtonClick() {
-    // globalStore.set("POESESSID", poeSessionId);
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
   }
 

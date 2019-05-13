@@ -14,7 +14,6 @@ class Input extends Component {
   constructor(props) {
     super(props);
 
-    // wsConnections: globalStore.get("wsConnections", [])
     this.state = {
       wsConnections: globalStore.get(storeKeys.WS_CONNECTIONS, [])
     };
@@ -37,7 +36,6 @@ class Input extends Component {
         wsConnections
       });
 
-      // globalStore.set("wsConnections", wsConnections);
       globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_CONNECT, {
@@ -66,7 +64,6 @@ class Input extends Component {
         wsConnections
       });
 
-      // globalStore.set("wsConnections", wsConnections);
       globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
 
       resolve();
@@ -86,7 +83,6 @@ class Input extends Component {
         wsConnections
       });
 
-      // globalStore.set("wsConnections", wsConnections);
       globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_DISCONNECT, wsConnectionData);

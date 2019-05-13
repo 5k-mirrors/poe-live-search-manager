@@ -8,7 +8,6 @@ const withLoggedOutRedirection = (WrappedComponent, redirectTo) => {
     constructor(props) {
       super(props);
 
-      // this.isLoggedIn = globalStore.get("isLoggedIn", false);
       this.isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
     }
 
