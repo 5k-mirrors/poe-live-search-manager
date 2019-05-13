@@ -1,10 +1,9 @@
 import React from "react";
-import { remote } from "electron";
 import { Redirect } from "react-router-dom";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 
-const withLoggedInRedirection = (WrappedComponent, redirectTo) => {
+const withLoggedOutRedirection = (WrappedComponent, redirectTo) => {
   return class extends React.Component {
     constructor(props) {
       super(props);
@@ -15,11 +14,6 @@ const withLoggedInRedirection = (WrappedComponent, redirectTo) => {
 
     render() {
       if (!this.isLoggedIn) {
-        remote.dialog.showErrorBox(
-          "Authentication is required",
-          "You must be logged in."
-        );
-
         return <Redirect to={redirectTo} />;
       }
 
@@ -28,4 +22,4 @@ const withLoggedInRedirection = (WrappedComponent, redirectTo) => {
   };
 };
 
-export default withLoggedInRedirection;
+export default withLoggedOutRedirection;

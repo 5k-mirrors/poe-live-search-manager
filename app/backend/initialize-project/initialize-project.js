@@ -1,9 +1,9 @@
 import { ipcMain } from "electron";
 import * as WebSocketActions from "../web-sockets/actions/actions";
-import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const connectToStoredWebSockets = () => {
   // const storedWsConnections = globalStore.get("wsConnections", []);
@@ -27,7 +27,7 @@ const disconnectFromStoredWebSockets = () => {
 
 const clearPoeSessionId = () => {
   // const poeSessionId = globalStore.get("POESESSID");
-  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
+  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 
   // Is it necessary to check whether the ID exists? IMO it's not.
   if (JavaScriptUtils.isDefined(poeSessionId)) {
@@ -37,29 +37,40 @@ const clearPoeSessionId = () => {
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_CONNECT, (event, connectionDetails) => {
-    // const isLoggedIn = globalStore.get("isLoggedIn", false);
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+    // const socketsConnected = globalStore.get("socketsConnected", false);
+    const socketsConnected = globalStore.get(
+      storeKeys.SOCKETS_CONNECTED,
+      false
+    );
 
-    if (isLoggedIn) {
+    if (socketsConnected) {
       WebSocketActions.connectToNewWebSocket(connectionDetails);
     }
   });
 
   ipcMain.on(ipcEvents.WS_DISCONNECT, (event, connectionDetails) => {
-    // const isLoggedIn = globalStore.get("isLoggedIn", false);
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+    // const socketsConnected = globalStore.get("socketsConnected", false);
+    const socketsConnected = globalStore.get(
+      storeKeys.SOCKETS_CONNECTED,
+      false
+    );
 
-    if (isLoggedIn) {
+    if (socketsConnected) {
       WebSocketActions.disconnectFromWebSocket(connectionDetails);
     }
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, () => {
+    // globalStore.set("socketsConnected", true);
+    globalStore.set(storeKeys.SOCKETS_CONNECTED, true);
+
     connectToStoredWebSockets();
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
     clearPoeSessionId();
+    // globalStore.set("socketsConnected", false);
+    globalStore.set(storeKeys.SOCKETS_CONNECTED, false);
 
     disconnectFromStoredWebSockets();
   });

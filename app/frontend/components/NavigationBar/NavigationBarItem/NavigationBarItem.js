@@ -8,9 +8,17 @@ const navigationBarItem = ({ displayName, routePath }) => {
     ${Item}
   `;
 
+  const navLinkActiveStyle = {
+    color: "#000000",
+    background: "#FFFFFF",
+    padding: "3px 5px"
+  };
+
   return (
     <StyledItem>
-      <NavLink to={routePath}>{displayName}</NavLink>
+      <NavLink activeStyle={navLinkActiveStyle} to={routePath}>
+        {displayName}
+      </NavLink>
     </StyledItem>
   );
 };
