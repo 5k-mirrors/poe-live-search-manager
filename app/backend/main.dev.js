@@ -14,7 +14,7 @@ import { app, BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
-import initializeProject from "./InitializeProject/InitializeProject";
+import initializeProject from "./initialize-project/initialize-project";
 
 export default class AppUpdater {
   constructor() {
