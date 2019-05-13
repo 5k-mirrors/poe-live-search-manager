@@ -1,11 +1,13 @@
 import { ipcMain } from "electron";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import * as WebSocketActions from "../WebSockets/Actions/Actions";
 import { globalStore } from "../../GlobalStore/GlobalStore";
+import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const connectToStoredWebSockets = () => {
-  const storedWsConnections = globalStore.get("wsConnections", []);
+  // const storedWsConnections = globalStore.get("wsConnections", []);
+  const storedWsConnections = globalStore.get(storeKeys.WS_CONNECTIONS, []);
 
   storedWsConnections.forEach(connectionDetails => {
     WebSocketActions.connectToNewWebSocket(connectionDetails);
@@ -13,7 +15,8 @@ const connectToStoredWebSockets = () => {
 };
 
 const disconnectFromStoredWebSockets = () => {
-  const storedWsConnections = globalStore.get("wsConnections", []);
+  // const storedWsConnections = globalStore.get("wsConnections", []);
+  const storedWsConnections = globalStore.get(storeKeys.WS_CONNECTIONS, []);
 
   storedWsConnections.forEach(connectionDetails => {
     WebSocketActions.disconnectFromWebSocket(connectionDetails);
@@ -23,16 +26,19 @@ const disconnectFromStoredWebSockets = () => {
 // GLOBAL @TODO: let's create constants to access the elements in the `globalStore`.
 
 const clearPoeSessionId = () => {
-  const poeSessionId = globalStore.get("POESESSID");
+  // const poeSessionId = globalStore.get("POESESSID");
+  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
 
+  // Is it necessary to check whether the ID exists? IMO it's not.
   if (JavaScriptUtils.isDefined(poeSessionId)) {
-    globalStore.delete("");
+    globalStore.delete(storeKeys.POE_SESSION_ID);
   }
 };
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_CONNECT, (event, connectionDetails) => {
-    const isLoggedIn = globalStore.get("isLoggedIn", false);
+    // const isLoggedIn = globalStore.get("isLoggedIn", false);
+    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
     if (isLoggedIn) {
       WebSocketActions.connectToNewWebSocket(connectionDetails);
@@ -40,7 +46,8 @@ const setupIpcEvents = () => {
   });
 
   ipcMain.on(ipcEvents.WS_DISCONNECT, (event, connectionDetails) => {
-    const isLoggedIn = globalStore.get("isLoggedIn", false);
+    // const isLoggedIn = globalStore.get("isLoggedIn", false);
+    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
     if (isLoggedIn) {
       WebSocketActions.disconnectFromWebSocket(connectionDetails);
