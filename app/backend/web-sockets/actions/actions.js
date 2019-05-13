@@ -28,7 +28,7 @@ export const connectToWebSocket = connectionDetails => {
   const newWebSocket = new WebSocket(connectionDetails.uri);
 
   newWebSocket.on("open", () => {
-    storedWebSockets.updateSocket(connectionDetails.id, newWebSocket);
+    storedWebSockets.updateWithSocket(connectionDetails.id, newWebSocket);
 
     setupWebSocketListeners(newWebSocket);
   });

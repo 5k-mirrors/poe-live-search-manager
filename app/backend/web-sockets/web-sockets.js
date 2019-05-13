@@ -9,7 +9,7 @@ class WebSockets {
     });
   }
 
-  updateSocket(id, socket) {
+  updateWithSocket(id, socket) {
     const webSocketIndex = this.wsStorage.findIndex(
       webSocket => webSocket.id === id
     );
