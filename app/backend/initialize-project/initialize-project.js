@@ -1,9 +1,9 @@
 import { ipcMain } from "electron";
-import * as WebSocketActions from "../WebSockets/Actions/Actions";
+import * as WebSocketActions from "../web-sockets/actions/actions";
+import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
-import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const connectToStoredWebSockets = () => {
   // const storedWsConnections = globalStore.get("wsConnections", []);
