@@ -5,7 +5,7 @@ export const button = css`
   border: none;
   outline: none;
   padding: 0;
-  margin-left: 2px;
+  margin-left: 4px;
 `;
 
 export const image = css`
