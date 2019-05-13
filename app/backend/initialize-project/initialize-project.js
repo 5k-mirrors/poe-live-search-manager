@@ -44,12 +44,16 @@ const setupIpcEvents = () => {
   });
 };
 
-const initializeProject = () => {
+const loadLocallySavedWsConnectionsIntoStore = () => {
   const locallySavedWsConnections = globalStore.get("wsConnections", []);
 
   locallySavedWsConnections.forEach(connectionDetails => {
     storedWebSockets.add(connectionDetails);
   });
+};
+
+const initializeProject = () => {
+  loadLocallySavedWsConnectionsIntoStore();
 
   setupIpcEvents();
 };
