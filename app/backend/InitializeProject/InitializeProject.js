@@ -21,9 +21,9 @@ const disconnectFromStoredWebSockets = () => {
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_CONNECT, (event, connectionDetails) => {
-    const socketsConnected = globalStore.get("socketsConnected", false);
+    const isLoggedIn = globalStore.get("isLoggedIn", false);
 
-    if (socketsConnected) {
+    if (isLoggedIn) {
       WebSocketActions.connectToNewWebSocket(connectionDetails);
     }
   });
