@@ -3,21 +3,22 @@ import * as WebSocketActions from "../web-sockets/actions/actions";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import { storedWebSockets } from "../../StoredWebSockets/StoredWebSockets";
 import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const connectToStoredWebSockets = () => {
-  const storedWsConnections = globalStore.get(storeKeys.WS_CONNECTIONS, []);
+  const storage = storedWebSockets.getStorage();
 
-  storedWsConnections.forEach(connectionDetails => {
-    WebSocketActions.connectToNewWebSocket(connectionDetails);
+  storage.forEach(connectionDetails => {
+    WebSocketActions.connectToWebSocket(connectionDetails);
   });
 };
 
 const disconnectFromStoredWebSockets = () => {
-  const storedWsConnections = globalStore.get(storeKeys.WS_CONNECTIONS, []);
+  const storage = storedWebSockets.getStorage();
 
-  storedWsConnections.forEach(connectionDetails => {
-    WebSocketActions.disconnectFromWebSocket(connectionDetails);
+  storage.forEach(connectionDetails => {
+    WebSocketActions.disconnectFromWebSocket(connectionDetails.id);
   });
 };
 
@@ -30,43 +31,46 @@ const clearPoeSessionId = () => {
 };
 
 const setupIpcEvents = () => {
-  ipcMain.on(ipcEvents.WS_CONNECT, (event, connectionDetails) => {
-    const socketsConnected = globalStore.get(
-      storeKeys.SOCKETS_CONNECTED,
-      false
-    );
+  ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
+    storedWebSockets.add(connectionDetails);
 
-    if (socketsConnected) {
-      WebSocketActions.connectToNewWebSocket(connectionDetails);
+    const isLoggedIn = globalStore.get("isLoggedIn", false);
+
+    if (isLoggedIn) {
+      WebSocketActions.connectToWebSocket(connectionDetails);
     }
   });
 
-  ipcMain.on(ipcEvents.WS_DISCONNECT, (event, connectionDetails) => {
-    const socketsConnected = globalStore.get(
-      storeKeys.SOCKETS_CONNECTED,
-      false
-    );
+  ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
+    const { id } = connectionDetails;
 
-    if (socketsConnected) {
-      WebSocketActions.disconnectFromWebSocket(connectionDetails);
-    }
+    WebSocketActions.disconnectFromWebSocket(id);
+
+    WebSocketActions.removeWebSocket(id);
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, () => {
-    globalStore.set(storeKeys.SOCKETS_CONNECTED, true);
-
     connectToStoredWebSockets();
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
     clearPoeSessionId();
-    globalStore.set(storeKeys.SOCKETS_CONNECTED, false);
 
     disconnectFromStoredWebSockets();
   });
 };
 
+const loadLocallySavedWsConnectionsIntoStore = () => {
+  const locallySavedWsConnections = globalStore.get("wsConnections", []);
+
+  locallySavedWsConnections.forEach(connectionDetails => {
+    storedWebSockets.add(connectionDetails);
+  });
+};
+
 const initializeProject = () => {
+  loadLocallySavedWsConnectionsIntoStore();
+
   setupIpcEvents();
 };
 

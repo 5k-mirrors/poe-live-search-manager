@@ -1,10 +1,9 @@
 import { Notification } from "electron";
 import WebSocket from "ws";
-import WebSockets from "../web-sockets";
 import getWindowByName from "../../utils/get-window-by-name/get-window-by-name";
+import * as JavaScriptUtils from "../../../utils/JavaScriptUtils/JavaScriptUtils";
+import { storedWebSockets } from "../../../StoredWebSockets/StoredWebSockets";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
-
-const webSockets = new WebSockets();
 
 const doNotify = ({ notificationMessage }) => {
   new Notification({
@@ -21,24 +20,30 @@ const setupWebSocketListeners = webSocket => {
 
     const window = getWindowByName("PoE Sniper");
 
-    window.webContents.send(ipcEvents.MESSAGE, message);
+    window.webContents.send(ipcEvents.TRADE_MESSAGE, message);
   });
 };
 
-export const connectToNewWebSocket = connectionDetails => {
+export const connectToWebSocket = connectionDetails => {
   const newWebSocket = new WebSocket(connectionDetails.uri);
 
   newWebSocket.on("open", () => {
-    webSockets.add(newWebSocket, connectionDetails.id);
+    storedWebSockets.updateWithSocket(connectionDetails.id, newWebSocket);
 
     setupWebSocketListeners(newWebSocket);
   });
 };
 
-export const disconnectFromWebSocket = connectionDetails => {
-  const ws = webSockets.get(connectionDetails.id);
+export const disconnectFromWebSocket = id => {
+  const ws = storedWebSockets.get(id);
 
-  ws.socket.close();
+  if (JavaScriptUtils.isDefined(ws.socket)) {
+    ws.socket.close();
+  }
+};
 
-  webSockets.remove(ws.id);
+export const removeWebSocket = id => {
+  const ws = storedWebSockets.get(id);
+
+  storedWebSockets.remove(ws.id);
 };

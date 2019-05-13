@@ -1,7 +1,7 @@
 export const ipcEvents = {
-  WS_CONNECT: "ws-connect",
-  WS_DISCONNECT: "ws-disconnect",
-  MESSAGE: "message",
+  WS_ADD: "ws-add",
+  WS_REMOVE: "ws-remove",
+  TRADE_MESSAGE: "trade-message",
   USER_LOGIN: "user-login",
   USER_LOGOUT: "user-logout"
 };
