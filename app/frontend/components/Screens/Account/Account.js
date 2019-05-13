@@ -5,7 +5,6 @@ import useStoreListener from "../../../utils/useStoreListener/useStoreListener";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 
 const account = () => {
-  // const [isLoggedIn] = useStoreListener("isLoggedIn") || false;
   const [isLoggedIn] = useStoreListener(storeKeys.IS_LOGGED_IN) || false;
 
   if (!isLoggedIn) {
