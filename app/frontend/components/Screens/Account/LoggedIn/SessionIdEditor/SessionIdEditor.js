@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
+import { Container, Input, SaveButton } from "./SessionIdEditor.style";
 // import Help from "../../../../../resources/assets/help.png";
 
-// TODO: rename the component to something else.
-const sessionID = () => {
+const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState("");
 
   function onPoeSessionIdChange(e) {
@@ -15,39 +16,35 @@ const sessionID = () => {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
   }
 
+  const StyledContainer = styled.div`
+    ${Container}
+  `;
+
+  const StyledInput = styled.input`
+    ${Input}
+  `;
+
+  const StyledSaveButton = styled.button`
+    ${SaveButton}
+  `;
+
   // TODO: How to open link in the default browser?
   // https://stackoverflow.com/questions/31749625/make-a-link-from-electron-open-in-browser
   return (
     <React.Fragment>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          marginBottom: "5px"
-        }}
-      >
-        <input
+      <StyledContainer>
+        <StyledInput
           type="text"
           placeholder="PoE Session ID"
           onChange={e => onPoeSessionIdChange(e)}
           value={poeSessionId}
-          style={{
-            padding: "5px 8px"
-          }}
         />
-      </div>
-      <button
-        style={{
-          display: "block",
-          padding: "5px 8px"
-        }}
-        type="button"
-        onClick={onSaveButtonClick}
-      >
+      </StyledContainer>
+      <StyledSaveButton type="button" onClick={onSaveButtonClick}>
         Save
-      </button>
+      </StyledSaveButton>
     </React.Fragment>
   );
 };
 
-export default sessionID;
+export default sessionIdEditor;

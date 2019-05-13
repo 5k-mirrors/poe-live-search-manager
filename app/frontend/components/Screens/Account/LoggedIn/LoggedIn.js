@@ -1,6 +1,8 @@
 import React from "react";
 import firebase from "firebase/app";
-import SessionID from "./SessionID/SessionID";
+import styled from "styled-components";
+import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
+import { LoggedInHeader, SignOutButton } from "./LoggedIn.style";
 
 const loggedIn = () => {
   const { currentUser } = firebase.auth();
@@ -8,31 +10,27 @@ const loggedIn = () => {
   const welcomeMessage = `Logged in as ${currentUser.displayName ||
     currentUser.email}`;
 
-  // TODO: slightly refactor the appearance of this page.
-  // TODO: create reusable styled-components.
+  const StyledLoggedInHeader = styled.div`
+    ${LoggedInHeader}
+  `;
+
+  const StyledSignOutButton = styled.button`
+    ${SignOutButton}
+  `;
+
+  // TODO: might be a good idea to separate the `StyledLoggedInHeader` into a component.
   return (
-    <div
-      style={{
-        width: "90%",
-        margin: "0 auto"
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center"
-        }}
-      >
+    <div>
+      <StyledLoggedInHeader>
         <h3>{welcomeMessage}</h3>
-        <button
-          style={{ margin: "10px", padding: "5px 8px" }}
+        <StyledSignOutButton
           type="button"
           onClick={() => firebase.auth().signOut()}
         >
           Sign-out
-        </button>
-      </div>
-      <SessionID />
+        </StyledSignOutButton>
+      </StyledLoggedInHeader>
+      <SessionIdEditor />
     </div>
   );
 };
