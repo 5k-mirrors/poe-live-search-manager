@@ -34,12 +34,16 @@ export const connectToWebSocket = connectionDetails => {
   });
 };
 
-export const removeWebSocket = id => {
+export const disconnectFromWebSocket = id => {
   const ws = storedWebSockets.get(id);
-
-  storedWebSockets.remove(ws.id);
 
   if (JavaScriptUtils.isDefined(ws.socket)) {
     ws.socket.close();
   }
+};
+
+export const removeWebSocket = id => {
+  const ws = storedWebSockets.get(id);
+
+  storedWebSockets.remove(ws.id);
 };

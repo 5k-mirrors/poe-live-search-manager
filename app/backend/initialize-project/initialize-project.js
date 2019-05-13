@@ -16,7 +16,7 @@ const disconnectFromStoredWebSockets = () => {
   const storage = storedWebSockets.getStorage();
 
   storage.forEach(connectionDetails => {
-    WebSocketActions.removeWebSocket(connectionDetails.id);
+    WebSocketActions.disconnectFromWebSocket(connectionDetails.id);
   });
 };
 
@@ -32,7 +32,11 @@ const setupIpcEvents = () => {
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
-    WebSocketActions.removeWebSocket(connectionDetails.id);
+    const { id } = connectionDetails;
+
+    WebSocketActions.disconnectFromWebSocket(id);
+
+    WebSocketActions.removeWebSocket(id);
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, () => {
