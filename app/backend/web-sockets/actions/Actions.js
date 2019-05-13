@@ -1,7 +1,7 @@
 import { Notification } from "electron";
 import WebSocket from "ws";
-import WebSockets from "../WebSockets";
-import getWindowByName from "../../utils/GetWindowByName/GetWindowByName";
+import WebSockets from "../web-sockets";
+import getWindowByName from "../../utils/get-window-by-name/get-window-by-name";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
 
 const webSockets = new WebSockets();
