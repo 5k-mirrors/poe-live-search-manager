@@ -21,26 +21,30 @@ const disconnectFromStoredWebSockets = () => {
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_CONNECT, (event, connectionDetails) => {
-    const isLoggedIn = globalStore.get("isLoggedIn", false);
+    const socketsConnected = globalStore.get("socketsConnected", false);
 
-    if (isLoggedIn) {
+    if (socketsConnected) {
       WebSocketActions.connectToNewWebSocket(connectionDetails);
     }
   });
 
   ipcMain.on(ipcEvents.WS_DISCONNECT, (event, connectionDetails) => {
-    const isLoggedIn = globalStore.get("isLoggedIn", false);
+    const socketsConnected = globalStore.get("socketsConnected", false);
 
-    if (isLoggedIn) {
+    if (socketsConnected) {
       WebSocketActions.disconnectFromWebSocket(connectionDetails);
     }
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, () => {
+    globalStore.set("socketsConnected", true);
+
     connectToStoredWebSockets();
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
+    globalStore.set("socketsConnected", false);
+
     disconnectFromStoredWebSockets();
   });
 };
