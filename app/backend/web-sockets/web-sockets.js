@@ -3,15 +3,29 @@ class WebSockets {
     this.wsStorage = [];
   }
 
-  add(webSocket, id) {
+  add(connectionDetails) {
     this.wsStorage.push({
-      id,
-      socket: webSocket
+      ...connectionDetails
     });
+  }
+
+  updateSocket(id, socket) {
+    const webSocketIndex = this.wsStorage.findIndex(
+      webSocket => webSocket.id === id
+    );
+
+    this.wsStorage[webSocketIndex] = {
+      ...this.wsStorage[webSocketIndex],
+      socket
+    };
   }
 
   get(id) {
     return this.wsStorage.find(webSocket => webSocket.id === id);
+  }
+
+  getStorage() {
+    return [...this.wsStorage];
   }
 
   remove(id) {

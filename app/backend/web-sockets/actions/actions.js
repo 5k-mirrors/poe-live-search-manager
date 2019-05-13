@@ -1,10 +1,9 @@
 import { Notification } from "electron";
 import WebSocket from "ws";
-import WebSockets from "../web-sockets";
 import getWindowByName from "../../utils/get-window-by-name/get-window-by-name";
+import * as JavaScriptUtils from "../../../utils/JavaScriptUtils/JavaScriptUtils";
+import { storedWebSockets } from "../../../StoredWebSockets/StoredWebSockets";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
-
-const webSockets = new WebSockets();
 
 const doNotify = ({ notificationMessage }) => {
   new Notification({
@@ -25,20 +24,22 @@ const setupWebSocketListeners = webSocket => {
   });
 };
 
-export const connectToNewWebSocket = connectionDetails => {
+export const connectToWebSocket = connectionDetails => {
   const newWebSocket = new WebSocket(connectionDetails.uri);
 
   newWebSocket.on("open", () => {
-    webSockets.add(newWebSocket, connectionDetails.id);
+    storedWebSockets.updateSocket(connectionDetails.id, newWebSocket);
 
     setupWebSocketListeners(newWebSocket);
   });
 };
 
-export const disconnectFromWebSocket = connectionDetails => {
-  const ws = webSockets.get(connectionDetails.id);
+export const removeWebSocket = id => {
+  const ws = storedWebSockets.get(id);
 
-  ws.socket.close();
+  storedWebSockets.remove(ws.id);
 
-  webSockets.remove(ws.id);
+  if (JavaScriptUtils.isDefined(ws.socket)) {
+    ws.socket.close();
+  }
 };

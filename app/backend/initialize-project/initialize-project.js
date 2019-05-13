@@ -2,54 +2,55 @@ import { ipcMain } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import * as WebSocketActions from "../web-sockets/actions/actions";
 import { globalStore } from "../../GlobalStore/GlobalStore";
+import { storedWebSockets } from "../../StoredWebSockets/StoredWebSockets";
 
 const connectToStoredWebSockets = () => {
-  const storedWsConnections = globalStore.get("wsConnections", []);
+  const storage = storedWebSockets.getStorage();
 
-  storedWsConnections.forEach(connectionDetails => {
-    WebSocketActions.connectToNewWebSocket(connectionDetails);
+  storage.forEach(connectionDetails => {
+    WebSocketActions.connectToWebSocket(connectionDetails);
   });
 };
 
 const disconnectFromStoredWebSockets = () => {
-  const storedWsConnections = globalStore.get("wsConnections", []);
+  const storage = storedWebSockets.getStorage();
 
-  storedWsConnections.forEach(connectionDetails => {
-    WebSocketActions.disconnectFromWebSocket(connectionDetails);
+  storage.forEach(connectionDetails => {
+    WebSocketActions.removeWebSocket(connectionDetails.id);
   });
 };
 
 const setupIpcEvents = () => {
-  ipcMain.on(ipcEvents.WS_CONNECT, (event, connectionDetails) => {
-    const socketsConnected = globalStore.get("socketsConnected", false);
+  ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
+    storedWebSockets.add(connectionDetails);
 
-    if (socketsConnected) {
-      WebSocketActions.connectToNewWebSocket(connectionDetails);
+    const isLoggedIn = globalStore.get("isLoggedIn", false);
+
+    if (isLoggedIn) {
+      WebSocketActions.connectToWebSocket(connectionDetails);
     }
   });
 
-  ipcMain.on(ipcEvents.WS_DISCONNECT, (event, connectionDetails) => {
-    const socketsConnected = globalStore.get("socketsConnected", false);
-
-    if (socketsConnected) {
-      WebSocketActions.disconnectFromWebSocket(connectionDetails);
-    }
+  ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
+    WebSocketActions.removeWebSocket(connectionDetails.id);
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, () => {
-    globalStore.set("socketsConnected", true);
-
     connectToStoredWebSockets();
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
-    globalStore.set("socketsConnected", false);
-
     disconnectFromStoredWebSockets();
   });
 };
 
 const initializeProject = () => {
+  const locallySavedWsConnections = globalStore.get("wsConnections", []);
+
+  locallySavedWsConnections.forEach(connectionDetails => {
+    storedWebSockets.add(connectionDetails);
+  });
+
   setupIpcEvents();
 };
 
