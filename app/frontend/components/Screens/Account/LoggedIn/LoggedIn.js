@@ -18,7 +18,6 @@ const loggedIn = () => {
     ${SignOutButton}
   `;
 
-  // TODO: might be a good idea to separate the `StyledLoggedInHeader` into a component.
   return (
     <div>
       <StyledLoggedInHeader>
