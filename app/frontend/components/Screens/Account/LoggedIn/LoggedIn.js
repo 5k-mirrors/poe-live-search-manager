@@ -9,17 +9,29 @@ const loggedIn = () => {
     currentUser.email}`;
 
   // TODO: slightly refactor the appearance of this page.
+  // TODO: create reusable styled-components.
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "space-between"
+        width: "90%",
+        margin: "0 auto"
       }}
     >
-      <h1>{welcomeMessage}</h1>
-      <button type="button" onClick={() => firebase.auth().signOut()}>
-        Sign-out
-      </button>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center"
+        }}
+      >
+        <h3>{welcomeMessage}</h3>
+        <button
+          style={{ margin: "10px", padding: "5px 8px" }}
+          type="button"
+          onClick={() => firebase.auth().signOut()}
+        >
+          Sign-out
+        </button>
+      </div>
       <SessionID />
     </div>
   );
