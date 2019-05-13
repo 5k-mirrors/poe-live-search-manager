@@ -34,7 +34,7 @@ const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
     storedWebSockets.add(connectionDetails);
 
-    const isLoggedIn = globalStore.get("isLoggedIn", false);
+    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
     if (isLoggedIn) {
       WebSocketActions.connectToWebSocket(connectionDetails);
@@ -61,7 +61,10 @@ const setupIpcEvents = () => {
 };
 
 const loadLocallySavedWsConnectionsIntoStore = () => {
-  const locallySavedWsConnections = globalStore.get("wsConnections", []);
+  const locallySavedWsConnections = globalStore.get(
+    storeKeys.WS_CONNECTIONS,
+    []
+  );
 
   locallySavedWsConnections.forEach(connectionDetails => {
     storedWebSockets.add(connectionDetails);
