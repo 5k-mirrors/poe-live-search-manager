@@ -29,11 +29,11 @@ export const connect = id => {
 
   const newWebsocket = new WebSocket(ws.uri);
 
-  newWebsocket.on("open", () => {
-    store.update(ws.id, {
-      socket: newWebsocket
-    });
+  store.update(ws.id, {
+    socket: newWebsocket
+  });
 
+  newWebsocket.on("open", () => {
     setupWebSocketListeners(newWebsocket);
   });
 };
