@@ -2,23 +2,23 @@ import { ipcMain } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import * as webSocketActions from "../web-sockets/actions";
-import store from "../web-sockets/store";
+import singletonStore from "../web-sockets/singletonStore";
 
 const connectToStoredWebSockets = () => {
-  store.all().forEach(connectionDetails => {
+  singletonStore.all().forEach(connectionDetails => {
     webSocketActions.connect(connectionDetails);
   });
 };
 
 const disconnectFromStoredWebSockets = () => {
-  store.all().forEach(connectionDetails => {
+  singletonStore.all().forEach(connectionDetails => {
     webSocketActions.disconnect(connectionDetails);
   });
 };
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
-    store.add(connectionDetails);
+    singletonStore.add(connectionDetails);
 
     const isLoggedIn = globalStore.get("isLoggedIn", false);
 
@@ -34,7 +34,7 @@ const setupIpcEvents = () => {
       webSocketActions.disconnect(connectionDetails);
     }
 
-    store.remove(connectionDetails.id);
+    singletonStore.remove(connectionDetails.id);
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, () => {
@@ -50,7 +50,7 @@ const loadLocallySavedWsConnectionsIntoStore = () => {
   const locallySavedWsConnections = globalStore.get("wsConnections", []);
 
   locallySavedWsConnections.forEach(connectionDetails => {
-    store.add(connectionDetails);
+    singletonStore.add(connectionDetails);
   });
 };
 

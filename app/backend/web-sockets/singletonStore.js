@@ -39,7 +39,17 @@ class Store {
   }
 }
 
-const storeInstance = new Store();
-Object.freeze(storeInstance);
+class SingletonStore {
+  constructor() {
+    if (!SingletonStore.instance) {
+      SingletonStore.instance = new Store();
+    }
 
-export default storeInstance;
+    return SingletonStore.instance;
+  }
+}
+
+const singletonStore = new SingletonStore();
+Object.freeze(singletonStore);
+
+export default singletonStore;
