@@ -33,6 +33,7 @@ export const connect = id => {
     const newWebsocket = new WebSocket(ws.uri);
 
     store.update(ws.id, {
+      ...ws,
       socket: newWebsocket
     });
 
@@ -48,6 +49,10 @@ export const disconnect = id => {
   if (JavaScriptUtils.isDefined(ws.socket)) {
     ws.socket.close();
 
-    store.removeSocket(id);
+    delete ws.socket;
+
+    store.update(ws.id, {
+      ...ws
+    });
   }
 };

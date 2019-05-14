@@ -9,12 +9,11 @@ class Store {
     });
   }
 
-  update(id, data) {
+  update(id, updatedData) {
     const wsElementIndex = this.storage.findIndex(ws => ws.id === id);
 
     this.storage[wsElementIndex] = {
-      ...this.storage[wsElementIndex],
-      ...data
+      ...updatedData
     };
   }
 
