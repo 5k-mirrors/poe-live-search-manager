@@ -31,8 +31,7 @@ export const connect = id => {
 
   newWebsocket.on("open", () => {
     store.update(ws.id, {
-      socket: newWebsocket,
-      connected: true
+      socket: newWebsocket
     });
 
     setupWebSocketListeners(newWebsocket);
@@ -44,9 +43,5 @@ export const disconnect = id => {
 
   if (JavaScriptUtils.isDefined(ws.socket)) {
     ws.socket.close();
-
-    store.update(ws.id, {
-      connected: false
-    });
   }
 };

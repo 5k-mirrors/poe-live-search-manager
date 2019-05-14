@@ -5,8 +5,7 @@ class Store {
 
   add(connectionDetails) {
     this.storage.push({
-      ...connectionDetails,
-      connected: false
+      ...connectionDetails
     });
   }
 
