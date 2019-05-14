@@ -17,7 +17,7 @@ class Store {
     };
   }
 
-  get(id) {
+  find(id) {
     return this.storage.find(ws => ws.id === id);
   }
 
@@ -49,6 +49,5 @@ class SingletonStore {
 }
 
 const singletonStore = new SingletonStore();
-Object.freeze(singletonStore);
 
 export default singletonStore;

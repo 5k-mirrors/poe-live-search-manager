@@ -25,26 +25,22 @@ const setupWebSocketListeners = webSocket => {
 };
 
 export const connect = id => {
-  const ws = store.get(id);
+  const ws = store.find(id);
 
-  if (JavaScriptUtils.isDefined(ws.socket)) {
-    // Reconnecting will be implemented here.
-  } else {
-    const newWebsocket = new WebSocket(ws.uri);
+  const newWebsocket = new WebSocket(ws.uri);
 
-    store.update(ws.id, {
-      ...ws,
-      socket: newWebsocket
-    });
+  store.update(ws.id, {
+    ...ws,
+    socket: newWebsocket
+  });
 
-    newWebsocket.on("open", () => {
-      setupWebSocketListeners(newWebsocket);
-    });
-  }
+  newWebsocket.on("open", () => {
+    setupWebSocketListeners(newWebsocket);
+  });
 };
 
 export const disconnect = id => {
-  const ws = store.get(id);
+  const ws = store.find(id);
 
   if (JavaScriptUtils.isDefined(ws.socket)) {
     ws.socket.close();
