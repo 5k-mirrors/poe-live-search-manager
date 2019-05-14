@@ -6,13 +6,13 @@ import singletonStore from "../web-sockets/singletonStore";
 
 const connectToStoredWebSockets = () => {
   singletonStore.all().forEach(connectionDetails => {
-    webSocketActions.connect(connectionDetails);
+    webSocketActions.connect(connectionDetails.id);
   });
 };
 
 const disconnectFromStoredWebSockets = () => {
   singletonStore.all().forEach(connectionDetails => {
-    webSocketActions.disconnect(connectionDetails);
+    webSocketActions.disconnect(connectionDetails.id);
   });
 };
 
@@ -23,7 +23,7 @@ const setupIpcEvents = () => {
     const isLoggedIn = globalStore.get("isLoggedIn", false);
 
     if (isLoggedIn) {
-      webSocketActions.connect(connectionDetails);
+      webSocketActions.connect(connectionDetails.id);
     }
   });
 
@@ -31,7 +31,7 @@ const setupIpcEvents = () => {
     const isLoggedIn = globalStore.get("isLoggedIn", false);
 
     if (isLoggedIn) {
-      webSocketActions.disconnect(connectionDetails);
+      webSocketActions.disconnect(connectionDetails.id);
     }
 
     singletonStore.remove(connectionDetails.id);

@@ -25,19 +25,21 @@ const setupWebSocketListeners = webSocket => {
 };
 
 // TODO: connected flag?
-// TODO: connect -> use get.
-export const connect = connectionDetails => {
-  const newWebsocket = new WebSocket(connectionDetails.uri);
+
+export const connect = id => {
+  const ws = singletonStore.get(id);
+
+  const newWebsocket = new WebSocket(ws.uri);
 
   newWebsocket.on("open", () => {
-    singletonStore.update(connectionDetails.id, newWebsocket);
+    singletonStore.update(ws.id, newWebsocket);
 
     setupWebSocketListeners(newWebsocket);
   });
 };
 
-export const disconnect = connectionDetails => {
-  const ws = singletonStore.get(connectionDetails.id);
+export const disconnect = id => {
+  const ws = singletonStore.get(id);
 
   if (JavaScriptUtils.isDefined(ws.socket)) {
     ws.socket.close();
