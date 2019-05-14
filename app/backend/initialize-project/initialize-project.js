@@ -1,33 +1,29 @@
 import { ipcMain } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import * as WebSocketActions from "../web-sockets/actions/actions";
 import { globalStore } from "../../GlobalStore/GlobalStore";
-import { storedWebSockets } from "../../StoredWebSockets/StoredWebSockets";
+import * as webSocketActions from "../web-sockets/actions";
+import store from "../web-sockets/store";
 
 const connectToStoredWebSockets = () => {
-  const storage = storedWebSockets.getStorage();
-
-  storage.forEach(connectionDetails => {
-    WebSocketActions.connectToWebSocket(connectionDetails);
+  store.all().forEach(connectionDetails => {
+    webSocketActions.connect(connectionDetails);
   });
 };
 
 const disconnectFromStoredWebSockets = () => {
-  const storage = storedWebSockets.getStorage();
-
-  storage.forEach(connectionDetails => {
-    WebSocketActions.disconnectFromWebSocket(connectionDetails.id);
+  store.all().forEach(connectionDetails => {
+    webSocketActions.disconnect(connectionDetails);
   });
 };
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
-    storedWebSockets.add(connectionDetails);
+    store.add(connectionDetails);
 
     const isLoggedIn = globalStore.get("isLoggedIn", false);
 
     if (isLoggedIn) {
-      WebSocketActions.connectToWebSocket(connectionDetails);
+      webSocketActions.connect(connectionDetails);
     }
   });
 
@@ -35,10 +31,10 @@ const setupIpcEvents = () => {
     const isLoggedIn = globalStore.get("isLoggedIn", false);
 
     if (isLoggedIn) {
-      WebSocketActions.disconnectFromWebSocket(connectionDetails.id);
+      webSocketActions.disconnect(connectionDetails);
     }
 
-    WebSocketActions.removeWebSocket(connectionDetails.id);
+    store.remove(connectionDetails.id);
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, () => {
@@ -54,7 +50,7 @@ const loadLocallySavedWsConnectionsIntoStore = () => {
   const locallySavedWsConnections = globalStore.get("wsConnections", []);
 
   locallySavedWsConnections.forEach(connectionDetails => {
-    storedWebSockets.add(connectionDetails);
+    store.add(connectionDetails);
   });
 };
 
