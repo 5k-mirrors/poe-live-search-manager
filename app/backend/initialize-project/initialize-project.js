@@ -1,24 +1,20 @@
 import { ipcMain } from "electron";
-import * as WebSocketActions from "../web-sockets/actions/actions";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
-import { storedWebSockets } from "../../StoredWebSockets/StoredWebSockets";
 import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import * as webSocketActions from "../web-sockets/actions";
+import store from "../web-sockets/store";
 
 const connectToStoredWebSockets = () => {
-  const storage = storedWebSockets.getStorage();
-
-  storage.forEach(connectionDetails => {
-    WebSocketActions.connectToWebSocket(connectionDetails);
+  store.all().forEach(connectionDetails => {
+    webSocketActions.connect(connectionDetails.id);
   });
 };
 
 const disconnectFromStoredWebSockets = () => {
-  const storage = storedWebSockets.getStorage();
-
-  storage.forEach(connectionDetails => {
-    WebSocketActions.disconnectFromWebSocket(connectionDetails.id);
+  store.all().forEach(connectionDetails => {
+    webSocketActions.disconnect(connectionDetails.id);
   });
 };
 
@@ -32,21 +28,23 @@ const clearPoeSessionId = () => {
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
-    storedWebSockets.add(connectionDetails);
+    store.add(connectionDetails);
 
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
     if (isLoggedIn) {
-      WebSocketActions.connectToWebSocket(connectionDetails);
+      webSocketActions.connect(connectionDetails.id);
     }
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
-    const { id } = connectionDetails;
+    const isLoggedIn = globalStore.get("isLoggedIn", false);
 
-    WebSocketActions.disconnectFromWebSocket(id);
+    if (isLoggedIn) {
+      webSocketActions.disconnect(connectionDetails.id);
+    }
 
-    WebSocketActions.removeWebSocket(id);
+    store.remove(connectionDetails.id);
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, () => {
@@ -67,7 +65,7 @@ const loadLocallySavedWsConnectionsIntoStore = () => {
   );
 
   locallySavedWsConnections.forEach(connectionDetails => {
-    storedWebSockets.add(connectionDetails);
+    store.add(connectionDetails);
   });
 };
 
