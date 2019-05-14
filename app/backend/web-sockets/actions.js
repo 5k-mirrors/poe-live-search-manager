@@ -24,15 +24,16 @@ const setupWebSocketListeners = webSocket => {
   });
 };
 
-// TODO: connected flag?
-
 export const connect = id => {
   const ws = store.get(id);
 
   const newWebsocket = new WebSocket(ws.uri);
 
   newWebsocket.on("open", () => {
-    store.update(ws.id, newWebsocket);
+    store.update(ws.id, {
+      socket: newWebsocket,
+      connected: true
+    });
 
     setupWebSocketListeners(newWebsocket);
   });
@@ -43,5 +44,9 @@ export const disconnect = id => {
 
   if (JavaScriptUtils.isDefined(ws.socket)) {
     ws.socket.close();
+
+    store.update(ws.id, {
+      connected: false
+    });
   }
 };

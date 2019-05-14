@@ -1,26 +1,21 @@
 class Store {
   constructor() {
-    if (!Store.instance) {
-      Store.instance = this;
-    }
-
     this.storage = [];
-
-    return Store.instance;
   }
 
   add(connectionDetails) {
     this.storage.push({
-      ...connectionDetails
+      ...connectionDetails,
+      connected: false
     });
   }
 
-  update(id, socket) {
+  update(id, data) {
     const wsElementIndex = this.storage.findIndex(ws => ws.id === id);
 
     this.storage[wsElementIndex] = {
       ...this.storage[wsElementIndex],
-      socket
+      ...data
     };
   }
 
