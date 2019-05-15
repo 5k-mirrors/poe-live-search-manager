@@ -5,28 +5,24 @@ import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import InfoButton from "./InfoButton/InfoButton";
 import { Container, Input, SaveButton } from "./SessionIdEditor.style";
 
+const StyledContainer = styled.div`
+  ${Container}
+`;
+
+const StyledInput = styled.input`
+  ${Input}
+`;
+
+const StyledSaveButton = styled.button`
+  ${SaveButton}
+`;
+
 const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState("");
-
-  function onPoeSessionIdChange(e) {
-    setPoeSessionId(e.target.value);
-  }
 
   function onSaveButtonClick() {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
   }
-
-  const StyledContainer = styled.div`
-    ${Container}
-  `;
-
-  const StyledInput = styled.input`
-    ${Input}
-  `;
-
-  const StyledSaveButton = styled.button`
-    ${SaveButton}
-  `;
 
   return (
     <Fragment>
@@ -34,7 +30,7 @@ const sessionIdEditor = () => {
         <StyledInput
           type="text"
           placeholder="PoE Session ID"
-          onChange={e => onPoeSessionIdChange(e)}
+          onChange={e => setPoeSessionId(e.target.value)}
           value={poeSessionId}
         />
         <InfoButton />
