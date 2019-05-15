@@ -18,7 +18,9 @@ const StyledSaveButton = styled.button`
 `;
 
 const sessionIdEditor = () => {
-  const [poeSessionId, setPoeSessionId] = useState("");
+  const [poeSessionId, setPoeSessionId] = useState(
+    globalStore.get(storeKeys.POE_SESSION_ID, "")
+  );
 
   function onSaveButtonClick() {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
