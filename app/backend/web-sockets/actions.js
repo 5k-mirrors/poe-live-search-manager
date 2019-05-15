@@ -27,16 +27,18 @@ const setupWebSocketListeners = webSocket => {
 export const connect = id => {
   const ws = store.find(id);
 
-  const newWebsocket = new WebSocket(ws.uri);
+  if (!JavaScriptUtils.isDefined(ws.socket)) {
+    const newWebsocket = new WebSocket(ws.uri);
 
-  store.update(ws.id, {
-    ...ws,
-    socket: newWebsocket
-  });
+    store.update(ws.id, {
+      ...ws,
+      socket: newWebsocket
+    });
 
-  newWebsocket.on("open", () => {
-    setupWebSocketListeners(newWebsocket);
-  });
+    newWebsocket.on("open", () => {
+      setupWebSocketListeners(newWebsocket);
+    });
+  }
 };
 
 export const disconnect = id => {
