@@ -1,29 +1,63 @@
 import { ipcMain } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import * as WebSocketActions from "../web-sockets/actions/actions";
-import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { globalStore } from "../../GlobalStore/GlobalStore";
+import * as webSocketActions from "../web-sockets/actions";
+import store from "../web-sockets/store";
+
+const connectToStoredWebSockets = () => {
+  store.all().forEach(connectionDetails => {
+    webSocketActions.connect(connectionDetails.id);
+  });
+};
+
+const disconnectFromStoredWebSockets = () => {
+  store.all().forEach(connectionDetails => {
+    webSocketActions.disconnect(connectionDetails.id);
+  });
+};
 
 const setupIpcEvents = () => {
-  ipcMain.on(ipcEvents.WS_CONNECT, (_, connectionDetails) => {
-    WebSocketActions.connectToNewWebSocket(connectionDetails);
+  ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
+    store.add(connectionDetails);
+
+    const isLoggedIn = globalStore.get("isLoggedIn", false);
+
+    if (isLoggedIn) {
+      webSocketActions.connect(connectionDetails.id);
+    }
   });
 
-  ipcMain.on(ipcEvents.WS_DISCONNECT, (_, connectionDetails) => {
-    WebSocketActions.disconnectFromWebSocket(connectionDetails);
+  ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
+    const isLoggedIn = globalStore.get("isLoggedIn", false);
+
+    if (isLoggedIn) {
+      webSocketActions.disconnect(connectionDetails.id);
+    }
+
+    store.remove(connectionDetails.id);
+  });
+
+  ipcMain.on(ipcEvents.USER_LOGIN, () => {
+    connectToStoredWebSockets();
+  });
+
+  ipcMain.on(ipcEvents.USER_LOGOUT, () => {
+    disconnectFromStoredWebSockets();
+  });
+};
+
+const loadLocallySavedWsConnectionsIntoStore = () => {
+  const locallySavedWsConnections = globalStore.get("wsConnections", []);
+
+  locallySavedWsConnections.forEach(connectionDetails => {
+    store.add(connectionDetails);
   });
 };
 
 const initializeProject = () => {
+  loadLocallySavedWsConnectionsIntoStore();
+
   setupIpcEvents();
-
-  const storedWsConnections = globalStore.get("wsConnections");
-
-  if (JavaScriptUtils.isDefined(storedWsConnections)) {
-    storedWsConnections.forEach(connectionDetails => {
-      WebSocketActions.connectToNewWebSocket(connectionDetails);
-    });
-  }
 };
 
 export default initializeProject;

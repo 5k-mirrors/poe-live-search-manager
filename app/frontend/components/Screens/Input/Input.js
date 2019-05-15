@@ -37,7 +37,7 @@ class Input extends Component {
 
       globalStore.set("wsConnections", wsConnections);
 
-      ipcRenderer.send(ipcEvents.WS_CONNECT, {
+      ipcRenderer.send(ipcEvents.WS_ADD, {
         ...wsConnectionDataWithUniqueId
       });
 
@@ -84,7 +84,7 @@ class Input extends Component {
 
       globalStore.set("wsConnections", wsConnections);
 
-      ipcRenderer.send(ipcEvents.WS_DISCONNECT, wsConnectionData);
+      ipcRenderer.send(ipcEvents.WS_REMOVE, wsConnectionData);
 
       resolve();
     });
