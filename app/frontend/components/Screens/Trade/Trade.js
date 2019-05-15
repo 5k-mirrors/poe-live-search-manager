@@ -4,7 +4,7 @@ import useStoreListener from "../../../utils/useStoreListener/useStoreListener";
 import withLoggedOutRedirection from "../../withLoggedOutRedirection/withLoggedOutRedirection";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
-import * as TableColumns from "../../../resources/TableColumns/TableColumns";
+import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 
 const trade = () => {
   const [messages, setMessages] =
@@ -28,7 +28,7 @@ const trade = () => {
   return (
     <MaterialTable
       title="Messages"
-      columns={TableColumns.tradeScreen}
+      columns={tableColumns.tradeScreen}
       data={messages}
       editable={{
         onRowDelete: message => deleteMessage(message)

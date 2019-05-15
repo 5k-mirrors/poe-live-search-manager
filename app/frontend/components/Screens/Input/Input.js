@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
-import * as TableColumns from "../../../resources/TableColumns/TableColumns";
+import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
@@ -99,7 +99,7 @@ class Input extends Component {
     return (
       <MaterialTable
         title="Active connections"
-        columns={TableColumns.inputScreen}
+        columns={tableColumns.inputScreen}
         data={wsConnections}
         editable={{
           onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),

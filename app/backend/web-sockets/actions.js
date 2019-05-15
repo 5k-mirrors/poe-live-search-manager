@@ -1,7 +1,7 @@
 import { Notification } from "electron";
 import WebSocket from "ws";
 import getWindowByName from "../utils/get-window-by-name/get-window-by-name";
-import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import store from "./store";
 
@@ -27,7 +27,7 @@ const setupWebSocketListeners = webSocket => {
 export const connect = id => {
   const ws = store.find(id);
 
-  if (!JavaScriptUtils.isDefined(ws.socket)) {
+  if (!javaScriptUtils.isDefined(ws.socket)) {
     const newWebsocket = new WebSocket(ws.uri);
 
     store.update(ws.id, {
@@ -44,7 +44,7 @@ export const connect = id => {
 export const disconnect = id => {
   const ws = store.find(id);
 
-  if (JavaScriptUtils.isDefined(ws.socket)) {
+  if (javaScriptUtils.isDefined(ws.socket)) {
     ws.socket.close();
 
     delete ws.socket;
