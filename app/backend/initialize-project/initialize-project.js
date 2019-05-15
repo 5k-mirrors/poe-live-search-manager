@@ -2,7 +2,7 @@ import { ipcMain } from "electron";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
-import * as JavaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as webSocketActions from "../web-sockets/actions";
 import store from "../web-sockets/store";
 
@@ -16,14 +16,6 @@ const disconnectFromStoredWebSockets = () => {
   store.all().forEach(connectionDetails => {
     webSocketActions.disconnect(connectionDetails.id);
   });
-};
-
-const clearPoeSessionId = () => {
-  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
-
-  if (JavaScriptUtils.isDefined(poeSessionId)) {
-    globalStore.delete(storeKeys.POE_SESSION_ID);
-  }
 };
 
 const setupIpcEvents = () => {
@@ -52,7 +44,7 @@ const setupIpcEvents = () => {
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
-    clearPoeSessionId();
+    storeUtils.deleteItem(storeKeys.POE_SESSION_ID);
 
     disconnectFromStoredWebSockets();
   });
