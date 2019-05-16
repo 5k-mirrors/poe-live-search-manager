@@ -8,7 +8,7 @@ export const button = css`
   margin-left: 4px;
 `;
 
-export const image = css`
+export const helpImage = css`
   width: 25px;
   height: 25px;
   cursor: pointer;

@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { Item } from "./NavigationBarItem.style";
+import { navItem } from "./NavigationBarItem.style";
 
-const StyledItem = styled.li`
-  ${Item}
+const StyledNavItem = styled.li`
+  ${navItem}
 `;
 
 const navLinkActiveStyle = {
@@ -14,11 +14,11 @@ const navLinkActiveStyle = {
 };
 
 const navigationBarItem = ({ displayName, routePath }) => (
-  <StyledItem>
+  <StyledNavItem>
     <NavLink activeStyle={navLinkActiveStyle} to={routePath}>
       {displayName}
     </NavLink>
-  </StyledItem>
+  </StyledNavItem>
 );
 
 export default navigationBarItem;

@@ -1,19 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 import NavigationBarItem from "./NavigationBarItem/NavigationBarItem";
-import { Container, ItemsList } from "./NavigationBar.style";
+import { navContainer, itemsList } from "./NavigationBar.style";
 import { routes } from "../../resources/Routes/Routes";
 
-const StyledContainer = styled.div`
-  ${Container}
+const StyledNavContainer = styled.div`
+  ${navContainer}
 `;
 
 const StyledItemsList = styled.ul`
-  ${ItemsList}
+  ${itemsList}
 `;
 
 const navigationBar = () => (
-  <StyledContainer>
+  <StyledNavContainer>
     <StyledItemsList>
       {routes.map(route => (
         <NavigationBarItem
@@ -23,7 +23,7 @@ const navigationBar = () => (
         />
       ))}
     </StyledItemsList>
-  </StyledContainer>
+  </StyledNavContainer>
 );
 
 export default navigationBar;

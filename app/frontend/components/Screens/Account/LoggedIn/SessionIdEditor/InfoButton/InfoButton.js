@@ -1,15 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import { shell } from "electron";
-import { button, image } from "./InfoButton.style";
+import { button, helpImage } from "./InfoButton.style";
 import HelpIcon from "../../../../../../resources/assets/help.png";
 
 const StyledButton = styled.button`
   ${button}
 `;
 
-const StyledImage = styled.img`
-  ${image}
+const StyledHelpImage = styled.img`
+  ${helpImage}
 `;
 
 const infoButton = () => {
@@ -21,7 +21,7 @@ const infoButton = () => {
 
   return (
     <StyledButton onClick={onInfoButtonClick}>
-      <StyledImage src={HelpIcon} alt="SessionID wiki" />
+      <StyledHelpImage src={HelpIcon} alt="SessionID wiki" />
     </StyledButton>
   );
 };

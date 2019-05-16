@@ -2,14 +2,14 @@ import React from "react";
 import firebase from "firebase/app";
 import styled from "styled-components";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
-import { LoggedInHeader, SignOutButton } from "./LoggedIn.style";
+import { loggedInHeader, signOutButton } from "./LoggedIn.style";
 
 const StyledLoggedInHeader = styled.div`
-  ${LoggedInHeader}
+  ${loggedInHeader}
 `;
 
 const StyledSignOutButton = styled.button`
-  ${SignOutButton}
+  ${signOutButton}
 `;
 
 const loggedIn = () => {
