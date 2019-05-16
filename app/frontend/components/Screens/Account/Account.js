@@ -6,12 +6,12 @@ import useStoreListener from "../../../utils/useStoreListener/useStoreListener";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import { container } from "./Account.style";
 
+const StyledContainer = styled.div`
+  ${container}
+`;
+
 const account = () => {
   const [isLoggedIn] = useStoreListener(storeKeys.IS_LOGGED_IN) || false;
-
-  const StyledContainer = styled.div`
-    ${container}
-  `;
 
   return (
     <StyledContainer>{isLoggedIn ? <LoggedIn /> : <SignIn />}</StyledContainer>

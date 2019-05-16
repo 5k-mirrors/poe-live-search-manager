@@ -4,19 +4,19 @@ import styled from "styled-components";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import { LoggedInHeader, SignOutButton } from "./LoggedIn.style";
 
+const StyledLoggedInHeader = styled.div`
+  ${LoggedInHeader}
+`;
+
+const StyledSignOutButton = styled.button`
+  ${SignOutButton}
+`;
+
 const loggedIn = () => {
   const { currentUser } = firebase.auth();
 
   const welcomeMessage = `Logged in as ${currentUser.displayName ||
     currentUser.email}`;
-
-  const StyledLoggedInHeader = styled.div`
-    ${LoggedInHeader}
-  `;
-
-  const StyledSignOutButton = styled.button`
-    ${SignOutButton}
-  `;
 
   return (
     <div>
