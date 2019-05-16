@@ -44,7 +44,7 @@ const setupIpcEvents = () => {
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
-    storeUtils.deleteItem(storeKeys.POE_SESSION_ID);
+    storeUtils.deleteIfExists(storeKeys.POE_SESSION_ID);
 
     disconnectFromStoredWebSockets();
   });

@@ -1,10 +1,7 @@
 import { globalStore } from "../../GlobalStore/GlobalStore";
-import * as javaScriptUtils from "../JavaScriptUtils/JavaScriptUtils";
 
-export const deleteItem = storeKey => {
-  const storeItem = globalStore.get(storeKey);
-
-  if (javaScriptUtils.isDefined(storeItem)) {
+export const deleteIfExists = storeKey => {
+  if (globalStore.has(storeKey)) {
     globalStore.delete(storeKey);
   }
 };
