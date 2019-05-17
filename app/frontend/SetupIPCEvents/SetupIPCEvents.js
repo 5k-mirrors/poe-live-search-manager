@@ -1,16 +1,17 @@
 import { ipcRenderer } from "electron";
 import { globalStore } from "../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 
 const setupIPCEvents = () => {
   ipcRenderer.on(ipcEvents.TRADE_MESSAGE, (_, message) => {
     const parsedMessage = JSON.parse(message);
 
-    const currentMessages = globalStore.get("messages", []);
+    const currentMessages = globalStore.get(storeKeys.TRADE_MESSAGES, []);
 
     currentMessages.unshift(parsedMessage);
 
-    globalStore.set("messages", currentMessages);
+    globalStore.set(storeKeys.TRADE_MESSAGES, currentMessages);
   });
 };
 

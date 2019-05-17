@@ -1,31 +1,29 @@
 import React from "react";
 import styled from "styled-components";
 import NavigationBarItem from "./NavigationBarItem/NavigationBarItem";
-import { Container, ItemsList } from "./NavigationBar.style";
+import { navContainer, itemsList } from "./NavigationBar.style";
 import { routes } from "../../resources/Routes/Routes";
 
-const navigationBar = () => {
-  const StyledContainer = styled.div`
-    ${Container}
-  `;
+const StyledNavContainer = styled.div`
+  ${navContainer}
+`;
 
-  const StyledItemsList = styled.ul`
-    ${ItemsList}
-  `;
+const StyledItemsList = styled.ul`
+  ${itemsList}
+`;
 
-  return (
-    <StyledContainer>
-      <StyledItemsList>
-        {routes.map(route => (
-          <NavigationBarItem
-            key={route.displayName}
-            displayName={route.displayName}
-            routePath={route.routePath}
-          />
-        ))}
-      </StyledItemsList>
-    </StyledContainer>
-  );
-};
+const navigationBar = () => (
+  <StyledNavContainer>
+    <StyledItemsList>
+      {routes.map(route => (
+        <NavigationBarItem
+          key={route.displayName}
+          displayName={route.displayName}
+          routePath={route.routePath}
+        />
+      ))}
+    </StyledItemsList>
+  </StyledNavContainer>
+);
 
 export default navigationBar;

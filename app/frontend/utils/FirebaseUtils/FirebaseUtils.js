@@ -1,7 +1,8 @@
 import firebase from "firebase/app";
 import { ipcRenderer } from "electron";
-import * as FirebaseConfigs from "../../resources/FirebaseConfigs/FirebaseConfigs";
+import * as firebaseConfigs from "../../resources/FirebaseConfigs/FirebaseConfigs";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
 
 export const initializeApp = () => {
@@ -10,14 +11,14 @@ export const initializeApp = () => {
     return firebase.apps[0];
   }
 
-  return firebase.initializeApp(FirebaseConfigs.connection);
+  return firebase.initializeApp(firebaseConfigs.connection);
 };
 
 export const startAuthObserver = () =>
   firebase.auth().onAuthStateChanged(user => {
     const isLoggedIn = !!user;
 
-    globalStore.set("isLoggedIn", isLoggedIn);
+    globalStore.set(storeKeys.IS_LOGGED_IN, isLoggedIn);
 
     if (isLoggedIn) {
       ipcRenderer.send(ipcEvents.USER_LOGIN);

@@ -3,10 +3,12 @@ import MaterialTable from "material-table";
 import useStoreListener from "../../../utils/useStoreListener/useStoreListener";
 import withLoggedOutRedirection from "../../withLoggedOutRedirection/withLoggedOutRedirection";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
-import * as TableColumns from "../../../resources/TableColumns/TableColumns";
+import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
+import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 
 const trade = () => {
-  const [messages, setMessages] = useStoreListener("messages") || [];
+  const [messages, setMessages] =
+    useStoreListener(storeKeys.TRADE_MESSAGES) || [];
 
   function deleteMessage(message) {
     return new Promise(resolve => {
@@ -17,7 +19,7 @@ const trade = () => {
 
       setMessages(currentMessages);
 
-      globalStore.set("messages", currentMessages);
+      globalStore.set(storeKeys.TRADE_MESSAGES, currentMessages);
 
       resolve();
     });
@@ -26,7 +28,7 @@ const trade = () => {
   return (
     <MaterialTable
       title="Messages"
-      columns={TableColumns.tradeScreen}
+      columns={tableColumns.tradeScreen}
       data={messages}
       editable={{
         onRowDelete: message => deleteMessage(message)

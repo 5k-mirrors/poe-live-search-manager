@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
-import * as TableColumns from "../../../resources/TableColumns/TableColumns";
+import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 
 // https://github.com/electron/electron/issues/7300#issuecomment-274269710
 const electron = window.require("electron");
@@ -14,7 +15,7 @@ class Input extends Component {
     super(props);
 
     this.state = {
-      wsConnections: globalStore.get("wsConnections", [])
+      wsConnections: globalStore.get(storeKeys.WS_CONNECTIONS, [])
     };
   }
 
@@ -35,7 +36,7 @@ class Input extends Component {
         wsConnections
       });
 
-      globalStore.set("wsConnections", wsConnections);
+      globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_ADD, {
         ...wsConnectionDataWithUniqueId
@@ -63,7 +64,7 @@ class Input extends Component {
         wsConnections
       });
 
-      globalStore.set("wsConnections", wsConnections);
+      globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
 
       resolve();
     });
@@ -82,7 +83,7 @@ class Input extends Component {
         wsConnections
       });
 
-      globalStore.set("wsConnections", wsConnections);
+      globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
 
       ipcRenderer.send(ipcEvents.WS_REMOVE, wsConnectionData);
 
@@ -98,7 +99,7 @@ class Input extends Component {
     return (
       <MaterialTable
         title="Active connections"
-        columns={TableColumns.inputScreen}
+        columns={tableColumns.inputScreen}
         data={wsConnections}
         editable={{
           onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),

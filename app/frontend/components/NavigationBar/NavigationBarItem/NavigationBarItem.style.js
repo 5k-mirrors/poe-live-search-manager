@@ -1,6 +1,6 @@
 import { css } from "styled-components";
 
-export const Item = css`
+export const navItem = css`
   display: inline-block;
   text-decoration: none;
   font-weight: bold;

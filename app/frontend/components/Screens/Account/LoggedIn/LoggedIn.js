@@ -1,5 +1,16 @@
 import React from "react";
 import firebase from "firebase/app";
+import styled from "styled-components";
+import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
+import { loggedInHeader, signOutButton } from "./LoggedIn.style";
+
+const StyledLoggedInHeader = styled.div`
+  ${loggedInHeader}
+`;
+
+const StyledSignOutButton = styled.button`
+  ${signOutButton}
+`;
 
 const loggedIn = () => {
   const { currentUser } = firebase.auth();
@@ -9,10 +20,16 @@ const loggedIn = () => {
 
   return (
     <div>
-      <h1>{welcomeMessage}</h1>
-      <button type="button" onClick={() => firebase.auth().signOut()}>
-        Sign-out
-      </button>
+      <StyledLoggedInHeader>
+        <h3>{welcomeMessage}</h3>
+        <StyledSignOutButton
+          type="button"
+          onClick={() => firebase.auth().signOut()}
+        >
+          Sign-out
+        </StyledSignOutButton>
+      </StyledLoggedInHeader>
+      <SessionIdEditor />
     </div>
   );
 };
