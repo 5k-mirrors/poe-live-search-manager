@@ -33,6 +33,7 @@ const subscription = ({ id }) => {
         <p>{subscriptionDetails.data.active_subscription.tier}</p>
         <p>{subscriptionDetails.data.active_subscription.period}</p>
         <p>{subscriptionDetails.data.active_subscription.active_until}</p>
+        <button type="button">Refresh</button>
       </div>
     </div>
   );

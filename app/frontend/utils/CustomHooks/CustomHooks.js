@@ -12,7 +12,7 @@ export const useGenericFetch = (fetchFunction, ...args) => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const fetchedData = await fetchFunction(args);
+        const fetchedData = await fetchFunction(...args);
 
         setData({
           ...defaultState,
