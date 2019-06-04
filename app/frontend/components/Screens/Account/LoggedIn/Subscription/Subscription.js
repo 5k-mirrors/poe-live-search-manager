@@ -4,16 +4,24 @@ import * as BaseUrls from "../../../../../resources/BaseUrls/BaseUrls";
 import LoaderIcon from "../../../../UI/LoaderIcon/LoaderIcon";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
 
-function getSubscriptionData(id) {
-  const fetchUrl = BaseUrls.userAPI + id;
+// TODO: this might not be necessary, let's think about this.
+/* function getUserAPIUrl(id) {
+  return BaseUrls.userAPI + id;
+} */
 
-  return fetch(fetchUrl)
+function getSubscriptionData(id) {
+  const userAPIUrl = BaseUrls.userAPI + id;
+
+  return fetch(userAPIUrl)
     .then(userSubscriptionDetails => userSubscriptionDetails.json())
     .then(parsedSubscriptionDetails => parsedSubscriptionDetails);
 }
 
 const subscription = ({ id }) => {
-  const subscriptionData = CustomHooks.useGenericFetch(getSubscriptionData, id);
+  const [subscriptionData, refreshData] = CustomHooks.useGenericFetch(
+    getSubscriptionData,
+    id
+  );
 
   if (subscriptionData.isLoading) {
     return <LoaderIcon />;
@@ -23,7 +31,14 @@ const subscription = ({ id }) => {
     return <p>Error while quering subscription information.</p>;
   }
 
-  return <DataDisplayer data={subscriptionData.data} />;
+  return (
+    <div>
+      <DataDisplayer data={subscriptionData.data} />
+      <button type="button" onClick={refreshData}>
+        Refresh
+      </button>
+    </div>
+  );
 };
 
 export default subscription;

@@ -9,29 +9,29 @@ export const useGenericFetch = (fetchFunction, ...args) => {
 
   const [data, setData] = useState(defaultState);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const fetchedData = await fetchFunction(...args);
+  async function fetchData() {
+    try {
+      const fetchedData = await fetchFunction(...args);
 
-        setData({
-          ...defaultState,
-          data: fetchedData,
-          isLoading: false,
-          err: false
-        });
-      } catch (e) {
-        setData({
-          ...defaultState,
-          data: null,
-          isLoading: false,
-          err: true
-        });
-      }
+      setData({
+        ...defaultState,
+        data: fetchedData,
+        isLoading: false,
+        err: false
+      });
+    } catch (e) {
+      setData({
+        ...defaultState,
+        data: null,
+        isLoading: false,
+        err: true
+      });
     }
+  }
 
+  useEffect(() => {
     fetchData();
   }, []);
 
-  return data;
+  return [data, fetchData];
 };
