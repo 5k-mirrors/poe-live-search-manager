@@ -2,6 +2,7 @@ import React from "react";
 import firebase from "firebase/app";
 import styled from "styled-components";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
+import Subscription from "./Subscription/Subscription";
 import { loggedInHeader, signOutButton } from "./LoggedIn.style";
 
 const StyledLoggedInHeader = styled.div`
@@ -30,6 +31,7 @@ const loggedIn = () => {
         </StyledSignOutButton>
       </StyledLoggedInHeader>
       <SessionIdEditor />
+      <Subscription id={currentUser.uid} />
     </div>
   );
 };
