@@ -4,7 +4,7 @@ import * as BaseUrls from "../../../../../resources/BaseUrls/BaseUrls";
 import LoaderIcon from "../../../../UI/LoaderIcon/LoaderIcon";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
 
-function getSubscriptionInformation(id) {
+function getSubscriptionData(id) {
   const fetchUrl = BaseUrls.userAPI + id;
 
   return fetch(fetchUrl)
@@ -13,20 +13,17 @@ function getSubscriptionInformation(id) {
 }
 
 const subscription = ({ id }) => {
-  const subscriptionDetails = CustomHooks.useGenericFetch(
-    getSubscriptionInformation,
-    id
-  );
+  const subscriptionData = CustomHooks.useGenericFetch(getSubscriptionData, id);
 
-  if (subscriptionDetails.isLoading) {
+  if (subscriptionData.isLoading) {
     return <LoaderIcon />;
   }
 
-  if (subscriptionDetails.err) {
+  if (subscriptionData.err) {
     return <p>Error while quering subscription information.</p>;
   }
 
-  return <DataDisplayer data={subscriptionDetails.data} />;
+  return <DataDisplayer data={subscriptionData.data} />;
 };
 
 export default subscription;
