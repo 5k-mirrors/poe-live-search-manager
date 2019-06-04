@@ -11,6 +11,11 @@ export const useGenericFetch = (fetchFunction, ...args) => {
   const [data, setData] = useState(defaultState);
 
   async function fetchData() {
+    setData({
+      ...data,
+      isLoading: true
+    });
+
     try {
       const fetchedData = await fetchFunction(...args);
 

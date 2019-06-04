@@ -2,12 +2,8 @@ import React from "react";
 import * as CustomHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import * as BaseUrls from "../../../../../resources/BaseUrls/BaseUrls";
 import LoaderIcon from "../../../../UI/LoaderIcon/LoaderIcon";
+import Button from "../../../../UI/Button/Button";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
-
-// TODO: this might not be necessary, let's think about this.
-/* function getUserAPIUrl(id) {
-  return BaseUrls.userAPI + id;
-} */
 
 function getSubscriptionData(id) {
   const userAPIUrl = BaseUrls.userAPI + id;
@@ -34,9 +30,7 @@ const subscription = ({ id }) => {
   return (
     <div>
       <DataDisplayer data={subscriptionData.data} />
-      <button type="button" onClick={refreshData}>
-        Refresh
-      </button>
+      <Button text="Refresh" clickEvent={refreshData} />
     </div>
   );
 };
