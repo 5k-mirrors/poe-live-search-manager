@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { globalStore } from "../../../GlobalStore/GlobalStore";
 
 export const useGenericFetch = (fetchFunction, ...args) => {
   const defaultState = {
@@ -35,3 +36,21 @@ export const useGenericFetch = (fetchFunction, ...args) => {
 
   return [data, fetchData];
 };
+
+export const useStoreListener = storeKey => {
+  const [value, setValue] = useState(globalStore.get(storeKey));
+
+  useEffect(() => {
+    const removeListener = globalStore.onDidChange(storeKey, updatedData => {
+      setValue(updatedData);
+    });
+
+    return () => {
+      removeListener();
+    };
+  }, []);
+
+  return [value, setValue];
+};
+
+export default useStoreListener;
