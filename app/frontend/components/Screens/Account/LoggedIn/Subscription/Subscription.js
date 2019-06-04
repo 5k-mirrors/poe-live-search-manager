@@ -2,6 +2,7 @@ import React from "react";
 import * as CustomHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import * as BaseUrls from "../../../../../resources/BaseUrls/BaseUrls";
 import LoaderIcon from "../../../../UI/LoaderIcon/LoaderIcon";
+import DataDisplayer from "./DataDisplayer/DataDisplayer";
 
 function getSubscriptionInformation(id) {
   const fetchUrl = BaseUrls.userAPI + id;
@@ -25,18 +26,7 @@ const subscription = ({ id }) => {
     return <p>Error while quering subscription information.</p>;
   }
 
-  return (
-    <div>
-      <h3>Subscription information</h3>
-      <div>
-        <p>{subscriptionDetails.data.paying}</p>
-        <p>{subscriptionDetails.data.active_subscription.tier}</p>
-        <p>{subscriptionDetails.data.active_subscription.period}</p>
-        <p>{subscriptionDetails.data.active_subscription.active_until}</p>
-        <button type="button">Refresh</button>
-      </div>
-    </div>
-  );
+  return <DataDisplayer data={subscriptionDetails.data} />;
 };
 
 export default subscription;
