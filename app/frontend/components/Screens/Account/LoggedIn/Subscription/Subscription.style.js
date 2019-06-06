@@ -1,6 +1,5 @@
 import { css } from "styled-components";
 
-export const buttonStyle = css`
-  margin: 0px 10px 10px 0;
+export const refreshButton = css`
   padding: 5px 8px;
 `;

@@ -1,9 +1,14 @@
 import React from "react";
+import styled from "styled-components";
 import * as CustomHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import * as BaseUrls from "../../../../../resources/BaseUrls/BaseUrls";
 import LoaderIcon from "../../../../UI/LoaderIcon/LoaderIcon";
-import Button from "../../../../UI/Button/Button";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
+import { refreshButton } from "./Subscription.style";
+
+const StyledRefreshButton = styled.button`
+  ${refreshButton}
+`;
 
 function getSubscriptionData(id) {
   const userAPIUrl = BaseUrls.userAPI + id;
@@ -30,7 +35,7 @@ const subscription = ({ id }) => {
   return (
     <div>
       <DataDisplayer data={subscriptionData.data} />
-      <Button text="Refresh" clickEvent={refreshData} />
+      <StyledRefreshButton onClick={refreshData}>Refresh</StyledRefreshButton>
     </div>
   );
 };
