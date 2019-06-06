@@ -24,7 +24,7 @@ const subscription = ({ id }) => {
   }
 
   if (subscriptionData.err) {
-    return <p>Error while quering subscription information.</p>;
+    return <p>An error occurred while querying subcription information.</p>;
   }
 
   return (
