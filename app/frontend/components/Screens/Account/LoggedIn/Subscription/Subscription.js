@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import * as CustomHooks from "../../../../../utils/CustomHooks/CustomHooks";
-import * as BaseUrls from "../../../../../resources/BaseUrls/BaseUrls";
+import baseApiUrl from "../../../../../resources/BaseApiUrl/BaseApiUrl";
 import LoaderIcon from "../../../../UI/LoaderIcon/LoaderIcon";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
 import { refreshButton } from "./Subscription.style";
@@ -11,9 +11,9 @@ const StyledRefreshButton = styled.button`
 `;
 
 function getSubscriptionData(id) {
-  const userAPIUrl = BaseUrls.userAPI + id;
+  const userApiUrl = `${baseApiUrl}/user/${id}`;
 
-  return fetch(userAPIUrl)
+  return fetch(userApiUrl)
     .then(userSubscriptionDetails => userSubscriptionDetails.json())
     .then(parsedSubscriptionDetails => parsedSubscriptionDetails);
 }
