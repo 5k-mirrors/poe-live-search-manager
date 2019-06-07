@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import * as CustomHooks from "../../../../../utils/CustomHooks/CustomHooks";
-import baseApiUrl from "../../../../../resources/BaseApiUrl/BaseApiUrl";
+import * as subscriptionUtils from "../../../../../../utils/SubscriptionUtils/SubscriptionUtils";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
 import { refreshButton } from "./Subscription.style";
 
@@ -9,19 +9,11 @@ const StyledRefreshButton = styled.button`
   ${refreshButton}
 `;
 
-function getSubscriptionData(id) {
-  const userApiUrl = `${baseApiUrl}/user/${id}`;
-
-  return fetch(userApiUrl)
-    .then(userSubscriptionDetails => userSubscriptionDetails.json())
-    .then(parsedSubscriptionDetails => parsedSubscriptionDetails);
-}
-
 const subscription = ({ id }) => {
   const [
     subscriptionData,
     refreshSubscriptionData
-  ] = CustomHooks.useGenericFetch(getSubscriptionData, id);
+  ] = CustomHooks.useGenericFetch(subscriptionUtils.get, id);
   const [isDisabled, disableRefreshButton] = CustomHooks.useDisable(1);
 
   function onRefreshButtonClick() {
