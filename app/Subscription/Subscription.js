@@ -27,7 +27,7 @@ class Subscription {
     return { ...this.data };
   }
 
-  isActive() {
+  active() {
     if (javaScriptUtils.isDefined(this.data.paying)) {
       return this.data.paying;
     }

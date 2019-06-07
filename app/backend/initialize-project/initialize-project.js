@@ -26,7 +26,7 @@ const setupIpcEvents = () => {
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
     if (isLoggedIn) {
-      if (subscription.isActive()) {
+      if (subscription.active()) {
         webSocketActions.connect(connectionDetails.id);
       }
     }
@@ -43,7 +43,7 @@ const setupIpcEvents = () => {
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, () => {
-    if (subscription.isActive()) {
+    if (subscription.active()) {
       connectToStoredWebSockets();
     }
   });
