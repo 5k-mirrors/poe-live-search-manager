@@ -5,7 +5,7 @@ export const loggedInHeader = css`
   align-items: center;
 `;
 
-export const signOutButton = css`
-  margin: 10px;
+export const signoutButton = css`
   padding: 5px 8px;
+  margin-left: 5px;
 `;

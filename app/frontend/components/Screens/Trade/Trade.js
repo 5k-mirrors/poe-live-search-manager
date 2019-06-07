@@ -1,6 +1,6 @@
 import React from "react";
 import MaterialTable from "material-table";
-import useStoreListener from "../../../utils/useStoreListener/useStoreListener";
+import * as CustomHooks from "../../../utils/CustomHooks/CustomHooks";
 import withLoggedOutRedirection from "../../withLoggedOutRedirection/withLoggedOutRedirection";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
@@ -8,7 +8,7 @@ import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 
 const trade = () => {
   const [messages, setMessages] =
-    useStoreListener(storeKeys.TRADE_MESSAGES) || [];
+    CustomHooks.useStoreListener(storeKeys.TRADE_MESSAGES) || [];
 
   function deleteMessage(message) {
     return new Promise(resolve => {

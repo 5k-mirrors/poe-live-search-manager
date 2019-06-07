@@ -2,14 +2,15 @@ import React from "react";
 import firebase from "firebase/app";
 import styled from "styled-components";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
-import { loggedInHeader, signOutButton } from "./LoggedIn.style";
+import Subscription from "./Subscription/Subscription";
+import { loggedInHeader, signoutButton } from "./LoggedIn.style";
 
 const StyledLoggedInHeader = styled.div`
   ${loggedInHeader}
 `;
 
-const StyledSignOutButton = styled.button`
-  ${signOutButton}
+const StyledSignoutButton = styled.button`
+  ${signoutButton}
 `;
 
 const loggedIn = () => {
@@ -22,14 +23,12 @@ const loggedIn = () => {
     <div>
       <StyledLoggedInHeader>
         <h3>{welcomeMessage}</h3>
-        <StyledSignOutButton
-          type="button"
-          onClick={() => firebase.auth().signOut()}
-        >
-          Sign-out
-        </StyledSignOutButton>
+        <StyledSignoutButton onClick={() => firebase.auth().signOut()}>
+          Sign out
+        </StyledSignoutButton>
       </StyledLoggedInHeader>
       <SessionIdEditor />
+      <Subscription id={currentUser.uid} />
     </div>
   );
 };
