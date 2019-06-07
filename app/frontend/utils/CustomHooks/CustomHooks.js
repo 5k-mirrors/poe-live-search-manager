@@ -61,7 +61,7 @@ export const useStoreListener = storeKey => {
 export const useDisable = seconds => {
   const [isDisabled, setIsDisabled] = useState(false);
 
-  function disableButton() {
+  function disable() {
     setIsDisabled(previousIsDisabled => !previousIsDisabled);
 
     const oneSecondInMilliseconds = 1000;
@@ -71,5 +71,5 @@ export const useDisable = seconds => {
     }, seconds * oneSecondInMilliseconds);
   }
 
-  return [isDisabled, disableButton];
+  return [isDisabled, disable];
 };
