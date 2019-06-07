@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import * as CustomHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import baseApiUrl from "../../../../../resources/BaseApiUrl/BaseApiUrl";
-import LoaderIcon from "../../../../UI/LoaderIcon/LoaderIcon";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
 import { refreshButton } from "./Subscription.style";
 
@@ -23,25 +22,18 @@ const subscription = ({ id }) => {
     getSubscriptionData,
     id
   );
-  const [isDisabled, disableButton] = CustomHooks.useDisable(1);
+  const [isDisabled, disableRefreshButton] = CustomHooks.useDisable(1);
 
   function onRefreshButtonClick() {
     refreshData();
 
-    disableButton();
-  }
-
-  if (subscriptionData.isLoading) {
-    return <LoaderIcon />;
-  }
-
-  if (subscriptionData.err) {
-    return <p>An error occurred while querying subcription information.</p>;
+    disableRefreshButton();
   }
 
   return (
     <div>
-      <DataDisplayer data={subscriptionData.data} />
+      <h3>Subscription information</h3>
+      <DataDisplayer subscriptionData={subscriptionData} />
       <StyledRefreshButton disabled={isDisabled} onClick={onRefreshButtonClick}>
         Refresh
       </StyledRefreshButton>
