@@ -23,6 +23,13 @@ const subscription = ({ id }) => {
     getSubscriptionData,
     id
   );
+  const [isDisabled, disableButton] = CustomHooks.useDisable(1);
+
+  function onRefreshButtonClick() {
+    refreshData();
+
+    disableButton();
+  }
 
   if (subscriptionData.isLoading) {
     return <LoaderIcon />;
@@ -35,7 +42,9 @@ const subscription = ({ id }) => {
   return (
     <div>
       <DataDisplayer data={subscriptionData.data} />
-      <StyledRefreshButton onClick={refreshData}>Refresh</StyledRefreshButton>
+      <StyledRefreshButton disabled={isDisabled} onClick={onRefreshButtonClick}>
+        Refresh
+      </StyledRefreshButton>
     </div>
   );
 };

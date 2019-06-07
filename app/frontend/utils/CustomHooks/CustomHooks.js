@@ -58,4 +58,18 @@ export const useStoreListener = storeKey => {
   return [value, setValue];
 };
 
-export default useStoreListener;
+export const useDisable = seconds => {
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  function disableButton() {
+    setIsDisabled(previousIsDisabled => !previousIsDisabled);
+
+    const oneSecondInMilliseconds = 1000;
+
+    setTimeout(() => {
+      setIsDisabled(previousIsDisabled => !previousIsDisabled);
+    }, seconds * oneSecondInMilliseconds);
+  }
+
+  return [isDisabled, disableButton];
+};
