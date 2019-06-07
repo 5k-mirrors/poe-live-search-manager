@@ -9,6 +9,7 @@ const StyledRefreshButton = styled.button`
   ${refreshButton}
 `;
 
+// TODO: the data should also be refreshed here!
 const subscription = ({ id }) => {
   const [
     subscriptionData,

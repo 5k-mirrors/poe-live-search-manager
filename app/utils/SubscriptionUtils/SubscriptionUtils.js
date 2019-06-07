@@ -12,10 +12,8 @@ export const get = id => {
     .then(parsedSubscriptionDetails => parsedSubscriptionDetails);
 };
 
-export const save = id => {
-  get(id).then(data => {
-    globalStore.set(storeKeys.SUBSCRIPTION, data);
-  });
+export const update = data => {
+  globalStore.set(storeKeys.SUBSCRIPTION, data);
 };
 
 export const isActive = () => {

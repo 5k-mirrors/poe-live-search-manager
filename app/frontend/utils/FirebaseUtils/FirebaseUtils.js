@@ -22,7 +22,9 @@ export const startAuthObserver = () =>
     globalStore.set(storeKeys.IS_LOGGED_IN, isLoggedIn);
 
     if (isLoggedIn) {
-      subscriptionUtils.save(user.uid).then(() => {
+      subscriptionUtils.get(user.uid).then(data => {
+        subscriptionUtils.update(data);
+
         ipcRenderer.send(ipcEvents.USER_LOGIN);
       });
     } else {
