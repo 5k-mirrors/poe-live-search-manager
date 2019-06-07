@@ -18,14 +18,14 @@ function getSubscriptionData(id) {
 }
 
 const subscription = ({ id }) => {
-  const [subscriptionData, refreshData] = CustomHooks.useGenericFetch(
-    getSubscriptionData,
-    id
-  );
+  const [
+    subscriptionData,
+    refreshSubscriptionData
+  ] = CustomHooks.useGenericFetch(getSubscriptionData, id);
   const [isDisabled, disableRefreshButton] = CustomHooks.useDisable(1);
 
   function onRefreshButtonClick() {
-    refreshData();
+    refreshSubscriptionData();
 
     disableRefreshButton();
   }
