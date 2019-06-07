@@ -5,7 +5,7 @@ import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as webSocketActions from "../web-sockets/actions";
 import store from "../web-sockets/store";
-import * as subscriptionUtils from "../../utils/SubscriptionUtils/SubscriptionUtils";
+import subscription from "../../Subscription/Subscription";
 
 const connectToStoredWebSockets = () => {
   store.all().forEach(connectionDetails => {
@@ -26,7 +26,7 @@ const setupIpcEvents = () => {
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
     if (isLoggedIn) {
-      if (subscriptionUtils.isActive()) {
+      if (subscription.isActive()) {
         webSocketActions.connect(connectionDetails.id);
       }
     }
@@ -43,7 +43,7 @@ const setupIpcEvents = () => {
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, () => {
-    if (subscriptionUtils.isActive()) {
+    if (subscription.isActive()) {
       connectToStoredWebSockets();
     }
   });

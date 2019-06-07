@@ -4,7 +4,7 @@ import * as firebaseConfigs from "../../resources/FirebaseConfigs/FirebaseConfig
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
-import * as subscriptionUtils from "../../../utils/SubscriptionUtils/SubscriptionUtils";
+import subscription from "../../../Subscription/Subscription";
 
 export const initializeApp = () => {
   // https://stackoverflow.com/a/41005100/9599137
@@ -22,9 +22,7 @@ export const startAuthObserver = () =>
     globalStore.set(storeKeys.IS_LOGGED_IN, isLoggedIn);
 
     if (isLoggedIn) {
-      subscriptionUtils.get(user.uid).then(data => {
-        subscriptionUtils.update(data);
-
+      subscription.refresh().then(() => {
         ipcRenderer.send(ipcEvents.USER_LOGIN);
       });
     } else {
