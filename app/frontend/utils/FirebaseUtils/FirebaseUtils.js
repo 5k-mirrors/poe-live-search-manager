@@ -4,7 +4,6 @@ import * as firebaseConfigs from "../../resources/FirebaseConfigs/FirebaseConfig
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
-import subscription from "../../../Subscription/Subscription";
 
 export const initializeApp = () => {
   // https://stackoverflow.com/a/41005100/9599137
@@ -15,7 +14,6 @@ export const initializeApp = () => {
   return firebase.initializeApp(firebaseConfigs.connection);
 };
 
-// FIXME: this depends on the `paying` field.
 export const startAuthObserver = () =>
   firebase.auth().onAuthStateChanged(user => {
     const isLoggedIn = !!user;
@@ -23,11 +21,7 @@ export const startAuthObserver = () =>
     globalStore.set(storeKeys.IS_LOGGED_IN, isLoggedIn);
 
     if (isLoggedIn) {
-      subscription.getData(user.uid).then(subscriptionData => {
-        subscription.update(subscriptionData);
-
-        ipcRenderer.send(ipcEvents.USER_LOGIN);
-      });
+      ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid);
     } else {
       ipcRenderer.send(ipcEvents.USER_LOGOUT);
     }

@@ -1,7 +1,6 @@
 import { Notification } from "electron";
 import WebSocket from "ws";
 import getWindowByName from "../utils/get-window-by-name/get-window-by-name";
-import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import store from "./store";
 
@@ -27,12 +26,13 @@ const setupWebSocketListeners = webSocket => {
 export const connect = id => {
   const ws = store.find(id);
 
-  if (!javaScriptUtils.isDefined(ws.socket)) {
+  if (!ws.isConnected) {
     const newWebsocket = new WebSocket(ws.uri);
 
     store.update(ws.id, {
       ...ws,
-      socket: newWebsocket
+      socket: newWebsocket,
+      isConnected: true
     });
 
     newWebsocket.on("open", () => {
@@ -44,13 +44,27 @@ export const connect = id => {
 export const disconnect = id => {
   const ws = store.find(id);
 
-  if (javaScriptUtils.isDefined(ws.socket)) {
+  if (ws.isConnected) {
     ws.socket.close();
 
     delete ws.socket;
 
     store.update(ws.id, {
-      ...ws
+      ...ws,
+      isConnected: false
     });
   }
+};
+
+// TODO: let's move `connectToStoredWebSockets` and `disconnectFromStoredWebSockets` here.
+export const connectToStoredWebSockets = () => {
+  store.all().forEach(connectionDetails => {
+    connect(connectionDetails.id);
+  });
+};
+
+export const disconnectFromStoredWebSockets = () => {
+  store.all().forEach(connectionDetails => {
+    disconnect(connectionDetails.id);
+  });
 };

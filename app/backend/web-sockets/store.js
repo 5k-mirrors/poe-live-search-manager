@@ -1,3 +1,4 @@
+// TODO: let's add an `isConnected` field to each webSocket within the `storage`.
 class Store {
   constructor() {
     this.storage = [];
@@ -5,7 +6,8 @@ class Store {
 
   add(connectionDetails) {
     this.storage.push({
-      ...connectionDetails
+      ...connectionDetails,
+      isConnected: false
     });
   }
 
@@ -13,6 +15,7 @@ class Store {
     const wsElementIndex = this.storage.findIndex(ws => ws.id === id);
 
     this.storage[wsElementIndex] = {
+      ...this.storage[wsElementIndex],
       ...updatedData
     };
   }

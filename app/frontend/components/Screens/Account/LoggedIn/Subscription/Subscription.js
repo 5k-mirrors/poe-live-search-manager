@@ -3,6 +3,7 @@ import styled from "styled-components";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
 import * as CustomHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import subscription from "../../../../../../Subscription/Subscription";
+import * as subscriptionActions from "../../../../../../Subscription/Actions";
 import { refreshButton } from "./Subscription.style";
 
 const StyledRefreshButton = styled.button`
@@ -20,6 +21,8 @@ const subscriptionContainer = ({ id }) => {
     refreshSubscriptionData();
 
     subscription.update(subscriptionData);
+
+    subscriptionActions.checkIfSubscriptionIsActive();
 
     disableRefreshButton();
   }

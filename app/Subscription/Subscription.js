@@ -1,3 +1,5 @@
+// => Because `fetch` is not defined in the main process.
+import fetch from "node-fetch";
 import baseApiUrl from "../frontend/resources/BaseApiUrl/BaseApiUrl";
 
 class Subscription {
@@ -22,10 +24,6 @@ class Subscription {
       ...this.data,
       ...updatedData
     };
-  }
-
-  all() {
-    return { ...this.data };
   }
 
   active() {
