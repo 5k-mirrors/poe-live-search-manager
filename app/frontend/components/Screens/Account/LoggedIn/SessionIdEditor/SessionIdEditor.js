@@ -36,9 +36,7 @@ const sessionIdEditor = () => {
   let timeout;
 
   useEffect(() => {
-    return () => {
-      clearTimeout(timeout);
-    };
+    return () => clearTimeout(timeout);
   }, []);
 
   function onSaveButtonClick() {
