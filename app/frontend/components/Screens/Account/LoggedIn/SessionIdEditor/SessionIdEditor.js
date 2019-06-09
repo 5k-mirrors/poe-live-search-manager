@@ -33,10 +33,12 @@ const sessionIdEditor = () => {
   );
   const [showSuccessIcon, setShowSuccessIcon] = useState(false);
 
-  let timer;
+  let timeout;
 
   useEffect(() => {
-    return () => clearInterval(timer);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
 
   function onSaveButtonClick() {
@@ -44,9 +46,10 @@ const sessionIdEditor = () => {
 
     setShowSuccessIcon(true);
 
-    timer = setTimeout(() => {
-      setShowSuccessIcon(false);
-    }, 2500);
+    timeout = () =>
+      setTimeout(() => {
+        setShowSuccessIcon(false);
+      }, 2500);
   }
 
   return (
