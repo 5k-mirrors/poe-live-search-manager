@@ -2,6 +2,7 @@ import React from "react";
 import firebase from "firebase/app";
 import styled from "styled-components";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
+// import SubscriptionDataDisplayer from "./SubscriptionDataDisplayer/SubscriptionDataDisplayer";
 import Subscription from "./Subscription/Subscription";
 import { loggedInHeader, signoutButton } from "./LoggedIn.style";
 

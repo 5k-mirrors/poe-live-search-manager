@@ -1,32 +1,33 @@
 import React from "react";
 import styled from "styled-components";
-import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
-import { refreshButton } from "./Subscription.style";
+import * as CustomHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import subscription from "../../../../../../Subscription/Subscription";
+import { refreshButton } from "./Subscription.style";
 
 const StyledRefreshButton = styled.button`
   ${refreshButton}
 `;
 
-// TODO: the data should also be refreshed here!
-const subscriptionTest = ({ id }) => {
-  /* const [
+const subscriptionContainer = ({ id }) => {
+  const [
     subscriptionData,
     refreshSubscriptionData
-  ] = CustomHooks.useGenericFetch(subscriptionUtils.get, id); */
-  const [isDisabled, disableRefreshButton] = customHooks.useDisable(1);
+  ] = CustomHooks.useGenericFetch(subscription.getData, id);
+  const [isDisabled, disableRefreshButton] = CustomHooks.useDisable(1);
 
   function onRefreshButtonClick() {
-    // refreshSubscriptionData();
-    subscription.refresh(id);
+    refreshSubscriptionData();
+
+    subscription.update(subscriptionData);
 
     disableRefreshButton();
   }
-  // <DataDisplayer subscriptionData={data} />
+
   return (
     <div>
       <h3>Subscription information</h3>
+      <DataDisplayer subscriptionData={subscriptionData} />
       <StyledRefreshButton disabled={isDisabled} onClick={onRefreshButtonClick}>
         Refresh
       </StyledRefreshButton>
@@ -34,4 +35,4 @@ const subscriptionTest = ({ id }) => {
   );
 };
 
-export default subscriptionTest;
+export default subscriptionContainer;

@@ -1,19 +1,20 @@
-import * as javaScriptUtils from "../utils/JavaScriptUtils/JavaScriptUtils";
 import baseApiUrl from "../frontend/resources/BaseApiUrl/BaseApiUrl";
 
 class Subscription {
   constructor() {
-    this.data = {};
+    this.data = {
+      paying: false
+    };
   }
 
-  refresh(id) {
+  // => ESlint requires using `this` inside class methods.
+  // eslint-disable-next-line class-methods-use-this
+  getData(id) {
     const userApiUrl = `${baseApiUrl}/user/${id}`;
 
     return fetch(userApiUrl)
       .then(subscriptionData => subscriptionData.json())
-      .then(parsedSubscriptionData => {
-        this.update(parsedSubscriptionData);
-      });
+      .then(parsedSubscriptionData => parsedSubscriptionData);
   }
 
   update(updatedData) {
@@ -28,11 +29,7 @@ class Subscription {
   }
 
   active() {
-    if (javaScriptUtils.isDefined(this.data.paying)) {
-      return this.data.paying;
-    }
-
-    return false;
+    return this.data.paying;
   }
 }
 
@@ -46,4 +43,6 @@ class SingletonSubscription {
   }
 }
 
-export default SingletonSubscription;
+const singletonSubscription = new SingletonSubscription();
+
+export default singletonSubscription;

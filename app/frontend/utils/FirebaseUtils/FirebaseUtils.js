@@ -15,6 +15,7 @@ export const initializeApp = () => {
   return firebase.initializeApp(firebaseConfigs.connection);
 };
 
+// FIXME: this depends on the `paying` field.
 export const startAuthObserver = () =>
   firebase.auth().onAuthStateChanged(user => {
     const isLoggedIn = !!user;
@@ -22,7 +23,9 @@ export const startAuthObserver = () =>
     globalStore.set(storeKeys.IS_LOGGED_IN, isLoggedIn);
 
     if (isLoggedIn) {
-      subscription.refresh().then(() => {
+      subscription.getData(user.uid).then(subscriptionData => {
+        subscription.update(subscriptionData);
+
         ipcRenderer.send(ipcEvents.USER_LOGIN);
       });
     } else {

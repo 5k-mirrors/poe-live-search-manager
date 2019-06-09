@@ -19,6 +19,8 @@ const disconnectFromStoredWebSockets = () => {
   });
 };
 
+// TODO: whenever the subscription expires, the app will receive an event in which the `paying` field will be updated in the DB.
+// As a result, we should listen to that change and handle this event gracefully - e.g. disconnect from WebSockets etc.
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
     store.add(connectionDetails);
