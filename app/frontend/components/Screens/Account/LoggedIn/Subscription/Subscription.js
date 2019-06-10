@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
+import subscription from "../../../../../../Subscription/Subscription";
 import * as subscriptionActions from "../../../../../../Subscription/Actions";
 import { refreshButton } from "./Subscription.style";
 
@@ -9,15 +10,17 @@ const StyledRefreshButton = styled.button`
   ${refreshButton}
 `;
 
-const subscription = ({ id }) => {
+const subscriptionTest = ({ id }) => {
   const [fetchDetails, reFetch] = customHooks.useGenericFetch(
-    subscriptionActions.refreshData,
+    subscription.getData,
     id
   );
   const [isDisabled, disableRefreshButton] = customHooks.useDisable(1);
 
   function onRefreshButtonClick() {
     reFetch();
+
+    subscriptionActions.updateWebSocketConnections();
 
     disableRefreshButton();
   }
@@ -33,4 +36,4 @@ const subscription = ({ id }) => {
   );
 };
 
-export default subscription;
+export default subscriptionTest;

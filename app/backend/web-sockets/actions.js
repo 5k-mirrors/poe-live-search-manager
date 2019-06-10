@@ -56,13 +56,13 @@ export const disconnect = id => {
   }
 };
 
-export const connectToStoredWebSockets = () => {
+export const connectToInactiveWebSockets = () => {
   store.all().forEach(connectionDetails => {
     connect(connectionDetails.id);
   });
 };
 
-export const disconnectFromStoredWebSockets = () => {
+export const disconnectFromActiveWebSockets = () => {
   store.all().forEach(connectionDetails => {
     disconnect(connectionDetails.id);
   });

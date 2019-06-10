@@ -5,28 +5,19 @@ let subscriptionInterval;
 
 export const updateWebSocketConnections = () => {
   if (subscription.active()) {
-    webSocketActions.connectToStoredWebSockets();
+    webSocketActions.connectToInactiveWebSockets();
   } else {
-    webSocketActions.disconnectFromStoredWebSockets();
+    webSocketActions.disconnectFromActiveWebSockets();
   }
 };
 
-export const refreshData = id =>
-  subscription.getData(id).then(subscriptionData => {
-    subscription.update(subscriptionData);
-
-    updateWebSocketConnections();
-
-    return subscriptionData;
-  });
-
 export const startSubscriptionInterval = id => {
-  refreshData(id);
+  subscription.refresh(id);
 
-  const oneHourInMilliseconds = 3600000;
+  const oneHourInMilliseconds = 5000;
 
   subscriptionInterval = setInterval(() => {
-    refreshData(id);
+    subscription.refresh(id);
   }, oneHourInMilliseconds);
 };
 
