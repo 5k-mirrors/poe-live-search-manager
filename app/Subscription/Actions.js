@@ -5,9 +5,9 @@ let subscriptionInterval;
 
 export const updateWebSocketConnections = () => {
   if (subscription.active()) {
-    webSocketActions.connectToInactiveWebSockets();
+    webSocketActions.connectToStoredWebSockets();
   } else {
-    webSocketActions.disconnectFromActiveWebSockets();
+    webSocketActions.disconnectFromStoredWebSockets();
   }
 };
 
