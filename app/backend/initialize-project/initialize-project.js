@@ -4,39 +4,8 @@ import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as webSocketActions from "../web-sockets/actions";
-import store from "../web-sockets/store";
 import * as subscriptionActions from "../../Subscription/Actions";
-// import subscription from "../../Subscription/Subscription";
-
-/* const connectToStoredWebSockets = () => {
-  store.all().forEach(connectionDetails => {
-    webSocketActions.connect(connectionDetails.id);
-  });
-};
-
-const disconnectFromStoredWebSockets = () => {
-  store.all().forEach(connectionDetails => {
-    webSocketActions.disconnect(connectionDetails.id);
-  });
-}; */
-
-/* let subscriptionIntervalTimer;
-
-const startSubscriptionInterval = id => {
-  const oneHourInMilliseconds = 3600000;
-
-  subscriptionIntervalTimer = setInterval(() => {
-    return subscription.getData(id).then(subscriptionData => {
-      subscription.update(subscriptionData);
-
-      if (subscription.active()) {
-        return connectToStoredWebSockets();
-      }
-
-      return disconnectFromStoredWebSockets();
-    });
-  }, oneHourInMilliseconds);
-}; */
+import store from "../web-sockets/store";
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
@@ -45,7 +14,7 @@ const setupIpcEvents = () => {
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
     if (isLoggedIn) {
-      subscriptionActions.checkIfSubscriptionIsActive();
+      subscriptionActions.updateWebSocketConnections();
     }
   });
 

@@ -36,7 +36,6 @@ const sessionIdEditor = () => {
   let timer;
 
   useEffect(() => {
-    // TODO: this should be `clearTimeout`.
     return () => clearInterval(timer);
   }, []);
 

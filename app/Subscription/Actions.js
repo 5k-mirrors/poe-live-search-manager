@@ -1,9 +1,9 @@
 import subscription from "./Subscription";
 import * as webSocketActions from "../backend/web-sockets/actions";
 
-let subscriptionIntervalTimer;
+let subscriptionInterval;
 
-export const checkIfSubscriptionIsActive = () => {
+export const updateWebSocketConnections = () => {
   if (subscription.active()) {
     return webSocketActions.connectToStoredWebSockets();
   }
@@ -11,20 +11,27 @@ export const checkIfSubscriptionIsActive = () => {
   return webSocketActions.disconnectFromStoredWebSockets();
 };
 
+export const refreshData = id =>
+  subscription.getData(id).then(subscriptionData => {
+    subscription.update(subscriptionData);
+
+    updateWebSocketConnections();
+
+    return subscriptionData;
+  });
+
 export const startSubscriptionInterval = id => {
-  const oneHourInMilliseconds = 3600000;
+  refreshData(id);
 
-  subscriptionIntervalTimer = setInterval(() => {
-    return subscription.getData(id).then(subscriptionData => {
-      subscription.update(subscriptionData);
+  const oneHourInMilliseconds = 5000;
 
-      checkIfSubscriptionIsActive();
-    });
+  subscriptionInterval = setInterval(() => {
+    refreshData(id);
   }, oneHourInMilliseconds);
 };
 
 export const clearSubscriptionInterval = () => {
-  clearInterval(subscriptionIntervalTimer);
+  clearInterval(subscriptionInterval);
 
   webSocketActions.disconnectFromStoredWebSockets();
 };
