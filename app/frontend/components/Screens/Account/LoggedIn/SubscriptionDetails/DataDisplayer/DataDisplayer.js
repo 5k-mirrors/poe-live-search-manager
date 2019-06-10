@@ -7,12 +7,12 @@ const StyledItems = styled.div`
   ${Items}
 `;
 
-const dataDisplayer = ({ fetchDetails }) => {
-  if (fetchDetails.isLoading) {
+const dataDisplayer = ({ fetchedData }) => {
+  if (fetchedData.isLoading) {
     return <LoaderIcon />;
   }
 
-  if (fetchDetails.err) {
+  if (fetchedData.err) {
     return <p>An error occurred while querying subcription information.</p>;
   }
 
@@ -20,15 +20,15 @@ const dataDisplayer = ({ fetchDetails }) => {
     <StyledItems>
       <p>
         <b>Tier </b>
-        {fetchDetails.data.active_subscription.tier}
+        {fetchedData.data.active_subscription.tier}
       </p>
       <p>
         <b>Period </b>
-        {fetchDetails.data.active_subscription.period}
+        {fetchedData.data.active_subscription.period}
       </p>
       <p>
         <b>Active until </b>
-        {fetchDetails.data.active_subscription.active_until}
+        {fetchedData.data.active_subscription.active_until}
       </p>
     </StyledItems>
   );
