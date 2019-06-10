@@ -11,13 +11,21 @@ export const updateWebSocketConnections = () => {
   }
 };
 
-export const startSubscriptionInterval = id => {
-  subscription.refresh(id);
+export const refresh = id => {
+  subscription.getData(id).then(subscriptionData => {
+    subscription.update(subscriptionData);
 
-  const oneHourInMilliseconds = 5000;
+    updateWebSocketConnections();
+  });
+};
+
+export const startSubscriptionInterval = id => {
+  refresh(id);
+
+  const oneHourInMilliseconds = 3600000;
 
   subscriptionInterval = setInterval(() => {
-    subscription.refresh(id);
+    refresh(id);
   }, oneHourInMilliseconds);
 };
 

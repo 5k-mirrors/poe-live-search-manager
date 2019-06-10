@@ -1,6 +1,5 @@
 // => `fetch` is not defined in the main process.
 import fetch from "node-fetch";
-import * as subscriptionActions from "./Actions";
 import baseApiUrl from "../frontend/resources/BaseApiUrl/BaseApiUrl";
 
 class Subscription {
@@ -18,14 +17,6 @@ class Subscription {
     return fetch(userApiUrl)
       .then(subscriptionData => subscriptionData.json())
       .then(parsedSubscriptionData => parsedSubscriptionData);
-  }
-
-  refresh(id) {
-    this.getData(id).then(subscriptionData => {
-      this.update(subscriptionData);
-
-      subscriptionActions.updateWebSocketConnections();
-    });
   }
 
   update(updatedData) {
