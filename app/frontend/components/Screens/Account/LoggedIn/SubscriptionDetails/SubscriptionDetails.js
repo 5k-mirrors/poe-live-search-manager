@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
+import GenericFetchDataDisplayer from "../../../../GenericFetchDataDisplayer/GenericFetchDataDisplayer";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import subscription from "../../../../../../Subscription/Subscription";
 import * as subscriptionActions from "../../../../../../Subscription/Actions";
@@ -28,7 +29,9 @@ const subscriptionDetails = ({ id }) => {
   return (
     <div>
       <h3>Subscription information</h3>
-      <DataDisplayer fetchedData={fetchedData} />
+      <GenericFetchDataDisplayer fetchedData={fetchedData}>
+        <DataDisplayer subscriptionData={fetchedData.data} />
+      </GenericFetchDataDisplayer>
       <StyledRefreshButton disabled={isDisabled} onClick={onRefreshButtonClick}>
         Refresh
       </StyledRefreshButton>
