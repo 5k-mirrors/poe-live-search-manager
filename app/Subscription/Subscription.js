@@ -1,4 +1,4 @@
-// => Because `fetch` is not defined in the main process.
+// => `fetch` is not defined in the main process.
 import fetch from "node-fetch";
 import baseApiUrl from "../frontend/resources/BaseApiUrl/BaseApiUrl";
 

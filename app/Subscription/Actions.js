@@ -5,10 +5,10 @@ let subscriptionInterval;
 
 export const updateWebSocketConnections = () => {
   if (subscription.active()) {
-    return webSocketActions.connectToStoredWebSockets();
+    webSocketActions.connectToStoredWebSockets();
+  } else {
+    webSocketActions.disconnectFromStoredWebSockets();
   }
-
-  return webSocketActions.disconnectFromStoredWebSockets();
 };
 
 export const refreshData = id =>
@@ -23,7 +23,7 @@ export const refreshData = id =>
 export const startSubscriptionInterval = id => {
   refreshData(id);
 
-  const oneHourInMilliseconds = 5000;
+  const oneHourInMilliseconds = 3600000;
 
   subscriptionInterval = setInterval(() => {
     refreshData(id);
