@@ -1,4 +1,3 @@
-// TODO: let's add an `isConnected` field to each webSocket within the `storage`.
 class Store {
   constructor() {
     this.storage = [];

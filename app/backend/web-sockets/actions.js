@@ -56,7 +56,6 @@ export const disconnect = id => {
   }
 };
 
-// TODO: let's move `connectToStoredWebSockets` and `disconnectFromStoredWebSockets` here.
 export const connectToStoredWebSockets = () => {
   store.all().forEach(connectionDetails => {
     connect(connectionDetails.id);
