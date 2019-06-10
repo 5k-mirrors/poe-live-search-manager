@@ -33,7 +33,9 @@ const setupIpcEvents = () => {
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
-    subscriptionActions.clearSubscriptionInterval();
+    subscriptionActions.stopSubscriptionInterval();
+
+    webSocketActions.disconnectFromStoredWebSockets();
 
     storeUtils.deleteIfExists(storeKeys.POE_SESSION_ID);
   });

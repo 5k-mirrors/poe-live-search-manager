@@ -30,8 +30,6 @@ export const startSubscriptionInterval = id => {
   }, oneHourInMilliseconds);
 };
 
-export const clearSubscriptionInterval = () => {
+export const stopSubscriptionInterval = () => {
   clearInterval(subscriptionInterval);
-
-  webSocketActions.disconnectFromStoredWebSockets();
 };
