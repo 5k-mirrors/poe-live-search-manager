@@ -1,7 +1,7 @@
 import subscription from "./Subscription";
 import * as webSocketActions from "../backend/web-sockets/actions";
 
-let subscriptionInterval;
+let refreshInterval;
 
 export const refresh = id => {
   subscription.getData(id).then(subscriptionData => {
@@ -11,16 +11,16 @@ export const refresh = id => {
   });
 };
 
-export const startSubscriptionRefreshInterval = id => {
+export const startRefreshInterval = id => {
   refresh(id);
 
   const oneHourInMilliseconds = 3600000;
 
-  subscriptionInterval = setInterval(() => {
+  refreshInterval = setInterval(() => {
     refresh(id);
   }, oneHourInMilliseconds);
 };
 
-export const stopSubscriptionRefreshInterval = () => {
-  clearInterval(subscriptionInterval);
+export const stopRefreshInterval = () => {
+  clearInterval(refreshInterval);
 };
