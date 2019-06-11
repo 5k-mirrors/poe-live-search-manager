@@ -3,19 +3,11 @@ import * as webSocketActions from "../backend/web-sockets/actions";
 
 let subscriptionInterval;
 
-export const updateWebSocketConnections = () => {
-  if (subscription.active()) {
-    webSocketActions.connectToStoredWebSockets();
-  } else {
-    webSocketActions.disconnectFromStoredWebSockets();
-  }
-};
-
 export const refresh = id => {
   subscription.getData(id).then(subscriptionData => {
     subscription.update(subscriptionData);
 
-    updateWebSocketConnections();
+    webSocketActions.updateConnections();
   });
 };
 

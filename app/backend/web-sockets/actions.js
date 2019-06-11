@@ -3,6 +3,7 @@ import WebSocket from "ws";
 import getWindowByName from "../utils/get-window-by-name/get-window-by-name";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import store from "./store";
+import subscription from "../../Subscription/Subscription";
 
 const doNotify = ({ notificationMessage }) => {
   new Notification({
@@ -66,4 +67,12 @@ export const disconnectFromStoredWebSockets = () => {
   store.all().forEach(connectionDetails => {
     disconnect(connectionDetails.id);
   });
+};
+
+export const updateConnections = () => {
+  if (subscription.active()) {
+    connectToStoredWebSockets();
+  } else {
+    disconnectFromStoredWebSockets();
+  }
 };

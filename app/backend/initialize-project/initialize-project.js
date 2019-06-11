@@ -14,7 +14,7 @@ const setupIpcEvents = () => {
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
     if (isLoggedIn) {
-      subscriptionActions.updateWebSocketConnections();
+      webSocketActions.updateConnections();
     }
   });
 

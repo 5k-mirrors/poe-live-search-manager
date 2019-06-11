@@ -4,7 +4,7 @@ import DataDisplayer from "./DataDisplayer/DataDisplayer";
 import GenericFetchDataDisplayer from "../../../../GenericFetchDataDisplayer/GenericFetchDataDisplayer";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import subscription from "../../../../../../Subscription/Subscription";
-import * as subscriptionActions from "../../../../../../Subscription/Actions";
+import * as webSocketActions from "../../../../../../backend/web-sockets/actions";
 import { refreshButton } from "./SubscriptionDetails.style";
 
 const StyledRefreshButton = styled.button`
@@ -21,7 +21,7 @@ const subscriptionDetails = ({ id }) => {
   function onRefreshButtonClick() {
     refreshFetchedData();
 
-    subscriptionActions.updateWebSocketConnections();
+    webSocketActions.updateConnections();
 
     disableRefreshButton();
   }
