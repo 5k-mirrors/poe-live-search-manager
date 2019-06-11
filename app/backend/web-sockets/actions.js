@@ -8,7 +8,9 @@ const setupWebSocketListeners = webSocket => {
     const parsedItemIds = JSON.parse(itemIds);
 
     parsedItemIds.new.forEach(id => {
-      poeTrade.getResult(id).then(() => {});
+      poeTrade.getResult(id).then(result => {
+        poeTrade.copyWhisperToClipboard(result);
+      });
     });
   });
 };
