@@ -11,7 +11,7 @@ export const refresh = id => {
   });
 };
 
-export const startSubscriptionInterval = id => {
+export const startSubscriptionRefreshInterval = id => {
   refresh(id);
 
   const oneHourInMilliseconds = 3600000;
@@ -21,6 +21,6 @@ export const startSubscriptionInterval = id => {
   }, oneHourInMilliseconds);
 };
 
-export const stopSubscriptionInterval = () => {
+export const stopSubscriptionRefreshInterval = () => {
   clearInterval(subscriptionInterval);
 };
