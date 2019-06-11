@@ -9,15 +9,11 @@ class Subscription {
     };
   }
 
-  // => ESlint requires using `this` inside class methods.
-  // eslint-disable-next-line class-methods-use-this
-  getData(id) {
+  getData = id => {
     const userApiUrl = `${baseApiUrl}/user/${id}`;
 
-    return fetch(userApiUrl)
-      .then(subscriptionData => subscriptionData.json())
-      .then(parsedSubscriptionData => parsedSubscriptionData);
-  }
+    return fetch(userApiUrl).then(subscriptionData => subscriptionData.json());
+  };
 
   update(updatedData) {
     this.data = {
