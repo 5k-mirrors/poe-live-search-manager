@@ -4,6 +4,8 @@ import getWindowByName from "../utils/get-window-by-name/get-window-by-name";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
+import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import { globalStore } from "../../GlobalStore/GlobalStore";
 
 const doNotify = ({ notificationMessage }) => {
   new Notification({
@@ -14,9 +16,9 @@ const doNotify = ({ notificationMessage }) => {
 
 const setupWebSocketListeners = webSocket => {
   webSocket.on("message", message => {
-    doNotify({
+    /* doNotify({
       notificationMessage: message
-    });
+    }); */
 
     const window = getWindowByName("PoE Sniper");
 
@@ -27,8 +29,14 @@ const setupWebSocketListeners = webSocket => {
 export const connect = id => {
   const ws = store.find(id);
 
+  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
+
   if (!ws.isConnected) {
-    const newWebsocket = new WebSocket(ws.uri);
+    const newWebsocket = new WebSocket(ws.uri, {
+      headers: {
+        Cookie: `POESESSID=${poeSessionId}`
+      }
+    });
 
     store.update(ws.id, {
       ...ws,

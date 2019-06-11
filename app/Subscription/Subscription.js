@@ -1,6 +1,6 @@
 // => `fetch` is not defined in the main process.
 import fetch from "node-fetch";
-import baseApiUrl from "../frontend/resources/BaseApiUrl/BaseApiUrl";
+import * as baseUrls from "../resources/BaseUrls/BaseUrls";
 
 class Subscription {
   constructor() {
@@ -10,7 +10,7 @@ class Subscription {
   }
 
   getData = id => {
-    const userApiUrl = `${baseApiUrl}/user/${id}`;
+    const userApiUrl = `${baseUrls.userApi}/user/${id}`;
 
     return fetch(userApiUrl).then(subscriptionData => subscriptionData.json());
   };
