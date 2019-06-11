@@ -14,7 +14,7 @@ export const getResult = id => {
   const itemUrl = `${baseUrls.tradeFetch + id}`;
 
   return fetch(itemUrl)
-    .then(data => data.json().result)
+    .then(data => data.json())
     .then(parsedData => parsedData.result);
 };
 
