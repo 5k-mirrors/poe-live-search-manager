@@ -1,8 +1,9 @@
 import fetch from "node-fetch";
 import { clipboard } from "electron";
-import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import doNotify from "../utils/do-notify/do-notify";
 
 export const getSession = () => {
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
@@ -14,7 +15,7 @@ export const getResult = id => {
   const itemUrl = `${baseUrls.tradeFetch + id}`;
 
   return fetch(itemUrl)
-    .then(data => data.json().result)
+    .then(data => data.json())
     .then(parsedData => parsedData.result);
 };
 
@@ -24,8 +25,21 @@ const getWhisperMessage = result => {
   return whisperMessage;
 };
 
-export const copyWhisperToClipboard = result => {
+const getNotificationTitle = () => {
+  return "New #{search_name} listed";
+};
+
+const getNotificationBody = whisperMessage => {
+  return whisperMessage.buyout ? `~b/o ${whisperMessage.buyout}` : " ";
+};
+
+export const handleResult = result => {
   const whisperMessage = getWhisperMessage(result);
 
   clipboard.writeText(whisperMessage);
+
+  doNotify({
+    title: getNotificationTitle(),
+    body: getNotificationBody(whisperMessage)
+  });
 };

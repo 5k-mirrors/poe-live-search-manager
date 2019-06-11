@@ -9,7 +9,7 @@ const setupWebSocketListeners = webSocket => {
 
     parsedItemIds.new.forEach(id => {
       poeTrade.getResult(id).then(result => {
-        poeTrade.copyWhisperToClipboard(result);
+        poeTrade.handleResult(result);
       });
     });
   });
