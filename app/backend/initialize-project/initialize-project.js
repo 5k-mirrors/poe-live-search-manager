@@ -4,19 +4,8 @@ import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as webSocketActions from "../web-sockets/actions";
+import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
-
-const connectToStoredWebSockets = () => {
-  store.all().forEach(connectionDetails => {
-    webSocketActions.connect(connectionDetails.id);
-  });
-};
-
-const disconnectFromStoredWebSockets = () => {
-  store.all().forEach(connectionDetails => {
-    webSocketActions.disconnect(connectionDetails.id);
-  });
-};
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
@@ -25,7 +14,7 @@ const setupIpcEvents = () => {
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
     if (isLoggedIn) {
-      webSocketActions.connect(connectionDetails.id);
+      webSocketActions.updateConnections();
     }
   });
 
@@ -39,14 +28,16 @@ const setupIpcEvents = () => {
     store.remove(connectionDetails.id);
   });
 
-  ipcMain.on(ipcEvents.USER_LOGIN, () => {
-    connectToStoredWebSockets();
+  ipcMain.on(ipcEvents.USER_LOGIN, (event, id) => {
+    subscriptionActions.startRefreshInterval(id);
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
-    storeUtils.deleteIfExists(storeKeys.POE_SESSION_ID);
+    subscriptionActions.stopRefreshInterval();
 
-    disconnectFromStoredWebSockets();
+    webSocketActions.disconnectFromStoredWebSockets();
+
+    storeUtils.deleteIfExists(storeKeys.POE_SESSION_ID);
   });
 };
 

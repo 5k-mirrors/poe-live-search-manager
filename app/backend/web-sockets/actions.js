@@ -1,9 +1,9 @@
 import { Notification } from "electron";
 import WebSocket from "ws";
 import getWindowByName from "../utils/get-window-by-name/get-window-by-name";
-import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import store from "./store";
+import subscription from "../../Subscription/Subscription";
 
 const doNotify = ({ notificationMessage }) => {
   new Notification({
@@ -27,12 +27,13 @@ const setupWebSocketListeners = webSocket => {
 export const connect = id => {
   const ws = store.find(id);
 
-  if (!javaScriptUtils.isDefined(ws.socket)) {
+  if (!ws.isConnected) {
     const newWebsocket = new WebSocket(ws.uri);
 
     store.update(ws.id, {
       ...ws,
-      socket: newWebsocket
+      socket: newWebsocket,
+      isConnected: true
     });
 
     newWebsocket.on("open", () => {
@@ -44,13 +45,34 @@ export const connect = id => {
 export const disconnect = id => {
   const ws = store.find(id);
 
-  if (javaScriptUtils.isDefined(ws.socket)) {
+  if (ws.isConnected) {
     ws.socket.close();
 
     delete ws.socket;
 
     store.update(ws.id, {
-      ...ws
+      ...ws,
+      isConnected: false
     });
+  }
+};
+
+export const connectToStoredWebSockets = () => {
+  store.all().forEach(connectionDetails => {
+    connect(connectionDetails.id);
+  });
+};
+
+export const disconnectFromStoredWebSockets = () => {
+  store.all().forEach(connectionDetails => {
+    disconnect(connectionDetails.id);
+  });
+};
+
+export const updateConnections = () => {
+  if (subscription.active()) {
+    connectToStoredWebSockets();
+  } else {
+    disconnectFromStoredWebSockets();
   }
 };

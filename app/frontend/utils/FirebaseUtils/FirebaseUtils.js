@@ -21,7 +21,7 @@ export const startAuthObserver = () =>
     globalStore.set(storeKeys.IS_LOGGED_IN, isLoggedIn);
 
     if (isLoggedIn) {
-      ipcRenderer.send(ipcEvents.USER_LOGIN);
+      ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid);
     } else {
       ipcRenderer.send(ipcEvents.USER_LOGOUT);
     }
