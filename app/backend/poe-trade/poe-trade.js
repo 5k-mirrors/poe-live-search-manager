@@ -25,7 +25,6 @@ export const getWhisperMessage = result => {
     result
   );
 
-  // TODO: not needed to check.
   if (javaScriptUtils.isDefined(whisperMessage)) {
     return whisperMessage;
   }
