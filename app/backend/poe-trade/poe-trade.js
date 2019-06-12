@@ -11,7 +11,7 @@ export const getSession = () => {
 };
 
 export const getResult = id => {
-  const itemUrl = `${baseUrls.tradeFetch + id}`;
+  const itemUrl = `${baseUrls.fetchAPI + id}`;
 
   return fetch(itemUrl)
     .then(data => data.json())

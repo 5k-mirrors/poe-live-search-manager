@@ -29,11 +29,11 @@ const setupIpcEvents = () => {
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, (event, id) => {
-    subscriptionActions.startSubscriptionRefreshInterval(id);
+    subscriptionActions.startRefreshInterval(id);
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
-    subscriptionActions.stopSubscriptionRefreshInterval();
+    subscriptionActions.stopRefreshInterval();
 
     webSocketActions.disconnectFromStoredWebSockets();
 
