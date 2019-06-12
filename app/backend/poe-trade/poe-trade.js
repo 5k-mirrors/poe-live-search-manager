@@ -24,13 +24,13 @@ export const getWhisperMessage = result => {
   return whisperMessage;
 };
 
-const getNotificationTitle = searchName => `New ${searchName} listed`;
+const getNotificationTitle = itemName => `New ${itemName} listed`;
 
 const getNotificationBody = whisperMessage =>
   whisperMessage.buyout ? `~b/o ${whisperMessage.buyout}` : " ";
 
-export const notifyUser = (whisperMessage, searchName) =>
+export const notifyUser = (whisperMessage, itemName) =>
   doNotify({
-    title: getNotificationTitle(searchName),
+    title: getNotificationTitle(itemName),
     body: getNotificationBody(whisperMessage)
   });
