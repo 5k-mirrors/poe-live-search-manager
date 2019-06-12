@@ -1,8 +1,8 @@
 import fetch from "node-fetch";
-import { clipboard } from "electron";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import doNotify from "../utils/do-notify/do-notify";
 
 export const getSession = () => {
@@ -19,27 +19,27 @@ export const getResult = id => {
     .then(parsedData => parsedData.result);
 };
 
-const getWhisperMessage = result => {
-  const whisperMessage = result[0].listing.whisper;
+export const getWhisperMessage = result => {
+  const whisperMessage = javaScriptUtils.safeAccess(
+    [0, "listing", "whisper"],
+    result
+  );
 
-  return whisperMessage;
+  // TODO: not needed to check.
+  if (javaScriptUtils.isDefined(whisperMessage)) {
+    return whisperMessage;
+  }
+
+  return "";
 };
 
-const getNotificationTitle = () => {
-  return "New #{search_name} listed";
-};
+const getNotificationTitle = searchName => `New ${searchName} listed`;
 
-const getNotificationBody = whisperMessage => {
-  return whisperMessage.buyout ? `~b/o ${whisperMessage.buyout}` : " ";
-};
+const getNotificationBody = whisperMessage =>
+  whisperMessage.buyout ? `~b/o ${whisperMessage.buyout}` : " ";
 
-export const handleResult = result => {
-  const whisperMessage = getWhisperMessage(result);
-
-  clipboard.writeText(whisperMessage);
-
+export const notifyUser = (whisperMessage, searchName) =>
   doNotify({
-    title: getNotificationTitle(),
+    title: getNotificationTitle(searchName),
     body: getNotificationBody(whisperMessage)
   });
-};

@@ -1,17 +1,29 @@
 import WebSocket from "ws";
+import { clipboard } from "electron";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
+import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
-const setupWebSocketListeners = webSocket => {
-  webSocket.on("message", itemIds => {
-    const parsedItemIds = JSON.parse(itemIds);
+const setupMessageListener = id => {
+  const ws = store.find(id);
 
-    parsedItemIds.new.forEach(id => {
-      poeTrade.getResult(id).then(result => {
-        poeTrade.handleResult(result);
+  ws.socket.on("message", response => {
+    const parsedResponse = JSON.parse(response);
+
+    const itemIds = javaScriptUtils.safeAccess(["new"], parsedResponse);
+
+    if (javaScriptUtils.isDefined(itemIds)) {
+      itemIds.forEach(itemId => {
+        poeTrade.getResult(itemId).then(result => {
+          const whisperMessage = poeTrade.getWhisperMessage(result);
+
+          clipboard.writeText(whisperMessage);
+
+          poeTrade.notifyUser(whisperMessage, ws.name);
+        });
       });
-    });
+    }
   });
 };
 
@@ -32,7 +44,7 @@ export const connect = id => {
     });
 
     newWebsocket.on("open", () => {
-      setupWebSocketListeners(newWebsocket);
+      setupMessageListener(id);
     });
   }
 };
