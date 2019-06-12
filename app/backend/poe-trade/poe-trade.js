@@ -1,5 +1,4 @@
 import fetch from "node-fetch";
-import { clipboard } from "electron";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
@@ -19,27 +18,19 @@ export const getResult = id => {
     .then(parsedData => parsedData.result);
 };
 
-const getWhisperMessage = result => {
+export const getWhisperMessage = result => {
   const whisperMessage = result[0].listing.whisper;
 
   return whisperMessage;
 };
 
-const getNotificationTitle = () => {
-  return "New #{search_name} listed";
-};
+const getNotificationTitle = searchName => `New ${searchName} listed`;
 
-const getNotificationBody = whisperMessage => {
-  return whisperMessage.buyout ? `~b/o ${whisperMessage.buyout}` : " ";
-};
+const getNotificationBody = whisperMessage =>
+  whisperMessage.buyout ? `~b/o ${whisperMessage.buyout}` : " ";
 
-export const handleResult = result => {
-  const whisperMessage = getWhisperMessage(result);
-
-  clipboard.writeText(whisperMessage);
-
+export const notifyUser = (whisperMessage, searchName) =>
   doNotify({
-    title: getNotificationTitle(),
+    title: getNotificationTitle(searchName),
     body: getNotificationBody(whisperMessage)
   });
-};
