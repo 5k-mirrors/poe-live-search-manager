@@ -5,18 +5,18 @@ import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import doNotify from "../utils/do-notify/do-notify";
 
-export const getSession = () => {
+export const getCookies = () => {
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
 
   return `POESESSID=${poeSessionId}`;
 };
 
-export const getResult = id => {
-  const itemUrl = `${baseUrls.fetchAPI + id}`;
+export const fetchItemDetails = id => {
+  const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
   return fetch(itemUrl)
-    .then(data => data.json())
-    .then(parsedData => parsedData.result);
+    .then(itemDetails => itemDetails.json())
+    .then(parsedItemDetails => parsedItemDetails.result);
 };
 
 export const getWhisperMessage = result => {
@@ -35,7 +35,7 @@ export const getWhisperMessage = result => {
 const getNotificationTitle = itemName => `New ${itemName} listed`;
 
 const getNotificationBody = whisperMessage =>
-  whisperMessage.buyout ? `~b/o ${whisperMessage.buyout}` : " ";
+  whisperMessage.buyout ? `~b/o ${whisperMessage.buyout}` : "";
 
 export const notifyUser = (whisperMessage, itemName) =>
   doNotify({

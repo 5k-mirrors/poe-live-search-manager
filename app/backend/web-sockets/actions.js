@@ -33,7 +33,7 @@ export const connect = id => {
   if (!ws.isConnected) {
     const newWebsocket = new WebSocket(ws.uri, {
       headers: {
-        Cookie: poeTrade.getSession()
+        Cookie: poeTrade.getCookies()
       }
     });
 
