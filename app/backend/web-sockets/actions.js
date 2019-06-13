@@ -8,8 +8,8 @@ const setupWebSocketListeners = webSocket => {
     const parsedItemIds = JSON.parse(itemIds);
 
     parsedItemIds.new.forEach(id => {
-      poeTrade.getResult(id).then(result => {
-        poeTrade.copyWhisperToClipboard(result);
+      poeTrade.fetchItemDetails(id).then(itemDetails => {
+        poeTrade.copyWhisperToClipboard(itemDetails);
       });
     });
   });
@@ -21,7 +21,7 @@ export const connect = id => {
   if (!ws.isConnected) {
     const newWebsocket = new WebSocket(ws.uri, {
       headers: {
-        Cookie: poeTrade.getSession()
+        Cookie: poeTrade.getCookies()
       }
     });
 
