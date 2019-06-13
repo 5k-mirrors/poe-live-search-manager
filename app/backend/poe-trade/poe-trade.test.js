@@ -22,16 +22,14 @@ describe("poeTrade", () => {
         fetch.mockResolvedValueOnce(data);
       });
 
-      it("throws `ItemFetchError`", async () => {
-        try {
-          await poeTrade.fetchItemDetails(id);
-        } catch (err) {
+      it("throws `ItemFetchError`", () => {
+        return poeTrade.fetchItemDetails(id).catch(err => {
           const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
           const expectedErrorMessage = `Item details not found for ${itemUrl}`;
 
           expect(err.message).toEqual(expectedErrorMessage);
-        }
+        });
       });
     });
 
