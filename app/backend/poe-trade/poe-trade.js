@@ -30,7 +30,6 @@ export const fetchItemDetails = id => {
 
 export const getWhisperMessage = itemDetails => {
   const whisperMessage = javaScriptUtils.safeGet(itemDetails, [
-    0,
     "listing",
     "whisper"
   ]);
