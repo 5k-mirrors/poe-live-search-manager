@@ -2,7 +2,6 @@ import WebSocket from "ws";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
-import ItemFetchError from "../errors/item-fetch-error";
 
 const setupWebSocketListeners = webSocket => {
   webSocket.on("message", itemIds => {
@@ -15,10 +14,8 @@ const setupWebSocketListeners = webSocket => {
           poeTrade.copyWhisperToClipboard(itemDetails);
         })
         .catch(err => {
-          if (err instanceof ItemFetchError) {
-            // eslint-disable-next-line no-console
-            console.error(err);
-          }
+          // eslint-disable-next-line no-console
+          console.error(err);
         });
     });
   });

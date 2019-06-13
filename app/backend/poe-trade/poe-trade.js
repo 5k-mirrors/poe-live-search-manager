@@ -22,7 +22,7 @@ export const fetchItemDetails = id => {
         return parsedData.result[0];
       }
 
-      throw new ItemFetchError(`Cannot fetch ${id}`);
+      throw new ItemFetchError(`Item details not found for ${itemUrl}`);
     });
 };
 
