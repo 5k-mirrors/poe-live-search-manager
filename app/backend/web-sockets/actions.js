@@ -11,7 +11,7 @@ const setupMessageListener = id => {
   ws.socket.on("message", response => {
     const parsedResponse = JSON.parse(response);
 
-    const itemIds = javaScriptUtils.safeAccess(["new"], parsedResponse);
+    const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
 
     if (javaScriptUtils.isDefined(itemIds)) {
       itemIds.forEach(itemId => {

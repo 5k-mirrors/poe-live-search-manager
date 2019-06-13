@@ -19,13 +19,14 @@ export const fetchItemDetails = id => {
     .then(parsedItemDetails => parsedItemDetails.result);
 };
 
-export const getWhisperMessage = result => {
-  const whisperMessage = javaScriptUtils.safeAccess(
-    [0, "listing", "whisper"],
-    result
-  );
+export const getWhisperMessage = itemDetails => {
+  const whisperMessage = javaScriptUtils.safeGet(itemDetails, [
+    0,
+    "listing",
+    "whisper"
+  ]);
 
-  if (javaScriptUtils.isDefined(whisperMessage)) {
+  if (whisperMessage !== null) {
     return whisperMessage;
   }
 
