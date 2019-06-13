@@ -8,7 +8,15 @@ const setupWebSocketListeners = webSocket => {
     const parsedItemIds = JSON.parse(itemIds);
 
     parsedItemIds.new.forEach(id => {
-      poeTrade.fetchItemDetails(id).then(() => {});
+      poeTrade
+        .fetchItemDetails(id)
+        .then(itemDetails => {
+          poeTrade.copyWhisperToClipboard(itemDetails);
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.error(err);
+        });
     });
   });
 };
