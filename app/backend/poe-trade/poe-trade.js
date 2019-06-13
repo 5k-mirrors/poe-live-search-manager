@@ -19,7 +19,7 @@ export const fetchItemDetails = id => {
     .then(data => data.json())
     .then(parsedData => {
       if (javaScriptUtils.isDefined(parsedData.result[0])) {
-        return parsedData.result;
+        return parsedData.result[0];
       }
 
       throw new ItemFetchError(`Cannot fetch ${id}`);
@@ -27,7 +27,7 @@ export const fetchItemDetails = id => {
 };
 
 const getWhisperMessage = itemDetails => {
-  const whisperMessage = itemDetails[0].listing.whisper;
+  const whisperMessage = itemDetails.listing.whisper;
 
   return whisperMessage;
 };
