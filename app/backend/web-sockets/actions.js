@@ -11,8 +11,8 @@ const setupMessageListener = id => {
     const parsedItemIds = JSON.parse(itemIds);
 
     parsedItemIds.new.forEach(itemId => {
-      poeTrade.getResult(itemId).then(result => {
-        const whisperMessage = poeTrade.getWhisperMessage(result);
+      poeTrade.fetchItemDetails(itemId).then(itemDetails => {
+        const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
 
         clipboard.writeText(whisperMessage);
 
@@ -28,7 +28,7 @@ export const connect = id => {
   if (!ws.isConnected) {
     const newWebsocket = new WebSocket(ws.uri, {
       headers: {
-        Cookie: poeTrade.getSession()
+        Cookie: poeTrade.getCookies()
       }
     });
 
