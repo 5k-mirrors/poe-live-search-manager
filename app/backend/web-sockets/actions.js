@@ -15,13 +15,19 @@ const setupMessageListener = id => {
 
     if (javaScriptUtils.isDefined(itemIds)) {
       itemIds.forEach(itemId => {
-        poeTrade.fetchItemDetails(itemId).then(itemDetails => {
-          const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
+        poeTrade
+          .fetchItemDetails(itemId)
+          .then(itemDetails => {
+            const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
 
-          clipboard.writeText(whisperMessage);
+            clipboard.writeText(whisperMessage);
 
-          poeTrade.notifyUser(whisperMessage, ws.name);
-        });
+            poeTrade.notifyUser(whisperMessage, ws.name);
+          })
+          .catch(err => {
+            // eslint-disable-next-line no-console
+            console.error(err);
+          });
       });
     }
   });

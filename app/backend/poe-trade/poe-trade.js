@@ -4,6 +4,7 @@ import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import doNotify from "../utils/do-notify/do-notify";
+import ItemFetchError from "../errors/item-fetch-error";
 
 export const getCookies = () => {
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
@@ -19,7 +20,11 @@ export const fetchItemDetails = id => {
     .then(parsedData => {
       const itemDetails = javaScriptUtils.safeGet(parsedData, ["result"]);
 
-      return itemDetails;
+      if (javaScriptUtils.isDefined(itemDetails[0])) {
+        return itemDetails[0];
+      }
+
+      throw new ItemFetchError(`Item details not found for ${itemUrl}`);
     });
 };
 
