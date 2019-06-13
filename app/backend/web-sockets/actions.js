@@ -15,7 +15,7 @@ const setupMessageListener = id => {
 
     if (javaScriptUtils.isDefined(itemIds)) {
       itemIds.forEach(itemId => {
-        poeTrade.getResult(itemId).then(itemDetails => {
+        poeTrade.fetchItemDetails(itemId).then(itemDetails => {
           const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
 
           clipboard.writeText(whisperMessage);
