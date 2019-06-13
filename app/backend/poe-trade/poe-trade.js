@@ -1,9 +1,9 @@
 import fetch from "node-fetch";
-import { clipboard } from "electron";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import doNotify from "../utils/do-notify/do-notify";
 import ItemFetchError from "../errors/item-fetch-error";
 
 export const getCookies = () => {
@@ -26,14 +26,16 @@ export const fetchItemDetails = id => {
     });
 };
 
-const getWhisperMessage = itemDetails => {
+export const getWhisperMessage = itemDetails => {
   const whisperMessage = itemDetails.listing.whisper;
 
   return whisperMessage;
 };
 
-export const copyWhisperToClipboard = itemDetails => {
-  const whisperMessage = getWhisperMessage(itemDetails);
+const getNotificationTitle = itemName => `New ${itemName} listed`;
 
-  clipboard.writeText(whisperMessage);
-};
+export const notifyUser = (whisperMessage, itemName) =>
+  doNotify({
+    title: getNotificationTitle(itemName),
+    body: whisperMessage
+  });

@@ -1,17 +1,24 @@
 import WebSocket from "ws";
+import { clipboard } from "electron";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 
-const setupWebSocketListeners = webSocket => {
-  webSocket.on("message", itemIds => {
+const setupMessageListener = id => {
+  const ws = store.find(id);
+
+  ws.socket.on("message", itemIds => {
     const parsedItemIds = JSON.parse(itemIds);
 
-    parsedItemIds.new.forEach(id => {
+    parsedItemIds.new.forEach(itemId => {
       poeTrade
-        .fetchItemDetails(id)
+        .fetchItemDetails(itemId)
         .then(itemDetails => {
-          poeTrade.copyWhisperToClipboard(itemDetails);
+          const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
+
+          clipboard.writeText(whisperMessage);
+
+          poeTrade.notifyUser(whisperMessage, ws.name);
         })
         .catch(err => {
           // eslint-disable-next-line no-console
@@ -38,7 +45,7 @@ export const connect = id => {
     });
 
     newWebsocket.on("open", () => {
-      setupWebSocketListeners(newWebsocket);
+      setupMessageListener(id);
     });
   }
 };
