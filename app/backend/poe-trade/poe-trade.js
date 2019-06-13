@@ -18,10 +18,10 @@ export const fetchItemDetails = id => {
   return fetch(itemUrl)
     .then(data => data.json())
     .then(parsedData => {
-      const itemDetails = javaScriptUtils.safeGet(parsedData, ["result"]);
+      const itemDetails = javaScriptUtils.safeGet(parsedData, ["result", 0]);
 
-      if (javaScriptUtils.isDefined(itemDetails[0])) {
-        return itemDetails[0];
+      if (javaScriptUtils.isDefined(itemDetails)) {
+        return itemDetails;
       }
 
       throw new ItemFetchError(`Item details not found for ${itemUrl}`);
