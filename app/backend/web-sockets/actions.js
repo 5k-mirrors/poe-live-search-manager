@@ -1,26 +1,15 @@
-import { Notification } from "electron";
 import WebSocket from "ws";
-import getWindowByName from "../utils/get-window-by-name/get-window-by-name";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
-
-const doNotify = ({ notificationMessage }) => {
-  new Notification({
-    title: "PoE Sniper Pro",
-    body: notificationMessage
-  }).show();
-};
+import * as poeTrade from "../poe-trade/poe-trade";
 
 const setupWebSocketListeners = webSocket => {
-  webSocket.on("message", message => {
-    doNotify({
-      notificationMessage: message
+  webSocket.on("message", itemIds => {
+    const parsedItemIds = JSON.parse(itemIds);
+
+    parsedItemIds.new.forEach(id => {
+      poeTrade.fetchItemDetails(id).then(() => {});
     });
-
-    const window = getWindowByName("PoE Sniper");
-
-    window.webContents.send(ipcEvents.TRADE_MESSAGE, message);
   });
 };
 
@@ -28,7 +17,11 @@ export const connect = id => {
   const ws = store.find(id);
 
   if (!ws.isConnected) {
-    const newWebsocket = new WebSocket(ws.uri);
+    const newWebsocket = new WebSocket(ws.uri, {
+      headers: {
+        Cookie: poeTrade.getCookies()
+      }
+    });
 
     store.update(ws.id, {
       ...ws,
