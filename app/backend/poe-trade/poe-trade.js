@@ -15,8 +15,12 @@ export const fetchItemDetails = id => {
   const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
   return fetch(itemUrl)
-    .then(itemDetails => itemDetails.json())
-    .then(parsedItemDetails => parsedItemDetails.result);
+    .then(data => data.json())
+    .then(parsedData => {
+      const itemDetails = javaScriptUtils.safeGet(parsedData, ["result"]);
+
+      return itemDetails;
+    });
 };
 
 export const getWhisperMessage = itemDetails => {
