@@ -49,7 +49,7 @@ describe("poeTrade", () => {
       });
 
       it("returns the data", () => {
-        poeTrade.fetchItemDetails(id).then(itemDetails => {
+        return poeTrade.fetchItemDetails(id).then(itemDetails => {
           expect(itemDetails).toEqual(parsedData.result[0]);
         });
       });
