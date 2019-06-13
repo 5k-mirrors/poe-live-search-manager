@@ -30,7 +30,7 @@ export const getWhisperMessage = itemDetails => {
     "whisper"
   ]);
 
-  if (whisperMessage !== null) {
+  if (javaScriptUtils.isDefined(whisperMessage)) {
     return whisperMessage;
   }
 
