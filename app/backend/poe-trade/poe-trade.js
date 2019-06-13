@@ -1,8 +1,10 @@
 import fetch from "node-fetch";
 import { clipboard } from "electron";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import ItemFetchError from "../errors/item-fetch-error";
 
 export const getCookies = () => {
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
@@ -15,7 +17,13 @@ export const fetchItemDetails = id => {
 
   return fetch(itemUrl)
     .then(data => data.json())
-    .then(parsedData => parsedData.result);
+    .then(parsedData => {
+      if (javaScriptUtils.isDefined(parsedData.result[0])) {
+        return parsedData.result;
+      }
+
+      throw new ItemFetchError(`Cannot fetch ${id}`);
+    });
 };
 
 const getWhisperMessage = itemDetails => {
