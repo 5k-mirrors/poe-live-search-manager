@@ -46,7 +46,7 @@ describe("poeTrade", () => {
         fetch.mockResolvedValueOnce(data);
       });
 
-      it("returns the data", () => {
+      it("returns the details", () => {
         return poeTrade.fetchItemDetails(id).then(itemDetails => {
           expect(itemDetails).toEqual(parsedData.result[0]);
         });
