@@ -1,8 +1,8 @@
 import fetch from "node-fetch";
-import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
-import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import doNotify from "../utils/do-notify/do-notify";
 import ItemFetchError from "../errors/item-fetch-error";
 
@@ -18,8 +18,10 @@ export const fetchItemDetails = id => {
   return fetch(itemUrl)
     .then(data => data.json())
     .then(parsedData => {
-      if (javaScriptUtils.isDefined(parsedData.result[0])) {
-        return parsedData.result[0];
+      const itemDetails = javaScriptUtils.safeGet(parsedData, ["result", 0]);
+
+      if (javaScriptUtils.isDefined(itemDetails)) {
+        return itemDetails;
       }
 
       throw new ItemFetchError(`Item details not found for ${itemUrl}`);
@@ -27,9 +29,16 @@ export const fetchItemDetails = id => {
 };
 
 export const getWhisperMessage = itemDetails => {
-  const whisperMessage = itemDetails.listing.whisper;
+  const whisperMessage = javaScriptUtils.safeGet(itemDetails, [
+    "listing",
+    "whisper"
+  ]);
 
-  return whisperMessage;
+  if (javaScriptUtils.isDefined(whisperMessage)) {
+    return whisperMessage;
+  }
+
+  return "";
 };
 
 const getNotificationTitle = itemName => `New ${itemName} listed`;

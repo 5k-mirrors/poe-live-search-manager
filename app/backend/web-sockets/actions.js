@@ -3,28 +3,33 @@ import { clipboard } from "electron";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
+import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const setupMessageListener = id => {
   const ws = store.find(id);
 
-  ws.socket.on("message", itemIds => {
-    const parsedItemIds = JSON.parse(itemIds);
+  ws.socket.on("message", response => {
+    const parsedResponse = JSON.parse(response);
 
-    parsedItemIds.new.forEach(itemId => {
-      poeTrade
-        .fetchItemDetails(itemId)
-        .then(itemDetails => {
-          const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
+    const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
 
-          clipboard.writeText(whisperMessage);
+    if (javaScriptUtils.isDefined(itemIds)) {
+      itemIds.forEach(itemId => {
+        poeTrade
+          .fetchItemDetails(itemId)
+          .then(itemDetails => {
+            const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
 
-          poeTrade.notifyUser(whisperMessage, ws.name);
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
-        });
-    });
+            clipboard.writeText(whisperMessage);
+
+            poeTrade.notifyUser(whisperMessage, ws.name);
+          })
+          .catch(err => {
+            // eslint-disable-next-line no-console
+            console.error(err);
+          });
+      });
+    }
   });
 };
 
