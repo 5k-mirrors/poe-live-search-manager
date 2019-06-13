@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import * as poeTrade from "./poe-trade";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import ItemFetchError from "../errors/item-fetch-error";
 
 jest.mock("node-fetch", () => jest.fn());
 
@@ -23,13 +24,13 @@ describe("poeTrade", () => {
       });
 
       it("throws `ItemFetchError`", () => {
-        return poeTrade.fetchItemDetails(id).catch(err => {
-          const itemUrl = `${baseUrls.poeFetchAPI + id}`;
+        const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
-          const expectedErrorMessage = `Item details not found for ${itemUrl}`;
+        const expectedErrorMessage = `Item details not found for ${itemUrl}`;
 
-          expect(err.message).toEqual(expectedErrorMessage);
-        });
+        return expect(poeTrade.fetchItemDetails(id)).rejects.toEqual(
+          new ItemFetchError(expectedErrorMessage)
+        );
       });
     });
 
@@ -47,9 +48,9 @@ describe("poeTrade", () => {
       });
 
       it("returns the details", () => {
-        return poeTrade.fetchItemDetails(id).then(itemDetails => {
-          expect(itemDetails).toEqual(parsedData.result[0]);
-        });
+        return expect(poeTrade.fetchItemDetails(id)).resolves.toEqual(
+          "itemDetails"
+        );
       });
     });
   });
