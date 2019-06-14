@@ -1,14 +1,19 @@
-image: node:latest
+image: node:8
+
+before_script:
+  - yarn install
+
+cache:
+  paths:
+    - node_modules/
 
 test:
   stage: test
   script:
-    - yarn install
     - yarn build-renderer
     - yarn test
 
 lint:
   stage: test
   script:
-    - yarn install
     - yarn lint
