@@ -11,6 +11,7 @@ test:
   stage: test
   script:
     - yarn build-renderer
+    - yarn build-main
     - yarn test
 
 lint:
