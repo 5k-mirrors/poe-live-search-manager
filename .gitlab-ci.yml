@@ -1,6 +1,7 @@
 image: node:latest
 
 before_script:
+  - yarn global add node-gyp
   - yarn install
 
 cache:
