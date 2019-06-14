@@ -1,0 +1,13 @@
+image: node:latest
+
+test:
+  stage: test
+  script:
+    - yarn install
+    - yarn test
+
+lint:
+  stage: test
+  script:
+    - yarn install
+    - yarn lint
