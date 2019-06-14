@@ -46,7 +46,7 @@ const getNotificationTitle = itemName => `New ${itemName} listed`;
 const getNotificationMessage = whisperMessage => {
   const itemPrice = whisperMessage.match(/listed for [\d]+ [\S]+/);
 
-  // => `match` returns null if there's no matching item.
+  // => `match` returns `null` if there's no matching item.
   if (javaScriptUtils.isDefined(itemPrice)) {
     return `~b/o ${itemPrice[0]
       .split(" ")
