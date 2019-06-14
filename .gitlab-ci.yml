@@ -1,7 +1,7 @@
 image: node:8
 
 before_script:
-  - yarn install
+  - npm install
 
 cache:
   paths:
@@ -10,14 +10,14 @@ cache:
 test:
   stage: test
   script:
-    - yarn build-renderer
-    - yarn build-main
-    - yarn test
+    - npm build-renderer
+    - npm build-main
+    - npm test
 
 lint:
   stage: test
   script:
-    - yarn lint
+    - npm lint
 
 code_quality:
   stage: test
