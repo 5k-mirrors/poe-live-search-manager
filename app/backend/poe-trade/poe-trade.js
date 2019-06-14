@@ -43,8 +43,22 @@ export const getWhisperMessage = itemDetails => {
 
 const getNotificationTitle = itemName => `New ${itemName} listed`;
 
+const getNotificationMessage = whisperMessage => {
+  const itemPrice = whisperMessage.match(/listed for [\d]+ [\S]+/);
+
+  // => `match` returns null if there's no matching item.
+  if (javaScriptUtils.isDefined(itemPrice)) {
+    return `~b/o ${itemPrice[0]
+      .split(" ")
+      .splice(2, 3)
+      .join(" ")}`;
+  }
+
+  return "";
+};
+
 export const notifyUser = (whisperMessage, itemName) =>
   doNotify({
     title: getNotificationTitle(itemName),
-    body: whisperMessage
+    body: getNotificationMessage(whisperMessage)
   });
