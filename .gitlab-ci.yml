@@ -8,9 +8,7 @@ test:
   stage: test
   script:
     - yarn install
-    - yarn build-renderer
-    - yarn build-main
-    - yarn test
+    - yarn test:coverage
 
 lint:
   stage: test
