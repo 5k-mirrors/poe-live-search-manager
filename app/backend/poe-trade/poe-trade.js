@@ -44,14 +44,16 @@ export const getWhisperMessage = itemDetails => {
 const getNotificationTitle = itemName => `New ${itemName} listed`;
 
 const getNotificationMessage = whisperMessage => {
-  const itemPrice = whisperMessage.match(/listed for [\d]+ [\S]+/);
+  const matchDetails = whisperMessage.match(/listed for [\d]+ [\S]+/);
 
-  // => `match` returns `null` if there's no matching item.
-  if (javaScriptUtils.isDefined(itemPrice)) {
-    return `~b/o ${itemPrice[0]
+  // => `match` returns `null` if there's no corresponding item in string.
+  if (javaScriptUtils.isDefined(matchDetails)) {
+    const itemPrice = matchDetails[0]
       .split(" ")
       .splice(2, 3)
-      .join(" ")}`;
+      .join(" ");
+
+    return `~b/o ${itemPrice}`;
   }
 
   return "";
