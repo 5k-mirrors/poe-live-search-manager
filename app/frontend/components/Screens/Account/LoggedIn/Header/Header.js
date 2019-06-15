@@ -14,12 +14,9 @@ const StyledSignOutButton = styled.button`
 const header = () => {
   const { currentUser } = firebase.auth();
 
-  const headerMessage = `Logged in as ${currentUser.displayName ||
-    currentUser.email}`;
-
   return (
     <StyledContainer>
-      <h3>{headerMessage}</h3>
+      <h3>{`Logged in as ${currentUser.displayName || currentUser.email}`}</h3>
       <StyledSignOutButton
         type="button"
         onClick={() => firebase.auth().signOut()}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, Fragment } from "react";
 import styled from "styled-components";
 import SuccessIcon from "../../../../../UI/SuccessIcon/SuccessIcon";
 import * as customHooks from "../../../../../../utils/CustomHooks/CustomHooks";
@@ -22,12 +22,6 @@ const notifications = () => {
     2500
   );
 
-  let timer;
-
-  useEffect(() => {
-    return () => clearInterval(timer);
-  }, []);
-
   function saveNotificationsInterval() {
     globalStore.set(storeKeys.NOTIFICATIONS_INTERVAL, interval);
 
@@ -35,7 +29,7 @@ const notifications = () => {
   }
 
   return (
-    <div>
+    <Fragment>
       <h5>Seconds between notifications</h5>
       <StyledIntervalInput
         type="number"
@@ -46,7 +40,7 @@ const notifications = () => {
         Save
       </StyledSaveButton>
       {showSuccess ? <SuccessIcon /> : null}
-    </div>
+    </Fragment>
   );
 };
 

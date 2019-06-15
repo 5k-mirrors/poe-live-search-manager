@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import styled from "styled-components";
 import InfoButton from "./InfoButton/InfoButton";
 import SuccessIcon from "../../../../../UI/SuccessIcon/SuccessIcon";
@@ -26,12 +26,6 @@ const sessionIdEditor = () => {
   const [showSuccess, startSuccessTimeout] = customHooks.useTimeoutWithFeedback(
     2500
   );
-
-  let timer;
-
-  useEffect(() => {
-    return () => clearInterval(timer);
-  }, []);
 
   function saveSessionID() {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
