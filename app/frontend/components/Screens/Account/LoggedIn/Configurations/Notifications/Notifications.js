@@ -18,14 +18,18 @@ const notifications = () => {
   const [interval, setInterval] = useState(
     globalStore.get(storeKeys.NOTIFICATIONS_INTERVAL, 3)
   );
-  const [showSuccess, startSuccessTimeout] = customHooks.useTimeoutWithFeedback(
-    2500
-  );
+  const [
+    showSuccessIcon,
+    displayIcon,
+    hideIconAfterMsElapsed
+  ] = customHooks.useDisplay();
 
   function saveNotificationsInterval() {
     globalStore.set(storeKeys.NOTIFICATIONS_INTERVAL, interval);
 
-    startSuccessTimeout();
+    displayIcon();
+
+    hideIconAfterMsElapsed(2500);
   }
 
   return (
@@ -39,7 +43,7 @@ const notifications = () => {
       <StyledSaveButton type="button" onClick={saveNotificationsInterval}>
         Save
       </StyledSaveButton>
-      {showSuccess ? <SuccessIcon /> : null}
+      {showSuccessIcon ? <SuccessIcon /> : null}
     </Fragment>
   );
 };

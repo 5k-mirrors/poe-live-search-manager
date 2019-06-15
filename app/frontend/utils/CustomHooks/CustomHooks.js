@@ -72,8 +72,8 @@ export const useDisable = milliseconds => {
   return [isDisabled, disable];
 };
 
-export const useTimeoutWithFeedback = milliseconds => {
-  const [showFeedback, setShowFeedback] = useState(false);
+export const useDisplay = () => {
+  const [showElement, setShowElement] = useState(false);
 
   let timeout;
 
@@ -81,13 +81,15 @@ export const useTimeoutWithFeedback = milliseconds => {
     return () => clearTimeout(timeout);
   }, []);
 
-  function startTimeout() {
-    setShowFeedback(true);
+  function displayElement() {
+    setShowElement(true);
+  }
 
+  function hideElementAfterMsElapsed(milliseconds) {
     timeout = setTimeout(() => {
-      setShowFeedback(false);
+      setShowElement(false);
     }, milliseconds);
   }
 
-  return [showFeedback, startTimeout];
+  return [showElement, displayElement, hideElementAfterMsElapsed];
 };

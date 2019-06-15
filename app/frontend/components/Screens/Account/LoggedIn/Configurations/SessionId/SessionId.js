@@ -23,14 +23,18 @@ const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState(
     globalStore.get(storeKeys.POE_SESSION_ID, "")
   );
-  const [showSuccess, startSuccessTimeout] = customHooks.useTimeoutWithFeedback(
-    2500
-  );
+  const [
+    showSuccessIcon,
+    displayIcon,
+    hideIconAfterMsElapsed
+  ] = customHooks.useDisplay();
 
   function saveSessionID() {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
 
-    startSuccessTimeout();
+    displayIcon();
+
+    hideIconAfterMsElapsed(2500);
   }
 
   return (
@@ -49,7 +53,7 @@ const sessionIdEditor = () => {
         <StyledSaveButton type="button" onClick={saveSessionID}>
           Save
         </StyledSaveButton>
-        {showSuccess ? <SuccessIcon /> : null}
+        {showSuccessIcon ? <SuccessIcon /> : null}
       </StyledFlexContainer>
     </Fragment>
   );
