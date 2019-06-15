@@ -1,15 +1,11 @@
 import React, { useState, useEffect, Fragment } from "react";
 import styled from "styled-components";
-import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import InfoButton from "./InfoButton/InfoButton";
-import {
-  flexContainer,
-  idInput,
-  saveButton,
-  successImage
-} from "./SessionIdEditor.style";
-import SuccessIcon from "../../../../../resources/assets/success.png";
+import SuccessIcon from "../../../../../UI/SuccessIcon/SuccessIcon";
+import { globalStore } from "../../../../../../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../../../../../../resources/StoreKeys/StoreKeys";
+import { flexContainer, idInput, saveButton } from "./SessionId.style";
+import * as customHooks from "../../../../../../utils/CustomHooks/CustomHooks";
 
 const StyledFlexContainer = styled.div`
   ${flexContainer}
@@ -23,15 +19,13 @@ const StyledSaveButton = styled.button`
   ${saveButton}
 `;
 
-const StyledSuccessImage = styled.img`
-  ${successImage}
-`;
-
 const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState(
     globalStore.get(storeKeys.POE_SESSION_ID, "")
   );
-  const [showSuccessIcon, setShowSuccessIcon] = useState(false);
+  const [showSuccess, startSuccessTimeout] = customHooks.useBooleanTimeout(
+    2500
+  );
 
   let timer;
 
@@ -39,18 +33,15 @@ const sessionIdEditor = () => {
     return () => clearInterval(timer);
   }, []);
 
-  function onSaveButtonClick() {
+  function saveSessionID() {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
 
-    setShowSuccessIcon(true);
-
-    timer = setTimeout(() => {
-      setShowSuccessIcon(false);
-    }, 2500);
+    startSuccessTimeout();
   }
 
   return (
     <Fragment>
+      <h5>Session ID</h5>
       <StyledFlexContainer>
         <StyledIdInput
           type="text"
@@ -61,12 +52,10 @@ const sessionIdEditor = () => {
         <InfoButton />
       </StyledFlexContainer>
       <StyledFlexContainer>
-        <StyledSaveButton type="button" onClick={onSaveButtonClick}>
+        <StyledSaveButton type="button" onClick={saveSessionID}>
           Save
         </StyledSaveButton>
-        {showSuccessIcon ? (
-          <StyledSuccessImage src={SuccessIcon} alt="Success" />
-        ) : null}
+        {showSuccess ? <SuccessIcon /> : null}
       </StyledFlexContainer>
     </Fragment>
   );

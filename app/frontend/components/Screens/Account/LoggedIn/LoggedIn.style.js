@@ -1,11 +1,6 @@
 import { css } from "styled-components";
 
-export const loggedInHeader = css`
-  display: flex;
-  align-items: center;
-`;
-
-export const signoutButton = css`
-  padding: 5px 8px;
-  margin-left: 5px;
+export const container = css`
+  display: grid;
+  grid-template-rows: 0.3fr 1fr 0.5fr;
 `;

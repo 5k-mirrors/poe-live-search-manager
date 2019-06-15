@@ -58,18 +58,37 @@ export const useStoreListener = storeKey => {
   return [value, setValue];
 };
 
-export const useDisable = seconds => {
+export const useDisable = milliseconds => {
   const [isDisabled, setIsDisabled] = useState(false);
 
   function disable() {
     setIsDisabled(previousIsDisabled => !previousIsDisabled);
 
-    const oneSecondInMilliseconds = 1000;
-
     setTimeout(() => {
       setIsDisabled(previousIsDisabled => !previousIsDisabled);
-    }, seconds * oneSecondInMilliseconds);
+    }, milliseconds);
   }
 
   return [isDisabled, disable];
+};
+
+// TODO: try to figure out a better name.
+export const useBooleanTimeout = milliseconds => {
+  const [showFeedback, setShowFeedback] = useState(false);
+
+  let interval;
+
+  useEffect(() => {
+    return () => clearTimeout(interval);
+  }, []);
+
+  function startTimeout() {
+    setShowFeedback(true);
+
+    interval = setTimeout(() => {
+      setShowFeedback(false);
+    }, milliseconds);
+  }
+
+  return [showFeedback, startTimeout];
 };

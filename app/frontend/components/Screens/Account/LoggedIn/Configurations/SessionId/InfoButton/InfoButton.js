@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { shell } from "electron";
 import { button, helpImage } from "./InfoButton.style";
-import HelpIcon from "../../../../../../resources/assets/help.png";
+import HelpIcon from "../../../../../../../resources/assets/help.png";
 
 const StyledButton = styled.button`
   ${button}

@@ -14,9 +14,3 @@ export const saveButton = css`
   display: block;
   padding: 5px 8px;
 `;
-
-export const successImage = css`
-  width: 25px;
-  height: 25px;
-  margin-left: 4px;
-`;
