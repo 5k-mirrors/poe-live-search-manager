@@ -23,7 +23,7 @@ const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState(
     globalStore.get(storeKeys.POE_SESSION_ID, "")
   );
-  const [showSuccess, startSuccessTimeout] = customHooks.useBooleanTimeout(
+  const [showSuccess, startSuccessTimeout] = customHooks.useTimeoutWithFeedback(
     2500
   );
 

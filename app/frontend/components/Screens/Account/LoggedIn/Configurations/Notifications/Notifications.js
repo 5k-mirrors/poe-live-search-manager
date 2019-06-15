@@ -18,7 +18,7 @@ const notifications = () => {
   const [interval, setInterval] = useState(
     globalStore.get(storeKeys.NOTIFICATIONS_INTERVAL, 3)
   );
-  const [showSuccess, startSuccessTimeout] = customHooks.useBooleanTimeout(
+  const [showSuccess, startSuccessTimeout] = customHooks.useTimeoutWithFeedback(
     2500
   );
 

@@ -72,8 +72,7 @@ export const useDisable = milliseconds => {
   return [isDisabled, disable];
 };
 
-// TODO: try to figure out a better name.
-export const useBooleanTimeout = milliseconds => {
+export const useTimeoutWithFeedback = milliseconds => {
   const [showFeedback, setShowFeedback] = useState(false);
 
   let interval;
