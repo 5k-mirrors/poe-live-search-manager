@@ -75,16 +75,16 @@ export const useDisable = milliseconds => {
 export const useTimeoutWithFeedback = milliseconds => {
   const [showFeedback, setShowFeedback] = useState(false);
 
-  let interval;
+  let timeout;
 
   useEffect(() => {
-    return () => clearTimeout(interval);
+    return () => clearTimeout(timeout);
   }, []);
 
   function startTimeout() {
     setShowFeedback(true);
 
-    interval = setTimeout(() => {
+    timeout = setTimeout(() => {
       setShowFeedback(false);
     }, milliseconds);
   }
