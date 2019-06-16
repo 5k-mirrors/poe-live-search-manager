@@ -43,8 +43,6 @@ export const getWhisperMessage = itemDetails => {
 
 const getNotificationTitle = itemName => `New ${itemName} listed`;
 
-const getNotificationTitle = itemName => `New ${itemName} listed`;
-
 export const notifyUser = (whisperMessage, itemName) =>
   doNotify({
     title: getNotificationTitle(itemName),
