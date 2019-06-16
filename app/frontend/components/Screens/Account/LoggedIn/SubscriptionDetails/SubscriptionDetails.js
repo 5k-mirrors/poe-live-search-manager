@@ -1,5 +1,4 @@
 import React from "react";
-import firebase from "firebase/app";
 import styled from "styled-components";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
 import GenericFetchDataDisplayer from "../../../../GenericFetchDataDisplayer/GenericFetchDataDisplayer";
@@ -12,14 +11,12 @@ const StyledRefreshButton = styled.button`
   ${refreshButton}
 `;
 
-const subscriptionDetails = () => {
-  const { currentUser } = firebase.auth();
-
+const subscriptionDetails = ({ id }) => {
   const [fetchedData, refreshFetchedData] = customHooks.useGenericFetch(
     subscription.getData,
-    currentUser.uid
+    id
   );
-  const [isDisabled, disableRefreshButton] = customHooks.useDisable(1000);
+  const [isDisabled, disableRefreshButton] = customHooks.useDisable(1);
 
   function onRefreshButtonClick() {
     refreshFetchedData();

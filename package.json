@@ -158,10 +158,8 @@
       "^.+\\.jsx?$": "babel-jest"
     },
     "collectCoverageFrom": [
-      "app/backend/**/*.js",
-      "app/frontend/**/*.js",
-      "app/utils/**/*.js",
-      "app/Subscription/**/*.js"
+      "app/**/*.{js,jsx}",
+      "!**/node_modules/**"
     ]
   },
   "devDependencies": {

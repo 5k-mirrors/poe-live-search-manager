@@ -17,7 +17,7 @@ const dataDisplayer = ({ subscriptionData }) => (
       {subscriptionData.active_subscription.period}
     </p>
     <p>
-      <b>Expires at </b>
+      <b>Active until </b>
       {subscriptionData.active_subscription.active_until}
     </p>
   </StyledItems>
