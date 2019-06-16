@@ -4,6 +4,10 @@ cache:
   paths:
     - node_modules/
 
+stages:
+  - test
+  - lint
+
 test:
   stage: test
   script:
@@ -11,7 +15,7 @@ test:
     - yarn test:coverage
 
 lint:
-  stage: test
+  stage: lint
   script:
     - yarn install
     - yarn lint
