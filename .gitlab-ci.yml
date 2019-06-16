@@ -12,7 +12,9 @@ test:
   stage: test
   script:
     - yarn install
-    - yarn test:coverage
+    - yarn build-renderer
+    - yarn build-main
+    - yarn test
 
 lint:
   stage: lint
