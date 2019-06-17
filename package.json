@@ -30,6 +30,7 @@
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r @babel/register ./app/backend/main.dev.js",
     "start-renderer-dev": "cross-env NODE_ENV=development webpack-dev-server --config configs/webpack.config.renderer.dev.babel.js",
     "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 jest",
+    "test:coverage": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 jest --coverage",
     "test-all": "yarn lint && yarn flow && yarn build && yarn test && yarn build-e2e && yarn test-e2e",
     "test-e2e": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe electron:./ ./test/e2e/HomePage.e2e.js",
     "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe-live electron:./ ./test/e2e/HomePage.e2e.js",
@@ -157,10 +158,9 @@
       "^.+\\.jsx?$": "babel-jest"
     },
     "collectCoverageFrom": [
-      "app/backend/**/*.js",
-      "app/frontend/**/*.js",
-      "app/utils/**/*.js",
-      "app/Subscription/**/*.js"
+      "app/**/*.js",
+      "!app/dist/**",
+      "!app/main.*.js"
     ]
   },
   "devDependencies": {
