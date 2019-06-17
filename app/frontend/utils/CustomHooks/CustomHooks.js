@@ -58,38 +58,18 @@ export const useStoreListener = storeKey => {
   return [value, setValue];
 };
 
-export const useDisable = milliseconds => {
+export const useDisable = seconds => {
   const [isDisabled, setIsDisabled] = useState(false);
 
   function disable() {
     setIsDisabled(previousIsDisabled => !previousIsDisabled);
 
+    const oneSecondInMilliseconds = 1000;
+
     setTimeout(() => {
       setIsDisabled(previousIsDisabled => !previousIsDisabled);
-    }, milliseconds);
+    }, seconds * oneSecondInMilliseconds);
   }
 
   return [isDisabled, disable];
-};
-
-export const useDisplay = () => {
-  const [showElement, setShowElement] = useState(false);
-
-  let timeout;
-
-  useEffect(() => {
-    return () => clearTimeout(timeout);
-  }, []);
-
-  function displayElement() {
-    setShowElement(true);
-  }
-
-  function hideElementAfterMsElapsed(milliseconds) {
-    timeout = setTimeout(() => {
-      setShowElement(false);
-    }, milliseconds);
-  }
-
-  return [showElement, displayElement, hideElementAfterMsElapsed];
 };
