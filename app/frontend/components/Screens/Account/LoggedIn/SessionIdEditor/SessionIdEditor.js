@@ -2,10 +2,9 @@ import React, { useState, useEffect, Fragment } from "react";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import InfoButton from "./InfoButton/InfoButton";
-import Button from "../../../../UI/Button/Button";
-import SuccessImage from "../../../../UI/SuccessImage/SuccessImage";
 import Input from "../../../../UI/Input/Input";
 import FlexContainer from "../../../../UI/FlexContainer/FlexContainer";
+import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 
 const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState(
@@ -19,7 +18,7 @@ const sessionIdEditor = () => {
     return () => clearInterval(timer);
   }, []);
 
-  function onSaveButtonClick() {
+  function onSave() {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
 
     setShowSuccessIcon(true);
@@ -40,10 +39,11 @@ const sessionIdEditor = () => {
         />
         <InfoButton />
       </FlexContainer>
-      <FlexContainer>
-        <Button clickEvent={onSaveButtonClick} text="Save" />
-        {showSuccessIcon ? <SuccessImage /> : null}
-      </FlexContainer>
+      <ButtonWithSuccessIcon
+        text="Save"
+        clickEvent={onSave}
+        iconIsVisible={showSuccessIcon}
+      />
     </Fragment>
   );
 };
