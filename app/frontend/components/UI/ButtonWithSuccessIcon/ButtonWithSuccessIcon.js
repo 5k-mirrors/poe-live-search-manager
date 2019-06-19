@@ -1,12 +1,12 @@
 import React from "react";
 import FlexContainer from "../FlexContainer/FlexContainer";
 import Button from "../Button/Button";
-import SuccessImage from "../SuccessImage/SuccessImage";
+import SuccessIcon from "../Icons/Success/Success";
 
 const buttonWithSuccessIcon = ({ iconIsVisible, text, clickEvent }) => (
   <FlexContainer>
     <Button clickEvent={clickEvent} text={text} />
-    {iconIsVisible ? <SuccessImage /> : null}
+    {iconIsVisible ? <SuccessIcon /> : null}
   </FlexContainer>
 );
 
