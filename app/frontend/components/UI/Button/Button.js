@@ -6,8 +6,10 @@ const Button = styled.button`
   ${cssButton}
 `;
 
-const button = ({ clickEvent, text }) => (
-  <Button onClick={clickEvent}>{text}</Button>
+const button = ({ clickEvent, text, ...props }) => (
+  <Button onClick={clickEvent} {...props}>
+    {text}
+  </Button>
 );
 
 export default button;

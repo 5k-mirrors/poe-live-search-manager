@@ -1,15 +1,10 @@
 import React from "react";
-import styled from "styled-components";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
 import GenericFetchDataDisplayer from "../../../../GenericFetchDataDisplayer/GenericFetchDataDisplayer";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import subscription from "../../../../../../Subscription/Subscription";
 import * as webSocketActions from "../../../../../../backend/web-sockets/actions";
-import { refreshButton } from "./SubscriptionDetails.style";
-
-const StyledRefreshButton = styled.button`
-  ${refreshButton}
-`;
+import Button from "../../../../UI/Button/Button";
 
 const subscriptionDetails = ({ id }) => {
   const [fetchedData, refreshFetchedData] = customHooks.useGenericFetch(
@@ -32,9 +27,11 @@ const subscriptionDetails = ({ id }) => {
       <GenericFetchDataDisplayer fetchedData={fetchedData}>
         <DataDisplayer subscriptionData={fetchedData.data} />
       </GenericFetchDataDisplayer>
-      <StyledRefreshButton disabled={isDisabled} onClick={onRefreshButtonClick}>
-        Refresh
-      </StyledRefreshButton>
+      <Button
+        clickEvent={onRefreshButtonClick}
+        text="Refresh"
+        disabled={isDisabled}
+      />
     </div>
   );
 };
