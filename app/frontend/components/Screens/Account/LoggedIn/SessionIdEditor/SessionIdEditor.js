@@ -35,7 +35,7 @@ const sessionIdEditor = () => {
   const [
     showSuccessIcon,
     displaySuccessIcon,
-    hideSuccessIconAfterMsElaped
+    hideSuccessIconAfterMsElapsed
   ] = customHooks.useDisplay();
 
   function onSaveButtonClick() {
@@ -43,7 +43,7 @@ const sessionIdEditor = () => {
 
     displaySuccessIcon();
 
-    hideSuccessIconAfterMsElaped(2500);
+    hideSuccessIconAfterMsElapsed(2500);
   }
 
   return (
