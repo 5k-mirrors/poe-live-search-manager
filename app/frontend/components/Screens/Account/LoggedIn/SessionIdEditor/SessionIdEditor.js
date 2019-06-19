@@ -2,8 +2,8 @@ import React, { useState, useEffect, Fragment } from "react";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import InfoButton from "./InfoButton/InfoButton";
-import Input from "../../../../UI/Input/Input";
-import FlexContainer from "../../../../UI/FlexContainer/FlexContainer";
+import Input from "../../../../UI/GeneralElements/Input/Input";
+import FlexContainer from "../../../../UI/GeneralElements/FlexContainer/FlexContainer";
 import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 
 const sessionIdEditor = () => {

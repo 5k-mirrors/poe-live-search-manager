@@ -1,6 +1,6 @@
 import React from "react";
-import FlexContainer from "../FlexContainer/FlexContainer";
-import Button from "../Button/Button";
+import FlexContainer from "../GeneralElements/FlexContainer/FlexContainer";
+import Button from "../GeneralElements/Button/Button";
 import SuccessIcon from "../Icons/Success/Success";
 
 const buttonWithSuccessIcon = ({ iconIsVisible, text, clickEvent }) => (
