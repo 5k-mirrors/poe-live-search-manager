@@ -33,7 +33,7 @@ const sessionIdEditor = () => {
     globalStore.get(storeKeys.POE_SESSION_ID, "")
   );
   const [
-    showSuccessIcon,
+    successIconIsVisible,
     displaySuccessIcon,
     hideSuccessIconAfterMsElapsed
   ] = customHooks.useDisplay();
@@ -61,7 +61,7 @@ const sessionIdEditor = () => {
         <StyledSaveButton type="button" onClick={onSaveButtonClick}>
           Save
         </StyledSaveButton>
-        {showSuccessIcon ? (
+        {successIconIsVisible ? (
           <StyledSuccessImage src={SuccessIcon} alt="Success" />
         ) : null}
       </StyledFlexContainer>
