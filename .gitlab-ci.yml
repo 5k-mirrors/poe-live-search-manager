@@ -14,6 +14,9 @@ test:
     - yarn install
     - yarn test:coverage
 
+  # https://gitlab.com/gitlab-org/gitlab-ce/issues/29642
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+
 lint:
   stage: lint
   script:
