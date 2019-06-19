@@ -28,6 +28,7 @@ const notificationDisplayTime = () => {
 
   return (
     <Fragment>
+      <h3>Interval between notifications</h3>
       <Input
         type="number"
         onChange={e => setNotificationsInterval(e.target.value)}

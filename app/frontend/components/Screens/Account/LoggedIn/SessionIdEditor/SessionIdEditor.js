@@ -31,10 +31,10 @@ const sessionIdEditor = () => {
 
   return (
     <Fragment>
+      <h3>PoE session ID</h3>
       <FlexContainer>
         <Input
           type="text"
-          placeholder="PoE Session ID"
           onChange={e => setPoeSessionId(e.target.value)}
           value={poeSessionId}
         />
