@@ -1,7 +1,7 @@
 import React from "react";
 import firebase from "firebase/app";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
-import NotificationDisplayTime from "./NotificationDisplayTime/NotificationDisplayTime";
+import Notifications from "./Notifications/Notifications";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/Button/Button";
 import FlexContainer from "../../../UI/FlexContainer/FlexContainer";
@@ -19,7 +19,7 @@ const loggedIn = () => {
         <Button clickEvent={() => firebase.auth().signOut()} text="Sign out" />
       </FlexContainer>
       <SessionIdEditor />
-      <NotificationDisplayTime />
+      <Notifications />
       <SubscriptionDetails id={currentUser.uid} />
     </div>
   );

@@ -7,8 +7,7 @@ import SuccessImage from "../../../../UI/SuccessImage/SuccessImage";
 import Input from "../../../../UI/Input/Input";
 import FlexContainer from "../../../../UI/FlexContainer/FlexContainer";
 
-// TODO: wouldn't it be better to add e.g. `HTMLElements`? => HTMLELements.Input?! or HtmlElements.Input?!
-const notificationDisplayTime = () => {
+const notifications = () => {
   const [notificationsInterval, setNotificationsInterval] = useState(
     globalStore.get(storeKeys.NOTIFICATIONS_INTERVAL, 3)
   );
@@ -42,4 +41,4 @@ const notificationDisplayTime = () => {
   );
 };
 
-export default notificationDisplayTime;
+export default notifications;
