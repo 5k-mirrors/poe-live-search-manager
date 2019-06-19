@@ -27,7 +27,7 @@ const notifications = () => {
 
   return (
     <Fragment>
-      <h3>Interval between notifications</h3>
+      <h3>Interval between notifications(in seconds)</h3>
       <Input
         type="number"
         onChange={e => setNotificationsInterval(e.target.value)}
