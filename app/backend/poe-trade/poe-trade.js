@@ -34,11 +34,11 @@ export const getWhisperMessage = itemDetails => {
     "whisper"
   ]);
 
-  if (javaScriptUtils.isDefined(whisperMessage)) {
-    return whisperMessage;
+  if (!javaScriptUtils.isDefined(whisperMessage)) {
+    return "";
   }
 
-  return "";
+  return whisperMessage;
 };
 
 const getNotificationTitle = itemName => `New ${itemName} listed`;
@@ -47,16 +47,16 @@ const getNotificationMessage = whisperMessage => {
   const matchDetails = whisperMessage.match(/listed for [\d]+ [\S]+/);
 
   // => `match` returns `null` if there's no corresponding item in the string.
-  if (javaScriptUtils.isDefined(matchDetails)) {
-    const itemPrice = matchDetails[0]
-      .split(" ")
-      .splice(2, 3)
-      .join(" ");
-
-    return `~b/o ${itemPrice}`;
+  if (!javaScriptUtils.isDefined(matchDetails)) {
+    return "";
   }
 
-  return "";
+  const itemPrice = matchDetails[0]
+    .split(" ")
+    .splice(2, 3)
+    .join(" ");
+
+  return `~b/o ${itemPrice}`;
 };
 
 export const notifyUser = (whisperMessage, itemName) =>
