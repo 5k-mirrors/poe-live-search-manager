@@ -3,13 +3,9 @@ import styled from "styled-components";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import InfoButton from "./InfoButton/InfoButton";
-import {
-  flexContainer,
-  idInput,
-  saveButton,
-  successImage
-} from "./SessionIdEditor.style";
+import { flexContainer, idInput, successImage } from "./SessionIdEditor.style";
 import SuccessIcon from "../../../../../resources/assets/success.png";
+import Button from "../../../../UI/Button/Button";
 
 const StyledFlexContainer = styled.div`
   ${flexContainer}
@@ -17,10 +13,6 @@ const StyledFlexContainer = styled.div`
 
 const StyledIdInput = styled.input`
   ${idInput}
-`;
-
-const StyledSaveButton = styled.button`
-  ${saveButton}
 `;
 
 const StyledSuccessImage = styled.img`
@@ -61,9 +53,7 @@ const sessionIdEditor = () => {
         <InfoButton />
       </StyledFlexContainer>
       <StyledFlexContainer>
-        <StyledSaveButton type="button" onClick={onSaveButtonClick}>
-          Save
-        </StyledSaveButton>
+        <Button clickEvent={onSaveButtonClick} text="Save" />
         {showSuccessIcon ? (
           <StyledSuccessImage src={SuccessIcon} alt="Success" />
         ) : null}
