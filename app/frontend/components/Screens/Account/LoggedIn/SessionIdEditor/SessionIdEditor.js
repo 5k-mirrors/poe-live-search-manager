@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import styled from "styled-components";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
@@ -37,12 +37,6 @@ const sessionIdEditor = () => {
     displaySuccessIcon,
     hideSuccessIconAfterMsElaped
   ] = customHooks.useDisplay();
-
-  let timeout;
-
-  useEffect(() => {
-    return () => clearTimeout(timeout);
-  }, []);
 
   function onSaveButtonClick() {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
