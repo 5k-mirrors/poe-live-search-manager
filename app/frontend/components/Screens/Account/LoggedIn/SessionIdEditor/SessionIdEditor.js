@@ -10,6 +10,7 @@ import {
   successImage
 } from "./SessionIdEditor.style";
 import SuccessIcon from "../../../../../resources/assets/success.png";
+import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 
 const StyledFlexContainer = styled.div`
   ${flexContainer}
@@ -31,7 +32,11 @@ const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState(
     globalStore.get(storeKeys.POE_SESSION_ID, "")
   );
-  const [showSuccessIcon, setShowSuccessIcon] = useState(false);
+  const [
+    showSuccessIcon,
+    displaySuccessIcon,
+    hideSuccessIconAfterMsElaped
+  ] = customHooks.useDisplay();
 
   let timeout;
 
@@ -42,12 +47,9 @@ const sessionIdEditor = () => {
   function onSaveButtonClick() {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
 
-    setShowSuccessIcon(true);
+    displaySuccessIcon();
 
-    timeout = () =>
-      setTimeout(() => {
-        setShowSuccessIcon(false);
-      }, 2500);
+    hideSuccessIconAfterMsElaped(2500);
   }
 
   return (
