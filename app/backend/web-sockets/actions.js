@@ -1,42 +1,56 @@
-import { Notification } from "electron";
 import WebSocket from "ws";
-import getWindowByName from "../utils/get-window-by-name/get-window-by-name";
-import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+import { clipboard } from "electron";
 import store from "./store";
+import subscription from "../../Subscription/Subscription";
+import * as poeTrade from "../poe-trade/poe-trade";
+import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
-const doNotify = ({ notificationMessage }) => {
-  new Notification({
-    title: "PoE Sniper Pro",
-    body: notificationMessage
-  }).show();
-};
+const setupMessageListener = id => {
+  const ws = store.find(id);
 
-const setupWebSocketListeners = webSocket => {
-  webSocket.on("message", message => {
-    doNotify({
-      notificationMessage: message
-    });
+  ws.socket.on("message", response => {
+    const parsedResponse = JSON.parse(response);
 
-    const window = getWindowByName("PoE Sniper");
+    const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
 
-    window.webContents.send(ipcEvents.TRADE_MESSAGE, message);
+    if (javaScriptUtils.isDefined(itemIds)) {
+      itemIds.forEach(itemId => {
+        poeTrade
+          .fetchItemDetails(itemId)
+          .then(itemDetails => {
+            const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
+
+            clipboard.writeText(whisperMessage);
+
+            poeTrade.notifyUser(whisperMessage, ws.name);
+          })
+          .catch(err => {
+            // eslint-disable-next-line no-console
+            console.error(err);
+          });
+      });
+    }
   });
 };
 
 export const connect = id => {
   const ws = store.find(id);
 
-  if (!javaScriptUtils.isDefined(ws.socket)) {
-    const newWebsocket = new WebSocket(ws.uri);
+  if (!ws.isConnected) {
+    const newWebsocket = new WebSocket(ws.uri, {
+      headers: {
+        Cookie: poeTrade.getCookies()
+      }
+    });
 
     store.update(ws.id, {
       ...ws,
-      socket: newWebsocket
+      socket: newWebsocket,
+      isConnected: true
     });
 
     newWebsocket.on("open", () => {
-      setupWebSocketListeners(newWebsocket);
+      setupMessageListener(id);
     });
   }
 };
@@ -44,13 +58,34 @@ export const connect = id => {
 export const disconnect = id => {
   const ws = store.find(id);
 
-  if (javaScriptUtils.isDefined(ws.socket)) {
+  if (ws.isConnected) {
     ws.socket.close();
 
     delete ws.socket;
 
     store.update(ws.id, {
-      ...ws
+      ...ws,
+      isConnected: false
     });
+  }
+};
+
+export const connectToStoredWebSockets = () => {
+  store.all().forEach(connectionDetails => {
+    connect(connectionDetails.id);
+  });
+};
+
+export const disconnectFromStoredWebSockets = () => {
+  store.all().forEach(connectionDetails => {
+    disconnect(connectionDetails.id);
+  });
+};
+
+export const updateConnections = () => {
+  if (subscription.active()) {
+    connectToStoredWebSockets();
+  } else {
+    disconnectFromStoredWebSockets();
   }
 };
