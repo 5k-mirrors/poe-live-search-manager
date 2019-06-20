@@ -33,7 +33,7 @@ describe("customHooks", () => {
       });
 
       it("calls `setTimeout` with the passed `milliseconds`", () => {
-        act(() => hideElementAfterMsElapsed(2500));
+        act(() => hideElementAfterMsElapsed(milliseconds));
 
         expect(setTimeout).toHaveBeenCalledWith(
           expect.any(Function),
