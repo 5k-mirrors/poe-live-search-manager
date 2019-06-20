@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import * as poeTrade from "./poe-trade";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../errors/item-fetch-error";
 
 jest.mock("node-fetch", () => jest.fn());
@@ -51,6 +52,50 @@ describe("poeTrade", () => {
         return expect(poeTrade.fetchItemDetails(id)).resolves.toEqual(
           "itemDetails"
         );
+      });
+    });
+  });
+
+  describe("notifyUser", () => {
+    let doNotifySpy;
+
+    beforeEach(() => {
+      doNotifySpy = jest
+        .spyOn(electronUtils, "doNotify")
+        .mockImplementationOnce(() => jest.fn());
+    });
+
+    const itemName = "Tabula Rasa Simple Robe";
+
+    describe("when `whisperMessage` fits the pattern", () => {
+      const whisperMessage =
+        '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 chaos in Legion (stash tab "6"; position: left 4, top 7)';
+
+      it("sets the `body` to the formatted string", () => {
+        const expectedString = `~b/o 20 chaos`;
+
+        poeTrade.notifyUser(whisperMessage, itemName);
+
+        expect(doNotifySpy).toHaveBeenCalledWith({
+          title: `New ${itemName} listed`,
+          body: expectedString
+        });
+      });
+    });
+
+    describe("when `whisperMessage` does not fit the pattern", () => {
+      const whisperMessage =
+        '@ВжухХацыч Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
+
+      it("sets the `body` to an empty string", () => {
+        const expectedString = "";
+
+        poeTrade.notifyUser(whisperMessage, itemName);
+
+        expect(doNotifySpy).toHaveBeenCalledWith({
+          title: `New ${itemName} listed`,
+          body: expectedString
+        });
       });
     });
   });

@@ -1,32 +1,12 @@
 import React, { useState, Fragment } from "react";
-import styled from "styled-components";
+import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import InfoButton from "./InfoButton/InfoButton";
-import {
-  flexContainer,
-  idInput,
-  saveButton,
-  successImage
-} from "./SessionIdEditor.style";
-import SuccessIcon from "../../../../../resources/assets/success.png";
-import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
-
-const StyledFlexContainer = styled.div`
-  ${flexContainer}
-`;
-
-const StyledIdInput = styled.input`
-  ${idInput}
-`;
-
-const StyledSaveButton = styled.button`
-  ${saveButton}
-`;
-
-const StyledSuccessImage = styled.img`
-  ${successImage}
-`;
+import Button from "../../../../UI/Button/Button";
+import SuccessImage from "../../../../UI/SuccessImage/SuccessImage";
+import Input from "../../../../UI/Input/Input";
+import FlexContainer from "../../../../UI/FlexContainer/FlexContainer";
 
 const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState(
@@ -48,23 +28,19 @@ const sessionIdEditor = () => {
 
   return (
     <Fragment>
-      <StyledFlexContainer>
-        <StyledIdInput
+      <FlexContainer>
+        <Input
           type="text"
           placeholder="PoE Session ID"
           onChange={e => setPoeSessionId(e.target.value)}
           value={poeSessionId}
         />
         <InfoButton />
-      </StyledFlexContainer>
-      <StyledFlexContainer>
-        <StyledSaveButton type="button" onClick={onSaveButtonClick}>
-          Save
-        </StyledSaveButton>
-        {successIconIsVisible ? (
-          <StyledSuccessImage src={SuccessIcon} alt="Success" />
-        ) : null}
-      </StyledFlexContainer>
+      </FlexContainer>
+      <FlexContainer>
+        <Button clickEvent={onSaveButtonClick} text="Save" />
+        {successIconIsVisible ? <SuccessImage /> : null}
+      </FlexContainer>
     </Fragment>
   );
 };
