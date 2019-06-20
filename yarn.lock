@@ -1495,6 +1495,13 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
+"@testing-library/react-hooks@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/react-hooks/-/react-hooks-1.0.2.tgz#85a91e6c63015cc861f42713f9066bf62f491457"
+  integrity sha512-YBSeOC3diWm1DQUjj1Nixj8Y1O3GA6gZaQo3QrmRxslUF8utN0ywZOY7rWbbFdgoSJUdWb6LWU8LwIN+/egujg==
+  dependencies:
+    "@babel/runtime" "^7.4.2"
+
 "@types/babel__core@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.0.tgz#710f2487dda4dcfd010ca6abb2b4dc7394365c51"

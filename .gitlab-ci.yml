@@ -7,6 +7,7 @@ cache:
 stages:
   - test
   - lint
+  - code_quality
 
 test:
   stage: test
@@ -24,7 +25,7 @@ lint:
     - yarn lint
 
 code_quality:
-  stage: test
+  stage: code_quality
   image: docker:stable
   variables:
     DOCKER_DRIVER: overlay2

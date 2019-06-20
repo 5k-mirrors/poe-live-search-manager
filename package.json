@@ -187,6 +187,7 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.0",
+    "@testing-library/react-hooks": "^1.0.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.5.0",
@@ -295,7 +296,7 @@
   "browserslist": "electron 1.6",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged && yarn run test:coverage"
     }
   }
 }
