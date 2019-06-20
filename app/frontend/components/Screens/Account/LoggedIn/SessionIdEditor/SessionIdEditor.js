@@ -1,4 +1,5 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, Fragment } from "react";
+import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import InfoButton from "./InfoButton/InfoButton";
@@ -10,22 +11,18 @@ const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState(
     globalStore.get(storeKeys.POE_SESSION_ID, "")
   );
-  const [showSuccessIcon, setShowSuccessIcon] = useState(false);
-
-  let timer;
-
-  useEffect(() => {
-    return () => clearInterval(timer);
-  }, []);
+  const [
+    successIconIsVisible,
+    displaySuccessIcon,
+    hideSuccessIconAfterMsElapsed
+  ] = customHooks.useDisplay();
 
   function onSave() {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
 
-    setShowSuccessIcon(true);
+    displaySuccessIcon();
 
-    timer = setTimeout(() => {
-      setShowSuccessIcon(false);
-    }, 2500);
+    hideSuccessIconAfterMsElapsed(2500);
   }
 
   return (
@@ -42,7 +39,7 @@ const sessionIdEditor = () => {
       <ButtonWithSuccessIcon
         text="Save"
         clickEvent={onSave}
-        iconIsVisible={showSuccessIcon}
+        iconIsVisible={successIconIsVisible}
       />
     </Fragment>
   );
