@@ -1,23 +1,13 @@
 import WebSocket from "ws";
 import { clipboard } from "electron";
-import Bottleneck from "bottleneck";
-import { globalStore } from "../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import store from "./store";
+import * as notificationsLimiter from "../notifications-limiter/notifications-limiter";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const setupMessageListener = id => {
-  const notificationsInterval = globalStore.get(
-    storeKeys.NOTIFICATIONS_INTERVAL,
-    3
-  );
-
-  const limiter = new Bottleneck({
-    maxConcurrent: 1,
-    minTime: notificationsInterval * 1000
-  });
+  const limiter = notificationsLimiter.get();
 
   const ws = store.find(id);
 
