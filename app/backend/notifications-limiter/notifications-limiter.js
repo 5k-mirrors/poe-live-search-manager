@@ -5,11 +5,12 @@ import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 const getMinTime = () => {
   const oneSecondInMilliseconds = 1000;
 
-  const minTime =
-    globalStore.get(storeKeys.NOTIFICATIONS_INTERVAL, 3) *
-    oneSecondInMilliseconds;
+  const notificationsInterval = globalStore.get(
+    storeKeys.NOTIFICATIONS_INTERVAL,
+    3
+  );
 
-  return minTime;
+  return notificationsInterval * oneSecondInMilliseconds;
 };
 
 export const get = () => {
