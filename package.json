@@ -295,7 +295,7 @@
   "browserslist": "electron 1.6",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged && yarn run test:coverage"
     }
   }
 }
