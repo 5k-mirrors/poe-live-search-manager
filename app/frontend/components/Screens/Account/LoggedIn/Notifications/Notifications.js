@@ -2,14 +2,12 @@ import React, { useState, Fragment } from "react";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
-import InfoButton from "./InfoButton/InfoButton";
 import Input from "../../../../UI/Input/Input";
-import FlexContainer from "../../../../UI/FlexContainer/FlexContainer";
 import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 
-const sessionIdEditor = () => {
-  const [poeSessionId, setPoeSessionId] = useState(
-    globalStore.get(storeKeys.POE_SESSION_ID, "")
+const notifications = () => {
+  const [notificationsInterval, setNotificationsInterval] = useState(
+    globalStore.get(storeKeys.NOTIFICATIONS_INTERVAL, 3)
   );
   const [
     successIconIsVisible,
@@ -18,7 +16,7 @@ const sessionIdEditor = () => {
   ] = customHooks.useDisplay();
 
   function onSave() {
-    globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
+    globalStore.set(storeKeys.NOTIFICATIONS_INTERVAL, notificationsInterval);
 
     displaySuccessIcon();
 
@@ -27,15 +25,12 @@ const sessionIdEditor = () => {
 
   return (
     <Fragment>
-      <h3>PoE session ID</h3>
-      <FlexContainer>
-        <Input
-          type="text"
-          onChange={e => setPoeSessionId(e.target.value)}
-          value={poeSessionId}
-        />
-        <InfoButton />
-      </FlexContainer>
+      <h3>Interval between notifications(in seconds)</h3>
+      <Input
+        type="number"
+        onChange={e => setNotificationsInterval(e.target.value)}
+        value={notificationsInterval}
+      />
       <ButtonWithSuccessIcon
         text="Save"
         clickEvent={onSave}
@@ -45,4 +40,4 @@ const sessionIdEditor = () => {
   );
 };
 
-export default sessionIdEditor;
+export default notifications;
