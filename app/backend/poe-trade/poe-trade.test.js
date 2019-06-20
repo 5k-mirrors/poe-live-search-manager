@@ -74,7 +74,7 @@ describe("poeTrade", () => {
       it("sets the `body` to the formatted string", () => {
         const expectedString = `~b/o 20 chaos`;
 
-        poeTrade.notifyUser(whisperMessage, itemName);
+        poeTrade.notifyUser(itemName, whisperMessage);
 
         expect(doNotifySpy).toHaveBeenCalledWith({
           title: `New ${itemName} listed`,
@@ -90,7 +90,7 @@ describe("poeTrade", () => {
       it("sets the `body` to an empty string", () => {
         const expectedString = "";
 
-        poeTrade.notifyUser(whisperMessage, itemName);
+        poeTrade.notifyUser(itemName, whisperMessage);
 
         expect(doNotifySpy).toHaveBeenCalledWith({
           title: `New ${itemName} listed`,

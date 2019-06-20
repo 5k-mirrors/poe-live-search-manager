@@ -1,11 +1,24 @@
 import WebSocket from "ws";
 import { clipboard } from "electron";
+import Bottleneck from "bottleneck";
+import { globalStore } from "../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const setupMessageListener = id => {
+  const notificationsInterval = globalStore.get(
+    storeKeys.NOTIFICATIONS_INTERVAL,
+    3
+  );
+
+  const limiter = new Bottleneck({
+    maxConcurrent: 1,
+    minTime: notificationsInterval * 1000
+  });
+
   const ws = store.find(id);
 
   ws.socket.on("message", response => {
@@ -18,11 +31,13 @@ const setupMessageListener = id => {
         poeTrade
           .fetchItemDetails(itemId)
           .then(itemDetails => {
-            const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
+            limiter.schedule(() => {
+              const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
 
-            clipboard.writeText(whisperMessage);
+              clipboard.writeText(whisperMessage);
 
-            poeTrade.notifyUser(whisperMessage, ws.name);
+              poeTrade.notifyUser(ws.name, whisperMessage);
+            });
           })
           .catch(err => {
             // eslint-disable-next-line no-console
