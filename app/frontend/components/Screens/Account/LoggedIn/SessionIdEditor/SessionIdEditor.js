@@ -3,8 +3,8 @@ import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import InfoButton from "./InfoButton/InfoButton";
-import Input from "../../../../UI/Input/Input";
-import FlexContainer from "../../../../UI/FlexContainer/FlexContainer";
+import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
+import FlexContainer from "../../../../UI/SimpleHtmlElements/FlexContainer/FlexContainer";
 import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 
 const sessionIdEditor = () => {

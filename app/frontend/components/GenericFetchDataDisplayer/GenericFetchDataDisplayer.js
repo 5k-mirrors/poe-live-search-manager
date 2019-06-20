@@ -1,5 +1,5 @@
 import React from "react";
-import LoaderIcon from "../UI/LoaderIcon/LoaderIcon";
+import LoaderIcon from "../UI/Icons/Loader/Loader";
 
 const genericFetchDataDisplayer = ({ fetchedData, children }) => {
   if (fetchedData.isLoading) {
