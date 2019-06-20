@@ -4,7 +4,7 @@ import GenericFetchDataDisplayer from "../../../../GenericFetchDataDisplayer/Gen
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import subscription from "../../../../../../Subscription/Subscription";
 import * as webSocketActions from "../../../../../../backend/web-sockets/actions";
-import Button from "../../../../UI/GeneralElements/Button/Button";
+import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 
 const subscriptionDetails = ({ id }) => {
   const [fetchedData, refreshFetchedData] = customHooks.useGenericFetch(

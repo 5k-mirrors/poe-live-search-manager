@@ -3,8 +3,8 @@ import firebase from "firebase/app";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import Notifications from "./Notifications/Notifications";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
-import Button from "../../../UI/GeneralElements/Button/Button";
-import FlexContainer from "../../../UI/GeneralElements/FlexContainer/FlexContainer";
+import Button from "../../../UI/SimpleHtmlElements/Button/Button";
+import FlexContainer from "../../../UI/SimpleHtmlElements/FlexContainer/FlexContainer";
 
 const loggedIn = () => {
   const { currentUser } = firebase.auth();

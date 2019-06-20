@@ -2,7 +2,7 @@ import React, { useState, Fragment } from "react";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
-import Input from "../../../../UI/GeneralElements/Input/Input";
+import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 
 const notifications = () => {
