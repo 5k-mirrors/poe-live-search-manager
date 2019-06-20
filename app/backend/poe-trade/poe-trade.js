@@ -3,7 +3,7 @@ import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
-import doNotify from "../utils/do-notify/do-notify";
+import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../errors/item-fetch-error";
 
 export const getCookies = () => {
@@ -34,17 +34,33 @@ export const getWhisperMessage = itemDetails => {
     "whisper"
   ]);
 
-  if (javaScriptUtils.isDefined(whisperMessage)) {
-    return whisperMessage;
+  if (!javaScriptUtils.isDefined(whisperMessage)) {
+    return "";
   }
 
-  return "";
+  return whisperMessage;
 };
 
 const getNotificationTitle = itemName => `New ${itemName} listed`;
 
+const getNotificationMessage = whisperMessage => {
+  const matchDetails = whisperMessage.match(/listed for [\d]+ [\S]+/);
+
+  // => `match` returns `null` if there's no corresponding item in the string.
+  if (!javaScriptUtils.isDefined(matchDetails)) {
+    return "";
+  }
+
+  const itemPrice = matchDetails[0]
+    .split(" ")
+    .splice(2, 3)
+    .join(" ");
+
+  return `~b/o ${itemPrice}`;
+};
+
 export const notifyUser = (whisperMessage, itemName) =>
-  doNotify({
+  electronUtils.doNotify({
     title: getNotificationTitle(itemName),
-    body: whisperMessage
+    body: getNotificationMessage(whisperMessage)
   });
