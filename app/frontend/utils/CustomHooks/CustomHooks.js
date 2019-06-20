@@ -73,3 +73,23 @@ export const useDisable = seconds => {
 
   return [isDisabled, disable];
 };
+
+export const useDisplay = () => {
+  const [elementIsVisible, setShowElement] = useState(false);
+
+  let timeout;
+
+  useEffect(() => {
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const displayElement = () => setShowElement(true);
+
+  const hideElementAfterMsElapsed = milliseconds => {
+    timeout = setTimeout(() => {
+      setShowElement(false);
+    }, milliseconds);
+  };
+
+  return [elementIsVisible, displayElement, hideElementAfterMsElapsed];
+};
