@@ -83,15 +83,13 @@ export const useDisplay = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  function displayElement() {
-    setShowElement(true);
-  }
+  const displayElement = () => setShowElement(true);
 
-  function hideElementAfterMsElapsed(milliseconds) {
+  const hideElementAfterMsElapsed = milliseconds => {
     timeout = setTimeout(() => {
       setShowElement(false);
     }, milliseconds);
-  }
+  };
 
   return [elementIsVisible, displayElement, hideElementAfterMsElapsed];
 };
