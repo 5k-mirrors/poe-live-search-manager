@@ -9,6 +9,16 @@ class NotificationsLimiter {
       maxConcurrent: 1,
       minTime: this.getMinTime()
     });
+
+    this.instance.on("error", error => {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    });
+
+    this.instance.on("failed", (error, jobInfo) => {
+      // eslint-disable-next-line no-console
+      console.error(`${jobInfo.options.id} failed. ${error}`);
+    });
   }
 
   getMinTime = () => {

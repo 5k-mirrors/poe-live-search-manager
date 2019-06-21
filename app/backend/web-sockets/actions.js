@@ -2,6 +2,7 @@ import WebSocket from "ws";
 import { clipboard } from "electron";
 import store from "./store";
 import notificationsLimiter from "../notifications-limiter/notifications-limiter";
+import uniqueIdGenerator from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
@@ -23,13 +24,18 @@ const setupMessageListener = id => {
           .then(itemDetails => {
             notificationsLimiter.refreshMinTime();
 
-            limiter.schedule(() => {
-              const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
+            limiter
+              .schedule({ id: uniqueIdGenerator() }, () => {
+                const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
 
-              clipboard.writeText(whisperMessage);
+                clipboard.writeText(whisperMessage);
 
-              poeTrade.notifyUser(ws.name, whisperMessage);
-            });
+                poeTrade.notifyUser(ws.name, whisperMessage);
+              })
+              .catch(err => {
+                // eslint-disable-next-line no-console
+                console.error(err);
+              });
           })
           .catch(err => {
             // eslint-disable-next-line no-console
