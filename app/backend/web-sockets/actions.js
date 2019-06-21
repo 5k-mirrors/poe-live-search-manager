@@ -6,7 +6,7 @@ import uniqueIdGenerator from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
-import parseUrl from "../parse-url/parse-url";
+import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 
 const setupMessageListener = id => {
   const limiter = notificationsLimiter.getLimiter();
@@ -51,9 +51,9 @@ export const connect = id => {
   const ws = store.find(id);
 
   if (!ws.isConnected) {
-    const parsedUrl = parseUrl(ws.uri);
+    const webSocketUri = getWebSocketUri(ws.uri);
 
-    const newWebsocket = new WebSocket(parsedUrl, {
+    const newWebsocket = new WebSocket(webSocketUri, {
       headers: {
         Cookie: poeTrade.getCookies()
       }

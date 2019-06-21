@@ -5,6 +5,7 @@ import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
+import * as poeUtils from "../../../../utils/PoeUtils/PoeUtils";
 
 // https://github.com/electron/electron/issues/7300#issuecomment-274269710
 const electron = window.require("electron");
@@ -20,7 +21,11 @@ class Input extends Component {
   }
 
   addNewConnection(wsConnectionData) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
+      if (!poeUtils.urlIsValid(wsConnectionData.uri)) {
+        return reject();
+      }
+
       const {
         wsConnections: [...wsConnections]
       } = this.state;
@@ -42,7 +47,7 @@ class Input extends Component {
         ...wsConnectionDataWithUniqueId
       });
 
-      resolve();
+      return resolve();
     });
   }
 

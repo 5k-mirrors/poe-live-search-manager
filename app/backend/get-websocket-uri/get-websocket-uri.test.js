@@ -1,6 +1,6 @@
-import parseUrl from "./parse-url";
+import getWebSocketUri from "./get-websocket-uri";
 
-describe("parseUrl", () => {
+describe("getWebSocketUri", () => {
   const expectedUrl =
     "wss://www.pathofexile.com/api/trade/live/Incursion/NK6Ec5";
 
@@ -10,7 +10,7 @@ describe("parseUrl", () => {
         "https://www.pathofexile.com/trade/search/Incursion/NK6Ec5/live/";
 
       it("returns the formatted WebSocket URL", () => {
-        const actualUrl = parseUrl(urlWithSlash);
+        const actualUrl = getWebSocketUri(urlWithSlash);
 
         expect(actualUrl).toEqual(expectedUrl);
       });
@@ -21,7 +21,7 @@ describe("parseUrl", () => {
         "https://www.pathofexile.com/trade/search/Incursion/NK6Ec5/live";
 
       it("returns the formatted WebSocket URL", () => {
-        const actualUrl = parseUrl(urlWithoutSlash);
+        const actualUrl = getWebSocketUri(urlWithoutSlash);
 
         expect(actualUrl).toEqual(expectedUrl);
       });
@@ -34,7 +34,7 @@ describe("parseUrl", () => {
         "https://www.pathofexile.com/trade/search/Incursion/NK6Ec5/";
 
       it("returns the formatted WebSocket URL", () => {
-        const actualUrl = parseUrl(urlWithSlash);
+        const actualUrl = getWebSocketUri(urlWithSlash);
 
         expect(actualUrl).toEqual(expectedUrl);
       });
@@ -45,7 +45,7 @@ describe("parseUrl", () => {
         "https://www.pathofexile.com/trade/search/Incursion/NK6Ec5";
 
       it("returns the formatted WebSocket URL", () => {
-        const actualUrl = parseUrl(urlWithoutSlash);
+        const actualUrl = getWebSocketUri(urlWithoutSlash);
 
         expect(actualUrl).toEqual(expectedUrl);
       });
