@@ -1,13 +1,13 @@
 import WebSocket from "ws";
 import { clipboard } from "electron";
 import store from "./store";
-import * as notificationsLimiter from "../notifications-limiter/notifications-limiter";
+import notificationsLimiter from "../notifications-limiter/notifications-limiter";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const setupMessageListener = id => {
-  const limiter = notificationsLimiter.get();
+  const limiter = notificationsLimiter.getLimiter();
 
   const ws = store.find(id);
 
@@ -21,6 +21,8 @@ const setupMessageListener = id => {
         poeTrade
           .fetchItemDetails(itemId)
           .then(itemDetails => {
+            notificationsLimiter.refreshMinTime();
+
             limiter.schedule(() => {
               const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
 
