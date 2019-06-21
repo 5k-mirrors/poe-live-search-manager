@@ -284,6 +284,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "source-map-support": "^0.5.11",
+    "url-parse": "^1.4.7",
     "ws": "^6.2.1"
   },
   "devEngines": {
