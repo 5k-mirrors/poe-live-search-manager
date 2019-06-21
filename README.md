@@ -6,6 +6,8 @@ Supported trade sites:
 - [poe.trade](https://poe.trade/)
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) (currently in closed beta)
 
+*Important notice: We're currently revamping this project, making `pathofexile.com/trade` support available to everyone. This repository will host the new app as soon as it's ready. If you'd like to get notified, write me a mail at `git.thisismydesign@gmail.com`.*
+
 *You are viewing the README of version [v0.6.0](https://github.com/thisismydesign/poe-sniper/releases/tag/v0.6.0). You can find other releases [here](https://github.com/thisismydesign/poe-sniper/releases).*
 
 | Branch | Status |
