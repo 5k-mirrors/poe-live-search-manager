@@ -10,23 +10,18 @@ const getLeague = url => url.split("search/")[1].split("/")[0];
 const getId = url => {
   const urlParts = url.split("/");
 
-  let id = urlParts[urlParts.length - 1];
-
-  if (isLiveUrl(urlParts)) {
-    id = urlParts[urlParts.length - 2];
-
-    if (lastElementIsSlash(urlParts)) {
-      id = urlParts[urlParts.length - 3];
-    }
-
-    return id;
+  if (isLiveUrl(urlParts) && lastElementIsSlash(urlParts)) {
+    return urlParts[urlParts.length - 3];
   }
 
-  if (lastElementIsSlash(urlParts)) {
-    id = urlParts[urlParts.length - 2];
+  if (
+    (isLiveUrl(urlParts) && !lastElementIsSlash(urlParts)) ||
+    (!isLiveUrl(urlParts) && lastElementIsSlash(urlParts))
+  ) {
+    return urlParts[urlParts.length - 2];
   }
 
-  return id;
+  return urlParts[urlParts.length - 1];
 };
 
 const parseUrl = url => {
