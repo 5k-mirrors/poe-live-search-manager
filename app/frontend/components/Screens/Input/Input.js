@@ -22,6 +22,7 @@ class Input extends Component {
 
   addNewConnection(wsConnectionData) {
     return new Promise((resolve, reject) => {
+      console.log("[running]", poeUtils.urlIsValid(wsConnectionData.uri));
       if (!poeUtils.urlIsValid(wsConnectionData.uri)) {
         return reject();
       }

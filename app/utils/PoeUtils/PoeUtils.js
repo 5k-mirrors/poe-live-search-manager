@@ -9,7 +9,8 @@ export const urlIsValid = url => {
     URL(url);
 
     return true;
-  } catch {
+  } catch (err) {
+    console.error(err);
     return false;
   }
 };
