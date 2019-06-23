@@ -53,7 +53,6 @@ describe("<Input />", () => {
 
       it("adds the new connection to the state", () => {
         const expectedStateConnections = [
-          ...inputWrapper.state("wsConnections"),
           {
             id,
             ...wsConnectionData
