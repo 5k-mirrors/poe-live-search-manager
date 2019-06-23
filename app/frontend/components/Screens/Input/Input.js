@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ipcRenderer } from "electron";
 import MaterialTable from "material-table";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
@@ -6,10 +7,6 @@ import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGene
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as regExes from "../../../../resources/RegExes/RegExes";
-
-// https://github.com/electron/electron/issues/7300#issuecomment-274269710
-const electron = window.require("electron");
-const { ipcRenderer } = electron;
 
 class Input extends Component {
   constructor(props) {
