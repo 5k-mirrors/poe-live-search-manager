@@ -25,7 +25,7 @@ describe("<Input />", () => {
       it("rejects", () => {
         return expect(
           inputWrapper.instance().addNewConnection(wsConnectionData)
-        ).rejects.toEqual(undefined);
+        ).rejects.toBeUndefined();
       });
     });
 
@@ -82,7 +82,7 @@ describe("<Input />", () => {
       it("resolves", () => {
         return expect(
           inputWrapper.instance().addNewConnection(wsConnectionData)
-        ).resolves.toEqual(undefined);
+        ).resolves.toBeUndefined();
       });
     });
   });
