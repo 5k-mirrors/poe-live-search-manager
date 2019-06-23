@@ -62,9 +62,9 @@ describe("<Input />", () => {
 
         inputWrapper.instance().addNewConnection(wsConnectionData);
 
-        const actualConnections = inputWrapper.state("wsConnections");
+        const actualStateConnections = inputWrapper.state("wsConnections");
 
-        expect(actualConnections).toEqual(expectedStateConnections);
+        expect(actualStateConnections).toEqual(expectedStateConnections);
       });
 
       it("sends the connection details to the BE", () => {
