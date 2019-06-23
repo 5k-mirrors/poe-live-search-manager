@@ -2,5 +2,3 @@
 export const ipcRenderer = {
   send: jest.fn()
 };
-
-export const doNotify = {};
