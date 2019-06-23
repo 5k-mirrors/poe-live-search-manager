@@ -2,7 +2,7 @@ import WebSocket from "ws";
 import { clipboard } from "electron";
 import store from "./store";
 import notificationsLimiter from "../notifications-limiter/notifications-limiter";
-import uniqueIdGenerator from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";

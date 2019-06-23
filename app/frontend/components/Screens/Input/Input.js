@@ -3,7 +3,7 @@ import { ipcRenderer } from "electron";
 import MaterialTable from "material-table";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
-import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as regExes from "../../../../resources/RegExes/RegExes";
