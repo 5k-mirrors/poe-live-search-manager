@@ -59,7 +59,7 @@ const getNotificationMessage = whisperMessage => {
   return `~b/o ${itemPrice}`;
 };
 
-export const notifyUser = (whisperMessage, itemName) =>
+export const notifyUser = (itemName, whisperMessage) =>
   electronUtils.doNotify({
     title: getNotificationTitle(itemName),
     body: getNotificationMessage(whisperMessage)

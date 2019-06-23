@@ -1,11 +1,15 @@
 import WebSocket from "ws";
 import { clipboard } from "electron";
 import store from "./store";
+import notificationsLimiter from "../notifications-limiter/notifications-limiter";
+import uniqueIdGenerator from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const setupMessageListener = id => {
+  const limiter = notificationsLimiter.getLimiter();
+
   const ws = store.find(id);
 
   ws.socket.on("message", response => {
@@ -18,11 +22,20 @@ const setupMessageListener = id => {
         poeTrade
           .fetchItemDetails(itemId)
           .then(itemDetails => {
-            const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
+            notificationsLimiter.refreshMinTime();
 
-            clipboard.writeText(whisperMessage);
+            limiter
+              .schedule({ id: uniqueIdGenerator() }, () => {
+                const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
 
-            poeTrade.notifyUser(whisperMessage, ws.name);
+                clipboard.writeText(whisperMessage);
+
+                poeTrade.notifyUser(ws.name, whisperMessage);
+              })
+              .catch(err => {
+                // eslint-disable-next-line no-console
+                console.error(err);
+              });
           })
           .catch(err => {
             // eslint-disable-next-line no-console
