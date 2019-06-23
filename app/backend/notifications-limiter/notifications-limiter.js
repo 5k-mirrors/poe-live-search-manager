@@ -12,12 +12,12 @@ class NotificationsLimiter {
 
     this.instance.on("error", error => {
       // eslint-disable-next-line no-console
-      console.error(error);
+      console.error(JSON.stringify(error));
     });
 
     this.instance.on("failed", (error, jobInfo) => {
       // eslint-disable-next-line no-console
-      console.error(`${jobInfo.options.id} failed. ${error}`);
+      console.error(`${jobInfo.options.id} failed. ${JSON.stringify(error)}`);
     });
   }
 
