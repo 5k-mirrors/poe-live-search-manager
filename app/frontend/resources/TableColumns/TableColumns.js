@@ -1,7 +1,7 @@
 export const inputScreen = [
   { field: "id", hidden: true },
   { title: "Item name", field: "name" },
-  { title: "URI", field: "uri" }
+  { title: "Search URL", field: "searchUrl" }
 ];
 
 export const tradeScreen = [

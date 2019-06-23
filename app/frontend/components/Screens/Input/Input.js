@@ -19,7 +19,9 @@ class Input extends Component {
 
   addNewConnection(wsConnectionData) {
     return new Promise((resolve, reject) => {
-      if (!regExes.searchUrlLeagueAndIdMatcher.test(wsConnectionData.uri)) {
+      if (
+        !regExes.searchUrlLeagueAndIdMatcher.test(wsConnectionData.searchUrl)
+      ) {
         return reject();
       }
 

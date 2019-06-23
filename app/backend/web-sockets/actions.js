@@ -51,7 +51,7 @@ export const connect = id => {
   const ws = store.find(id);
 
   if (!ws.isConnected) {
-    const webSocketUri = getWebSocketUri(ws.uri);
+    const webSocketUri = getWebSocketUri(ws.searchUrl);
 
     const newWebsocket = new WebSocket(webSocketUri, {
       headers: {
