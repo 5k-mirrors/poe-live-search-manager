@@ -9,103 +9,86 @@ import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as regExes from "../../../../resources/RegExes/RegExes";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 
-// @TODO: the table doesn't reflect the proper state whenever the app is restarted.
 class Input extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      wsConnections: globalStore.get(storeKeys.WS_CONNECTIONS, [])
+      webSocketStore: []
     };
+  }
 
-    ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, details) => {
-      this.updateSocketState(details);
+  componentDidMount() {
+    ipcRenderer.send(ipcEvents.STORE_REQUEST);
+
+    ipcRenderer.on(ipcEvents.STORE_UPDATE, (event, updatedStore) => {
+      this.setState({
+        webSocketStore: updatedStore
+      });
     });
   }
 
-  addNewConnection(wsConnectionData) {
+  componentWillUnmount() {
+    ipcRenderer.removeAllListeners();
+  }
+
+  addNewConnection = connectionDetails => {
     return new Promise((resolve, reject) => {
       if (
-        !regExes.searchUrlLeagueAndIdMatcher.test(wsConnectionData.searchUrl)
+        !regExes.searchUrlLeagueAndIdMatcher.test(connectionDetails.searchUrl)
       ) {
         return reject(new InvalidInputError());
       }
 
-      const {
-        wsConnections: [...wsConnections]
-      } = this.state;
-
-      const wsConnectionDataWithUniqueId = {
+      const connectionDetailsWithUniqueId = {
         id: uniqueIdGenerator(),
-        isConnected: false,
-        ...wsConnectionData
+        ...connectionDetails
       };
 
-      wsConnections.push(wsConnectionDataWithUniqueId);
+      ipcRenderer.send(ipcEvents.WS_ADD, connectionDetailsWithUniqueId);
 
-      this.setState({
-        wsConnections
-      });
+      const globalStoreConnections = globalStore.get(
+        storeKeys.WS_CONNECTIONS,
+        []
+      );
 
-      globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
+      globalStoreConnections.push(connectionDetailsWithUniqueId);
 
-      ipcRenderer.send(ipcEvents.WS_ADD, {
-        ...wsConnectionDataWithUniqueId
-      });
+      globalStore.set(storeKeys.WS_CONNECTIONS, globalStoreConnections);
 
       return resolve();
     });
-  }
+  };
 
-  updateSocketState(details) {
-    const {
-      wsConnections: [...wsConnections]
-    } = this.state;
-
-    const connectionIndex = wsConnections.findIndex(
-      wsConnection => wsConnection.id === details.id
-    );
-
-    if (wsConnections[connectionIndex]) {
-      wsConnections[connectionIndex].isConnected = details.isConnected;
-
-      this.setState({
-        wsConnections
-      });
-    }
-  }
-
-  deleteConnection(wsConnectionData) {
+  deleteConnection = connectionDetails => {
     return new Promise(resolve => {
-      const {
-        wsConnections: [...wsConnections]
-      } = this.state;
+      ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
 
-      const wsConnectionDataIndex = wsConnections.indexOf(wsConnectionData);
-      wsConnections.splice(wsConnectionDataIndex, 1);
+      const globalStoreConnections = globalStore.get(
+        storeKeys.WS_CONNECTIONS,
+        []
+      );
 
-      this.setState({
-        wsConnections
-      });
+      const updatedGlobalStoreConnections = globalStoreConnections.filter(
+        storedConnection => storedConnection.id !== connectionDetails.id
+      );
 
-      globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
-
-      ipcRenderer.send(ipcEvents.WS_REMOVE, wsConnectionData);
+      globalStore.set(storeKeys.WS_CONNECTIONS, updatedGlobalStoreConnections);
 
       resolve();
     });
-  }
+  };
 
   render() {
     const {
-      wsConnections: [...wsConnections]
+      webSocketStore: [...webSocketStore]
     } = this.state;
 
     return (
       <MaterialTable
         title="Active connections"
         columns={tableColumns.inputScreen}
-        data={wsConnections}
+        data={webSocketStore}
         editable={{
           onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),
           onRowDelete: wsConnectionData =>

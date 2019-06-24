@@ -7,8 +7,6 @@ import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
-import * as electronUtils from "../utils/electron-utils/electron-utils";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 
 const setupMessageListener = id => {
   const limiter = notificationsLimiter.getLimiter();
@@ -49,19 +47,6 @@ const setupMessageListener = id => {
   });
 };
 
-const update = (id, details) => {
-  store.update(id, {
-    ...details
-  });
-
-  const window = electronUtils.getWindowByName("PoE Sniper");
-
-  window.webContents.send(ipcEvents.SOCKET_STATE_UPDATE, {
-    id,
-    isConnected: details.isConnected
-  });
-};
-
 export const connect = id => {
   const ws = store.find(id);
 
@@ -74,11 +59,13 @@ export const connect = id => {
       }
     });
 
-    update(ws.id, {
+    store.update(ws.id, {
       ...ws,
       socket: newWebsocket,
       isConnected: true
     });
+
+    store.send();
 
     newWebsocket.on("open", () => {
       setupMessageListener(id);
@@ -94,7 +81,7 @@ export const disconnect = id => {
 
     delete ws.socket;
 
-    update(ws.id, {
+    store.update(ws.id, {
       ...ws,
       isConnected: false
     });

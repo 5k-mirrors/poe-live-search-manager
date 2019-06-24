@@ -1,3 +1,6 @@
+import * as electronUtils from "../utils/electron-utils/electron-utils";
+import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+
 class Store {
   constructor() {
     this.storage = [];
@@ -31,6 +34,12 @@ class Store {
     const wsElementIndex = this.storage.findIndex(ws => ws.id === id);
 
     this.storage.splice(wsElementIndex, 1);
+  }
+
+  send() {
+    const window = electronUtils.getWindowByName("PoE Sniper");
+
+    window.webContents.send(ipcEvents.STORE_UPDATE, this.all());
   }
 }
 

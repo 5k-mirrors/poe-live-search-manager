@@ -8,6 +8,10 @@ import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 
 const setupIpcEvents = () => {
+  ipcMain.on(ipcEvents.STORE_REQUEST, () => {
+    store.send();
+  });
+
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
     store.add(connectionDetails);
 
@@ -26,6 +30,8 @@ const setupIpcEvents = () => {
     }
 
     store.remove(connectionDetails.id);
+
+    store.send();
   });
 
   ipcMain.on(ipcEvents.USER_LOGIN, (event, id) => {

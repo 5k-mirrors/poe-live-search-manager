@@ -7,7 +7,6 @@ const Error = styled.img`
   ${errorStyle}
 `;
 
-// @TODO: IconDisplayer?
 const error = () => <Error src={errorIconPath} />;
 
 export default error;
