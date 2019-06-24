@@ -161,6 +161,9 @@
       "app/**/*.js",
       "!app/dist/**",
       "!app/main.*.js"
+    ],
+    "setupFiles": [
+      "<rootDir>/app/SetupEnzyme/SetupEnzyme.js"
     ]
   },
   "devDependencies": {

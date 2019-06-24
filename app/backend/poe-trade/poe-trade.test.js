@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import * as poeTrade from "./poe-trade";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
-import ItemFetchError from "../errors/item-fetch-error";
+import ItemFetchError from "../../errors/item-fetch-error";
 
 jest.mock("node-fetch", () => jest.fn());
 

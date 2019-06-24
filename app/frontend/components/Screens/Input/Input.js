@@ -1,14 +1,13 @@
 import React, { Component } from "react";
+import { ipcRenderer } from "electron";
 import MaterialTable from "material-table";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
-import { uniqueIdGenerator } from "../../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
-
-// https://github.com/electron/electron/issues/7300#issuecomment-274269710
-const electron = window.require("electron");
-const { ipcRenderer } = electron;
+import * as regExes from "../../../../resources/RegExes/RegExes";
+import InvalidInputError from "../../../../errors/invalid-input-error";
 
 class Input extends Component {
   constructor(props) {
@@ -20,7 +19,13 @@ class Input extends Component {
   }
 
   addNewConnection(wsConnectionData) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
+      if (
+        !regExes.searchUrlLeagueAndIdMatcher.test(wsConnectionData.searchUrl)
+      ) {
+        return reject(new InvalidInputError());
+      }
+
       const {
         wsConnections: [...wsConnections]
       } = this.state;
@@ -42,7 +47,7 @@ class Input extends Component {
         ...wsConnectionDataWithUniqueId
       });
 
-      resolve();
+      return resolve();
     });
   }
 
@@ -105,16 +110,6 @@ class Input extends Component {
           onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),
           onRowDelete: wsConnectionData =>
             this.deleteConnection(wsConnectionData)
-        }}
-        options={{
-          headerStyle: {
-            backgroundColor: "#01579b",
-            color: "#FFF",
-            fontWeight: "bold"
-          },
-          rowStyle: {
-            backgroundColor: "#EEE"
-          }
         }}
       />
     );

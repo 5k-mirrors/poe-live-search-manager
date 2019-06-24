@@ -2,10 +2,11 @@ import WebSocket from "ws";
 import { clipboard } from "electron";
 import store from "./store";
 import notificationsLimiter from "../notifications-limiter/notifications-limiter";
-import uniqueIdGenerator from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 
 const setupMessageListener = id => {
   const limiter = notificationsLimiter.getLimiter();
@@ -50,7 +51,9 @@ export const connect = id => {
   const ws = store.find(id);
 
   if (!ws.isConnected) {
-    const newWebsocket = new WebSocket(ws.uri, {
+    const webSocketUri = getWebSocketUri(ws.searchUrl);
+
+    const newWebsocket = new WebSocket(webSocketUri, {
       headers: {
         Cookie: poeTrade.getCookies()
       }
