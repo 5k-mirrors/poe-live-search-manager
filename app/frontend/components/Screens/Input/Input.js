@@ -9,6 +9,7 @@ import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as regExes from "../../../../resources/RegExes/RegExes";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 
+// @TODO: the table doesn't reflect the proper state whenever the app is restarted.
 class Input extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +17,10 @@ class Input extends Component {
     this.state = {
       wsConnections: globalStore.get(storeKeys.WS_CONNECTIONS, [])
     };
+
+    ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, details) => {
+      this.updateSocketState(details);
+    });
   }
 
   addNewConnection(wsConnectionData) {
@@ -32,6 +37,7 @@ class Input extends Component {
 
       const wsConnectionDataWithUniqueId = {
         id: uniqueIdGenerator(),
+        isConnected: false,
         ...wsConnectionData
       };
 
@@ -51,28 +57,22 @@ class Input extends Component {
     });
   }
 
-  updateConnection(updatedWsConnectionData, previousWsConnectionData) {
-    return new Promise(resolve => {
-      const {
-        wsConnections: [...wsConnections]
-      } = this.state;
+  updateSocketState(details) {
+    const {
+      wsConnections: [...wsConnections]
+    } = this.state;
 
-      const previousWsConnectionIndex = wsConnections.indexOf(
-        previousWsConnectionData
-      );
-      wsConnections[previousWsConnectionIndex] = {
-        ...previousWsConnectionData,
-        ...updatedWsConnectionData
-      };
+    const connectionIndex = wsConnections.findIndex(
+      wsConnection => wsConnection.id === details.id
+    );
+
+    if (wsConnections[connectionIndex]) {
+      wsConnections[connectionIndex].isConnected = details.isConnected;
 
       this.setState({
         wsConnections
       });
-
-      globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
-
-      resolve();
-    });
+    }
   }
 
   deleteConnection(wsConnectionData) {

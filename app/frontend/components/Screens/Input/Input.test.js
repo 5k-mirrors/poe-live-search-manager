@@ -56,6 +56,7 @@ describe("<Input />", () => {
         const expectedStateConnections = [
           {
             id,
+            isConnected: false,
             ...wsConnectionData
           }
         ];
@@ -70,6 +71,7 @@ describe("<Input />", () => {
       it("sends the connection details to the BE", () => {
         const expectedValue = {
           id,
+          isConnected: false,
           ...wsConnectionData
         };
 
