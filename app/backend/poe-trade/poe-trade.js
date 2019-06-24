@@ -4,7 +4,7 @@ import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
-import ItemFetchError from "../errors/item-fetch-error";
+import ItemFetchError from "../../errors/item-fetch-error";
 
 export const getCookies = () => {
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");

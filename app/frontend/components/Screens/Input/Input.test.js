@@ -5,6 +5,7 @@ import Input from "./Input";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import * as UniqueIdGenerator from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import InvalidInputError from "../../../../errors/invalid-input-error";
 
 describe("<Input />", () => {
   let inputWrapper;
@@ -22,10 +23,10 @@ describe("<Input />", () => {
         searchUrl: "https://invalid-uri.com"
       };
 
-      it("rejects", () => {
+      it("rejects with `InvalidInputError`", () => {
         return expect(
           inputWrapper.instance().addNewConnection(wsConnectionData)
-        ).rejects.toBeUndefined();
+        ).rejects.toEqual(new InvalidInputError());
       });
     });
 

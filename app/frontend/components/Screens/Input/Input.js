@@ -7,6 +7,7 @@ import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdG
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as regExes from "../../../../resources/RegExes/RegExes";
+import InvalidInputError from "../../../../errors/invalid-input-error";
 
 class Input extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ class Input extends Component {
       if (
         !regExes.searchUrlLeagueAndIdMatcher.test(wsConnectionData.searchUrl)
       ) {
-        return reject();
+        return reject(new InvalidInputError());
       }
 
       const {
