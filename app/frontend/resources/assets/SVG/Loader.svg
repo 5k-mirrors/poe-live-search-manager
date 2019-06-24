@@ -1,7 +1,4 @@
-import React from "react";
-
-const loaderIcon = () => (
-  <svg
+<svg
     width="38"
     height="38"
     viewBox="0 0 38 38"
@@ -24,6 +21,3 @@ const loaderIcon = () => (
       </g>
     </g>
   </svg>
-);
-
-export default loaderIcon;

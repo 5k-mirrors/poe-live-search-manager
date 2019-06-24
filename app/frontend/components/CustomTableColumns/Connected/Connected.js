@@ -1,20 +1,21 @@
 import React from "react";
-import SuccessIcon from "../../UI/Icons/Success/Success";
-import ErrorIcon from "../../UI/Icons/Error/Error";
+import IconDisplayer from "../../UI/IconDisplayer/IconDisplayer";
+import successIcon from "../../../resources/assets/PNG/success.png";
+import errorIcon from "../../../resources/assets/PNG/error.png";
 import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const connected = ({ ...props }) => {
   if (!javaScriptUtils.isDefined(props)) {
-    return <ErrorIcon />;
+    return <IconDisplayer path={errorIcon} />;
   }
 
   const { isConnected } = props;
 
   if (isConnected) {
-    return <SuccessIcon />;
+    return <IconDisplayer path={successIcon} />;
   }
 
-  return <ErrorIcon />;
+  return <IconDisplayer path={errorIcon} />;
 };
 
 export default connected;

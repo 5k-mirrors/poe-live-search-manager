@@ -1,12 +1,13 @@
 import React from "react";
 import FlexContainer from "../SimpleHtmlElements/FlexContainer/FlexContainer";
 import Button from "../SimpleHtmlElements/Button/Button";
-import SuccessIcon from "../Icons/Success/Success";
+import IconDispalyer from "../IconDisplayer/IconDisplayer";
+import successIcon from "../../../resources/assets/PNG/success.png";
 
 const buttonWithSuccessIcon = ({ iconIsVisible, text, clickEvent }) => (
   <FlexContainer>
     <Button clickEvent={clickEvent} text={text} />
-    {iconIsVisible ? <SuccessIcon /> : null}
+    {iconIsVisible ? <IconDispalyer path={successIcon} /> : null}
   </FlexContainer>
 );
 
