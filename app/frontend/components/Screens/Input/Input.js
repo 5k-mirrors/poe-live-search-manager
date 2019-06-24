@@ -110,16 +110,6 @@ class Input extends Component {
           onRowDelete: wsConnectionData =>
             this.deleteConnection(wsConnectionData)
         }}
-        options={{
-          headerStyle: {
-            backgroundColor: "#01579b",
-            color: "#FFF",
-            fontWeight: "bold"
-          },
-          rowStyle: {
-            backgroundColor: "#EEE"
-          }
-        }}
       />
     );
   }
