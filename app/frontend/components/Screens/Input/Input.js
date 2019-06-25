@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import { ipcRenderer } from "electron";
 import MaterialTable from "material-table";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
@@ -6,119 +6,18 @@ import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as regExes from "../../../../resources/RegExes/RegExes";
 import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
-import * as customHooks from "../../../utils/CustomHooks/CustomHooks";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 
-const input = () => {
-  const [webSocketStore, setWebSocketStore] = useState([]);
-  const [reconnectIsDisabled, disableReconnect] = customHooks.useDisable(2);
-
-  const updateConnectionState = socketDetails => {
-    const currentWebSocketStore = [...webSocketStore];
-
-    const webSocketIndex = currentWebSocketStore.findIndex(
-      webSocket => webSocket.id === socketDetails.id
-    );
-
-    if (javaScriptUtils.isDefined(webSocketStore[webSocketIndex])) {
-      webSocketStore[webSocketIndex].isConnected = socketDetails.isConnected;
-      setWebSocketStore(currentWebSocketStore);
-    }
-  };
-
-  useEffect(() => {
-    ipcRenderer.send(ipcEvents.STORE_REQUEST);
-
-    ipcRenderer.on(ipcEvents.STORE_RESPONSE, (event, currentStore) => {
-      setWebSocketStore(currentStore);
-    });
-
-    ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, socketDetails) => {
-      updateConnectionState(socketDetails);
-    });
-
-    return () => ipcRenderer.removeAllListeners();
-  });
-
-  const socketReconnect = connectionDetails => {
-    disableReconnect();
-
-    ipcRenderer.send(ipcEvents.SOCKET_RECONNECT, connectionDetails);
-  };
-
-  const deleteConnection = connectionDetails => {
-    return new Promise(resolve => {
-      const currentWebSocketStore = [...webSocketStore];
-
-      const updatedWebSocketStore = currentWebSocketStore.filter(
-        webSocket => webSocket.id !== connectionDetails.id
-      );
-
-      ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
-
-      setWebSocketStore(updatedWebSocketStore);
-
-      resolve();
-    });
-  };
-
-  const addNewConnection = connectionDetails => {
-    return new Promise((resolve, reject) => {
-      if (
-        !regExes.searchUrlLeagueAndIdMatcher.test(connectionDetails.searchUrl)
-      ) {
-        return reject(new InvalidInputError());
-      }
-
-      const currentWebSocketStore = [...webSocketStore];
-
-      const connectionDetailsWithUniqueId = {
-        id: uniqueIdGenerator(),
-        isConnected: false,
-        ...connectionDetails
-      };
-
-      ipcRenderer.send(ipcEvents.WS_ADD, connectionDetailsWithUniqueId);
-
-      currentWebSocketStore.push(connectionDetailsWithUniqueId);
-
-      setWebSocketStore(currentWebSocketStore);
-
-      return resolve();
-    });
-  };
-
-  return (
-    <MaterialTable
-      title="Active connections"
-      columns={tableColumns.inputScreen}
-      data={webSocketStore}
-      editable={{
-        onRowAdd: wsConnectionData => addNewConnection(wsConnectionData),
-        onRowDelete: wsConnectionData => deleteConnection(wsConnectionData)
-      }}
-      actions={[
-        {
-          icon: "cached",
-          tooltip: "Reconnect",
-          onClick: (event, connectionDetails) =>
-            socketReconnect(connectionDetails),
-          disabled: reconnectIsDisabled
-        }
-      ]}
-    />
-  );
-};
-
-export default input;
-
-/* class Input extends Component {
+class Input extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      webSocketStore: []
+      webSocketStore: [],
+      reconnectIsDisabled: false
     };
+
+    this.reconnectDisableTimeout = null;
   }
 
   componentDidMount() {
@@ -137,11 +36,27 @@ export default input;
 
   componentWillUnmount() {
     ipcRenderer.removeAllListeners();
+
+    clearTimeout(this.reconnectDisableTimeout);
   }
 
   socketReconnect = connectionDetails => {
+    this.disableReconnect();
+
     ipcRenderer.send(ipcEvents.SOCKET_RECONNECT, connectionDetails);
   };
+
+  disableReconnect() {
+    this.setState({
+      reconnectIsDisabled: true
+    });
+
+    this.reconnectDisableTimeout = setTimeout(() => {
+      this.setState({
+        reconnectIsDisabled: false
+      });
+    }, 2000);
+  }
 
   updateConnectionState(socketDetails) {
     const {
@@ -213,10 +128,10 @@ export default input;
 
   render() {
     const {
-      webSocketStore: [...webSocketStore]
+      webSocketStore: [...webSocketStore],
+      reconnectIsDisabled
     } = this.state;
 
-    // @TODO: disable the refresh button.
     return (
       <MaterialTable
         title="Active connections"
@@ -232,7 +147,8 @@ export default input;
             icon: "cached",
             tooltip: "Reconnect",
             onClick: (event, connectionDetails) =>
-              this.socketReconnect(connectionDetails)
+              this.socketReconnect(connectionDetails),
+            disabled: reconnectIsDisabled
           }
         ]}
       />
@@ -240,4 +156,4 @@ export default input;
   }
 }
 
-export default Input; */
+export default Input;
