@@ -43,7 +43,7 @@ class Input extends Component {
     });
   }
 
-  socketReconnect = connectionDetails => {
+  reconnect = connectionDetails => {
     this.disableReconnect(connectionDetails.id);
 
     ipcRenderer.send(ipcEvents.SOCKET_RECONNECT, connectionDetails);
@@ -154,7 +154,7 @@ class Input extends Component {
             icon: "cached",
             tooltip: "Reconnect",
             onClick: (event, connectionDetails) =>
-              this.socketReconnect(connectionDetails),
+              this.reconnect(connectionDetails),
             disabled: rowData.reconnectIsDisabled
           })
         ]}
