@@ -7,17 +7,6 @@ import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 
-const updateGlobalStoreWebSocketConnections = () => {
-  const sanitizedStore = store
-    .all()
-    .map(
-      ({ socket, isConnected, ...remainingSocketDetails }) =>
-        remainingSocketDetails
-    );
-
-  globalStore.set(storeKeys.WS_CONNECTIONS, sanitizedStore);
-};
-
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.STORE_REQUEST, event => {
     const sanitizedStore = store
@@ -32,7 +21,7 @@ const setupWebSocketIpcListeners = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
     store.add(connectionDetails);
 
-    updateGlobalStoreWebSocketConnections();
+    globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
 
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
@@ -50,7 +39,7 @@ const setupWebSocketIpcListeners = () => {
 
     store.remove(connectionDetails.id);
 
-    updateGlobalStoreWebSocketConnections();
+    globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
   });
 
   ipcMain.on(ipcEvents.SOCKET_RECONNECT, (event, connectionDetails) => {

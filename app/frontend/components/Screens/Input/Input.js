@@ -13,11 +13,10 @@ class Input extends Component {
     super(props);
 
     this.state = {
-      webSocketStore: [],
-      reconnectIsDisabled: false
+      webSocketStore: []
     };
 
-    this.reconnectDisableTimeout = null;
+    this.reconnectTimeouts = [];
   }
 
   componentDidMount() {
@@ -30,50 +29,56 @@ class Input extends Component {
     });
 
     ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, socketDetails) => {
-      this.updateConnectionState(socketDetails);
+      this.update(socketDetails.id, {
+        isConnected: socketDetails.isConnected
+      });
     });
   }
 
   componentWillUnmount() {
     ipcRenderer.removeAllListeners();
 
-    clearTimeout(this.reconnectDisableTimeout);
+    this.reconnectTimeouts.forEach(timeout => {
+      clearTimeout(timeout);
+    });
   }
 
   socketReconnect = connectionDetails => {
-    this.disableReconnect();
+    this.disableReconnect(connectionDetails.id);
 
     ipcRenderer.send(ipcEvents.SOCKET_RECONNECT, connectionDetails);
   };
 
-  disableReconnect() {
-    this.setState({
-      reconnectIsDisabled: true
-    });
-
-    this.reconnectDisableTimeout = setTimeout(() => {
-      this.setState({
-        reconnectIsDisabled: false
-      });
-    }, 2000);
-  }
-
-  updateConnectionState(socketDetails) {
+  update(id, data) {
     const {
       webSocketStore: [...webSocketStore]
     } = this.state;
 
     const webSocketIndex = webSocketStore.findIndex(
-      webSocket => webSocket.id === socketDetails.id
+      webSocket => webSocket.id === id
     );
 
-    if (javaScriptUtils.isDefined(webSocketStore[webSocketIndex])) {
-      webSocketStore[webSocketIndex].isConnected = socketDetails.isConnected;
+    if (javaScriptUtils.isDefined(webSocketStore[webSocketIndex]))
+      webSocketStore[webSocketIndex] = {
+        ...webSocketStore[webSocketIndex],
+        ...data
+      };
 
-      this.setState({
-        webSocketStore
-      });
-    }
+    this.setState({
+      webSocketStore
+    });
+  }
+
+  disableReconnect(id) {
+    this.update(id, {
+      reconnectIsDisabled: true
+    });
+
+    this.reconnectTimeouts.push(
+      setTimeout(() => {
+        this.update(id, { reconnectIsDisabled: false });
+      }, 2000)
+    );
   }
 
   deleteConnection(connectionDetails) {
@@ -110,13 +115,16 @@ class Input extends Component {
 
       const connectionDetailsWithUniqueId = {
         id: uniqueIdGenerator(),
-        isConnected: false,
         ...connectionDetails
       };
 
       ipcRenderer.send(ipcEvents.WS_ADD, connectionDetailsWithUniqueId);
 
-      webSocketStore.push(connectionDetailsWithUniqueId);
+      webSocketStore.push({
+        ...connectionDetailsWithUniqueId,
+        isConnected: false,
+        reconnectIsDisabled: false
+      });
 
       this.setState({
         webSocketStore
@@ -128,8 +136,7 @@ class Input extends Component {
 
   render() {
     const {
-      webSocketStore: [...webSocketStore],
-      reconnectIsDisabled
+      webSocketStore: [...webSocketStore]
     } = this.state;
 
     return (
@@ -143,13 +150,13 @@ class Input extends Component {
             this.deleteConnection(wsConnectionData)
         }}
         actions={[
-          {
+          rowData => ({
             icon: "cached",
             tooltip: "Reconnect",
             onClick: (event, connectionDetails) =>
               this.socketReconnect(connectionDetails),
-            disabled: reconnectIsDisabled
-          }
+            disabled: rowData.reconnectIsDisabled
+          })
         ]}
       />
     );
