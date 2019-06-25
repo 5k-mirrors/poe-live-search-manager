@@ -53,7 +53,6 @@ const setupIpcEvents = () => {
     updateGlobalStoreWebSocketConnections();
   });
 
-  // @TODO => consider if the user subscription is active or not.
   ipcMain.on(ipcEvents.SOCKET_RECONNECT, (event, connectionDetails) => {
     webSocketActions.reconnect(connectionDetails.id);
   });

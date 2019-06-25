@@ -127,5 +127,7 @@ export const updateConnections = () => {
 export const reconnect = id => {
   disconnect(id);
 
-  connect(id);
+  if (subscription.active()) {
+    connect(id);
+  }
 };
