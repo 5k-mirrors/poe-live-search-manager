@@ -4,6 +4,7 @@ export const ipcEvents = {
   TRADE_MESSAGE: "tradeMessage",
   USER_LOGIN: "userLogin",
   USER_LOGOUT: "userLogout",
+  SOCKET_STATE_UPDATE: "socketStateUpdate",
   STORE_REQUEST: "storeRequest",
-  STORE_UPDATE: "storeUpdate"
+  STORE_RESPONSE: "storeResponse"
 };

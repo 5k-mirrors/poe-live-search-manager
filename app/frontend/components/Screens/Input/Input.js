@@ -4,8 +4,6 @@ import MaterialTable from "material-table";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
-import { globalStore } from "../../../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as regExes from "../../../../resources/RegExes/RegExes";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 
@@ -21,11 +19,18 @@ class Input extends Component {
   componentDidMount() {
     ipcRenderer.send(ipcEvents.STORE_REQUEST);
 
-    ipcRenderer.on(ipcEvents.STORE_UPDATE, (event, updatedStore) => {
+    ipcRenderer.on(ipcEvents.STORE_RESPONSE, (event, webSocketStore) => {
       this.setState({
-        webSocketStore: updatedStore
+        webSocketStore
       });
     });
+
+    ipcRenderer.on(
+      ipcEvents.SOCKET_STATE_UPDATE,
+      (event, updatedSocketData) => {
+        this.updateSocketState(updatedSocketData);
+      }
+    );
   }
 
   componentWillUnmount() {
@@ -40,40 +45,59 @@ class Input extends Component {
         return reject(new InvalidInputError());
       }
 
+      const {
+        webSocketStore: [...webSocketStore]
+      } = this.state;
+
       const connectionDetailsWithUniqueId = {
         id: uniqueIdGenerator(),
+        isConnected: false,
         ...connectionDetails
       };
 
       ipcRenderer.send(ipcEvents.WS_ADD, connectionDetailsWithUniqueId);
 
-      const globalStoreConnections = globalStore.get(
-        storeKeys.WS_CONNECTIONS,
-        []
-      );
+      webSocketStore.push(connectionDetailsWithUniqueId);
 
-      globalStoreConnections.push(connectionDetailsWithUniqueId);
-
-      globalStore.set(storeKeys.WS_CONNECTIONS, globalStoreConnections);
+      this.setState({
+        webSocketStore
+      });
 
       return resolve();
     });
   };
 
+  updateSocketState = updatedSocketData => {
+    const {
+      webSocketStore: [...webSocketStore]
+    } = this.state;
+
+    const webSocketIndex = webSocketStore.findIndex(
+      webSocket => webSocket.id === updatedSocketData.id
+    );
+
+    webSocketStore[webSocketIndex].isConnected = updatedSocketData.isConnected;
+
+    this.setState({
+      webSocketStore
+    });
+  };
+
   deleteConnection = connectionDetails => {
     return new Promise(resolve => {
+      const {
+        webSocketStore: [...webSocketStore]
+      } = this.state;
+
+      const updatedWebSocketStore = webSocketStore.filter(
+        webSocket => webSocket.id !== connectionDetails.id
+      );
+
       ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
 
-      const globalStoreConnections = globalStore.get(
-        storeKeys.WS_CONNECTIONS,
-        []
-      );
-
-      const updatedGlobalStoreConnections = globalStoreConnections.filter(
-        storedConnection => storedConnection.id !== connectionDetails.id
-      );
-
-      globalStore.set(storeKeys.WS_CONNECTIONS, updatedGlobalStoreConnections);
+      this.setState({
+        webSocketStore: updatedWebSocketStore
+      });
 
       resolve();
     });
