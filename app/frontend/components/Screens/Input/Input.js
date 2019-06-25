@@ -18,9 +18,9 @@ class Input extends Component {
   }
 
   componentDidMount() {
-    ipcRenderer.send(ipcEvents.STORE_REQUEST);
+    ipcRenderer.send(ipcEvents.GET_SOCKETS);
 
-    ipcRenderer.on(ipcEvents.STORE_RESPONSE, (event, currentStore) => {
+    ipcRenderer.on(ipcEvents.SEND_SOCKETS, (event, currentStore) => {
       this.setState({
         webSocketStore: currentStore
       });
