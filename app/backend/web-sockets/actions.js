@@ -96,6 +96,11 @@ export const disconnect = id => {
       ...ws,
       isConnected: false
     });
+
+    sendSocketStateUpdate({
+      id: ws.id,
+      isConnected: false
+    });
   }
 };
 
