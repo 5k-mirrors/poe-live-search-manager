@@ -8,7 +8,7 @@ import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 
 const subscriptionDetails = ({ id }) => {
   const [fetchedData, refreshFetchedData] = customHooks.useGenericFetch(
-    subscription.getData,
+    subscription.query,
     id
   );
   const [isDisabled, disableRefreshButton] = customHooks.useDisable(1);

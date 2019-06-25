@@ -4,7 +4,7 @@ import * as webSocketActions from "../backend/web-sockets/actions";
 let refreshInterval;
 
 export const refresh = id => {
-  subscription.getData(id).then(subscriptionData => {
+  subscription.query(id).then(subscriptionData => {
     subscription.update(subscriptionData);
 
     webSocketActions.updateConnections();
