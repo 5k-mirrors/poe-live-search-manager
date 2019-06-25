@@ -20,36 +20,32 @@ class Input extends Component {
   componentDidMount() {
     ipcRenderer.send(ipcEvents.STORE_REQUEST);
 
-    ipcRenderer.on(ipcEvents.STORE_RESPONSE, (event, webSocketStore) => {
+    ipcRenderer.on(ipcEvents.STORE_RESPONSE, (event, currentStore) => {
       this.setState({
-        webSocketStore
+        webSocketStore: currentStore
       });
     });
 
-    ipcRenderer.on(
-      ipcEvents.SOCKET_STATE_UPDATE,
-      (event, updatedSocketData) => {
-        this.updateSocketState(updatedSocketData);
-      }
-    );
+    ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, socketDetails) => {
+      this.updateSocketState(socketDetails);
+    });
   }
 
   componentWillUnmount() {
     ipcRenderer.removeAllListeners();
   }
 
-  updateSocketState(updatedSocketData) {
+  updateSocketState(socketDetails) {
     const {
       webSocketStore: [...webSocketStore]
     } = this.state;
 
     const webSocketIndex = webSocketStore.findIndex(
-      webSocket => webSocket.id === updatedSocketData.id
+      webSocket => webSocket.id === socketDetails.id
     );
 
     if (javaScriptUtils.isDefined(webSocketStore[webSocketIndex])) {
-      webSocketStore[webSocketIndex].isConnected =
-        updatedSocketData.isConnected;
+      webSocketStore[webSocketIndex].isConnected = socketDetails.isConnected;
 
       this.setState({
         webSocketStore
