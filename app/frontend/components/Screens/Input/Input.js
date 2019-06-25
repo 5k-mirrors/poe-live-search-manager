@@ -27,7 +27,7 @@ class Input extends Component {
     });
 
     ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, socketDetails) => {
-      this.updateSocketState(socketDetails);
+      this.updateConnectionState(socketDetails);
     });
   }
 
@@ -35,7 +35,7 @@ class Input extends Component {
     ipcRenderer.removeAllListeners();
   }
 
-  updateSocketState(socketDetails) {
+  updateConnectionState(socketDetails) {
     const {
       webSocketStore: [...webSocketStore]
     } = this.state;
