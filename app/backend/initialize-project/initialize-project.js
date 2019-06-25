@@ -18,8 +18,7 @@ const updateGlobalStoreWebSocketConnections = () => {
   globalStore.set(storeKeys.WS_CONNECTIONS, sanitizedStore);
 };
 
-const setupIpcEvents = () => {
-  // @TODO => setupStoreIpcEvents()?
+const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.STORE_REQUEST, event => {
     const sanitizedStore = store
       .all()
@@ -27,8 +26,9 @@ const setupIpcEvents = () => {
 
     event.sender.send(ipcEvents.STORE_RESPONSE, sanitizedStore);
   });
+};
 
-  // @TODO => setupWebSocketIpcEvents()?
+const setupWebSocketIpcListeners = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
     store.add(connectionDetails);
 
@@ -56,8 +56,9 @@ const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.SOCKET_RECONNECT, (event, connectionDetails) => {
     webSocketActions.reconnect(connectionDetails.id);
   });
+};
 
-  // @TODO: setupUserAuthenticationIpcEvents()?
+const setupAuthenticationIpcListeners = () => {
   ipcMain.on(ipcEvents.USER_LOGIN, (event, id) => {
     subscriptionActions.startRefreshInterval(id);
   });
@@ -85,7 +86,11 @@ const loadLocallySavedWsConnectionsIntoStore = () => {
 const initializeProject = () => {
   loadLocallySavedWsConnectionsIntoStore();
 
-  setupIpcEvents();
+  setupStoreIpcListeners();
+
+  setupWebSocketIpcListeners();
+
+  setupAuthenticationIpcListeners();
 };
 
 export default initializeProject;
