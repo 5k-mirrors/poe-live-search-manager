@@ -5,6 +5,7 @@ import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as regExes from "../../../../resources/RegExes/RegExes";
+import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 
 class Input extends Component {
@@ -46,11 +47,14 @@ class Input extends Component {
       webSocket => webSocket.id === updatedSocketData.id
     );
 
-    webSocketStore[webSocketIndex].isConnected = updatedSocketData.isConnected;
+    if (javaScriptUtils.isDefined(webSocketStore[webSocketIndex])) {
+      webSocketStore[webSocketIndex].isConnected =
+        updatedSocketData.isConnected;
 
-    this.setState({
-      webSocketStore
-    });
+      this.setState({
+        webSocketStore
+      });
+    }
   }
 
   deleteConnection(connectionDetails) {
