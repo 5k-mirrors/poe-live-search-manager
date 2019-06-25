@@ -96,6 +96,11 @@ export const disconnect = id => {
       ...ws,
       isConnected: false
     });
+
+    sendSocketStateUpdate({
+      id: ws.id,
+      isConnected: false
+    });
   }
 };
 
@@ -117,4 +122,10 @@ export const updateConnections = () => {
   } else {
     disconnectFromStoredWebSockets();
   }
+};
+
+export const reconnect = id => {
+  disconnect(id);
+
+  connect(id);
 };

@@ -5,6 +5,7 @@ export const ipcEvents = {
   USER_LOGIN: "userLogin",
   USER_LOGOUT: "userLogout",
   SOCKET_STATE_UPDATE: "socketStateUpdate",
+  SOCKET_RECONNECT: "socketReconnect",
   STORE_REQUEST: "storeRequest",
   STORE_RESPONSE: "storeResponse"
 };

@@ -19,6 +19,7 @@ const updateGlobalStoreWebSocketConnections = () => {
 };
 
 const setupIpcEvents = () => {
+  // @TODO => setupStoreIpcEvents()?
   ipcMain.on(ipcEvents.STORE_REQUEST, event => {
     const sanitizedStore = store
       .all()
@@ -27,6 +28,7 @@ const setupIpcEvents = () => {
     event.sender.send(ipcEvents.STORE_RESPONSE, sanitizedStore);
   });
 
+  // @TODO => setupWebSocketIpcEvents()?
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
     store.add(connectionDetails);
 
@@ -51,6 +53,12 @@ const setupIpcEvents = () => {
     updateGlobalStoreWebSocketConnections();
   });
 
+  // @TODO => consider if the user subscription is active or not.
+  ipcMain.on(ipcEvents.SOCKET_RECONNECT, (event, connectionDetails) => {
+    webSocketActions.reconnect(connectionDetails.id);
+  });
+
+  // @TODO: setupUserAuthenticationIpcEvents()?
   ipcMain.on(ipcEvents.USER_LOGIN, (event, id) => {
     subscriptionActions.startRefreshInterval(id);
   });

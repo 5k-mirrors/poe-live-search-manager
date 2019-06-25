@@ -28,6 +28,7 @@ class Input extends Component {
     ipcRenderer.on(
       ipcEvents.SOCKET_STATE_UPDATE,
       (event, updatedSocketData) => {
+        console.log(updatedSocketData);
         this.updateSocketState(updatedSocketData);
       }
     );
@@ -36,6 +37,10 @@ class Input extends Component {
   componentWillUnmount() {
     ipcRenderer.removeAllListeners();
   }
+
+  socketReconnect = connectionDetails => {
+    ipcRenderer.send(ipcEvents.SOCKET_RECONNECT, connectionDetails);
+  };
 
   updateSocketState(updatedSocketData) {
     const {
@@ -108,6 +113,7 @@ class Input extends Component {
       webSocketStore: [...webSocketStore]
     } = this.state;
 
+    // @TODO: disable the refresh button.
     return (
       <MaterialTable
         title="Active connections"
@@ -118,6 +124,14 @@ class Input extends Component {
           onRowDelete: wsConnectionData =>
             this.deleteConnection(wsConnectionData)
         }}
+        actions={[
+          {
+            icon: "cached",
+            tooltip: "Reconnect",
+            onClick: (event, connectionDetails) =>
+              this.socketReconnect(connectionDetails)
+          }
+        ]}
       />
     );
   }
