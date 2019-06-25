@@ -37,7 +37,43 @@ class Input extends Component {
     ipcRenderer.removeAllListeners();
   }
 
-  addNewConnection = connectionDetails => {
+  updateSocketState(updatedSocketData) {
+    const {
+      webSocketStore: [...webSocketStore]
+    } = this.state;
+
+    const webSocketIndex = webSocketStore.findIndex(
+      webSocket => webSocket.id === updatedSocketData.id
+    );
+
+    webSocketStore[webSocketIndex].isConnected = updatedSocketData.isConnected;
+
+    this.setState({
+      webSocketStore
+    });
+  }
+
+  deleteConnection(connectionDetails) {
+    return new Promise(resolve => {
+      const {
+        webSocketStore: [...webSocketStore]
+      } = this.state;
+
+      const updatedWebSocketStore = webSocketStore.filter(
+        webSocket => webSocket.id !== connectionDetails.id
+      );
+
+      ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
+
+      this.setState({
+        webSocketStore: updatedWebSocketStore
+      });
+
+      resolve();
+    });
+  }
+
+  addNewConnection(connectionDetails) {
     return new Promise((resolve, reject) => {
       if (
         !regExes.searchUrlLeagueAndIdMatcher.test(connectionDetails.searchUrl)
@@ -65,43 +101,7 @@ class Input extends Component {
 
       return resolve();
     });
-  };
-
-  updateSocketState = updatedSocketData => {
-    const {
-      webSocketStore: [...webSocketStore]
-    } = this.state;
-
-    const webSocketIndex = webSocketStore.findIndex(
-      webSocket => webSocket.id === updatedSocketData.id
-    );
-
-    webSocketStore[webSocketIndex].isConnected = updatedSocketData.isConnected;
-
-    this.setState({
-      webSocketStore
-    });
-  };
-
-  deleteConnection = connectionDetails => {
-    return new Promise(resolve => {
-      const {
-        webSocketStore: [...webSocketStore]
-      } = this.state;
-
-      const updatedWebSocketStore = webSocketStore.filter(
-        webSocket => webSocket.id !== connectionDetails.id
-      );
-
-      ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
-
-      this.setState({
-        webSocketStore: updatedWebSocketStore
-      });
-
-      resolve();
-    });
-  };
+  }
 
   render() {
     const {
