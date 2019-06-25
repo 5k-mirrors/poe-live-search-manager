@@ -5,6 +5,7 @@ import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as regExes from "../../../../resources/RegExes/RegExes";
+import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 
 class Input extends Component {
@@ -19,19 +20,15 @@ class Input extends Component {
   componentDidMount() {
     ipcRenderer.send(ipcEvents.STORE_REQUEST);
 
-    ipcRenderer.on(ipcEvents.STORE_RESPONSE, (event, webSocketStore) => {
+    ipcRenderer.on(ipcEvents.STORE_RESPONSE, (event, currentStore) => {
       this.setState({
-        webSocketStore
+        webSocketStore: currentStore
       });
     });
 
-    ipcRenderer.on(
-      ipcEvents.SOCKET_STATE_UPDATE,
-      (event, updatedSocketData) => {
-        console.log(updatedSocketData);
-        this.updateSocketState(updatedSocketData);
-      }
-    );
+    ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, socketDetails) => {
+      this.updateSocketState(socketDetails);
+    });
   }
 
   componentWillUnmount() {
@@ -42,20 +39,22 @@ class Input extends Component {
     ipcRenderer.send(ipcEvents.SOCKET_RECONNECT, connectionDetails);
   };
 
-  updateSocketState(updatedSocketData) {
+  updateSocketState(socketDetails) {
     const {
       webSocketStore: [...webSocketStore]
     } = this.state;
 
     const webSocketIndex = webSocketStore.findIndex(
-      webSocket => webSocket.id === updatedSocketData.id
+      webSocket => webSocket.id === socketDetails.id
     );
 
-    webSocketStore[webSocketIndex].isConnected = updatedSocketData.isConnected;
+    if (javaScriptUtils.isDefined(webSocketStore[webSocketIndex])) {
+      webSocketStore[webSocketIndex].isConnected = socketDetails.isConnected;
 
-    this.setState({
-      webSocketStore
-    });
+      this.setState({
+        webSocketStore
+      });
+    }
   }
 
   deleteConnection(connectionDetails) {

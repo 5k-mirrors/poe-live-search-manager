@@ -49,10 +49,10 @@ const setupMessageListener = id => {
   });
 };
 
-const sendSocketStateUpdate = updatedSocketData => {
+const sendStateUpdate = socketDetails => {
   const window = electronUtils.getWindowByName("PoE Sniper");
 
-  window.webContents.send(ipcEvents.SOCKET_STATE_UPDATE, updatedSocketData);
+  window.webContents.send(ipcEvents.SOCKET_STATE_UPDATE, socketDetails);
 };
 
 export const connect = id => {
@@ -73,7 +73,7 @@ export const connect = id => {
       isConnected: true
     });
 
-    sendSocketStateUpdate({
+    sendStateUpdate({
       id: ws.id,
       isConnected: true
     });
@@ -97,7 +97,7 @@ export const disconnect = id => {
       isConnected: false
     });
 
-    sendSocketStateUpdate({
+    sendStateUpdate({
       id: ws.id,
       isConnected: false
     });
