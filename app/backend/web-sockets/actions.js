@@ -128,6 +128,6 @@ export const reconnect = id => {
   disconnect(id);
 
   if (subscription.active()) {
-    connect(id);
+    setTimeout(() => connect(id), 500);
   }
 };
