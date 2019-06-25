@@ -42,7 +42,7 @@ const setupWebSocketIpcListeners = () => {
     globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
   });
 
-  ipcMain.on(ipcEvents.SOCKET_RECONNECT, (event, connectionDetails) => {
+  ipcMain.on(ipcEvents.RECONNECT_SOCKET, (event, connectionDetails) => {
     webSocketActions.reconnect(connectionDetails.id);
   });
 };

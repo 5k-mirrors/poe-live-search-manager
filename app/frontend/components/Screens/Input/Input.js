@@ -46,7 +46,7 @@ class Input extends Component {
   reconnect = connectionDetails => {
     this.disableReconnect(connectionDetails.id);
 
-    ipcRenderer.send(ipcEvents.SOCKET_RECONNECT, connectionDetails);
+    ipcRenderer.send(ipcEvents.RECONNECT_SOCKET, connectionDetails);
   };
 
   update(id, data) {
