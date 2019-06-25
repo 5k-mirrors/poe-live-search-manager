@@ -20,11 +20,10 @@ const updateGlobalStoreWebSocketConnections = () => {
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
-    const sanitizedStore = store
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = store
       .all()
       .map(({ socket, ...remainingSocketDetails }) => remainingSocketDetails);
-
-    event.sender.send(ipcEvents.SEND_SOCKETS, sanitizedStore);
   });
 
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {

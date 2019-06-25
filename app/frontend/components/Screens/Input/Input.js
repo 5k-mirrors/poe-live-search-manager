@@ -13,19 +13,11 @@ class Input extends Component {
     super(props);
 
     this.state = {
-      webSocketStore: []
+      webSocketStore: ipcRenderer.sendSync(ipcEvents.GET_SOCKETS)
     };
   }
 
   componentDidMount() {
-    ipcRenderer.send(ipcEvents.GET_SOCKETS);
-
-    ipcRenderer.on(ipcEvents.SEND_SOCKETS, (event, currentStore) => {
-      this.setState({
-        webSocketStore: currentStore
-      });
-    });
-
     ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, socketDetails) => {
       this.updateConnectionState(socketDetails);
     });
