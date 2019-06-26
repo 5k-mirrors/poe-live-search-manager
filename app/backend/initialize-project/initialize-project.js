@@ -20,11 +20,11 @@ const updateGlobalStoreWebSocketConnections = () => {
 
 const setupIpcEvents = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
-    const eventObject = { ...event };
-
-    eventObject.returnValue = store
+    const sanititedStore = store
       .all()
       .map(({ socket, ...remainingSocketDetails }) => remainingSocketDetails);
+
+    event.sender.send(ipcEvents.SEND_SOCKETS, sanititedStore);
   });
 
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
