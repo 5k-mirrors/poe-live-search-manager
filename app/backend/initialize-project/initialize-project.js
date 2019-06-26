@@ -8,7 +8,7 @@ import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 
 const setupStoreIpcListeners = () => {
-  ipcMain.on(ipcEvents.STORE_REQUEST, event => {
+  ipcMain.on(ipcEvents.GET_SOCKETS, event => {
     const sanitizedStore = store
       .all()
       .map(({ socket, ...remainingSocketDetails }) => remainingSocketDetails);
@@ -66,6 +66,8 @@ const loadLocallySavedWsConnectionsIntoStore = () => {
     storeKeys.WS_CONNECTIONS,
     []
   );
+
+  console.log(locallySavedWsConnections);
 
   locallySavedWsConnections.forEach(connectionDetails => {
     store.add(connectionDetails);
