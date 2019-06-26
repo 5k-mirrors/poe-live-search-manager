@@ -6,7 +6,9 @@ import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerat
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
+import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 
 const setupMessageListener = id => {
   const limiter = notificationsLimiter.getLimiter();
@@ -47,6 +49,19 @@ const setupMessageListener = id => {
   });
 };
 
+const updateSocket = (id, details) => {
+  store.update(id, {
+    ...details
+  });
+
+  const window = electronUtils.getWindowByName("PoE Sniper");
+
+  window.webContents.send(ipcEvents.SOCKET_STATE_UPDATE, {
+    id,
+    isConnected: details.isConnected
+  });
+};
+
 export const connect = id => {
   const ws = store.find(id);
 
@@ -59,7 +74,7 @@ export const connect = id => {
       }
     });
 
-    store.update(ws.id, {
+    updateSocket(ws.id, {
       ...ws,
       socket: newWebsocket,
       isConnected: true
@@ -67,6 +82,13 @@ export const connect = id => {
 
     newWebsocket.on("open", () => {
       setupMessageListener(id);
+    });
+
+    newWebsocket.on("close", () => {
+      updateSocket(ws.id, {
+        ...ws,
+        isConnected: false
+      });
     });
   }
 };
@@ -79,7 +101,7 @@ export const disconnect = id => {
 
     delete ws.socket;
 
-    store.update(ws.id, {
+    updateSocket(ws.id, {
       ...ws,
       isConnected: false
     });

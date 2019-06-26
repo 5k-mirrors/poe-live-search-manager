@@ -32,12 +32,6 @@ class Store {
 
     this.storage.splice(wsElementIndex, 1);
   }
-
-  removeSocket(id) {
-    const wsElementIndex = this.storage.findIndex(ws => ws.id === id);
-
-    delete this.storage[wsElementIndex].socket;
-  }
 }
 
 class SingletonStore {

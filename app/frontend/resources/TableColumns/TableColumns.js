@@ -1,6 +1,6 @@
 import React from "react";
-import { MTableEditField } from "material-table";
-import * as regExes from "../../../resources/RegExes/RegExes";
+import SearchUrl from "../../components/CustomTableColumns/SearchUrl/SearchUrl";
+import Connected from "../../components/CustomTableColumns/Connected/Connected";
 
 export const inputScreen = [
   { field: "id", hidden: true },
@@ -8,16 +8,13 @@ export const inputScreen = [
   {
     title: "Search URL",
     field: "searchUrl",
-    editComponent: props => {
-      const { value } = props;
-
-      return (
-        <MTableEditField
-          error={!regExes.searchUrlLeagueAndIdMatcher.test(value)}
-          {...props}
-        />
-      );
-    }
+    editComponent: props => <SearchUrl {...props} />
+  },
+  {
+    title: "Connected",
+    field: "isConnected",
+    editable: "never",
+    render: props => <Connected {...props} />
   }
 ];
 

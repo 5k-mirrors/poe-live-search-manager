@@ -18,14 +18,14 @@ describe("<Input />", () => {
 
   describe("addNewConnection", () => {
     describe("when the given URL is invalid", () => {
-      const wsConnectionData = {
+      const connectionDetails = {
         name: "Test item",
         searchUrl: "https://invalid-uri.com"
       };
 
       it("rejects with `InvalidInputError`", () => {
         return expect(
-          inputWrapper.instance().addNewConnection(wsConnectionData)
+          inputWrapper.instance().addNewConnection(connectionDetails)
         ).rejects.toEqual(new InvalidInputError());
       });
     });
@@ -35,7 +35,7 @@ describe("<Input />", () => {
 
       const id = "54dxtv";
 
-      const wsConnectionData = {
+      const connectionDetails = {
         name: "Test item",
         searchUrl: "https://www.pathofexile.com/trade/search/Legion/NK6Ec5/live"
       };
@@ -47,33 +47,19 @@ describe("<Input />", () => {
       });
 
       it("generates a unique ID", () => {
-        inputWrapper.instance().addNewConnection(wsConnectionData);
+        inputWrapper.instance().addNewConnection(connectionDetails);
 
         expect(uniqueIdGeneratorSpy).toHaveBeenCalled();
-      });
-
-      it("adds the new connection to the state", () => {
-        const expectedStateConnections = [
-          {
-            id,
-            ...wsConnectionData
-          }
-        ];
-
-        inputWrapper.instance().addNewConnection(wsConnectionData);
-
-        const actualStateConnections = inputWrapper.state("wsConnections");
-
-        expect(actualStateConnections).toEqual(expectedStateConnections);
       });
 
       it("sends the connection details to the BE", () => {
         const expectedValue = {
           id,
-          ...wsConnectionData
+          isConnected: false,
+          ...connectionDetails
         };
 
-        inputWrapper.instance().addNewConnection(wsConnectionData);
+        inputWrapper.instance().addNewConnection(connectionDetails);
 
         expect(ipcRenderer.send).toHaveBeenCalledWith(ipcEvents.WS_ADD, {
           ...expectedValue
@@ -82,7 +68,7 @@ describe("<Input />", () => {
 
       it("resolves", () => {
         return expect(
-          inputWrapper.instance().addNewConnection(wsConnectionData)
+          inputWrapper.instance().addNewConnection(connectionDetails)
         ).resolves.toBeUndefined();
       });
     });

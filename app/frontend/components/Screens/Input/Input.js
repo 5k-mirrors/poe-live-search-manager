@@ -4,9 +4,8 @@ import MaterialTable from "material-table";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
-import { globalStore } from "../../../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as regExes from "../../../../resources/RegExes/RegExes";
+import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 
 class Input extends Component {
@@ -14,98 +13,106 @@ class Input extends Component {
     super(props);
 
     this.state = {
-      wsConnections: globalStore.get(storeKeys.WS_CONNECTIONS, [])
+      webSocketStore: []
     };
   }
 
-  addNewConnection(wsConnectionData) {
+  componentDidMount() {
+    ipcRenderer.send(ipcEvents.GET_SOCKETS);
+
+    ipcRenderer.on(ipcEvents.SEND_SOCKETS, (evnt, currentSockets) => {
+      this.setState({
+        webSocketStore: currentSockets
+      });
+    });
+
+    ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, socketDetails) => {
+      this.updateConnectionState(socketDetails);
+    });
+  }
+
+  componentWillUnmount() {
+    ipcRenderer.removeAllListeners();
+  }
+
+  updateConnectionState(socketDetails) {
+    const {
+      webSocketStore: [...webSocketStore]
+    } = this.state;
+
+    const webSocketIndex = webSocketStore.findIndex(
+      webSocket => webSocket.id === socketDetails.id
+    );
+
+    if (javaScriptUtils.isDefined(webSocketStore[webSocketIndex])) {
+      webSocketStore[webSocketIndex].isConnected = socketDetails.isConnected;
+
+      this.setState({
+        webSocketStore
+      });
+    }
+  }
+
+  deleteConnection(connectionDetails) {
+    return new Promise(resolve => {
+      const {
+        webSocketStore: [...webSocketStore]
+      } = this.state;
+
+      const updatedWebSocketStore = webSocketStore.filter(
+        webSocket => webSocket.id !== connectionDetails.id
+      );
+
+      ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
+
+      this.setState({
+        webSocketStore: updatedWebSocketStore
+      });
+
+      resolve();
+    });
+  }
+
+  addNewConnection(connectionDetails) {
     return new Promise((resolve, reject) => {
       if (
-        !regExes.searchUrlLeagueAndIdMatcher.test(wsConnectionData.searchUrl)
+        !regExes.searchUrlLeagueAndIdMatcher.test(connectionDetails.searchUrl)
       ) {
         return reject(new InvalidInputError());
       }
 
       const {
-        wsConnections: [...wsConnections]
+        webSocketStore: [...webSocketStore]
       } = this.state;
 
-      const wsConnectionDataWithUniqueId = {
+      const connectionDetailsWithUniqueId = {
         id: uniqueIdGenerator(),
-        ...wsConnectionData
+        isConnected: false,
+        ...connectionDetails
       };
 
-      wsConnections.push(wsConnectionDataWithUniqueId);
+      ipcRenderer.send(ipcEvents.WS_ADD, connectionDetailsWithUniqueId);
+
+      webSocketStore.push(connectionDetailsWithUniqueId);
 
       this.setState({
-        wsConnections
-      });
-
-      globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
-
-      ipcRenderer.send(ipcEvents.WS_ADD, {
-        ...wsConnectionDataWithUniqueId
+        webSocketStore
       });
 
       return resolve();
     });
   }
 
-  updateConnection(updatedWsConnectionData, previousWsConnectionData) {
-    return new Promise(resolve => {
-      const {
-        wsConnections: [...wsConnections]
-      } = this.state;
-
-      const previousWsConnectionIndex = wsConnections.indexOf(
-        previousWsConnectionData
-      );
-      wsConnections[previousWsConnectionIndex] = {
-        ...previousWsConnectionData,
-        ...updatedWsConnectionData
-      };
-
-      this.setState({
-        wsConnections
-      });
-
-      globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
-
-      resolve();
-    });
-  }
-
-  deleteConnection(wsConnectionData) {
-    return new Promise(resolve => {
-      const {
-        wsConnections: [...wsConnections]
-      } = this.state;
-
-      const wsConnectionDataIndex = wsConnections.indexOf(wsConnectionData);
-      wsConnections.splice(wsConnectionDataIndex, 1);
-
-      this.setState({
-        wsConnections
-      });
-
-      globalStore.set(storeKeys.WS_CONNECTIONS, wsConnections);
-
-      ipcRenderer.send(ipcEvents.WS_REMOVE, wsConnectionData);
-
-      resolve();
-    });
-  }
-
   render() {
     const {
-      wsConnections: [...wsConnections]
+      webSocketStore: [...webSocketStore]
     } = this.state;
 
     return (
       <MaterialTable
         title="Active connections"
         columns={tableColumns.inputScreen}
-        data={wsConnections}
+        data={webSocketStore}
         editable={{
           onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),
           onRowDelete: wsConnectionData =>
