@@ -1,5 +1,11 @@
 # poe-sniper-electron
 
-### Firebase
+### Dev
 
-Configure the project's API key in the `.env` file.
+- Configure the project's API key in the `.env` file.
+- Set up notifications (if on Widnows): https://electronjs.org/docs/tutorial/notifications#windows
+
+```bash
+yarn install
+yarn dev
+```

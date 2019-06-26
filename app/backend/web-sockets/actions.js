@@ -6,8 +6,8 @@ import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerat
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
-import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
+import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 
 const setupMessageListener = id => {
@@ -49,7 +49,7 @@ const setupMessageListener = id => {
   });
 };
 
-const update = (id, details) => {
+const updateSocket = (id, details) => {
   store.update(id, {
     ...details
   });
@@ -74,7 +74,7 @@ export const connect = id => {
       }
     });
 
-    update(ws.id, {
+    updateSocket(ws.id, {
       ...ws,
       socket: newWebsocket,
       isConnected: true
@@ -82,6 +82,13 @@ export const connect = id => {
 
     newWebsocket.on("open", () => {
       setupMessageListener(id);
+    });
+
+    newWebsocket.on("close", () => {
+      updateSocket(ws.id, {
+        ...ws,
+        isConnected: false
+      });
     });
   }
 };
@@ -94,7 +101,7 @@ export const disconnect = id => {
 
     delete ws.socket;
 
-    update(ws.id, {
+    updateSocket(ws.id, {
       ...ws,
       isConnected: false
     });
