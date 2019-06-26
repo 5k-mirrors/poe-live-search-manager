@@ -52,17 +52,7 @@ class Input extends Component {
   };
 
   reconnectAll = () => {
-    this.setState({
-      allReconnectsAreDisabled: true
-    });
-
-    this.reconnectTimeoutIds.push(
-      setTimeout(() => {
-        this.setState({
-          allReconnectsAreDisabled: false
-        });
-      }, this.disableDurationInMilliseconds)
-    );
+    this.disableAllReconnects();
 
     ipcRenderer.send(ipcEvents.RECONNECT_ALL);
   };
@@ -96,6 +86,20 @@ class Input extends Component {
     this.reconnectTimeoutIds.push(
       setTimeout(() => {
         this.update(id, { reconnectIsDisabled: false });
+      }, this.disableDurationInMilliseconds)
+    );
+  }
+
+  disableAllReconnects() {
+    this.setState({
+      allReconnectsAreDisabled: true
+    });
+
+    this.reconnectTimeoutIds.push(
+      setTimeout(() => {
+        this.setState({
+          allReconnectsAreDisabled: false
+        });
       }, this.disableDurationInMilliseconds)
     );
   }
