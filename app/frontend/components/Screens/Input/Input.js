@@ -18,6 +18,7 @@ class Input extends Component {
     };
 
     this.reconnectTimeoutIds = [];
+    this.disableDurationInMilliseconds = 2000;
   }
 
   componentDidMount() {
@@ -60,7 +61,7 @@ class Input extends Component {
         this.setState({
           allReconnectsAreDisabled: false
         });
-      }, 2000)
+      }, this.disableDurationInMilliseconds)
     );
 
     ipcRenderer.send(ipcEvents.RECONNECT_ALL);
@@ -95,7 +96,7 @@ class Input extends Component {
     this.reconnectTimeoutIds.push(
       setTimeout(() => {
         this.update(id, { reconnectIsDisabled: false });
-      }, 2000)
+      }, this.disableDurationInMilliseconds)
     );
   }
 
