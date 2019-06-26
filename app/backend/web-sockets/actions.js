@@ -74,13 +74,13 @@ export const connect = id => {
       }
     });
 
-    updateSocket(ws.id, {
-      ...ws,
-      socket: newWebsocket,
-      isConnected: true
-    });
-
     newWebsocket.on("open", () => {
+      updateSocket(ws.id, {
+        ...ws,
+        socket: newWebsocket,
+        isConnected: true
+      });
+
       setupMessageListener(id);
     });
 
@@ -100,11 +100,6 @@ export const disconnect = id => {
     ws.socket.close();
 
     delete ws.socket;
-
-    updateSocket(ws.id, {
-      ...ws,
-      isConnected: false
-    });
   }
 };
 
@@ -134,5 +129,14 @@ export const reconnect = id => {
   if (subscription.active()) {
     // Reconnect delayed so that there's feedback to the user. Otherwise, it might be too quick.
     setTimeout(() => connect(id), 500);
+  }
+};
+
+export const reconnectAll = () => {
+  disconnectFromStoredWebSockets();
+
+  if (subscription.active()) {
+    // Reconnect delayed so that there's feedback to the user. Otherwise, it might be too quick.
+    setTimeout(() => connectToStoredWebSockets(), 500);
   }
 };

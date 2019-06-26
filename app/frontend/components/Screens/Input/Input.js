@@ -13,7 +13,8 @@ class Input extends Component {
     super(props);
 
     this.state = {
-      webSocketStore: []
+      webSocketStore: [],
+      disableAllReconnects: false
     };
 
     this.reconnectTimeouts = [];
@@ -48,6 +49,18 @@ class Input extends Component {
 
     ipcRenderer.send(ipcEvents.RECONNECT_SOCKET, connectionDetails);
   };
+
+  reconnectAll = () => {
+    ipcRenderer.send(ipcEvents.RECONNECT_ALL);
+  };
+
+  isWebSocketStoreEmpty() {
+    const {
+      webSocketStore: [...webSocketStore]
+    } = this.state;
+
+    return webSocketStore.length === 0;
+  }
 
   update(id, data) {
     const {
@@ -95,7 +108,8 @@ class Input extends Component {
       ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
 
       this.setState({
-        webSocketStore: updatedWebSocketStore
+        webSocketStore: updatedWebSocketStore,
+        disableAllReconnects: this.isWebSocketStoreEmpty()
       });
 
       resolve();
@@ -137,7 +151,8 @@ class Input extends Component {
 
   render() {
     const {
-      webSocketStore: [...webSocketStore]
+      webSocketStore: [...webSocketStore],
+      disableAllReconnects
     } = this.state;
 
     return (
@@ -156,8 +171,15 @@ class Input extends Component {
             tooltip: "Reconnect",
             onClick: (event, connectionDetails) =>
               this.reconnect(connectionDetails),
-            disabled: rowData.reconnectIsDisabled
-          })
+            disabled: rowData.reconnectIsDisabled || disableAllReconnects
+          }),
+          {
+            icon: "cached",
+            tooltip: "Reconnect all",
+            isFreeAction: true,
+            disabled: disableAllReconnects,
+            onClick: () => this.reconnectAll()
+          }
         ]}
       />
     );
