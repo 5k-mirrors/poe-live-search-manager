@@ -8,14 +8,13 @@ import * as regExes from "../../../../resources/RegExes/RegExes";
 import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 
-// @TODO => disable `Reconnect all` when there's (at least) one active reconnection.
-// @TODO => disable all reconnect buttons when clicking on `Reconnect all`.
 class Input extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      webSocketStore: []
+      webSocketStore: [],
+      allReconnectsAreDisabled: false
     };
 
     this.reconnectTimeoutIds = [];
@@ -52,6 +51,18 @@ class Input extends Component {
   };
 
   reconnectAll = () => {
+    this.setState({
+      allReconnectsAreDisabled: true
+    });
+
+    this.reconnectTimeoutIds.push(
+      setTimeout(() => {
+        this.setState({
+          allReconnectsAreDisabled: false
+        });
+      }, 2000)
+    );
+
     ipcRenderer.send(ipcEvents.RECONNECT_ALL);
   };
 
@@ -151,7 +162,8 @@ class Input extends Component {
 
   render() {
     const {
-      webSocketStore: [...webSocketStore]
+      webSocketStore: [...webSocketStore],
+      allReconnectsAreDisabled
     } = this.state;
 
     return (
@@ -170,13 +182,13 @@ class Input extends Component {
             tooltip: "Reconnect",
             onClick: (event, connectionDetails) =>
               this.reconnect(connectionDetails),
-            disabled: webSocket.reconnectIsDisabled
+            disabled: webSocket.reconnectIsDisabled || allReconnectsAreDisabled
           }),
           {
             icon: "cached",
             tooltip: "Reconnect all",
             isFreeAction: true,
-            disabled: this.isWebSocketStoreEmpty(),
+            disabled: this.isWebSocketStoreEmpty() || allReconnectsAreDisabled,
             onClick: () => this.reconnectAll()
           }
         ]}
