@@ -32,6 +32,13 @@ class Store {
 
     this.storage.splice(wsElementIndex, 1);
   }
+
+  sanitized() {
+    return this.all().map(
+      ({ socket, isConnected, ...remainingSocketDetails }) =>
+        remainingSocketDetails
+    );
+  }
 }
 
 class SingletonStore {

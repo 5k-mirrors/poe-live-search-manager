@@ -9,7 +9,7 @@ class Subscription {
     };
   }
 
-  getData = id => {
+  query = id => {
     const userApiUrl = `${baseUrls.firebaseUserAPI}/user/${id}`;
 
     return fetch(userApiUrl).then(subscriptionData => subscriptionData.json());

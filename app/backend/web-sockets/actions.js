@@ -127,3 +127,12 @@ export const updateConnections = () => {
     disconnectFromStoredWebSockets();
   }
 };
+
+export const reconnect = id => {
+  disconnect(id);
+
+  if (subscription.active()) {
+    // Reconnect delayed so that there's feedback to the user. Otherwise, it might be too quick.
+    setTimeout(() => connect(id), 500);
+  }
+};

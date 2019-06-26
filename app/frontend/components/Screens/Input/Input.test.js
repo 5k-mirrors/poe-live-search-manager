@@ -55,7 +55,6 @@ describe("<Input />", () => {
       it("sends the connection details to the BE", () => {
         const expectedValue = {
           id,
-          isConnected: false,
           ...connectionDetails
         };
 

@@ -7,30 +7,21 @@ import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 
-const updateGlobalStoreWebSocketConnections = () => {
-  const sanitizedStore = store
-    .all()
-    .map(
-      ({ socket, isConnected, ...remainingSocketDetails }) =>
-        remainingSocketDetails
-    );
-
-  globalStore.set(storeKeys.WS_CONNECTIONS, sanitizedStore);
-};
-
-const setupIpcEvents = () => {
+const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
-    const sanititedStore = store
+    const sanitizedStore = store
       .all()
       .map(({ socket, ...remainingSocketDetails }) => remainingSocketDetails);
 
-    event.sender.send(ipcEvents.SEND_SOCKETS, sanititedStore);
+    event.sender.send(ipcEvents.SEND_SOCKETS, sanitizedStore);
   });
+};
 
+const setupWebSocketIpcListeners = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
     store.add(connectionDetails);
 
-    updateGlobalStoreWebSocketConnections();
+    globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
 
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
@@ -48,9 +39,15 @@ const setupIpcEvents = () => {
 
     store.remove(connectionDetails.id);
 
-    updateGlobalStoreWebSocketConnections();
+    globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
   });
 
+  ipcMain.on(ipcEvents.RECONNECT_SOCKET, (event, connectionDetails) => {
+    webSocketActions.reconnect(connectionDetails.id);
+  });
+};
+
+const setupAuthenticationIpcListeners = () => {
   ipcMain.on(ipcEvents.USER_LOGIN, (event, id) => {
     subscriptionActions.startRefreshInterval(id);
   });
@@ -78,7 +75,11 @@ const loadLocallySavedWsConnectionsIntoStore = () => {
 const initializeProject = () => {
   loadLocallySavedWsConnectionsIntoStore();
 
-  setupIpcEvents();
+  setupStoreIpcListeners();
+
+  setupWebSocketIpcListeners();
+
+  setupAuthenticationIpcListeners();
 };
 
 export default initializeProject;
