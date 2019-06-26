@@ -132,7 +132,7 @@ export const reconnect = id => {
   disconnect(id);
 
   if (subscription.active()) {
-    // Notice the reconnect effect.
+    // Reconnect delayed so that there's feedback to the user. Otherwise, it might be too quick.
     setTimeout(() => connect(id), 500);
   }
 };

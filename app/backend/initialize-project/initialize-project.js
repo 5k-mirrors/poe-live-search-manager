@@ -67,8 +67,6 @@ const loadLocallySavedWsConnectionsIntoStore = () => {
     []
   );
 
-  console.log(locallySavedWsConnections);
-
   locallySavedWsConnections.forEach(connectionDetails => {
     store.add(connectionDetails);
   });
