@@ -13,7 +13,7 @@ const setupStoreIpcListeners = () => {
       .all()
       .map(({ socket, ...remainingSocketDetails }) => remainingSocketDetails);
 
-    event.sender.send(ipcEvents.STORE_RESPONSE, sanitizedStore);
+    event.sender.send(ipcEvents.SEND_SOCKETS, sanitizedStore);
   });
 };
 

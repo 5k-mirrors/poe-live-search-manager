@@ -1,9 +1,10 @@
 import React from "react";
-import LoaderIcon from "../UI/Icons/Loader/Loader";
+import IconDisplayer from "../UI/IconDisplayer/IconDisplayer";
+import loaderIcon from "../../resources/assets/SVG/Loader.svg";
 
 const genericFetchDataDisplayer = ({ fetchedData, children }) => {
   if (fetchedData.isLoading) {
-    return <LoaderIcon />;
+    return <IconDisplayer path={loaderIcon} />;
   }
 
   if (fetchedData.err) {

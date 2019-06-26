@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { shell } from "electron";
 import { button, helpImage } from "./InfoButton.style";
-import HelpIcon from "../../../../../../resources/assets/help.png";
+import helpIcon from "../../../../../../resources/assets/PNG/help.png";
 
 const StyledButton = styled.button`
   ${button}
@@ -21,7 +21,7 @@ const infoButton = () => {
 
   return (
     <StyledButton onClick={onInfoButtonClick}>
-      <StyledHelpImage src={HelpIcon} alt="SessionID wiki" />
+      <StyledHelpImage src={helpIcon} alt="SessionID wiki" />
     </StyledButton>
   );
 };

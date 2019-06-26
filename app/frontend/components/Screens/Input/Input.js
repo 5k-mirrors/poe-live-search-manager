@@ -20,11 +20,11 @@ class Input extends Component {
   }
 
   componentDidMount() {
-    ipcRenderer.send(ipcEvents.STORE_REQUEST);
+    ipcRenderer.send(ipcEvents.GET_SOCKETS);
 
-    ipcRenderer.on(ipcEvents.STORE_RESPONSE, (event, currentStore) => {
+    ipcRenderer.on(ipcEvents.SEND_SOCKETS, (evnt, currentSockets) => {
       this.setState({
-        webSocketStore: currentStore
+        webSocketStore: currentSockets
       });
     });
 
@@ -58,15 +58,16 @@ class Input extends Component {
       webSocket => webSocket.id === id
     );
 
-    if (javaScriptUtils.isDefined(webSocketStore[webSocketIndex]))
+    if (javaScriptUtils.isDefined(webSocketStore[webSocketIndex])) {
       webSocketStore[webSocketIndex] = {
         ...webSocketStore[webSocketIndex],
         ...data
       };
 
-    this.setState({
-      webSocketStore
-    });
+      this.setState({
+        webSocketStore
+      });
+    }
   }
 
   disableReconnect(id) {
