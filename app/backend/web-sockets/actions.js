@@ -49,10 +49,17 @@ const setupMessageListener = id => {
   });
 };
 
-const sendStateUpdate = socketDetails => {
+const updateSocket = (id, details) => {
+  store.update(id, {
+    ...details
+  });
+
   const window = electronUtils.getWindowByName("PoE Sniper");
 
-  window.webContents.send(ipcEvents.SOCKET_STATE_UPDATE, socketDetails);
+  window.webContents.send(ipcEvents.SOCKET_STATE_UPDATE, {
+    id,
+    isConnected: details.isConnected
+  });
 };
 
 export const connect = id => {
@@ -67,19 +74,21 @@ export const connect = id => {
       }
     });
 
-    store.update(ws.id, {
+    updateSocket(ws.id, {
       ...ws,
       socket: newWebsocket,
       isConnected: true
     });
 
-    sendStateUpdate({
-      id: ws.id,
-      isConnected: true
-    });
-
     newWebsocket.on("open", () => {
       setupMessageListener(id);
+    });
+
+    newWebsocket.on("close", () => {
+      updateSocket(ws.id, {
+        ...ws,
+        isConnected: false
+      });
     });
   }
 };
@@ -92,13 +101,8 @@ export const disconnect = id => {
 
     delete ws.socket;
 
-    store.update(ws.id, {
+    updateSocket(ws.id, {
       ...ws,
-      isConnected: false
-    });
-
-    sendStateUpdate({
-      id: ws.id,
       isConnected: false
     });
   }
