@@ -17,7 +17,7 @@ class Input extends Component {
       disableAllReconnects: false
     };
 
-    this.reconnectTimeouts = [];
+    this.reconnectTimeoutIds = [];
   }
 
   componentDidMount() {
@@ -39,7 +39,7 @@ class Input extends Component {
   componentWillUnmount() {
     ipcRenderer.removeAllListeners();
 
-    this.reconnectTimeouts.forEach(timeout => {
+    this.reconnectTimeoutIds.forEach(timeout => {
       clearTimeout(timeout);
     });
   }
@@ -88,7 +88,7 @@ class Input extends Component {
       reconnectIsDisabled: true
     });
 
-    this.reconnectTimeouts.push(
+    this.reconnectTimeoutIds.push(
       setTimeout(() => {
         this.update(id, { reconnectIsDisabled: false });
       }, 2000)
