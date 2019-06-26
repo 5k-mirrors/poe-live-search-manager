@@ -8,13 +8,14 @@ import * as regExes from "../../../../resources/RegExes/RegExes";
 import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 
+// @TODO => disable `Reconnect all` when there's (at least) one active reconnection.
+// @TODO => disable all reconnect buttons when clicking on `Reconnect all`.
 class Input extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      webSocketStore: [],
-      disableAllReconnects: false
+      webSocketStore: []
     };
 
     this.reconnectTimeoutIds = [];
@@ -23,7 +24,7 @@ class Input extends Component {
   componentDidMount() {
     ipcRenderer.send(ipcEvents.GET_SOCKETS);
 
-    ipcRenderer.on(ipcEvents.SEND_SOCKETS, (evnt, currentSockets) => {
+    ipcRenderer.on(ipcEvents.SEND_SOCKETS, (event, currentSockets) => {
       this.setState({
         webSocketStore: currentSockets
       });
@@ -53,14 +54,6 @@ class Input extends Component {
   reconnectAll = () => {
     ipcRenderer.send(ipcEvents.RECONNECT_ALL);
   };
-
-  isWebSocketStoreEmpty() {
-    const {
-      webSocketStore: [...webSocketStore]
-    } = this.state;
-
-    return webSocketStore.length === 0;
-  }
 
   update(id, data) {
     const {
@@ -108,8 +101,7 @@ class Input extends Component {
       ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
 
       this.setState({
-        webSocketStore: updatedWebSocketStore,
-        disableAllReconnects: this.isWebSocketStoreEmpty()
+        webSocketStore: updatedWebSocketStore
       });
 
       resolve();
@@ -149,10 +141,17 @@ class Input extends Component {
     });
   }
 
+  isWebSocketStoreEmpty() {
+    const {
+      webSocketStore: [...webSocketStore]
+    } = this.state;
+
+    return webSocketStore.length === 0;
+  }
+
   render() {
     const {
-      webSocketStore: [...webSocketStore],
-      disableAllReconnects
+      webSocketStore: [...webSocketStore]
     } = this.state;
 
     return (
@@ -166,18 +165,18 @@ class Input extends Component {
             this.deleteConnection(wsConnectionData)
         }}
         actions={[
-          rowData => ({
+          webSocket => ({
             icon: "cached",
             tooltip: "Reconnect",
             onClick: (event, connectionDetails) =>
               this.reconnect(connectionDetails),
-            disabled: rowData.reconnectIsDisabled || disableAllReconnects
+            disabled: webSocket.reconnectIsDisabled
           }),
           {
             icon: "cached",
             tooltip: "Reconnect all",
             isFreeAction: true,
-            disabled: disableAllReconnects,
+            disabled: this.isWebSocketStoreEmpty(),
             onClick: () => this.reconnectAll()
           }
         ]}
