@@ -84,7 +84,10 @@ export const connect = id => {
       setupMessageListener(id);
     });
 
-    newWebsocket.on("error", () => {
+    newWebsocket.on("error", (code, reason) => {
+      // eslint-disable-next-line no-console
+      console.error(`${ws.id} connection error. ${code}, ${reason}`);
+
       updateSocket(ws.id, {
         ...ws,
         isConnected: false
