@@ -10,7 +10,11 @@ const navigationBar = () => {
 
   return (
     <Paper className={classes.container}>
-      <Breadcrumbs aria-label="Breadcrumb">
+      <Breadcrumbs
+        className={classes.breadcrumb}
+        separator=""
+        aria-label="Breadcrumb"
+      >
         {routes.map(route => (
           <NavigationBarItem
             key={route.displayName}

@@ -6,5 +6,8 @@ export const useNavigationBarStyles = makeStyles({
     flexWrap: "wrap",
     padding: 10,
     marginBottom: 15
+  },
+  breadcrumb: {
+    justifyContent: "center"
   }
 });
