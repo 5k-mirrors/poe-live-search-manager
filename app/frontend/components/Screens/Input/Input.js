@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 import { ipcRenderer } from "electron";
 import MaterialTable from "material-table";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
@@ -7,6 +8,11 @@ import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdG
 import * as regExes from "../../../../resources/RegExes/RegExes";
 import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import InvalidInputError from "../../../../errors/invalid-input-error";
+import { containerStyle } from "./Input.style";
+
+const Container = styled.div`
+  ${containerStyle}
+`;
 
 class Input extends Component {
   constructor(props) {
@@ -172,32 +178,41 @@ class Input extends Component {
     } = this.state;
 
     return (
-      <MaterialTable
-        title="Active connections"
-        columns={tableColumns.inputScreen}
-        data={webSocketStore}
-        editable={{
-          onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),
-          onRowDelete: wsConnectionData =>
-            this.deleteConnection(wsConnectionData)
-        }}
-        actions={[
-          webSocket => ({
-            icon: "cached",
-            tooltip: "Reconnect",
-            onClick: (event, connectionDetails) =>
-              this.reconnect(connectionDetails),
-            disabled: webSocket.reconnectIsDisabled || allReconnectsAreDisabled
-          }),
-          {
-            icon: "cached",
-            tooltip: "Reconnect all",
-            isFreeAction: true,
-            disabled: this.isWebSocketStoreEmpty() || allReconnectsAreDisabled,
-            onClick: () => this.reconnectAll()
-          }
-        ]}
-      />
+      <Container>
+        <MaterialTable
+          title="Active connections"
+          columns={tableColumns.inputScreen}
+          data={webSocketStore}
+          editable={{
+            onRowAdd: wsConnectionData =>
+              this.addNewConnection(wsConnectionData),
+            onRowDelete: wsConnectionData =>
+              this.deleteConnection(wsConnectionData)
+          }}
+          actions={[
+            webSocket => ({
+              icon: "cached",
+              tooltip: "Reconnect",
+              onClick: (event, connectionDetails) =>
+                this.reconnect(connectionDetails),
+              disabled:
+                webSocket.reconnectIsDisabled || allReconnectsAreDisabled
+            }),
+            {
+              icon: "cached",
+              tooltip: "Reconnect all",
+              isFreeAction: true,
+              disabled:
+                this.isWebSocketStoreEmpty() || allReconnectsAreDisabled,
+              onClick: () => this.reconnectAll()
+            }
+          ]}
+          options={{
+            showTitle: false,
+            toolbarButtonAlignment: "left"
+          }}
+        />
+      </Container>
     );
   }
 }
