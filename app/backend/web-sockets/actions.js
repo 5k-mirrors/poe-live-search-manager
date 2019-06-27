@@ -87,7 +87,7 @@ export const connect = id => {
     newWebsocket.on("error", () => {
       updateSocket(ws.id, {
         ...ws,
-        isConnected: true
+        isConnected: false
       });
     });
 
