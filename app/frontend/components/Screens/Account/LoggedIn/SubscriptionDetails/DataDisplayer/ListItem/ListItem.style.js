@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export const useDataDisplayerStyles = makeStyles({
+export const useListItemStyles = makeStyles({
   listItem: {
     paddingLeft: 0
   },
