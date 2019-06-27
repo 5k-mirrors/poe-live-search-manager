@@ -45,6 +45,10 @@ const setupWebSocketIpcListeners = () => {
   ipcMain.on(ipcEvents.RECONNECT_SOCKET, (event, connectionDetails) => {
     webSocketActions.reconnect(connectionDetails.id);
   });
+
+  ipcMain.on(ipcEvents.RECONNECT_ALL, () => {
+    webSocketActions.reconnectAll();
+  });
 };
 
 const setupAuthenticationIpcListeners = () => {

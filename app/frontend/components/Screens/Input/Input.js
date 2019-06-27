@@ -13,16 +13,18 @@ class Input extends Component {
     super(props);
 
     this.state = {
-      webSocketStore: []
+      webSocketStore: [],
+      allReconnectsAreDisabled: false
     };
 
-    this.reconnectTimeouts = [];
+    this.reconnectTimeoutIds = [];
+    this.disableDurationInMilliseconds = 2000;
   }
 
   componentDidMount() {
     ipcRenderer.send(ipcEvents.GET_SOCKETS);
 
-    ipcRenderer.on(ipcEvents.SEND_SOCKETS, (evnt, currentSockets) => {
+    ipcRenderer.on(ipcEvents.SEND_SOCKETS, (event, currentSockets) => {
       this.setState({
         webSocketStore: currentSockets
       });
@@ -38,7 +40,7 @@ class Input extends Component {
   componentWillUnmount() {
     ipcRenderer.removeAllListeners();
 
-    this.reconnectTimeouts.forEach(timeout => {
+    this.reconnectTimeoutIds.forEach(timeout => {
       clearTimeout(timeout);
     });
   }
@@ -47,6 +49,12 @@ class Input extends Component {
     this.disableReconnect(connectionDetails.id);
 
     ipcRenderer.send(ipcEvents.RECONNECT_SOCKET, connectionDetails);
+  };
+
+  reconnectAll = () => {
+    this.disableAllReconnects();
+
+    ipcRenderer.send(ipcEvents.RECONNECT_ALL);
   };
 
   update(id, data) {
@@ -75,10 +83,24 @@ class Input extends Component {
       reconnectIsDisabled: true
     });
 
-    this.reconnectTimeouts.push(
+    this.reconnectTimeoutIds.push(
       setTimeout(() => {
         this.update(id, { reconnectIsDisabled: false });
-      }, 2000)
+      }, this.disableDurationInMilliseconds)
+    );
+  }
+
+  disableAllReconnects() {
+    this.setState({
+      allReconnectsAreDisabled: true
+    });
+
+    this.reconnectTimeoutIds.push(
+      setTimeout(() => {
+        this.setState({
+          allReconnectsAreDisabled: false
+        });
+      }, this.disableDurationInMilliseconds)
     );
   }
 
@@ -135,9 +157,18 @@ class Input extends Component {
     });
   }
 
-  render() {
+  isWebSocketStoreEmpty() {
     const {
       webSocketStore: [...webSocketStore]
+    } = this.state;
+
+    return webSocketStore.length === 0;
+  }
+
+  render() {
+    const {
+      webSocketStore: [...webSocketStore],
+      allReconnectsAreDisabled
     } = this.state;
 
     return (
@@ -151,13 +182,20 @@ class Input extends Component {
             this.deleteConnection(wsConnectionData)
         }}
         actions={[
-          rowData => ({
+          webSocket => ({
             icon: "cached",
             tooltip: "Reconnect",
             onClick: (event, connectionDetails) =>
               this.reconnect(connectionDetails),
-            disabled: rowData.reconnectIsDisabled
-          })
+            disabled: webSocket.reconnectIsDisabled || allReconnectsAreDisabled
+          }),
+          {
+            icon: "cached",
+            tooltip: "Reconnect all",
+            isFreeAction: true,
+            disabled: this.isWebSocketStoreEmpty() || allReconnectsAreDisabled,
+            onClick: () => this.reconnectAll()
+          }
         ]}
       />
     );
