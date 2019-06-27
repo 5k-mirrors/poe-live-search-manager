@@ -86,7 +86,7 @@ export const connect = id => {
 
     newWebsocket.on("error", error => {
       // eslint-disable-next-line no-console
-      console.log(JSON.stringify(error));
+      console.error(JSON.stringify(error));
 
       updateSocket(ws.id, {
         ...ws,
