@@ -23,7 +23,6 @@ const subscriptionDetails = ({ id }) => {
 
   return (
     <div>
-      <h3>Subscription information</h3>
       <GenericFetchDataDisplayer fetchedData={fetchedData}>
         <DataDisplayer subscriptionData={fetchedData.data} />
       </GenericFetchDataDisplayer>

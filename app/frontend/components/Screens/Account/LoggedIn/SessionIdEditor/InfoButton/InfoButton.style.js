@@ -1,15 +1,12 @@
-import { css } from "styled-components";
+import { makeStyles } from "@material-ui/core/styles";
 
-export const button = css`
-  background: none;
-  border: none;
-  outline: none;
-  padding: 0;
-  margin-left: 4px;
-`;
-
-export const helpImage = css`
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-`;
+export const useInfoButtonStyles = makeStyles({
+  iconButton: {
+    padding: 0,
+    marginLeft: 5
+  },
+  helpIcon: {
+    color: "#FFFFFF",
+    fontSize: "35px"
+  }
+});

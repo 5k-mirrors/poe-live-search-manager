@@ -1,7 +1,17 @@
-import { css } from "styled-components";
+import { makeStyles } from "@material-ui/core/styles";
 
-export const Items = css`
-  & > p {
-    font-size: 15px;
+export const useDataDisplayerStyles = makeStyles({
+  listItem: {
+    paddingLeft: 0
+  },
+  header: {
+    paddingLeft: 0,
+    color: "#FFFFFF"
+  },
+  primaryText: {
+    fontWeight: "bold"
+  },
+  secondaryText: {
+    color: "#FFFFFF"
   }
-`;
+});

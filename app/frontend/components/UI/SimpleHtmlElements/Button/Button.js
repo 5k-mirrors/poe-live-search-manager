@@ -1,15 +1,21 @@
 import React from "react";
-import styled from "styled-components";
-import { cssButton } from "./Button.style";
+import Button from "@material-ui/core/Button";
+import { useButtonStyles } from "./Button.style";
 
-const Button = styled.button`
-  ${cssButton}
-`;
+const button = ({ clickEvent, text, ...props }) => {
+  const classes = useButtonStyles();
 
-const button = ({ clickEvent, text, ...props }) => (
-  <Button onClick={clickEvent} {...props}>
-    {text}
-  </Button>
-);
-
+  return (
+    <Button
+      variant="contained"
+      color="primary"
+      size="medium"
+      onClick={clickEvent}
+      className={classes.button}
+      {...props}
+    >
+      {text}
+    </Button>
+  );
+};
 export default button;
