@@ -1,4 +1,5 @@
 import React from "react";
+import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigationBarItem from "./NavigationBarItem/NavigationBarItem";
@@ -9,21 +10,24 @@ const navigationBar = () => {
   const classes = useNavigationBarStyles();
 
   return (
-    <Paper className={classes.container}>
-      <Breadcrumbs
-        className={classes.breadcrumb}
-        separator=""
-        aria-label="Breadcrumb"
-      >
-        {routes.map(route => (
-          <NavigationBarItem
-            key={route.displayName}
-            displayName={route.displayName}
-            routePath={route.routePath}
-          />
-        ))}
-      </Breadcrumbs>
-    </Paper>
+    <Container maxWidth="sm">
+      <Paper className={classes.container}>
+        <Breadcrumbs
+          className={classes.test}
+          separator=""
+          aria-label="Breadcrumb"
+        >
+          {routes.map(route => (
+            <NavigationBarItem
+              style={{ justifyContent: "center" }}
+              key={route.displayName}
+              displayName={route.displayName}
+              routePath={route.routePath}
+            />
+          ))}
+        </Breadcrumbs>
+      </Paper>
+    </Container>
   );
 };
 
