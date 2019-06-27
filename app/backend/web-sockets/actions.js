@@ -84,7 +84,20 @@ export const connect = id => {
       setupMessageListener(id);
     });
 
-    newWebsocket.on("close", () => {
+    newWebsocket.on("error", error => {
+      // eslint-disable-next-line no-console
+      console.error(JSON.stringify(error));
+
+      updateSocket(ws.id, {
+        ...ws,
+        isConnected: false
+      });
+    });
+
+    newWebsocket.on("close", (code, reason) => {
+      // eslint-disable-next-line no-console
+      console.error(`${ws.id} connection is closed. ${code}, ${reason}`);
+
       updateSocket(ws.id, {
         ...ws,
         isConnected: false
