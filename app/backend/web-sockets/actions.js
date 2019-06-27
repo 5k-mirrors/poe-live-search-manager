@@ -84,6 +84,13 @@ export const connect = id => {
       setupMessageListener(id);
     });
 
+    newWebsocket.on("error", () => {
+      updateSocket(ws.id, {
+        ...ws,
+        isConnected: true
+      });
+    });
+
     newWebsocket.on("close", () => {
       updateSocket(ws.id, {
         ...ws,
