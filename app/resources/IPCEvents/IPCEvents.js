@@ -8,5 +8,6 @@ export const ipcEvents = {
   RECONNECT_SOCKET: "reconnectSocket",
   RECONNECT_ALL: "reconnectAllSockets",
   GET_SOCKETS: "getSockets",
-  SEND_SOCKETS: "sendSockets"
+  SEND_SOCKETS: "sendSockets",
+  TEST_NOTIFICATION: "testNotification"
 };
