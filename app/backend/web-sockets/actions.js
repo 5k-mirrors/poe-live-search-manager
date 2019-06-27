@@ -84,7 +84,10 @@ export const connect = id => {
       setupMessageListener(id);
     });
 
-    newWebsocket.on("error", () => {
+    newWebsocket.on("error", error => {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(error));
+
       updateSocket(ws.id, {
         ...ws,
         isConnected: false
