@@ -9,14 +9,9 @@ body {
   color: white;
   width: 100%;
   height: 100vh;
-  background-color: #232c39;
-  background-image: linear-gradient(
-    45deg,
-    rgba(174, 177, 183, 0.2) 10%,
-    rgba(135, 138, 142, 0.7)
-  );
+  background-color: #292b2e;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 h2 {

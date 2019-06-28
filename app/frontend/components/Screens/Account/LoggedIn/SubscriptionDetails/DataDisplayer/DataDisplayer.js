@@ -1,26 +1,18 @@
+/* eslint-disable camelcase */
 import React from "react";
-import styled from "styled-components";
-import { Items } from "./DataDisplayer.style";
+import List from "@material-ui/core/List";
+import ListItem from "./ListItem/ListItem";
 
-const StyledItems = styled.div`
-  ${Items}
-`;
+const dataDisplayer = ({ subscriptionData }) => {
+  const { tier, period, active_until } = subscriptionData.active_subscription;
 
-const dataDisplayer = ({ subscriptionData }) => (
-  <StyledItems>
-    <p>
-      <b>Tier </b>
-      {subscriptionData.active_subscription.tier}
-    </p>
-    <p>
-      <b>Period </b>
-      {subscriptionData.active_subscription.period}
-    </p>
-    <p>
-      <b>Expires at </b>
-      {subscriptionData.active_subscription.active_until}
-    </p>
-  </StyledItems>
-);
+  return (
+    <List component="nav" aria-label="Main mailbox folders">
+      <ListItem primaryText="Tier" secondaryText={tier} />
+      <ListItem primaryText="Period" secondaryText={period} />
+      <ListItem primaryText="Expires at" secondaryText={active_until} />
+    </List>
+  );
+};
 
 export default dataDisplayer;

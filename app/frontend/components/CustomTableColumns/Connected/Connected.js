@@ -1,16 +1,15 @@
 import React from "react";
-import IconDisplayer from "../../UI/IconDisplayer/IconDisplayer";
-import successIcon from "../../../resources/assets/PNG/success.png";
-import errorIcon from "../../../resources/assets/PNG/error.png";
+import Done from "@material-ui/icons/Done";
+import Cancel from "@material-ui/icons/Cancel";
 
 const connected = ({ ...props }) => {
   const { isConnected } = props;
 
   if (isConnected) {
-    return <IconDisplayer path={successIcon} />;
+    return <Done fontSize="large" />;
   }
 
-  return <IconDisplayer path={errorIcon} />;
+  return <Cancel fontSize="large" />;
 };
 
 export default connected;

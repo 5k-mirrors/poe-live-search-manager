@@ -1,11 +1,13 @@
-import { css } from "styled-components";
+import { makeStyles } from "@material-ui/core/styles";
 
-export const navContainer = css`
-  width: 100%;
-  text-align: center;
-`;
-
-export const itemsList = css`
-  display: inline-block;
-  list-style-type: none;
-`;
+export const useNavigationBarStyles = makeStyles({
+  container: {
+    justifyContent: "center",
+    flexWrap: "wrap",
+    padding: 10,
+    marginBottom: 15,
+    "& ol": {
+      justifyContent: "center"
+    }
+  }
+});

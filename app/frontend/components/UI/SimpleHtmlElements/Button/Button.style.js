@@ -1,6 +1,7 @@
-import { css } from "styled-components";
+import { makeStyles } from "@material-ui/core/styles";
 
-export const cssButton = css`
-  display: block;
-  padding: 5px 8px;
-`;
+export const useButtonStyles = makeStyles({
+  button: {
+    fontWeight: "bold"
+  }
+});

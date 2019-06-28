@@ -1,14 +1,23 @@
 import React from "react";
-import FlexContainer from "../SimpleHtmlElements/FlexContainer/FlexContainer";
-import Button from "../SimpleHtmlElements/Button/Button";
-import IconDispalyer from "../IconDisplayer/IconDisplayer";
-import successIcon from "../../../resources/assets/PNG/success.png";
+import Done from "@material-ui/icons/Done";
+import Button from "@material-ui/core/Button";
+import { useButtonWithSuccessIconStyles } from "./ButtonWithSuccessIcon.style";
 
-const buttonWithSuccessIcon = ({ iconIsVisible, text, clickEvent }) => (
-  <FlexContainer>
-    <Button clickEvent={clickEvent} text={text} />
-    {iconIsVisible ? <IconDispalyer path={successIcon} /> : null}
-  </FlexContainer>
-);
+const buttonWithSuccessIcon = ({ iconIsVisible, text, clickEvent }) => {
+  const classes = useButtonWithSuccessIconStyles();
+
+  return (
+    <Button
+      variant="contained"
+      color="primary"
+      size="medium"
+      onClick={clickEvent}
+      className={classes.button}
+    >
+      {text}
+      {iconIsVisible ? <Done className={classes.extendedIcon} /> : null}
+    </Button>
+  );
+};
 
 export default buttonWithSuccessIcon;

@@ -1,11 +1,17 @@
 import React from "react";
-import styled from "styled-components";
-import { cssInput } from "./Input.style";
+import TextField from "@material-ui/core/TextField";
+import { useInputStyles } from "./Input.style";
 
-const Input = styled.input`
-  ${cssInput}
-`;
+const input = ({ ...props }) => {
+  const classes = useInputStyles();
 
-const input = ({ ...props }) => <Input {...props} />;
+  return (
+    <TextField
+      InputProps={{ classes, disableUnderline: true }}
+      {...props}
+      variant="filled"
+    />
+  );
+};
 
 export default input;

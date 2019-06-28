@@ -1,18 +1,12 @@
 import React from "react";
-import styled from "styled-components";
 import { shell } from "electron";
-import { button, helpImage } from "./InfoButton.style";
-import helpIcon from "../../../../../../resources/assets/PNG/help.png";
-
-const StyledButton = styled.button`
-  ${button}
-`;
-
-const StyledHelpImage = styled.img`
-  ${helpImage}
-`;
+import IconButton from "@material-ui/core/IconButton";
+import HelpOutline from "@material-ui/icons/HelpOutline";
+import { useInfoButtonStyles } from "./InfoButton.style";
 
 const infoButton = () => {
+  const classes = useInfoButtonStyles();
+
   function onInfoButtonClick() {
     shell.openExternal(
       "https://github.com/Stickymaddness/Procurement/wiki/SessionID"
@@ -20,9 +14,9 @@ const infoButton = () => {
   }
 
   return (
-    <StyledButton onClick={onInfoButtonClick}>
-      <StyledHelpImage src={helpIcon} alt="SessionID wiki" />
-    </StyledButton>
+    <IconButton className={classes.iconButton} onClick={onInfoButtonClick}>
+      <HelpOutline className={classes.helpIcon} />
+    </IconButton>
   );
 };
 

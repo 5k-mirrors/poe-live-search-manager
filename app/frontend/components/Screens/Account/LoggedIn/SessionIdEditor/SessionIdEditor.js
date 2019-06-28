@@ -1,10 +1,10 @@
 import React, { useState, Fragment } from "react";
+import FlexBox from "../../../../UI/SimpleHtmlElements/FlexBox/FlexBox";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import InfoButton from "./InfoButton/InfoButton";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
-import FlexContainer from "../../../../UI/SimpleHtmlElements/FlexContainer/FlexContainer";
 import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 
 const sessionIdEditor = () => {
@@ -27,15 +27,15 @@ const sessionIdEditor = () => {
 
   return (
     <Fragment>
-      <h3>PoE session ID</h3>
-      <FlexContainer>
+      <FlexBox>
         <Input
           type="text"
           onChange={e => setPoeSessionId(e.target.value)}
           value={poeSessionId}
+          label="Session ID"
         />
         <InfoButton />
-      </FlexContainer>
+      </FlexBox>
       <ButtonWithSuccessIcon
         text="Save"
         clickEvent={onSave}

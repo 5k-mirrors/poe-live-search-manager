@@ -1,12 +1,13 @@
 import React from "react";
+import Container from "@material-ui/core/Container";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Screens from "../../components/Screens/Screens";
 
 const app = () => (
-  <div>
+  <Container>
     <NavigationBar />
     <Screens />
-  </div>
+  </Container>
 );
 
 export default app;

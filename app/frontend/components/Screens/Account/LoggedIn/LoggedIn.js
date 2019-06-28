@@ -1,9 +1,10 @@
 import React from "react";
+import Typography from "@material-ui/core/Typography";
 import firebase from "firebase/app";
+import FlexBox from "../../../UI/SimpleHtmlElements/FlexBox/FlexBox";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/SimpleHtmlElements/Button/Button";
-import FlexContainer from "../../../UI/SimpleHtmlElements/FlexContainer/FlexContainer";
 
 const loggedIn = () => {
   const { currentUser } = firebase.auth();
@@ -13,10 +14,12 @@ const loggedIn = () => {
 
   return (
     <div>
-      <FlexContainer>
-        <h3>{welcomeMessage}</h3>
+      <FlexBox justifyContent="space-between">
+        <Typography variant="h6" gutterBottom>
+          {welcomeMessage}
+        </Typography>
         <Button clickEvent={() => firebase.auth().signOut()} text="Sign out" />
-      </FlexContainer>
+      </FlexBox>
       <SessionIdEditor />
       <SubscriptionDetails id={currentUser.uid} />
     </div>
