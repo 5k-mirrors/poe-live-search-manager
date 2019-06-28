@@ -7,7 +7,7 @@ import { globalStore } from "../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../resources/StoreKeys/StoreKeys";
 
 const clipboard = () => {
-  const [copyWhiser, setCopyWhisper] = useState(
+  const [copyWhisper, setCopyWhisper] = useState(
     globalStore.get(storeKeys.COPY_WHISPER, true)
   );
 
@@ -26,7 +26,7 @@ const clipboard = () => {
         <Grid item>Disabled</Grid>
         <Grid item>
           <Switch
-            checked={copyWhiser}
+            checked={copyWhisper}
             onChange={event => handleSwitchChange(event.target.checked)}
             color="default"
           />
