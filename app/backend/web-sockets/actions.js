@@ -9,14 +9,6 @@ import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import { globalStore } from "../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
-
-const copyWhisperIsEnabled = () => {
-  const copyWhisper = globalStore.get(storeKeys.COPY_WHISPER, true);
-
-  return copyWhisper;
-};
 
 const setupMessageListener = id => {
   const limiter = notificationsLimiter.getLimiter();
@@ -39,7 +31,7 @@ const setupMessageListener = id => {
               .schedule({ id: uniqueIdGenerator() }, () => {
                 const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
 
-                if (copyWhisperIsEnabled()) {
+                if (poeTrade.copyWhisperIsEnabled()) {
                   clipboard.writeText(whisperMessage);
                 }
 
