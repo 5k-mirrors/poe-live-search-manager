@@ -3,5 +3,6 @@ export const storeKeys = {
   IS_LOGGED_IN: "isLoggedIn",
   TRADE_MESSAGES: "tradeMessages",
   WS_CONNECTIONS: "wsConnections",
-  NOTIFICATIONS_INTERVAL: "notificationsInterval"
+  NOTIFICATIONS_INTERVAL: "notificationsInterval",
+  COPY_WHISPER: "copyWhisper"
 };
