@@ -3,6 +3,7 @@ import { globalStore } from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
+import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
@@ -65,6 +66,15 @@ const setupAuthenticationIpcListeners = () => {
   });
 };
 
+const setupGeneralIpcListeners = () => {
+  ipcMain.on(ipcEvents.TEST_NOTIFICATION, () => {
+    electronUtils.doNotify({
+      title: "Title",
+      body: "Description"
+    });
+  });
+};
+
 const loadLocallySavedWsConnectionsIntoStore = () => {
   const locallySavedWsConnections = globalStore.get(
     storeKeys.WS_CONNECTIONS,
@@ -84,6 +94,8 @@ const initializeProject = () => {
   setupWebSocketIpcListeners();
 
   setupAuthenticationIpcListeners();
+
+  setupGeneralIpcListeners();
 };
 
 export default initializeProject;
