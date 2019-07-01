@@ -7,9 +7,17 @@ const input = ({ ...props }) => {
 
   return (
     <TextField
-      InputProps={{ classes, disableUnderline: true }}
+      variant="outlined"
+      InputLabelProps={{
+        classes: {
+          root: classes.label,
+          focused: classes.focused
+        }
+      }}
+      InputProps={{
+        className: classes.input
+      }}
       {...props}
-      variant="filled"
     />
   );
 };
