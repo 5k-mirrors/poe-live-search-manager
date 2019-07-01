@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Switch from "@material-ui/core/Switch";
 import { globalStore } from "../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../resources/StoreKeys/StoreKeys";
+import { useClipboardStyles } from "./Clipboard.style";
 
 const clipboard = () => {
+  const classes = useClipboardStyles();
+
   const [copyWhisper, setCopyWhisper] = useState(
     globalStore.get(storeKeys.COPY_WHISPER, true)
   );
@@ -22,17 +24,16 @@ const clipboard = () => {
       <Typography variant="h6">
         Copy whisper messages to the clipboard
       </Typography>
-      <Grid component="label" container alignItems="center" spacing={1}>
-        <Grid item>Disabled</Grid>
-        <Grid item>
-          <Switch
-            checked={copyWhisper}
-            onChange={event => handleSwitchChange(event.target.checked)}
-            color="default"
-          />
-        </Grid>
-        <Grid item>Enabled</Grid>
-      </Grid>
+      <Switch
+        checked={copyWhisper}
+        onChange={event => handleSwitchChange(event.target.checked)}
+        classes={{
+          switchBase: classes.switchBase,
+          thumb: classes.thumb,
+          track: classes.track,
+          checked: classes.checked
+        }}
+      />
     </Box>
   );
 };
