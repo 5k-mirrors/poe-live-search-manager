@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from "react";
-import FlexBox from "../../../../UI/SimpleHtmlElements/FlexBox/FlexBox";
+import Box from "@material-ui/core/Box";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
@@ -27,15 +27,16 @@ const sessionIdEditor = () => {
 
   return (
     <Fragment>
-      <FlexBox>
+      <Box display="flex" alignItems="center" mb={3}>
         <Input
           type="text"
           onChange={e => setPoeSessionId(e.target.value)}
           value={poeSessionId}
           label="Session ID"
+          error={!poeSessionId}
         />
         <InfoButton />
-      </FlexBox>
+      </Box>
       <ButtonWithSuccessIcon
         text="Save"
         clickEvent={onSave}

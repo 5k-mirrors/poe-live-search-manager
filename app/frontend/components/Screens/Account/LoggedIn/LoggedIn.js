@@ -1,7 +1,7 @@
 import React from "react";
+import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import firebase from "firebase/app";
-import FlexBox from "../../../UI/SimpleHtmlElements/FlexBox/FlexBox";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/SimpleHtmlElements/Button/Button";
@@ -14,12 +14,17 @@ const loggedIn = () => {
 
   return (
     <div>
-      <FlexBox justifyContent="space-between">
+      <Box
+        display="flex"
+        alignItems="center"
+        mb={3}
+        justifyContent="space-between"
+      >
         <Typography variant="h6" gutterBottom>
           {welcomeMessage}
         </Typography>
         <Button clickEvent={() => firebase.auth().signOut()} text="Sign out" />
-      </FlexBox>
+      </Box>
       <SessionIdEditor />
       <SubscriptionDetails id={currentUser.uid} />
     </div>
