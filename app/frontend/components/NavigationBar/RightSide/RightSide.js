@@ -11,7 +11,6 @@ import { version } from "../../../../../package.json";
 
 const rightSide = () => {
   const classes = useRightSideStyles();
-
   const versionNumber = `v${version}`;
 
   return (
