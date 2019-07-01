@@ -28,6 +28,7 @@ const clipboard = () => {
         checked={copyWhisper}
         onChange={event => handleSwitchChange(event.target.checked)}
         classes={{
+          root: classes.root,
           switchBase: classes.switchBase,
           thumb: classes.thumb,
           track: classes.track,
