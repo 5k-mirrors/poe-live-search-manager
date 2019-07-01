@@ -7,6 +7,7 @@ const leftSide = () => (
   <Breadcrumbs separator="">
     {routes.map(route => (
       <NavLink
+        key={route.displayName}
         style={{ color: "#000000" }}
         activeStyle={{ fontWeight: "bold" }}
         to={route.path}
