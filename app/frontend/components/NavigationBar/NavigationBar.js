@@ -2,14 +2,10 @@ import React from "react";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Typograpghy from "@material-ui/core/Typography";
 import NavigationBarItem from "./NavigationBarItem/NavigationBarItem";
+import VersionDisplayer from "./VersionDisplayer/VersionDisplayer";
 import { routes } from "../../resources/Routes/Routes";
 import { useNavigationBarStyles } from "./NavigationBar.style";
-
-// What's the current version number?
-// https://stackoverflow.com/a/36733261/9599137
-import { version } from "../../../../package.json";
 
 const navigationBar = () => {
   const classes = useNavigationBarStyles();
@@ -27,9 +23,7 @@ const navigationBar = () => {
             />
           ))}
         </Breadcrumbs>
-        <Typograpghy className={classes.verson} variant="subtitle2">
-          {version}
-        </Typograpghy>
+        <VersionDisplayer />
       </Paper>
     </Container>
   );
