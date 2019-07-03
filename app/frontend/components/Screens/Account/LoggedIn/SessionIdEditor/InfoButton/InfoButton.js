@@ -11,7 +11,7 @@ const infoButton = () => {
   return (
     <IconButton
       className={classes.iconButton}
-      onClick={() => electronUtils.openExternalUrl(baseUrls.sessionId)}
+      onClick={() => electronUtils.openExternalUrl(baseUrls.sessionIdWiki)}
     >
       <HelpOutline className={classes.helpIcon} />
     </IconButton>
