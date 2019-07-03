@@ -14,7 +14,7 @@ const rightSide = () => {
   const versionNumber = `v${version}`;
 
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="center">
+    <Box display="flex" alignItems="center" className={classes.root}>
       <Typograpghy variant="subtitle2">{versionNumber}</Typograpghy>
       <Button
         className={classes.button}

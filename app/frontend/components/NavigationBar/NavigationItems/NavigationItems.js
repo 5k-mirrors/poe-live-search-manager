@@ -3,7 +3,7 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import { NavLink } from "react-router-dom";
 import { routes } from "../../../resources/Routes/Routes";
 
-const leftSide = () => (
+const navigationItems = () => (
   <Breadcrumbs separator="">
     {routes.map(route => (
       <NavLink
@@ -18,4 +18,4 @@ const leftSide = () => (
   </Breadcrumbs>
 );
 
-export default leftSide;
+export default navigationItems;
