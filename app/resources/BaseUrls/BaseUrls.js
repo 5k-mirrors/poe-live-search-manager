@@ -5,7 +5,7 @@ export const poeFetchAPI = "https://www.pathofexile.com/api/trade/fetch/";
 
 export const poeWsUri = "wss://www.pathofexile.com/api/trade/live";
 
-export const sessionId =
+export const sessionIdWiki =
   "https://github.com/Stickymaddness/Procurement/wiki/SessionID";
 
 export const reportIssue =
