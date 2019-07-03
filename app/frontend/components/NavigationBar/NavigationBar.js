@@ -3,6 +3,7 @@ import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import NavigationBarItem from "./NavigationBarItem/NavigationBarItem";
+import VersionDisplayer from "./VersionDisplayer/VersionDisplayer";
 import { routes } from "../../resources/Routes/Routes";
 import { useNavigationBarStyles } from "./NavigationBar.style";
 
@@ -10,13 +11,9 @@ const navigationBar = () => {
   const classes = useNavigationBarStyles();
 
   return (
-    <Container maxWidth="sm">
+    <Container>
       <Paper className={classes.container}>
-        <Breadcrumbs
-          className={classes.test}
-          separator=""
-          aria-label="Breadcrumb"
-        >
+        <Breadcrumbs separator="" aria-label="Breadcrumb">
           {routes.map(route => (
             <NavigationBarItem
               style={{ justifyContent: "center" }}
@@ -26,6 +23,7 @@ const navigationBar = () => {
             />
           ))}
         </Breadcrumbs>
+        <VersionDisplayer />
       </Paper>
     </Container>
   );
