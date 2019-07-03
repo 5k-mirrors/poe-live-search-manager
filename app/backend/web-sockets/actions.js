@@ -31,7 +31,9 @@ const setupMessageListener = id => {
               .schedule({ id: uniqueIdGenerator() }, () => {
                 const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
 
-                clipboard.writeText(whisperMessage);
+                if (poeTrade.copyWhisperIsEnabled()) {
+                  clipboard.writeText(whisperMessage);
+                }
 
                 poeTrade.notifyUser(ws.name, whisperMessage);
               })
