@@ -1,10 +1,13 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 export const useClipboardStyles = makeStyles(theme => ({
+  root: {
+    marginLeft: -12
+  },
   switchBase: {
     "&$checked": {
       "& + $track": {
-        backgroundColor: "#f2ff00",
+        backgroundColor: "#1976d2",
         opacity: 1
       }
     }
