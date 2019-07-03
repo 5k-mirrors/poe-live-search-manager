@@ -1,20 +1,18 @@
 import React from "react";
-import { shell } from "electron";
 import IconButton from "@material-ui/core/IconButton";
 import HelpOutline from "@material-ui/icons/HelpOutline";
+import * as electronUtils from "../../../../../../utils/ElectronUtils/ElectronUtils";
+import * as baseUrls from "../../../../../../../resources/BaseUrls/BaseUrls";
 import { useInfoButtonStyles } from "./InfoButton.style";
 
 const infoButton = () => {
   const classes = useInfoButtonStyles();
 
-  function onInfoButtonClick() {
-    shell.openExternal(
-      "https://github.com/Stickymaddness/Procurement/wiki/SessionID"
-    );
-  }
-
   return (
-    <IconButton className={classes.iconButton} onClick={onInfoButtonClick}>
+    <IconButton
+      className={classes.iconButton}
+      onClick={() => electronUtils.openExternalUrl(baseUrls.sessionId)}
+    >
       <HelpOutline className={classes.helpIcon} />
     </IconButton>
   );

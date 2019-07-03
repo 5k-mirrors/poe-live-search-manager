@@ -7,9 +7,6 @@ export const useNavigationBarStyles = makeStyles({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    marginBottom: 15,
-    "& ol": {
-      justifyContent: "center"
-    }
+    marginBottom: 15
   }
 });

@@ -1,6 +1,6 @@
 export const routes = [
-  { displayName: "Trade", routePath: "/trade" },
-  { displayName: "Searches", routePath: "/input" },
-  { displayName: "Account", routePath: "/account" },
-  { displayName: "Settings", routePath: "/settings" }
+  { displayName: "Trade", path: "/trade" },
+  { displayName: "Searches", path: "/input" },
+  { displayName: "Account", path: "/account" },
+  { displayName: "Settings", path: "/settings" }
 ];
