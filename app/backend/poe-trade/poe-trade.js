@@ -12,6 +12,12 @@ export const getCookies = () => {
   return `POESESSID=${poeSessionId}`;
 };
 
+export const copyWhisperIsEnabled = () => {
+  const copyWhisper = globalStore.get(storeKeys.COPY_WHISPER, true);
+
+  return copyWhisper;
+};
+
 export const fetchItemDetails = id => {
   const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
