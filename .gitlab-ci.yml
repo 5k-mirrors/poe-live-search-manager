@@ -8,28 +8,13 @@ cache:
 # https://gist.github.com/ChugunovRoman/bbcaaa47492c24e0f2b5320a9a54f930.
 stages:
   - build
-  - deploy
-
-pages:
-  stage: deploy
-  script:
-    - mkdir .public
-    - cp -r packages/app/desktop/build/installers/* .public
-    - mv .public public
-  dependencies:
-    - build
-  artifacts:
-    paths:
-      - public/*.exe
 
 build:
-  image: 4tqrgqe5yrgfd/electron
   stage: build
-  script:
-    - cd packages/app/desktop/
+  scripts:
     - yarn install
-    - yarn package:win
+    - yarn package-win
   artifacts:
-    expire_in: 1 day
     paths:
-      - packages/app/desktop/build/installers/*.exe
+      - release/*.exe
+      - release/*.msi
