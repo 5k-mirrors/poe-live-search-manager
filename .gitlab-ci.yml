@@ -9,6 +9,7 @@ stages:
 
 build:
   stage: build
+  image: electronuserland/builder:wine
   script:
     - yarn install
     - yarn package-win
