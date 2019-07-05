@@ -4,14 +4,12 @@ cache:
   paths:
     - node_modules/
 
-# Testing artifacts.
-# https://gist.github.com/ChugunovRoman/bbcaaa47492c24e0f2b5320a9a54f930.
 stages:
   - build
 
 build:
   stage: build
-  scripts:
+  script:
     - yarn install
     - yarn package-win
   artifacts:
