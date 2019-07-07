@@ -54,5 +54,3 @@ build:
     paths:
       - release/*.exe
       - release/*.msi
-  only:
-    - master
