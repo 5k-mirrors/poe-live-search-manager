@@ -15,6 +15,7 @@ import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
 import initializeProject from "./initialize-project/initialize-project";
+import { build } from "../../package.json";
 
 export default class AppUpdater {
   constructor() {
@@ -60,6 +61,9 @@ app.on("window-all-closed", () => {
   }
 });
 
+// https://stackoverflow.com/a/52195400/9599137 -> in order to make the notification messages work on Windows.
+app.setAppUserModelId(build.appId);
+
 app.on("ready", async () => {
   if (
     process.env.NODE_ENV === "development" ||
@@ -79,9 +83,6 @@ app.on("ready", async () => {
   } else {
     mainWindow.loadURL(`file://${__dirname}/app.html`);
   }
-
-  // https://stackoverflow.com/a/52195400/9599137 -> in order to make the notification messages work on Windows.
-  app.setAppUserModelId("com.5k-mirrors.poe-sniper");
 
   // @TODO: Use 'ready-to-show' event
   // https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event

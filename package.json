@@ -82,7 +82,7 @@
     },
     "win": {
       "target": [
-        "portable"
+        "nsis"
       ]
     },
     "linux": {
