@@ -49,8 +49,7 @@ build:
   image: electronuserland/builder:wine
   script:
     - yarn install
-    - yarn package-all
+    - yarn package-win
   artifacts:
     paths:
-      - release/*.dmg
       - release/*.exe
