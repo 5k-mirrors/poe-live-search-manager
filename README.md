@@ -50,7 +50,7 @@ Extract it (preferably into it's own folder). Inside the folder you will find 3 
 
 [`example_input.yaml`](./artifacts/example_input.yaml) contains links to the searches you want to be notified about and a custom name for each search. If you're unsure about the [YAML format]((https://learn.getgrav.org/advanced/yaml)) just follow the example. Assuming the linked example you will receive notifications like: `New Tabula on Standard listed. ~b/o 10 chaos`. If you prefer, you can remove a trade site entirely.
 
-[`config.yaml`](./artifacts/config.yaml) contains Poe::Sniper's configuration such as how long the notifications should last, where the input file is located, etc. Most notably, in order to use [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) you neeed to specify: `session_id` ([instructions on where to find it](https://github.com/Stickymaddness/Procurement/wiki/SessionID)), `user_email` and `user_password` (you received these if participating in the beta).
+[`config.yaml`](./artifacts/config.yaml) contains Poe::Sniper's configuration such as how long the notifications should last, where the input file is located, etc. Most notably, in order to use [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) you neeed to specify: `session_id` ([instructions on where to find it](https://github.com/Stickymaddness/Procurement/wiki/SessionID)), `user_email` and `user_password` (you received these if participating in the beta). *Note: these are not your PoE credentials, you should never give those out to a third party.*
 
 Modify `config.yaml` and `example_input.yaml` according to your needs.
 
