@@ -18,5 +18,6 @@ yarn dev
 - notifications(item name + b/o)
 - notifications interval(customizable)
 - test notifications
-- query subscription details
+- query/refresh subscription details
 - copy whisper messages to clipboard(customizable)
+- open external URLs in the default browser
