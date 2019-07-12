@@ -2,7 +2,7 @@ import firebase from "firebase";
 import "firebase/auth";
 
 export const connection = {
-  apiKey: process.env.API_KEY
+  apiKey: process.env.FIREBASE_API_KEY
 };
 
 export const ui = {
