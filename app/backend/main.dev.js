@@ -16,6 +16,10 @@ import log from "electron-log";
 import MenuBuilder from "./menu";
 import initializeProject from "./initialize-project/initialize-project";
 
+// https://stackoverflow.com/a/52195400/9599137, https://www.electron.build/configuration/nsis#guid-vs-application-name
+// => Windows 8/8.1 and 10 notifications.
+app.setAppUserModelId("com.5k-mirrors.poe-sniper");
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = "info";
@@ -79,9 +83,6 @@ app.on("ready", async () => {
   } else {
     mainWindow.loadURL(`file://${__dirname}/app.html`);
   }
-
-  // https://stackoverflow.com/a/52195400/9599137 -> in order to make the notification messages work on Windows.
-  app.setAppUserModelId("com.5k-mirrors.poe-sniper");
 
   // @TODO: Use 'ready-to-show' event
   // https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event

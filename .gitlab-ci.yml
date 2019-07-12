@@ -8,6 +8,7 @@ stages:
   - test
   - lint
   - code_quality
+  - build
 
 test:
   stage: test
@@ -42,3 +43,13 @@ code_quality:
   artifacts:
     reports:
       codequality: gl-code-quality-report.json
+
+build:
+  stage: build
+  image: electronuserland/builder:wine
+  script:
+    - yarn install
+    - yarn package-win
+  artifacts:
+    paths:
+      - release/*.exe
