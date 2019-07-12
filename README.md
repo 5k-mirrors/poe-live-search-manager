@@ -12,11 +12,11 @@ yarn dev
 ## Features
 
 - conditional socket connections
+- single/all socket reconnections
 - data persistence
 - route restrictions
-- single/all socket reconnections
 - notifications(item name + b/o)
 - notifications interval(customizable)
-- test noficications
+- test notifications
 - query subscription details
-- whisper message copying(customizable)
+- copy whisper messages to clipboard(customizable)
