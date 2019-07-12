@@ -13,7 +13,7 @@ yarn dev
 
 - conditional socket connections
 - single/all socket reconnections
-- data persistence
+- data persistence(between both app restarts & logouts, except the session id)
 - route restrictions
 - notifications(item name + b/o)
 - notifications interval(customizable)
