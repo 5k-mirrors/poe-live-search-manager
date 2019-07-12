@@ -15,7 +15,10 @@ import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
 import initializeProject from "./initialize-project/initialize-project";
-import { build } from "../../package.json";
+
+// https://stackoverflow.com/a/52195400/9599137, https://www.electron.build/configuration/nsis#guid-vs-application-name
+// => Windows 8/8.1 and 10 notifications.
+app.setAppUserModelId("com.5k-mirrors.poe-sniper");
 
 export default class AppUpdater {
   constructor() {
@@ -60,9 +63,6 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
-
-// https://stackoverflow.com/a/52195400/9599137 -> in order to make the notification messages work on Windows.
-app.setAppUserModelId(build.appId);
 
 app.on("ready", async () => {
   if (

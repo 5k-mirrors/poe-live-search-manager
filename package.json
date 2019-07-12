@@ -82,8 +82,15 @@
     },
     "win": {
       "target": [
-        "nsis"
+        "nsis",
+        "portable"
       ]
+    },
+    "nsis": {
+      "artifactName": "poe-sniper-v${version}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "poe-sniper-v${version}-dev-standalone.${ext}"
     },
     "linux": {
       "target": [
