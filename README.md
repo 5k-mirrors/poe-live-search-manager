@@ -3,7 +3,7 @@
 ## Development
 
 - Include the Firebase API key in the `.env` file as described in the [example](./.env.example).
-- Set up notifications (if on Widnows): https://electronjs.org/docs/tutorial/notifications#windows
+- Set up notifications (if on Windows): https://electronjs.org/docs/tutorial/notifications#windows
 
 ```bash
 yarn install
