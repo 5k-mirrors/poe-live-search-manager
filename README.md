@@ -25,7 +25,7 @@ As a user, I can login, so that my subscription is recognized and can access gat
   - send a test notification
   - turn on/off automatic whisper message copying
 
-As a user, my settings are stored locally, so that I don't have to set them again
+As a user, my settings are stored locally, so that I do not have to set them again
 
 - when the user logs in, its previously stored settings are reloaded from the local storage
 - when logged out user restarts the application, its input searches are reloaded
@@ -44,7 +44,7 @@ As a user, I can add a new search, so that I get notified for items matched by t
 - when logged in user adds a new row to the input table with valid content, socket connection happens
 - when socket connection happens, the connection state is indicated in that row
 
-As a user, I can delete searches, so that I don't get notified for items matched by that search
+As a user, I can delete searches, so that I do not get notified for items matched by that search
 
 - when logged out user removes a search from the input table, the row is deleted
 - when logged in user removes a disconnected search from the input table, the row is deleted
