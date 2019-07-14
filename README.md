@@ -44,13 +44,13 @@ As a user, I can add a new search, so that I get notified for items matched by t
 - when logged in user adds a new row to the input table with valid content, socket connection happens
 - when socket connection happens, the connection state is indicated in that row
 
-As a user, I can reconnect to my searches, so that reinitialize my connections
-
-- when the user reconnects to a single socket, the socket is disconnected and it connects after one sec
-- when the user reconnects to all sockets, the sockets are disconnected they connect after one sec
-
 As a user, I can delete searches, so that I don't get notified for items matched by that search
 
 - when logged out user removes a search from the input table, the row is deleted
 - when logged in user removes a disconnected search from the input table, the row is deleted
 - when logged in user removes a connected search from the input table, the socket is disconnected and the row is deleted
+
+As a user, I can reconnect to my searches, so that reinitialize my connections
+
+- when the user reconnects to a single socket, the socket is disconnected and it connects after one sec
+- when the user reconnects to all sockets, the sockets are disconnected they connect after one sec
