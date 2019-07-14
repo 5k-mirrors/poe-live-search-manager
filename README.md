@@ -52,5 +52,5 @@ As a user, I can delete searches, so that I do not get notified for items matche
 
 As a user, I can reconnect to my searches, so that reinitialize my connections
 
-- when the user reconnects to a disconnected socket, it executes the connection after 500ms
-- when the user reconnects to a connected socket, the socket is disconnected and it executes the connection after 500ms
+- when the user reconnects to a disconnected socket, it executes the connection after 500ms delay
+- when the user reconnects to a connected socket, the socket is disconnected and it executes the connection after 500ms delay
