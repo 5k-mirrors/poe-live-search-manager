@@ -14,7 +14,7 @@ yarn dev
 
 See #42.
 
-Windows notification do not appear in the case of the standalone version.
+Windows notifications do not appear in the case of the standalone version.
 
 We have submitted an issue to the _electron-builder_ repository:
 
