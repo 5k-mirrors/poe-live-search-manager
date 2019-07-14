@@ -36,7 +36,7 @@ As a user, my settings are stored locally, so that I do not have to set them aga
 As a user, I can add a new search, so that I get notified for items matched by that search
 
 - when the user tries to add a new row to the input table with wrong URL:
-  - the save button does not react,
+  - the save button does not react
   - a red line indicates it
 - when logged out user adds a new row to the input table, socket connection does not happen
 - when logged in user adds a new row to the input table without active subscription, socket connection does not happen
@@ -52,5 +52,5 @@ As a user, I can delete searches, so that I do not get notified for items matche
 
 As a user, I can reconnect to my searches, so that reinitialize my connections
 
-- when the user reconnects to a single socket, the socket is disconnected and it connects after one sec
-- when the user reconnects to all sockets, the sockets are disconnected they connect after one sec
+- when the user reconnects to a disconnected socket, it connects after one sec
+- when the user reconnects to a connected socket, the socket is disconnected and it connects after one sec
