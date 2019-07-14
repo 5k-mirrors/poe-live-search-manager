@@ -14,7 +14,7 @@ yarn dev
 
 As a user, I can login, so that my subscription is recognized and can access gated content
 
-- when logged out user visits either the trade, account or settings screen, it is redirected to the login screen
+- when logged out user visits either the trade or settings screen, it is redirected to the login screen
 - when logged out user visits the input screen, it can see its searches
 - when logged in user visits the account screen, it:
   - has access to its session id
