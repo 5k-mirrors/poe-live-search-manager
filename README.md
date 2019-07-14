@@ -2,15 +2,20 @@
 
 ## Development
 
-- Include the project's Firebase API key in the `.env` file.
-- Set up notifications (if on Widnows): https://electronjs.org/docs/tutorial/notifications#windows
+- Include the Firebase API key in the `.env` file as described in the [example](./.env.example).
+- Set up notifications (if on Windows): https://electronjs.org/docs/tutorial/notifications#windows
 
 ```bash
 yarn install
 yarn dev
 ```
 
-The portable version doesn't support notifications on Windows. References:
+## Portable version - Windows notifications issue
 
-- https://github.com/electron/electron/issues/10864#issuecomment-494773594
-- https://gitlab.com/c-hive/poe-sniper-electron/issues/35
+See #42.
+
+Windows notification do not appear in the case of the standalone version.
+
+We have submitted an issue to the _electron-builder_ repository:
+
+- https://github.com/electron-userland/electron-builder/issues/4054
