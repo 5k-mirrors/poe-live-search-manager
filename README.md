@@ -55,7 +55,7 @@ As a user, I can delete searches, so that I do not get notified for items matche
   - the socket is disconnected
   - the row is deleted
   - whisper messages do not alter clipboard
-  - no longer shows OS notifications
+  - it no longer shows OS notifications
 
 As a user, I can reconnect to my searches, so that reinitialize my connections
 
