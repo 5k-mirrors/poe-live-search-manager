@@ -13,7 +13,7 @@
     "lint": "eslint app",
     "package": "cross-env NODE_ENV=production npm run build && electron-builder",
     "package:all": "cross-env NODE_ENV=production npm run build && electron-builder --mwl",
-    "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64",
+    "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish never",
     "package:mac": "cross-env NODE_ENV=production npm run build && electron-builder build --mac",
     "package:linux": "cross-env NODE_ENV=production npm run build && electron-builder build --linux",
     "prettify": "prettier --write app/**/*.js",
