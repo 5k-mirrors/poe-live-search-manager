@@ -1,7 +1,7 @@
 image: node:8
 
 before_script:
-  - echo $FIREBASE_API_KEY >> .env
+  - echo "FIREBASE_API_KEY=$FIREBASE_API_KEY" >> .env
 
 cache:
   paths:
