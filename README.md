@@ -10,6 +10,12 @@ yarn install
 yarn dev
 ```
 
+## Portable version - Windows notifications issue
+
+See #42. Additionally, an issue has been submitted to the _electron-builder_ repository:
+
+- https://github.com/electron-userland/electron-builder/issues/4054
+
 ## QA
 
 As a user, I can login, so that my subscription is recognized and can access gated content
