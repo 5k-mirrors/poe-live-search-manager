@@ -50,7 +50,7 @@ As a user, I can add a new search, so that I get notified for items matched by t
 - when logged in user adds a new row to the input table with valid content:
   - socket connection happens
   - whisper messages alter clipboard
-  - shows OS notifications in sequence
+  - it shows OS notifications in sequence
 - when socket connection happens, the connection state is indicated in that row
 
 As a user, I can delete searches, so that I do not get notified for items matched by that search
