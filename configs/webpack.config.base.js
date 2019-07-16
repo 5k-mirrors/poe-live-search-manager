@@ -44,6 +44,13 @@ export default {
     }),
 
     new webpack.NamedModulesPlugin(),
-    new DotEnv()
+    process.env.CI
+      ? // eslint-disable-next-line no-console
+        (console.log("[CI building]"),
+        new webpack.DefinePlugin({
+          "process.env.FIREBASE_API_KEY": process.env.FIREBASE_API_KEY
+        }))
+      : // eslint-disable-next-line no-console
+        (console.log("[NO CI building]"), new DotEnv())
   ]
 };
