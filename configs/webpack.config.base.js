@@ -46,6 +46,7 @@ export default {
     new webpack.NamedModulesPlugin(),
     // https://github.com/mrsteele/dotenv-webpack#properties
     new DotEnv({
+      safe: true,
       systemvars: !!process.env.CI
     })
   ]
