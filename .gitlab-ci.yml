@@ -1,5 +1,8 @@
 image: node:8
 
+before_script:
+  - echo "FIREBASE_API_KEY=$FIREBASE_API_KEY" >> .env
+
 cache:
   paths:
     - node_modules/
@@ -43,7 +46,6 @@ code_quality:
   artifacts:
     reports:
       codequality: gl-code-quality-report.json
-
 
 build:
   stage: build
