@@ -13,6 +13,7 @@ module.exports = {
     ],
   },
   plugins: [
+    // https://github.com/mrsteele/dotenv-webpack#properties
     new DotEnv({
       safe: true,
       systemvars: true,
