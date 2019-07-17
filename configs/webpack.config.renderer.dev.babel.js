@@ -12,7 +12,6 @@ import fs from "fs";
 import webpack from "webpack";
 import chalk from "chalk";
 import merge from "webpack-merge";
-import DotEnv from "dotenv-webpack";
 import { spawn, execSync } from "child_process";
 import baseConfig from "./webpack.config.base";
 import CheckNodeEnv from "../internals/scripts/CheckNodeEnv";
@@ -211,8 +210,6 @@ export default merge.smart(baseConfig, {
     }),
 
     new webpack.NoEmitOnErrorsPlugin(),
-
-    new DotEnv(),
 
     /**
      * Create global constants which can be configured at compile time.
