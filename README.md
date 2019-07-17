@@ -71,3 +71,4 @@ As a user, I can reconnect to my searches, so that reinitialize my connections
 
 - when the user clicks the reconnect button for a disconnected socket, it connects
 - when the user clicks the reconnect button for a connected socket, it disconnects and then connects, which is visible to the user
+- when the user reconnects to all of its sockets, the single socket reconnection is disabled
