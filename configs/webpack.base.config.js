@@ -1,4 +1,12 @@
+const webpack = require("webpack");
 const DotEnv = require("dotenv-webpack");
+
+// https://stackoverflow.com/a/38401256/9599137
+const revision = require("child_process")
+  .execSync(
+    "git describe --tags --exact-match 2> /dev/null || git describe --always"
+  )
+  .toString();
 
 module.exports = {
   module: {
@@ -17,6 +25,9 @@ module.exports = {
     new DotEnv({
       safe: true,
       systemvars: true,
+    }),
+    new webpack.DefinePlugin({
+      "process.env.REVISION": JSON.stringify(revision),
     }),
   ],
   resolve: {
