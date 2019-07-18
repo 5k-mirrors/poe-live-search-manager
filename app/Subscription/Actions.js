@@ -1,5 +1,5 @@
 import subscription from "./Subscription";
-import * as webSocketActions from "../backend/web-sockets/actions";
+import * as webSocketActions from "../main/web-sockets/actions";
 
 let refreshInterval;
 

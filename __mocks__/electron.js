@@ -2,5 +2,5 @@
 export const ipcRenderer = {
   send: jest.fn(),
   sendSync: jest.fn().mockImplementation(() => []),
-  on: jest.fn()
+  on: jest.fn(),
 };

@@ -49,7 +49,7 @@ build:
   image: electronuserland/builder:wine
   script:
     - yarn install
-    - yarn package-win
+    - yarn package:win
   artifacts:
     paths:
       - release/*.exe

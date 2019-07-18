@@ -5,7 +5,7 @@ import * as baseUrls from "../resources/BaseUrls/BaseUrls";
 class Subscription {
   constructor() {
     this.data = {
-      paying: false
+      paying: false,
     };
   }
 
@@ -18,7 +18,7 @@ class Subscription {
   update(updatedData) {
     this.data = {
       ...this.data,
-      ...updatedData
+      ...updatedData,
     };
   }
 
