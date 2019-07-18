@@ -1,6 +1,14 @@
 const path = require("path");
+const webpack = require("webpack");
 const merge = require("webpack-merge");
 const { spawn } = require("child_process");
+
+const revision = require("child_process")
+  .execSync(
+    "git describe --tags --exact-match 2> /dev/null || git describe --always"
+  )
+  .toString();
+
 const baseWebpackConfigurations = require("./webpack.base.config");
 
 const port = process.env.PORT || 3001;
@@ -32,6 +40,11 @@ module.exports = merge(baseWebpackConfigurations, {
     ],
   },
   target: "electron-renderer",
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env.REVISION": JSON.stringify(revision),
+    }),
+  ],
   devServer: {
     port,
     publicPath: `http://localhost:${port}/dist`,
