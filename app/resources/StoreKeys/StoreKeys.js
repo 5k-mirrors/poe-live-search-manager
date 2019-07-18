@@ -4,5 +4,5 @@ export const storeKeys = {
   TRADE_MESSAGES: "tradeMessages",
   WS_CONNECTIONS: "wsConnections",
   NOTIFICATIONS_INTERVAL: "notificationsInterval",
-  COPY_WHISPER: "copyWhisper"
+  COPY_WHISPER: "copyWhisper",
 };
