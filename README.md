@@ -6,14 +6,14 @@ Supported trade sites:
 - [poe.trade](https://poe.trade/)
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) (currently in closed beta)
 
-*Important notice: We're currently revamping this project, making `pathofexile.com/trade` support available to everyone. This repository will host the new app as soon as it's ready. If you'd like to get notified, write me a mail at `git.thisismydesign@gmail.com`.*
+*Important notice: We're currently revamping this project, making `pathofexile.com/trade` support available to everyone. This repository will host the new app as soon as it's ready. If you'd like to get notified, write us a message at `git.thisismydesign@gmail.com`.*
 
 *You are viewing the README of version [v0.6.0](https://github.com/thisismydesign/poe-sniper/releases/tag/v0.6.0). You can find other releases [here](https://github.com/thisismydesign/poe-sniper/releases).*
 
 | Branch | Status |
 | ------ | ------ |
-| Release | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=release)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Build status](https://ci.appveyor.com/api/projects/status/7ft4qq0exr0nkr40/branch/master?svg=true)](https://ci.appveyor.com/project/thisismydesign/poe-sniper/branch/release)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=release)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=release) |
-| Development | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=master)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Build status](https://ci.appveyor.com/api/projects/status/7ft4qq0exr0nkr40/branch/master?svg=true)](https://ci.appveyor.com/project/thisismydesign/poe-sniper/branch/master)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=master)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=master)   [![Depfu](https://badges.depfu.com/badges/3e6a8a1eae324ce15a5e0f4d3dd81857/overview.svg)](https://depfu.com/github/thisismydesign/poe-sniper) |
+| Release | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=release)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Build status](https://ci.appveyor.com/api/projects/status/e4h2eyfuv5sl8ijt/branch/master?svg=true)](https://ci.appveyor.com/project/thisismydesign/poe-sniper-imtaj/branch/release)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=release)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=release) |
+| Development | [![Build Status](https://travis-ci.org/thisismydesign/poe-sniper.svg?branch=master)](https://travis-ci.org/thisismydesign/poe-sniper/branches)   [![Build status](https://ci.appveyor.com/api/projects/status/e4h2eyfuv5sl8ijt/branch/master?svg=true)](https://ci.appveyor.com/project/thisismydesign/poe-sniper-imtaj/branch/master)   [![Coverage Status](https://coveralls.io/repos/github/thisismydesign/poe-sniper/badge.svg?branch=master)](https://coveralls.io/github/thisismydesign/poe-sniper?branch=master)   [![Depfu](https://badges.depfu.com/badges/3e6a8a1eae324ce15a5e0f4d3dd81857/overview.svg)](https://depfu.com/github/thisismydesign/poe-sniper) |
 
 ## How does it work
 
