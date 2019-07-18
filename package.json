@@ -99,6 +99,7 @@
     ],
     "win": {
       "target": [
+        "nsis",
         "portable"
       ]
     },
