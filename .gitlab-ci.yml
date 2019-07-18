@@ -1,8 +1,5 @@
 image: node:8
 
-before_script:
-  - export REVISION='git describe --tags --exact-match 2> /dev/null || git describe --always'
-
 cache:
   paths:
     - node_modules/
@@ -12,6 +9,8 @@ stages:
 
 build:
   stage: build
+  variables:
+    - REVISION: "$(git describe --tags --exact-match 2> /dev/null || git describe --always)"
   image: electronuserland/builder:wine
   script:
     - echo $REVISION
