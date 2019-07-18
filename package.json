@@ -104,10 +104,10 @@
       ]
     },
     "nsis": {
-      "artifactName": "poe-sniper-v${version}-${env.REVISION}-setup.${ext}"
+      "artifactName": "poe-sniper-${env.REVISION}-setup.${ext}"
     },
     "portable": {
-      "artifactName": "poe-sniper-v${version}-${env.REVISION}-dev-standalone.${ext}"
+      "artifactName": "poe-sniper-${env.REVISION}-dev-standalone.${ext}"
     },
     "directories": {
       "output": "release"
