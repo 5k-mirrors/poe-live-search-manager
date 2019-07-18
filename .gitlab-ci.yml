@@ -5,44 +5,7 @@ cache:
     - node_modules/
 
 stages:
-  - test
-  - lint
-  - code_quality
   - build
-
-test:
-  stage: test
-  script:
-    - yarn install
-    - yarn test:coverage
-
-  # https://gitlab.com/gitlab-org/gitlab-ce/issues/29642
-  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
-
-lint:
-  stage: lint
-  script:
-    - yarn install
-    - yarn lint
-
-code_quality:
-  stage: code_quality
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-  allow_failure: true
-  services:
-    - docker:stable-dind
-  script:
-    - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-    - docker run
-      --env SOURCE_CODE="$PWD"
-      --volume "$PWD":/code
-      --volume /var/run/docker.sock:/var/run/docker.sock
-      "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
-  artifacts:
-    reports:
-      codequality: gl-code-quality-report.json
 
 build:
   stage: build

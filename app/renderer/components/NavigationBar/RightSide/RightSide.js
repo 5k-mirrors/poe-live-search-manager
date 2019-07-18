@@ -9,9 +9,11 @@ import { useRightSideStyles } from "./RightSide.style";
 // https://stackoverflow.com/a/36733261/9599137
 import { version } from "../../../../../package.json";
 
+const isDev = process.env.NODE_ENV === "development";
+
 const rightSide = () => {
   const classes = useRightSideStyles();
-  const versionNumber = `v${version}`;
+  const versionNumber = isDev ? `v${version}` : process.env.REVISION;
 
   return (
     <Box display="flex" alignItems="center" className={classes.root}>
