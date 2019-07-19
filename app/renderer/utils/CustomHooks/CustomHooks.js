@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 
 export const useGenericFetch = (fetchFunction, ...args) => {
@@ -10,6 +9,7 @@ export const useGenericFetch = (fetchFunction, ...args) => {
   };
 
   const [data, setData] = useState(defaultState);
+  const isMounted = useRef(true);
 
   async function fetchData() {
     setData({
@@ -20,24 +20,32 @@ export const useGenericFetch = (fetchFunction, ...args) => {
     try {
       const fetchedData = await fetchFunction(...args);
 
-      setData({
-        ...defaultState,
-        data: fetchedData,
-        isLoading: false,
-        err: false,
-      });
+      if (isMounted.current) {
+        setData({
+          ...defaultState,
+          data: fetchedData,
+          isLoading: false,
+          err: false,
+        });
+      }
     } catch (e) {
-      setData({
-        ...defaultState,
-        data: null,
-        isLoading: false,
-        err: true,
-      });
+      if (isMounted.current) {
+        setData({
+          ...defaultState,
+          data: null,
+          isLoading: false,
+          err: true,
+        });
+      }
     }
   }
 
   useEffect(() => {
     fetchData();
+
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   return [data, fetchData];
@@ -60,6 +68,7 @@ export const useStoreListener = storeKey => {
 };
 
 export const useDisable = seconds => {
+  const timeoutId = useRef();
   const [isDisabled, setIsDisabled] = useState(false);
 
   function disable() {
@@ -67,10 +76,12 @@ export const useDisable = seconds => {
 
     const oneSecondInMilliseconds = 1000;
 
-    setTimeout(() => {
+    timeoutId.current = setTimeout(() => {
       setIsDisabled(previousIsDisabled => !previousIsDisabled);
     }, seconds * oneSecondInMilliseconds);
   }
+
+  useEffect(() => () => clearTimeout(timeoutId.current), []);
 
   return [isDisabled, disable];
 };
