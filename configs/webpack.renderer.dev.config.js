@@ -1,13 +1,18 @@
 const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
+const os = require("os");
 const { spawn } = require("child_process");
 
-const revision = require("child_process")
-  .execSync(
-    "git describe --tags --exact-match 2> /dev/null || git describe --always"
-  )
-  .toString();
+const platformIsWindows = os.platform() === "win32";
+
+const revision = platformIsWindows
+  ? "Windows"
+  : require("child_process")
+      .execSync(
+        "git describe --tags --exact-match 2> /dev/null || git describe --always"
+      )
+      .toString();
 
 const baseWebpackConfigurations = require("./webpack.base.config");
 
