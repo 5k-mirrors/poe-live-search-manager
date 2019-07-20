@@ -7,7 +7,7 @@ const { spawn } = require("child_process");
 const platformIsWindows = os.platform() === "win32";
 
 const revision = platformIsWindows
-  ? "Windows"
+  ? "revision not supported on win dev"
   : require("child_process")
       .execSync(
         "git describe --tags --exact-match 2> /dev/null || git describe --always"
