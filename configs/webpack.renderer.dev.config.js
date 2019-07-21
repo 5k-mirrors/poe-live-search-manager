@@ -1,6 +1,19 @@
 const path = require("path");
+const webpack = require("webpack");
 const merge = require("webpack-merge");
+const os = require("os");
 const { spawn } = require("child_process");
+
+const platformIsWindows = os.platform() === "win32";
+
+const revision = platformIsWindows
+  ? "revision not supported on win dev"
+  : require("child_process")
+      .execSync(
+        "git describe --tags --exact-match 2> /dev/null || git describe --always"
+      )
+      .toString();
+
 const baseWebpackConfigurations = require("./webpack.base.config");
 
 const port = process.env.PORT || 3001;
@@ -32,6 +45,11 @@ module.exports = merge(baseWebpackConfigurations, {
     ],
   },
   target: "electron-renderer",
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env.REVISION": JSON.stringify(revision),
+    }),
+  ],
   devServer: {
     port,
     publicPath: `http://localhost:${port}/dist`,
