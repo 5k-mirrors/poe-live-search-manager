@@ -14,6 +14,12 @@ let win;
 // => Windows 8/8.1 and 10 notifications.
 app.setAppUserModelId("com.5k-mirrors.poe-sniper");
 
+autoUpdater.setFeedURL({
+  provider: "github",
+  owner: "5k-mirrors",
+  repo: "poe-sniper",
+});
+
 const setupDevelopmentWorkflow = async () => {
   require("electron-debug")();
 
