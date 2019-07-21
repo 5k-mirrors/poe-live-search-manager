@@ -2,12 +2,16 @@ import React from "react";
 import Box from "@material-ui/core/Box";
 import Typograpghy from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import ReactTooltip from "react-tooltip";
 import * as electronUtils from "../../../utils/ElectronUtils/ElectronUtils";
 import * as baseUrls from "../../../../resources/BaseUrls/BaseUrls";
+import * as regExes from "../../../../resources/RegExes/RegExes";
 import { useRightSideStyles } from "./RightSide.style";
-
-// https://stackoverflow.com/a/36733261/9599137
 import { version } from "../../../../../package.json";
+
+const displayRevisionTooltip = !regExes.semanticVersionNumberMatcher.test(
+  process.env.REVISION
+);
 
 const rightSide = () => {
   const classes = useRightSideStyles();
@@ -15,7 +19,14 @@ const rightSide = () => {
 
   return (
     <Box display="flex" alignItems="center" className={classes.root}>
-      <Typograpghy variant="subtitle2">{versionNumber}</Typograpghy>
+      <Typograpghy data-tip variant="subtitle2">
+        {versionNumber}
+      </Typograpghy>
+      {displayRevisionTooltip ? (
+        <ReactTooltip place="bottom" type="info">
+          {process.env.REVISION}
+        </ReactTooltip>
+      ) : null}
       <Button
         className={classes.button}
         onClick={() => electronUtils.openExternalUrl(baseUrls.reportIssue)}
