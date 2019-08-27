@@ -5,13 +5,10 @@ cache:
     - node_modules/
 
 stages:
-  - test
-  - lint
-  - code_quality
-  - build
+  - verify
 
 test:
-  stage: test
+  stage: verify
   script:
     - yarn install
     - yarn test:coverage
@@ -20,13 +17,13 @@ test:
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 
 lint:
-  stage: lint
+  stage: verify
   script:
     - yarn install
     - yarn lint
 
-code_quality:
-  stage: code_quality
+code-quality:
+  stage: verify
   image: docker:stable
   variables:
     DOCKER_DRIVER: overlay2
@@ -45,7 +42,7 @@ code_quality:
       codequality: gl-code-quality-report.json
 
 build:
-  stage: build
+  stage: verify
   image: electronuserland/builder:wine
   script:
     - export REVISION="$(git describe --tags --exact-match 2> /dev/null || git describe --always)"
