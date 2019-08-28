@@ -15,7 +15,7 @@ const loggedIn = () => {
       firebaseContext.currentUser.email}`;
   }
 
-  if (firebaseContext.isLoading) {
+  if (firebaseContext.userIsLoading) {
     return <Loader />;
   }
 

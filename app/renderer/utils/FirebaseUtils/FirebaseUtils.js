@@ -2,7 +2,7 @@ import { useContext, createContext } from "react";
 
 const defaultFirebaseContextState = {
   app: null,
-  isLoading: true,
+  userIsLoading: true,
   currentUser: null,
 };
 

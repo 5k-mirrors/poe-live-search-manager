@@ -5,6 +5,7 @@ import { FirebaseContext } from "../../utils/FirebaseUtils/FirebaseUtils";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
+import * as javaScriptUtils from "../../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const Firebase = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -46,8 +47,8 @@ const Firebase = ({ children }) => {
     <FirebaseContext.Provider
       value={{
         app: getApp(),
+        userIsLoading: !javaScriptUtils.isDefined(currentUser),
         currentUser,
-        isLoading: currentUser === null,
       }}
     >
       {children}
