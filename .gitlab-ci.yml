@@ -5,13 +5,11 @@ cache:
     - node_modules/
 
 stages:
-  - test
-  - lint
-  - code_quality
+  - verify
   - build
 
 test:
-  stage: test
+  stage: verify
   script:
     - yarn install
     - yarn test:coverage
@@ -20,13 +18,13 @@ test:
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 
 lint:
-  stage: lint
+  stage: verify
   script:
     - yarn install
     - yarn lint
 
-code_quality:
-  stage: code_quality
+code-quality:
+  stage: verify
   image: docker:stable
   variables:
     DOCKER_DRIVER: overlay2
@@ -44,7 +42,7 @@ code_quality:
     reports:
       codequality: gl-code-quality-report.json
 
-build:
+electron-win-build:
   stage: build
   image: electronuserland/builder:wine
   script:
@@ -54,3 +52,6 @@ build:
   artifacts:
     paths:
       - release/*.exe
+  only:
+    variables:
+      - $BUILD_ELECTRON_WINDOWS_APP
