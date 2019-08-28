@@ -42,7 +42,7 @@ code-quality:
     reports:
       codequality: gl-code-quality-report.json
 
-electron-build:
+electron-win-build:
   stage: build
   image: electronuserland/builder:wine
   script:
@@ -52,3 +52,6 @@ electron-build:
   artifacts:
     paths:
       - release/*.exe
+  only:
+    variables:
+      - $BUILD_ELECTRON_WINDOWS_APP
