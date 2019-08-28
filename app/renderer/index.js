@@ -7,7 +7,6 @@ import * as firebaseUtils from "./utils/FirebaseUtils/FirebaseUtils";
 
 setupIPCEvents();
 
-firebaseUtils.initializeApp();
 firebaseUtils.startAuthObserver();
 
 ReactDOM.render(

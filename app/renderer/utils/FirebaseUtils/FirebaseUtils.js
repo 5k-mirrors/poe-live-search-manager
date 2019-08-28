@@ -1,21 +1,24 @@
-import firebase from "firebase/app";
+import firebase from "firebase";
 import { ipcRenderer } from "electron";
-import * as firebaseConfigs from "../../resources/FirebaseConfigs/FirebaseConfigs";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
 
-export const initializeApp = () => {
+export const getApp = () => {
   // https://stackoverflow.com/a/41005100/9599137
   if (firebase.apps.length) {
     return firebase.apps[0];
   }
 
-  return firebase.initializeApp(firebaseConfigs.connection);
+  return firebase.initializeApp({
+    apiKey: process.env.FIREBASE_API_KEY,
+  });
 };
 
-export const startAuthObserver = () =>
-  firebase.auth().onAuthStateChanged(user => {
+export const startAuthObserver = () => {
+  const firebaseApp = getApp();
+
+  return firebaseApp.auth().onAuthStateChanged(user => {
     const isLoggedIn = !!user;
 
     globalStore.set(storeKeys.IS_LOGGED_IN, isLoggedIn);
@@ -26,3 +29,4 @@ export const startAuthObserver = () =>
       ipcRenderer.send(ipcEvents.USER_LOGOUT);
     }
   });
+};

@@ -1,15 +1,17 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import firebase from "firebase/app";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/SimpleHtmlElements/Button/Button";
+import * as firebaseUtils from "../../../../utils/FirebaseUtils/FirebaseUtils";
 
 const loggedIn = () => {
-  const { currentUser } = firebase.auth();
+  const firebaseApp = firebaseUtils.getApp();
 
-  const welcomeMessage = `Logged in as ${currentUser.displayName ||
+  const { currentUser } = firebaseApp.auth();
+
+  const welcomeMessage = `Loggedd in as ${currentUser.displayName ||
     currentUser.email}`;
 
   return (
@@ -23,7 +25,10 @@ const loggedIn = () => {
         <Typography variant="h6" gutterBottom>
           {welcomeMessage}
         </Typography>
-        <Button clickEvent={() => firebase.auth().signOut()} text="Sign out" />
+        <Button
+          clickEvent={() => firebaseApp.auth().signOut()}
+          text="Sign out"
+        />
       </Box>
       <SessionIdEditor />
       <SubscriptionDetails id={currentUser.uid} />
