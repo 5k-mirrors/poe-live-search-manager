@@ -6,6 +6,7 @@ cache:
 
 stages:
   - verify
+  - build
 
 test:
   stage: verify
@@ -41,8 +42,8 @@ code-quality:
     reports:
       codequality: gl-code-quality-report.json
 
-build:
-  stage: verify
+electron-build:
+  stage: build
   image: electronuserland/builder:wine
   script:
     - export REVISION="$(git describe --tags --exact-match 2> /dev/null || git describe --always)"
