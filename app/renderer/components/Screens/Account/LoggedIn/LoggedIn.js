@@ -4,15 +4,20 @@ import Typography from "@material-ui/core/Typography";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/SimpleHtmlElements/Button/Button";
+import Loader from "../../../UI/Loader/Loader";
 import * as firebaseUtils from "../../../../utils/FirebaseUtils/FirebaseUtils";
 
 const loggedIn = () => {
-  const firebaseApp = firebaseUtils.getApp();
+  const firebaseContext = firebaseUtils.useFirebaseContext();
 
-  const { currentUser } = firebaseApp.auth();
+  function getMessage() {
+    return `Logged in as ${firebaseContext.currentUser.displayName ||
+      firebaseContext.currentUser.email}`;
+  }
 
-  const welcomeMessage = `Loggedd in as ${currentUser.displayName ||
-    currentUser.email}`;
+  if (firebaseContext.isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div>
@@ -23,15 +28,15 @@ const loggedIn = () => {
         justifyContent="space-between"
       >
         <Typography variant="h6" gutterBottom>
-          {welcomeMessage}
+          {getMessage()}
         </Typography>
         <Button
-          clickEvent={() => firebaseApp.auth().signOut()}
+          clickEvent={() => firebaseContext.app.auth().signOut()}
           text="Sign out"
         />
       </Box>
       <SessionIdEditor />
-      <SubscriptionDetails id={currentUser.uid} />
+      <SubscriptionDetails />
     </div>
   );
 };

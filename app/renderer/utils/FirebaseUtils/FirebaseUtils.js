@@ -1,8 +1,17 @@
+import React, { useContext } from "react";
 import firebase from "firebase";
-import { ipcRenderer } from "electron";
-import { globalStore } from "../../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
-import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
+
+const defaultFirebaseContextState = {
+  app: null,
+  isLoading: true,
+  currentUser: null,
+};
+
+export const FirebaseContext = React.createContext({
+  ...defaultFirebaseContextState,
+});
+
+export const useFirebaseContext = () => useContext(FirebaseContext);
 
 export const getApp = () => {
   // https://stackoverflow.com/a/41005100/9599137
@@ -12,21 +21,5 @@ export const getApp = () => {
 
   return firebase.initializeApp({
     apiKey: process.env.FIREBASE_API_KEY,
-  });
-};
-
-export const startAuthObserver = () => {
-  const firebaseApp = getApp();
-
-  return firebaseApp.auth().onAuthStateChanged(user => {
-    const isLoggedIn = !!user;
-
-    globalStore.set(storeKeys.IS_LOGGED_IN, isLoggedIn);
-
-    if (isLoggedIn) {
-      ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid);
-    } else {
-      ipcRenderer.send(ipcEvents.USER_LOGOUT);
-    }
   });
 };

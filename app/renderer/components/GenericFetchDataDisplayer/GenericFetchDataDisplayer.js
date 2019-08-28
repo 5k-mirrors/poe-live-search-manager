@@ -1,14 +1,11 @@
 import React from "react";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { useGenericFetchDataDisplayerStyles } from "./GenericFetchDataDisplayer.style";
+import Loader from "../UI/Loader/Loader";
 
 const genericFetchDataDisplayer = ({ fetchedData, children }) => {
-  const classes = useGenericFetchDataDisplayerStyles();
-
   if (fetchedData.isLoading) {
     return (
       <div>
-        <CircularProgress color="secondary" className={classes.loaderIcon} />
+        <Loader />
       </div>
     );
   }

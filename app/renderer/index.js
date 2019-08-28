@@ -2,16 +2,16 @@ import React from "react";
 import * as ReactDOM from "react-dom";
 import { HashRouter as Router } from "react-router-dom";
 import App from "./containers/App/App";
+import Firebase from "./components/Firebase/Firebase";
 import setupIPCEvents from "./SetupIPCEvents/SetupIPCEvents";
-import * as firebaseUtils from "./utils/FirebaseUtils/FirebaseUtils";
 
 setupIPCEvents();
 
-firebaseUtils.startAuthObserver();
-
 ReactDOM.render(
   <Router>
-    <App />
+    <Firebase>
+      <App />
+    </Firebase>
   </Router>,
   document.getElementById("root")
 );
