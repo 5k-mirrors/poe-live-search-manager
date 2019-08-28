@@ -3,10 +3,10 @@ import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import * as firebaseUtils from "../../../../utils/FirebaseUtils/FirebaseUtils";
 
 const signIn = () => {
-  const firebaseApp = firebaseUtils.getApp();
+  const firebaseContext = firebaseUtils.useFirebaseContext();
 
   const uiConfig = {
-    signInOptions: [firebaseApp.auth.EmailAuthProvider.PROVIDER_ID],
+    signInOptions: [firebaseContext.app.auth.EmailAuthProvider.PROVIDER_ID],
     callbacks: {
       signInSuccessWithAuthResult: () => false,
     },
@@ -17,7 +17,7 @@ const signIn = () => {
       <p>Sign in</p>
       <StyledFirebaseAuth
         uiConfig={uiConfig}
-        firebaseAuth={firebaseApp.auth()}
+        firebaseAuth={firebaseContext.app.auth()}
       />
     </div>
   );
