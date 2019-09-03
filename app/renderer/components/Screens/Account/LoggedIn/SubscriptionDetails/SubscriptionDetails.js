@@ -28,8 +28,8 @@ const subscriptionDetails = () => {
 
   return (
     <Box mt={3}>
+      <Typography variant="h6">Subscription information</Typography>
       <GenericFetchDataDisplayer fetchedData={fetchedData}>
-        <Typography variant="h6">Subscription information</Typography>
         <DataDisplayer subscriptionData={fetchedData.data} />
       </GenericFetchDataDisplayer>
       <Button
