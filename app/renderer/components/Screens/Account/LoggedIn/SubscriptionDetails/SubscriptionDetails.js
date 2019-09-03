@@ -5,11 +5,14 @@ import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import subscription from "../../../../../../Subscription/Subscription";
 import * as webSocketActions from "../../../../../../main/web-sockets/actions";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
+import * as firebaseUtils from "../../../../../utils/FirebaseUtils/FirebaseUtils";
 
-const subscriptionDetails = ({ id }) => {
+const subscriptionDetails = () => {
+  const firebaseContext = firebaseUtils.useFirebaseContext();
+
   const [fetchedData, refreshFetchedData] = customHooks.useGenericFetch(
     subscription.query,
-    id
+    firebaseContext.currentUser.uid
   );
   const [isDisabled, disableRefreshButton] = customHooks.useDisable(1);
 
