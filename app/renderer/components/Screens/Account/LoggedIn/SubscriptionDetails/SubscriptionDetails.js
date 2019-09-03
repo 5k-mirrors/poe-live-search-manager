@@ -1,12 +1,10 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import DataDisplayer from "./DataDisplayer/DataDisplayer";
-import GenericFetchDataDisplayer from "../../../../GenericFetchDataDisplayer/GenericFetchDataDisplayer";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import subscription from "../../../../../../Subscription/Subscription";
 import * as webSocketActions from "../../../../../../main/web-sockets/actions";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
+import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import * as firebaseUtils from "../../../../../utils/FirebaseUtils/FirebaseUtils";
 
 const subscriptionDetails = () => {
@@ -26,17 +24,37 @@ const subscriptionDetails = () => {
     disableRefreshButton();
   }
 
+  function subscriptionText() {
+    if (fetchedData.isLoading) {
+      return "Loading...";
+    }
+    if (fetchedData.err || !fetchedData.data) {
+      return "Error while fetching data";
+    }
+    if (fetchedData.data.paying) {
+      return fetchedData.data.type ? fetchedData.data.type : "Active";
+    }
+    return "Inactive";
+  }
+
   return (
     <Box mt={3}>
-      <Typography variant="h6">Subscription information</Typography>
-      <GenericFetchDataDisplayer fetchedData={fetchedData}>
-        <DataDisplayer subscriptionData={fetchedData.data} />
-      </GenericFetchDataDisplayer>
-      <Button
-        clickEvent={onRefreshButtonClick}
-        text="Refresh"
-        disabled={isDisabled}
+      <Input
+        type="text"
+        value={subscriptionText()}
+        label="Subscription"
+        error={fetchedData.isLoading || fetchedData.err}
+        InputProps={{
+          readOnly: true,
+        }}
       />
+      <Box mt={3}>
+        <Button
+          clickEvent={onRefreshButtonClick}
+          text="Refresh"
+          disabled={isDisabled}
+        />
+      </Box>
     </Box>
   );
 };

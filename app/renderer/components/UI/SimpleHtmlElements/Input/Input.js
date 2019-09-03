@@ -4,6 +4,7 @@ import { useInputStyles } from "./Input.style";
 
 const input = ({ ...props }) => {
   const classes = useInputStyles();
+  const { InputProps, ...otherProps } = props;
 
   return (
     <TextField
@@ -15,9 +16,10 @@ const input = ({ ...props }) => {
         },
       }}
       InputProps={{
+        ...InputProps,
         className: classes.input,
       }}
-      {...props}
+      {...otherProps}
     />
   );
 };
