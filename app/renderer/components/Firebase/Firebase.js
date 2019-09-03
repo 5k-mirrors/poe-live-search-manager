@@ -39,8 +39,12 @@ const Firebase = ({ children }) => {
     });
   }
 
+  let unregisterAuthObserver;
+
   useEffect(() => {
-    startAuthObserver();
+    unregisterAuthObserver = startAuthObserver();
+
+    return () => unregisterAuthObserver();
   }, []);
 
   return (
