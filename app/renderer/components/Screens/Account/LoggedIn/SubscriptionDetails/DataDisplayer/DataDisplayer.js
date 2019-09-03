@@ -23,8 +23,8 @@ const dataDisplayer = ({ subscriptionData }) => {
         <ListItemText
           primary={
             subscriptionData.paying
-              ? `Active subscription: ${
-                  subscriptionData.type ? subscriptionData.type : ""
+              ? `Active subscription ${
+                  subscriptionData.type ? `: ${subscriptionData.type}` : ""
                 }`
               : "Inactive subscription"
           }
