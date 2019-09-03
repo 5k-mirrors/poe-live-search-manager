@@ -11,7 +11,7 @@ const testNotification = () => {
   }
 
   return (
-    <Box mt={2}>
+    <Box mt={2} mb={2}>
       <Typography variant="h6">Test notification</Typography>
       <Button text="Send" clickEvent={send} />
     </Box>
