@@ -4,5 +4,6 @@ export const safeGet = (object, properties) =>
       value && value[currentProperty] ? value[currentProperty] : null,
     object
   );
+
 export const isDefined = value =>
   typeof value !== "undefined" && value !== null;
