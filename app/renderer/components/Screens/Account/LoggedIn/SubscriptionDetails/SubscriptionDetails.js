@@ -1,4 +1,6 @@
 import React from "react";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
 import DataDisplayer from "./DataDisplayer/DataDisplayer";
 import GenericFetchDataDisplayer from "../../../../GenericFetchDataDisplayer/GenericFetchDataDisplayer";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
@@ -25,8 +27,9 @@ const subscriptionDetails = () => {
   }
 
   return (
-    <div>
+    <Box mt={3}>
       <GenericFetchDataDisplayer fetchedData={fetchedData}>
+        <Typography variant="h6">Subscription information</Typography>
         <DataDisplayer subscriptionData={fetchedData.data} />
       </GenericFetchDataDisplayer>
       <Button
@@ -34,7 +37,7 @@ const subscriptionDetails = () => {
         text="Refresh"
         disabled={isDisabled}
       />
-    </div>
+    </Box>
   );
 };
 
