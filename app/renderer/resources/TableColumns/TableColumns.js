@@ -17,3 +17,8 @@ export const inputScreen = [
     editComponent: props => <SearchUrl {...props} />,
   },
 ];
+
+export const tradeScreen = [
+  { title: "Name", field: "itemName" },
+  { title: "Price", field: "itemPrice" },
+];
