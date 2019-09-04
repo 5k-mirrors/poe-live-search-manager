@@ -76,6 +76,9 @@ const setupGeneralIpcListeners = () => {
 };
 
 const loadLocallySavedWsConnectionsIntoStore = () => {
+  /* The store must be emptied beforehand, otherwise FE hot-reload causes duplicate items. */
+  store.clear();
+
   const locallySavedWsConnections = globalStore.get(
     storeKeys.WS_CONNECTIONS,
     []

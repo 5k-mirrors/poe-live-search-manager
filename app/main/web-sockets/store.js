@@ -39,6 +39,12 @@ class Store {
         remainingSocketDetails
     );
   }
+
+  clear() {
+    while (this.storage.length) {
+      this.storage.pop();
+    }
+  }
 }
 
 class SingletonStore {
