@@ -1,3 +1,6 @@
+import { globalStore } from "../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+
 class Store {
   constructor() {
     this.storage = [];
@@ -38,6 +41,22 @@ class Store {
       ({ socket, isConnected, ...remainingSocketDetails }) =>
         remainingSocketDetails
     );
+  }
+
+  clear() {
+    // https://stackoverflow.com/a/1232046/9599137
+    this.storage.splice(0, this.storage.length);
+  }
+
+  load() {
+    /* The store must be emptied beforehand, otherwise FE hot-reload causes dudplicated items. */
+    this.clear();
+
+    const localSearches = globalStore.get(storeKeys.WS_CONNECTIONS, []);
+
+    localSearches.forEach(searchDetails => {
+      this.add(searchDetails);
+    });
   }
 }
 

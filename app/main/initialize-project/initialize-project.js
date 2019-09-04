@@ -75,19 +75,8 @@ const setupGeneralIpcListeners = () => {
   });
 };
 
-const loadLocallySavedWsConnectionsIntoStore = () => {
-  const locallySavedWsConnections = globalStore.get(
-    storeKeys.WS_CONNECTIONS,
-    []
-  );
-
-  locallySavedWsConnections.forEach(connectionDetails => {
-    store.add(connectionDetails);
-  });
-};
-
 const initializeProject = () => {
-  loadLocallySavedWsConnectionsIntoStore();
+  store.load();
 
   setupStoreIpcListeners();
 
