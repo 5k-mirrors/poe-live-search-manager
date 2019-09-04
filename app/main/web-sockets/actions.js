@@ -64,8 +64,19 @@ const updateSocket = (id, details) => {
   });
 };
 
+const heartbeat = ws => {
+  clearTimeout(ws.pingTimeout);
+
+  // Timeouts need to be defined per WebSocket
+  // eslint-disable-next-line no-param-reassign
+  ws.pingTimeout = setTimeout(() => {
+    ws.terminate();
+  }, 30000 + 1000);
+};
+
 export const connect = id => {
   const ws = store.find(id);
+  if (!ws) return;
 
   if (!ws.isConnected) {
     const webSocketUri = getWebSocketUri(ws.searchUrl);
@@ -86,6 +97,10 @@ export const connect = id => {
       setupMessageListener(id);
     });
 
+    newWebsocket.on("ping", () => {
+      heartbeat(newWebsocket);
+    });
+
     newWebsocket.on("error", error => {
       // eslint-disable-next-line no-console
       console.error(JSON.stringify(error));
@@ -94,6 +109,8 @@ export const connect = id => {
         ...ws,
         isConnected: false,
       });
+
+      newWebsocket.close();
     });
 
     newWebsocket.on("close", (code, reason) => {
@@ -104,6 +121,10 @@ export const connect = id => {
         ...ws,
         isConnected: false,
       });
+
+      setTimeout(() => {
+        connect(id);
+      }, 500);
     });
   }
 };
@@ -111,11 +132,16 @@ export const connect = id => {
 export const disconnect = id => {
   const ws = store.find(id);
 
-  if (ws.isConnected) {
+  if (ws.isConnected && ws.socket) {
     ws.socket.close();
 
     delete ws.socket;
   }
+
+  updateSocket(ws.id, {
+    ...ws,
+    isConnected: false,
+  });
 };
 
 export const connectToStoredWebSockets = () => {
