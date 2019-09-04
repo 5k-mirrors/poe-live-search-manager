@@ -4,13 +4,12 @@ import { globalStore } from "../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 import subscription from "../../../Subscription/Subscription";
 import * as subscriptionActions from "../../../Subscription/Actions";
-import * as javaScriptUtils from "../../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as firebaseUtils from "../../utils/FirebaseUtils/FirebaseUtils";
 
 const withRouteRestriction = WrappedComponent => {
   return ({ ...props }) => {
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-    const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, null);
+    const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
     const firebaseContext = firebaseUtils.useFirebaseContext();
 
     async function refreshSubscriptionDetails() {
@@ -24,9 +23,7 @@ const withRouteRestriction = WrappedComponent => {
     }, []);
 
     const routeAccessIsAllowed =
-      isLoggedIn &&
-      javaScriptUtils.isDefined(poeSessionId) &&
-      subscription.active();
+      isLoggedIn && poeSessionId !== "" && subscription.active();
 
     if (routeAccessIsAllowed) {
       return <WrappedComponent {...props} />;
