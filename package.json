@@ -1,8 +1,8 @@
 {
-  "name": "poe-sniper-pro",
-  "productName": "PoE Sniper Pro",
+  "name": "poe-sniper",
+  "productName": "PoE Sniper",
   "version": "0.6.0",
-  "description": "An Electron-React based boilerplate.",
+  "description": "Desktop tool for Path of Exile to make instants offers for listed items without leaving the game",
   "main": "./app/main.prod.js",
   "scripts": {
     "build": "npm run build:main && npm run build:renderer",
@@ -22,19 +22,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gomorizsolt/minelectreactist.git"
+    "url": "git@gitlab.com:c-hive/poe-sniper-electron.git"
   },
   "keywords": [
     "electron",
     "react",
-    "boilerplate"
+    "path of exile",
+    "poe",
+    "ggg"
   ],
-  "author": "Zsolt Gomori",
-  "license": "MIT",
+  "author": "C-Hive",
+  "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/gomorizsolt/minelectreactist/issues"
+    "url": "https://github.com/5k-mirrors/poe-sniper/issues"
   },
-  "homepage": "https://github.com/gomorizsolt/minelectreactist#readme",
+  "homepage": "https://github.com/5k-mirrors/poe-sniper",
   "dependencies": {
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
