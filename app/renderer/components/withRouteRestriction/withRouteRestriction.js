@@ -13,20 +13,22 @@ const withRouteRestriction = WrappedComponent => {
     const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, null);
     const firebaseContext = firebaseUtils.useFirebaseContext();
 
-    async function refresh() {
-      await subscriptionActions.refresh(firebaseContext.currentUser.uid);
+    async function refreshSubscriptionDetails() {
+      if (isLoggedIn) {
+        await subscriptionActions.refresh(firebaseContext.currentUser.uid);
+      }
     }
 
     useEffect(() => {
-      refresh();
+      refreshSubscriptionDetails();
     }, []);
 
-    const userIsEligible =
+    const routeAccessIsAllowed =
       isLoggedIn &&
       javaScriptUtils.isDefined(poeSessionId) &&
       subscription.active();
 
-    if (userIsEligible) {
+    if (routeAccessIsAllowed) {
       return <WrappedComponent {...props} />;
     }
 
