@@ -41,9 +41,8 @@ class Store {
   }
 
   clear() {
-    while (this.storage.length) {
-      this.storage.pop();
-    }
+    // https://stackoverflow.com/a/1232046/9599137
+    this.storage.splice(0, this.storage.length);
   }
 }
 
