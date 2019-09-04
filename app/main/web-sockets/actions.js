@@ -64,6 +64,9 @@ const updateSocket = (id, details) => {
   });
 };
 
+const serverPingTimeframeSeconds = 30;
+const pingAllowedDelaySeconds = 1;
+
 const heartbeat = ws => {
   clearTimeout(ws.pingTimeout);
 
@@ -71,7 +74,7 @@ const heartbeat = ws => {
   // eslint-disable-next-line no-param-reassign
   ws.pingTimeout = setTimeout(() => {
     ws.terminate();
-  }, 30000 + 1000);
+  }, (serverPingTimeframeSeconds + pingAllowedDelaySeconds) * 1000);
 };
 
 export const connect = id => {
