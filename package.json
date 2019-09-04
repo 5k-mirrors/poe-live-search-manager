@@ -89,7 +89,8 @@
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.1",
+    "webpack-obfuscator": "^0.18.3"
   },
   "build": {
     "productName": "PoE Sniper",
