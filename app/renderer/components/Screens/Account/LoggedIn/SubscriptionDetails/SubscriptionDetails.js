@@ -43,7 +43,11 @@ const subscriptionDetails = () => {
         type="text"
         value={subscriptionText()}
         label="Subscription"
-        error={fetchedData.isLoading || fetchedData.err}
+        error={
+          fetchedData.isLoading ||
+          fetchedData.err ||
+          (fetchedData.data && !fetchedData.data.paying)
+        }
         InputProps={{
           readOnly: true,
         }}
