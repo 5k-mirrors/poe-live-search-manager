@@ -2,13 +2,15 @@ import React from "react";
 import { shallow } from "enzyme";
 import { ipcRenderer } from "electron";
 import { Redirect } from "react-router-dom";
-import Input from "./Input";
+import MaterialTable from "material-table";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
+import Input from "./Input";
 import * as UniqueIdGenerator from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 import shallowWrappedComponent from "../../../utils/ShallowWrappedComponent/ShallowWrappedComponent";
+import subscription from "../../../../Subscription/Subscription";
 
 describe("<Input />", () => {
   let inputWrapper;
@@ -17,11 +19,21 @@ describe("<Input />", () => {
     globalStore.clear();
   });
 
-  describe("when the user is logged in", () => {
+  describe("when user is eligible to visit the screen", () => {
     beforeEach(() => {
       globalStore.set(storeKeys.IS_LOGGED_IN, true);
+      globalStore.set(
+        storeKeys.POE_SESSION_ID,
+        "0f67fc8c213e5cd859ba8cc353803f52"
+      );
+
+      jest.spyOn(subscription, "active").mockImplementationOnce(() => true);
 
       inputWrapper = shallowWrappedComponent(<Input />);
+    });
+
+    it("renders `MaterialTable`", () => {
+      expect(inputWrapper.find(MaterialTable)).toHaveLength(1);
     });
 
     describe("addNewConnection", () => {
@@ -83,15 +95,15 @@ describe("<Input />", () => {
     });
   });
 
-  describe("when the user is not logged in", () => {
+  describe("when user is not eligible to visit the screen", () => {
     beforeEach(() => {
       globalStore.set(storeKeys.IS_LOGGED_IN, false);
 
       inputWrapper = shallow(<Input />);
     });
 
-    // https://stackoverflow.com/a/44426403/9599137
-    it("renders a `Redirect` component", () => {
+    /* https://stackoverflow.com/a/44426403/9599137 */
+    it("renders `Redirect`", () => {
       expect(inputWrapper.find(Redirect)).toHaveLength(1);
     });
   });
