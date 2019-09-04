@@ -76,7 +76,7 @@ const setupGeneralIpcListeners = () => {
 };
 
 const loadLocallySavedWsConnectionsIntoStore = () => {
-  /* The store must be emptied beforehand, otherwise FE hot-reload causes duplicate items. */
+  /* The store must be emptied beforehand, otherwise FE hot-reload causes dudplicated items. */
   store.clear();
 
   const locallySavedWsConnections = globalStore.get(
