@@ -1,7 +1,9 @@
 const DotEnv = require("dotenv-webpack");
 const JavaScriptObfuscator = require("webpack-obfuscator");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
+  mode: "production",
   module: {
     rules: [
       {
@@ -13,15 +15,16 @@ module.exports = {
       },
     ],
   },
+  optimization: {
+    minimizer: [new TerserPlugin()],
+  },
   plugins: [
     // https://github.com/mrsteele/dotenv-webpack#properties
     new DotEnv({
       safe: true,
       systemvars: true,
     }),
-    new JavaScriptObfuscator({
-      rotateUnicodeArray: true,
-    }),
+    new JavaScriptObfuscator(),
   ],
   resolve: {
     // Reason for adding .json
