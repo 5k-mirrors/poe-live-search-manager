@@ -1,6 +1,5 @@
 const DotEnv = require("dotenv-webpack");
 const JavaScriptObfuscator = require("webpack-obfuscator");
-const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   mode: "production",
@@ -14,9 +13,6 @@ module.exports = {
         },
       },
     ],
-  },
-  optimization: {
-    minimizer: [new TerserPlugin()],
   },
   plugins: [
     // https://github.com/mrsteele/dotenv-webpack#properties
