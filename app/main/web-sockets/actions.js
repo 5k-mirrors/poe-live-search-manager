@@ -111,6 +111,7 @@ export const connect = id => {
       updateSocket(ws.id, {
         ...ws,
         isConnected: false,
+        shouldReconnect: true,
       });
 
       newWebsocket.close();
@@ -120,14 +121,20 @@ export const connect = id => {
       // eslint-disable-next-line no-console
       console.error(`${ws.id} connection is closed. ${code}, ${reason}`);
 
-      updateSocket(ws.id, {
+      /* updateSocket(ws.id, {
         ...ws,
         isConnected: false,
-      });
+      }); */
 
-      setTimeout(() => {
-        connect(id);
-      }, 500);
+      const wss = store.find(ws.id);
+
+      console.log(wss.shouldReconnect);
+
+      if (wss.shouldReconnect) {
+        setTimeout(() => {
+          connect(id);
+        }, 500);
+      }
     });
   }
 };
@@ -135,7 +142,13 @@ export const connect = id => {
 export const disconnect = id => {
   const ws = store.find(id);
 
-  if (ws.isConnected && ws.socket) {
+  console.log(ws.id);
+
+  if (ws.isConnected) {
+    store.update(ws.id, {
+      shouldReconnect: false,
+    });
+
     ws.socket.close();
 
     delete ws.socket;

@@ -1,11 +1,13 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
+import { ipcRenderer } from "electron";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import subscription from "../../../../../../Subscription/Subscription";
-import * as webSocketActions from "../../../../../../main/web-sockets/actions";
+import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import * as firebaseUtils from "../../../../../utils/FirebaseUtils/FirebaseUtils";
+import * as javaScriptUtils from "../../../../../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const subscriptionDetails = () => {
   const firebaseContext = firebaseUtils.useFirebaseContext();
@@ -19,8 +21,6 @@ const subscriptionDetails = () => {
   function onRefreshButtonClick() {
     refreshFetchedData();
 
-    webSocketActions.updateConnections();
-
     disableRefreshButton();
   }
 
@@ -28,12 +28,19 @@ const subscriptionDetails = () => {
     if (fetchedData.isLoading) {
       return "Loading...";
     }
+
     if (fetchedData.err || !fetchedData.data) {
       return "Error while fetching data";
     }
-    if (fetchedData.data.paying) {
-      return fetchedData.data.type ? fetchedData.data.type : "Active";
+
+    if (javaScriptUtils.isDefined(fetchedData.data)) {
+      ipcRenderer.send(ipcEvents.SUBSCRIPTION_UPDATE, fetchedData.data);
+
+      if (fetchedData.data.paying) {
+        return fetchedData.data.type ? fetchedData.data.type : "Active";
+      }
     }
+
     return "Inactive";
   }
 

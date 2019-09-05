@@ -10,6 +10,7 @@ class Store {
     this.storage.push({
       ...connectionDetails,
       isConnected: false,
+      shouldReconnect: true,
     });
   }
 
