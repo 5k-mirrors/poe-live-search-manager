@@ -33,6 +33,10 @@ Supported trade sites:
 - A destop shortcut is created and updates are installed on app start.
 - Enjoy!
 
+Known issues:
+- **If the account is configured correctly (`Session ID` is set and `Public beta` subscripion is visible) but the searches don't connect try restarting the app.**
+
+
 ![install](install.gif)
 
 ## Caveats
