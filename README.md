@@ -1,6 +1,6 @@
 # Poe::Sniper
 
-#### Desktop tool for Path of Exile to make instants offers for listed items without leaving the game.
+#### Desktop tool for Path of Exile to make instant offers for listed items without leaving the game.
 
 It is an alternative to keeping several browser tabs open but it consumes far less resources and you don’t need to switch between the game and the browser tabs all the time. You can use custom search criteria and message the seller instantly in-game.
 
@@ -16,7 +16,7 @@ Supported trade sites:
 ## Features
 
 - ToS compliant, not breaking any rules
-- Queries new listsings instantly via live mode
+- Queries new listings instantly via live mode
 - Handles any custom search
 - Uses Windows notifications which:
   - don't remove focus from the game
@@ -28,7 +28,7 @@ Supported trade sites:
 ## Installation
 
 - Download and run the latest [release](https://github.com/5k-mirrors/poe-sniper/releases).
-- Windows sometimes warns you about installing unsinged apps. If prompted, click `More info` and `Run anyway`.
+- Windows sometimes warns you about installing unsigned apps. If prompted, click `More info` and `Run anyway`.
 - The app will install and start.
 - A destop shortcut is created and updates are installed on app start.
 - Enjoy!
