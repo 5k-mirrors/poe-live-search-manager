@@ -11,6 +11,8 @@ Supported trade sites:
 
 ## Usage
 
+[Click here for full size](https://i.imgur.com/wn8kSQD.gifv)
+
 ![demo](demo.gif)
 
 ## Features
