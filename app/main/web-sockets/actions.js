@@ -79,6 +79,7 @@ const heartbeat = ws => {
 
 export const connect = id => {
   const ws = store.find(id);
+
   if (!ws) return;
 
   if (!ws.isConnected) {
@@ -121,16 +122,14 @@ export const connect = id => {
       // eslint-disable-next-line no-console
       console.error(`${ws.id} connection is closed. ${code}, ${reason}`);
 
-      /* updateSocket(ws.id, {
-        ...ws,
+      const currentWs = store.find(ws.id);
+
+      updateSocket(currentWs.id, {
+        ...currentWs,
         isConnected: false,
-      }); */
+      });
 
-      const wss = store.find(ws.id);
-
-      console.log(wss.shouldReconnect);
-
-      if (wss.shouldReconnect) {
+      if (currentWs.shouldReconnect) {
         setTimeout(() => {
           connect(id);
         }, 500);
@@ -142,22 +141,17 @@ export const connect = id => {
 export const disconnect = id => {
   const ws = store.find(id);
 
-  console.log(ws.id);
-
   if (ws.isConnected) {
-    store.update(ws.id, {
-      shouldReconnect: false,
-    });
-
     ws.socket.close();
 
     delete ws.socket;
-  }
 
-  updateSocket(ws.id, {
-    ...ws,
-    isConnected: false,
-  });
+    updateSocket(ws.id, {
+      ...ws,
+      isConnected: false,
+      shouldReconnect: false,
+    });
+  }
 };
 
 export const connectToStoredWebSockets = () => {
