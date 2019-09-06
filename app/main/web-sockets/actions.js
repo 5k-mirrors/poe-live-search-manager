@@ -141,7 +141,7 @@ export const connect = id => {
 export const disconnect = id => {
   const ws = store.find(id);
 
-  if (ws.isConnected) {
+  if (ws.isConnected && ws.socket) {
     ws.socket.close();
 
     delete ws.socket;
