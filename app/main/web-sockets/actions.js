@@ -124,15 +124,17 @@ export const connect = id => {
 
       const currentWs = store.find(ws.id);
 
-      updateSocket(currentWs.id, {
-        ...currentWs,
-        isConnected: false,
-      });
+      if (javaScriptUtils.isDefined(currentWs)) {
+        updateSocket(currentWs.id, {
+          ...currentWs,
+          isConnected: false,
+        });
 
-      if (currentWs.shouldReconnect) {
-        setTimeout(() => {
-          connect(id);
-        }, 500);
+        if (currentWs.shouldReconnect) {
+          setTimeout(() => {
+            connect(id);
+          }, 500);
+        }
       }
     });
   }
