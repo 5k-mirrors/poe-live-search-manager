@@ -8,7 +8,7 @@ export const safeGet = (object, properties) =>
 export const isDefined = value =>
   typeof value !== "undefined" && value !== null;
 
-export const logInDev = message => {
+export const devLog = message => {
   const isDev = process.env.NODE_ENV === "development";
 
   if (isDev) {

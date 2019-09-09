@@ -91,7 +91,7 @@ export const connect = id => {
     });
 
     newWebsocket.on("open", () => {
-      javaScriptUtils.logInDev(`SOCKET OPEN - ${ws.id}`);
+      javaScriptUtils.devLog(`SOCKET OPEN - ${ws.id}`);
 
       updateSocket(ws.id, {
         ...ws,
@@ -103,13 +103,13 @@ export const connect = id => {
     });
 
     newWebsocket.on("ping", () => {
-      javaScriptUtils.logInDev(`SOCKET PING - ${ws.id}`);
+      javaScriptUtils.devLog(`SOCKET PING - ${ws.id}`);
 
       heartbeat(newWebsocket);
     });
 
     newWebsocket.on("error", error => {
-      javaScriptUtils.logInDev(`SOCKET ERROR - ${ws.id} ${error}`);
+      javaScriptUtils.devLog(`SOCKET ERROR - ${ws.id} ${error}`);
 
       updateSocket(ws.id, {
         ...ws,
@@ -121,7 +121,7 @@ export const connect = id => {
 
     newWebsocket.on("close", (code, reason) => {
       // eslint-disable-next-line no-console
-      javaScriptUtils.logInDev(`SOCKET CLOSE - ${ws.id} ${code} ${reason}`);
+      javaScriptUtils.devLog(`SOCKET CLOSE - ${ws.id} ${code} ${reason}`);
 
       updateSocket(ws.id, {
         ...ws,
