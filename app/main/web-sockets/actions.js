@@ -94,6 +94,8 @@ export const connect = id => {
     newWebsocket.on("open", () => {
       javaScriptUtils.devLog(`SOCKET OPEN - ${ws.id}`);
 
+      heartbeat(newWebsocket);
+
       updateSocket(ws.id, {
         ...ws,
         socket: newWebsocket,
@@ -115,7 +117,6 @@ export const connect = id => {
       updateSocket(ws.id, {
         ...ws,
         isConnected: false,
-        shouldReconnect: true,
       });
 
       newWebsocket.close();
@@ -124,19 +125,15 @@ export const connect = id => {
     newWebsocket.on("close", (code, reason) => {
       javaScriptUtils.devLog(`SOCKET CLOSE - ${ws.id} ${code} ${reason}`);
 
-      const currentWs = store.find(ws.id);
+      updateSocket(ws.id, {
+        ...ws,
+        isConnected: false,
+      });
 
-      if (currentWs) {
-        updateSocket(currentWs.id, {
-          ...currentWs,
-          isConnected: false,
-        });
-
-        if (currentWs.shouldReconnect) {
-          setTimeout(() => {
-            connect(id);
-          }, 500);
-        }
+      if (subscription.active()) {
+        setTimeout(() => {
+          connect(id);
+        }, 500);
       }
     });
   }
@@ -153,7 +150,6 @@ export const disconnect = id => {
     updateSocket(ws.id, {
       ...ws,
       isConnected: false,
-      shouldReconnect: false,
     });
   }
 };
