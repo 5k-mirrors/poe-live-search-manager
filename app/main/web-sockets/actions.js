@@ -122,12 +122,11 @@ export const connect = id => {
     });
 
     newWebsocket.on("close", (code, reason) => {
-      // eslint-disable-next-line no-console
       javaScriptUtils.devLog(`SOCKET CLOSE - ${ws.id} ${code} ${reason}`);
 
       const currentWs = store.find(ws.id);
 
-      if (javaScriptUtils.isDefined(currentWs)) {
+      if (currentWs) {
         updateSocket(currentWs.id, {
           ...currentWs,
           isConnected: false,

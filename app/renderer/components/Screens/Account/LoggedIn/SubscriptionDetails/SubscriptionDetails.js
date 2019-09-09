@@ -7,7 +7,6 @@ import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import * as firebaseUtils from "../../../../../utils/FirebaseUtils/FirebaseUtils";
-import * as javaScriptUtils from "../../../../../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const subscriptionDetails = () => {
   const firebaseContext = firebaseUtils.useFirebaseContext();
@@ -33,7 +32,7 @@ const subscriptionDetails = () => {
       return "Error while fetching data";
     }
 
-    if (javaScriptUtils.isDefined(fetchedData.data)) {
+    if (fetchedData.data) {
       ipcRenderer.send(ipcEvents.SUBSCRIPTION_UPDATE, fetchedData.data);
 
       if (fetchedData.data.paying) {
