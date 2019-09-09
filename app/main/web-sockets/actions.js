@@ -123,7 +123,6 @@ export const connect = id => {
 
     newWebsocket.on("close", (code, reason) => {
       // eslint-disable-next-line no-console
-      // console.error(`${ws.id} connection is closed. ${code}, ${reason}`);
       javaScriptUtils.logInDev(`SOCKET CLOSE - ${ws.id} ${code} ${reason}`);
 
       const currentWs = store.find(ws.id);
