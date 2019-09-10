@@ -9,6 +9,8 @@ import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+import { globalStore } from "../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 
 const setupMessageListener = id => {
   const limiter = notificationsLimiter.getLimiter();
@@ -170,12 +172,19 @@ export const disconnectFromStoredWebSockets = () => {
   });
 };
 
+const conditionsAreFulfilled = () => {
+  const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
+
+  return isLoggedIn && poeSessionId !== "" && subscription.active();
+};
+
 export const updateConnections = () => {
-  if (subscription.active()) {
-    connectToStoredWebSockets();
-  } else {
-    disconnectFromStoredWebSockets();
+  if (conditionsAreFulfilled()) {
+    return connectToStoredWebSockets();
   }
+
+  return disconnectFromStoredWebSockets();
 };
 
 export const reconnect = id => {

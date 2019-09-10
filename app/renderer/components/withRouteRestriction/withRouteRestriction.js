@@ -1,31 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { ipcRenderer } from "electron";
 import { Redirect } from "react-router-dom";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
-import subscription from "../../../Subscription/Subscription";
-import * as subscriptionActions from "../../../Subscription/Actions";
-import * as firebaseUtils from "../../utils/FirebaseUtils/FirebaseUtils";
+import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
+import Loader from "../UI/Loader/Loader";
 
 const withRouteRestriction = WrappedComponent => {
   return ({ ...props }) => {
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
     const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
-    const firebaseContext = firebaseUtils.useFirebaseContext();
-
-    async function refreshSubscriptionDetails() {
-      if (isLoggedIn) {
-        await subscriptionActions.refresh(firebaseContext.currentUser.uid);
-      }
-    }
+    const [isPaying, setIsPaying] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-      refreshSubscriptionDetails();
+      ipcRenderer.send(ipcEvents.GET_PAYING_STATUS);
+
+      ipcRenderer.on(ipcEvents.SEND_PAYING_STATUS, (event, payingStatus) => {
+        setIsPaying(payingStatus);
+
+        setIsLoading(false);
+      });
+
+      return () => ipcRenderer.removeAllListeners();
     }, []);
 
-    const routeAccessIsAllowed =
-      isLoggedIn && poeSessionId !== "" && subscription.active();
+    function conditionsAreFulfilled() {
+      return isLoggedIn && poeSessionId !== "" && isPaying;
+    }
 
-    if (routeAccessIsAllowed) {
+    if (isLoading) {
+      return <Loader />;
+    }
+
+    if (conditionsAreFulfilled()) {
       return <WrappedComponent {...props} />;
     }
 

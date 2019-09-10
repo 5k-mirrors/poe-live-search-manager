@@ -7,8 +7,8 @@ import Settings from "./Settings/Settings";
 const screens = () => (
   <Switch>
     <Route path="/input" component={Input} />
-    <Route path="/account" component={Account} />
     <Route path="/settings" component={Settings} />
+    <Route component={Account} />
   </Switch>
 );
 
