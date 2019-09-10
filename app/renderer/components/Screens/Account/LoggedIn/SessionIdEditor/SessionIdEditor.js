@@ -1,8 +1,10 @@
 import React, { useState, Fragment } from "react";
 import Box from "@material-ui/core/Box";
+import { ipcRenderer } from "electron";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
+import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import InfoButton from "./InfoButton/InfoButton";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
@@ -21,6 +23,8 @@ const sessionIdEditor = () => {
     globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
 
     displaySuccessIcon();
+
+    ipcRenderer.send(ipcEvents.RECONNECT_ALL);
 
     hideSuccessIconAfterMsElapsed(2500);
   }
