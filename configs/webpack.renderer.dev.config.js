@@ -14,11 +14,11 @@ const revision = platformIsWindows
       )
       .toString();
 
-const baseWebpackConfigurations = require("./webpack.base.config");
+const webpackDevConfigurations = require("./webpack.base.dev.config");
 
 const port = process.env.PORT || 3001;
 
-module.exports = merge(baseWebpackConfigurations, {
+module.exports = merge(webpackDevConfigurations, {
   // => @babel/polyfill https://stackoverflow.com/a/33527883/9599137
   entry: ["@babel/polyfill", path.resolve("app", "renderer", "index.js")],
   output: {

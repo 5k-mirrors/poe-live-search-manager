@@ -7,6 +7,7 @@ import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
+import subscription from "../../Subscription/Subscription";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -73,6 +74,15 @@ const setupGeneralIpcListeners = () => {
       body: "Description",
     });
   });
+
+  ipcMain.on(
+    ipcEvents.SUBSCRIPTION_UPDATE,
+    (event, updatedSubscriptionData) => {
+      subscription.update(updatedSubscriptionData);
+
+      webSocketActions.updateConnections();
+    }
+  );
 };
 
 const initializeProject = () => {

@@ -79,6 +79,7 @@ const heartbeat = ws => {
 
 export const connect = id => {
   const ws = store.find(id);
+
   if (!ws) return;
 
   if (!ws.isConnected) {
@@ -91,6 +92,10 @@ export const connect = id => {
     });
 
     newWebsocket.on("open", () => {
+      javaScriptUtils.devLog(`SOCKET OPEN - ${webSocketUri} / ${ws.id}`);
+
+      heartbeat(newWebsocket);
+
       updateSocket(ws.id, {
         ...ws,
         socket: newWebsocket,
@@ -101,12 +106,15 @@ export const connect = id => {
     });
 
     newWebsocket.on("ping", () => {
+      javaScriptUtils.devLog(`SOCKET PING - ${webSocketUri} / ${ws.id}`);
+
       heartbeat(newWebsocket);
     });
 
     newWebsocket.on("error", error => {
-      // eslint-disable-next-line no-console
-      console.error(JSON.stringify(error));
+      javaScriptUtils.devLog(
+        `SOCKET ERROR - ${webSocketUri} / ${ws.id} ${error}`
+      );
 
       updateSocket(ws.id, {
         ...ws,
@@ -117,17 +125,20 @@ export const connect = id => {
     });
 
     newWebsocket.on("close", (code, reason) => {
-      // eslint-disable-next-line no-console
-      console.error(`${ws.id} connection is closed. ${code}, ${reason}`);
+      javaScriptUtils.devLog(
+        `SOCKET CLOSE - ${webSocketUri} / ${ws.id} ${code} ${reason}`
+      );
 
       updateSocket(ws.id, {
         ...ws,
         isConnected: false,
       });
 
-      setTimeout(() => {
-        connect(id);
-      }, 500);
+      if (subscription.active()) {
+        setTimeout(() => {
+          connect(id);
+        }, 500);
+      }
     });
   }
 };
@@ -139,12 +150,12 @@ export const disconnect = id => {
     ws.socket.close();
 
     delete ws.socket;
-  }
 
-  updateSocket(ws.id, {
-    ...ws,
-    isConnected: false,
-  });
+    updateSocket(ws.id, {
+      ...ws,
+      isConnected: false,
+    });
+  }
 };
 
 export const connectToStoredWebSockets = () => {
