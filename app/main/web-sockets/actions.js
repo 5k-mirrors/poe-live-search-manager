@@ -79,6 +79,7 @@ const heartbeat = ws => {
 
 export const connect = id => {
   const ws = store.find(id);
+
   if (!ws) return;
 
   if (!ws.isConnected) {
@@ -92,6 +93,8 @@ export const connect = id => {
 
     newWebsocket.on("open", () => {
       javaScriptUtils.devLog(`SOCKET OPEN - ${webSocketUri} / ${ws.id}`);
+
+      heartbeat(newWebsocket);
 
       updateSocket(ws.id, {
         ...ws,
@@ -131,9 +134,11 @@ export const connect = id => {
         isConnected: false,
       });
 
-      setTimeout(() => {
-        connect(id);
-      }, 500);
+      if (subscription.active()) {
+        setTimeout(() => {
+          connect(id);
+        }, 500);
+      }
     });
   }
 };
@@ -145,12 +150,12 @@ export const disconnect = id => {
     ws.socket.close();
 
     delete ws.socket;
-  }
 
-  updateSocket(ws.id, {
-    ...ws,
-    isConnected: false,
-  });
+    updateSocket(ws.id, {
+      ...ws,
+      isConnected: false,
+    });
+  }
 };
 
 export const connectToStoredWebSockets = () => {

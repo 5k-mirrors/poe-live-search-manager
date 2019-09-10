@@ -10,4 +10,5 @@ export const ipcEvents = {
   GET_SOCKETS: "getSockets",
   SEND_SOCKETS: "sendSockets",
   TEST_NOTIFICATION: "testNotification",
+  SUBSCRIPTION_UPDATE: "subscriptionUpdate",
 };
