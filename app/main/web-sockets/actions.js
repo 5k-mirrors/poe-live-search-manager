@@ -172,15 +172,14 @@ export const disconnectFromStoredWebSockets = () => {
   });
 };
 
-const conditionsAreFulfilled = () => {
+export const updateConnections = () => {
   const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
 
-  return isLoggedIn && poeSessionId !== "" && subscription.active();
-};
+  const conditionsAreFulfilled =
+    isLoggedIn && poeSessionId !== "" && subscription.active();
 
-export const updateConnections = () => {
-  if (conditionsAreFulfilled()) {
+  if (conditionsAreFulfilled) {
     return connectToStoredWebSockets();
   }
 
