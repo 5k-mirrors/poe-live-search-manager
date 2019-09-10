@@ -1,4 +1,17 @@
-# poe-sniper-electron
+# Poe::Sniper
+
+#### Desktop tool for Path of Exile to make instant offers for listed items without leaving the game.
+
+
+It is an alternative to keeping several browser tabs open but it consumes far less resources and you don’t need to switch between the game and the browser tabs all the time. You can use custom search criteria and message the seller instantly in-game.
+
+Supported trade sites:
+- [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
+
+## Services
+
+- [GitHub](https://github.com/5k-mirrors/poe-sniper) is used as a homepage and for tracking external issues
+- [Production firebase instace](https://console.firebase.google.com/u/0/project/poe-sniper-gateway/overview)
 
 ## Development
 
