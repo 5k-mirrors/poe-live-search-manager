@@ -25,11 +25,7 @@ const setupWebSocketIpcListeners = () => {
 
     globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
 
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-    if (isLoggedIn) {
-      webSocketActions.updateConnections();
-    }
+    webSocketActions.updateConnections();
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
@@ -83,6 +79,10 @@ const setupGeneralIpcListeners = () => {
       webSocketActions.updateConnections();
     }
   );
+
+  ipcMain.on(ipcEvents.GET_PAYING_STATUS, event => {
+    event.sender.send(ipcEvents.SEND_PAYING_STATUS, subscription.active());
+  });
 };
 
 const initializeProject = () => {

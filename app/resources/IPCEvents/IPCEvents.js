@@ -11,4 +11,6 @@ export const ipcEvents = {
   SEND_SOCKETS: "sendSockets",
   TEST_NOTIFICATION: "testNotification",
   SUBSCRIPTION_UPDATE: "subscriptionUpdate",
+  GET_PAYING_STATUS: "getPayingStatus",
+  SEND_PAYING_STATUS: "sendPayingStatus",
 };

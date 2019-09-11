@@ -9,6 +9,8 @@ import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+import { globalStore } from "../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 
 const setupMessageListener = id => {
   const limiter = notificationsLimiter.getLimiter();
@@ -136,7 +138,9 @@ export const connect = id => {
       isConnected: false,
     });
 
-    if (subscription.active()) {
+    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+
+    if (isLoggedIn && subscription.active()) {
       setTimeout(() => {
         javaScriptUtils.devLog(
           `Auto-reconnect initiated - ${webSocketUri} / ${id}`
@@ -165,7 +169,7 @@ export const disconnect = id => {
   }
 };
 
-export const connectToStoredWebSockets = () => {
+const connectAll = () => {
   store.all().forEach(connectionDetails => {
     connect(connectionDetails.id);
   });
@@ -178,11 +182,17 @@ export const disconnectAll = () => {
 };
 
 export const updateConnections = () => {
-  if (subscription.active()) {
-    connectToStoredWebSockets();
-  } else {
-    disconnectAll();
+  const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
+
+  const conditionsAreFulfilled =
+    isLoggedIn && poeSessionId && subscription.active();
+
+  if (conditionsAreFulfilled) {
+    return connectAll();
   }
+
+  return disconnectAll();
 };
 
 export const reconnect = id => {
