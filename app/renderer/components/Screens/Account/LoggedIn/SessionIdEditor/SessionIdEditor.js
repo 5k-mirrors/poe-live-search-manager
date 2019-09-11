@@ -11,7 +11,7 @@ import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWi
 
 const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState(
-    globalStore.get(storeKeys.POE_SESSION_ID, "")
+    globalStore.get(storeKeys.POE_SESSION_ID, null)
   );
   const [
     successIconIsVisible,
@@ -20,7 +20,10 @@ const sessionIdEditor = () => {
   ] = customHooks.useDisplay();
 
   function onSave() {
-    globalStore.set(storeKeys.POE_SESSION_ID, poeSessionId);
+    globalStore.set(
+      storeKeys.POE_SESSION_ID,
+      poeSessionId === "" ? null : poeSessionId
+    );
 
     displaySuccessIcon();
 
@@ -35,7 +38,7 @@ const sessionIdEditor = () => {
         <Input
           type="text"
           onChange={e => setPoeSessionId(e.target.value)}
-          value={poeSessionId}
+          value={poeSessionId || ""}
           label="Session ID"
           error={!poeSessionId}
         />

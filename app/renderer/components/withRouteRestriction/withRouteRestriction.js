@@ -9,7 +9,7 @@ import Loader from "../UI/Loader/Loader";
 const withRouteRestriction = WrappedComponent => {
   return ({ ...props }) => {
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-    const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
+    const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
     const [isPaying, setIsPaying] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -26,7 +26,7 @@ const withRouteRestriction = WrappedComponent => {
     }, []);
 
     function conditionsAreFulfilled() {
-      return isLoggedIn && poeSessionId !== "" && isPaying;
+      return isLoggedIn && poeSessionId && isPaying;
     }
 
     if (isLoading) {

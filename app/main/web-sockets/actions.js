@@ -136,7 +136,9 @@ export const connect = id => {
         isConnected: false,
       });
 
-      if (subscription.active()) {
+      const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+
+      if (isLoggedIn && subscription.active()) {
         setTimeout(() => {
           connect(id);
         }, 500);
@@ -174,10 +176,10 @@ export const disconnectFromStoredWebSockets = () => {
 
 export const updateConnections = () => {
   const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
+  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 
   const conditionsAreFulfilled =
-    isLoggedIn && poeSessionId !== "" && subscription.active();
+    isLoggedIn && poeSessionId && subscription.active();
 
   if (conditionsAreFulfilled) {
     return connectToStoredWebSockets();
