@@ -9,6 +9,10 @@ import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUt
 import InvalidInputError from "../../../../errors/invalid-input-error";
 import withLoggedOutRestriction from "../../withLoggedOutRedirection/withLoggedOutRedirection";
 
+const { dialog } = require("electron").remote;
+const yaml = require("js-yaml");
+const fs = require("fs");
+
 class Input extends Component {
   constructor(props) {
     super(props);
@@ -166,6 +170,30 @@ class Input extends Component {
     return webSocketStore.length === 0;
   }
 
+  import() {
+    dialog.showOpenDialog(
+      {
+        properties: ["openFile"],
+        filters: [{ name: "YAML", extensions: ["yml", "yaml"] }],
+      },
+      files => {
+        if (files !== undefined) {
+          try {
+            const input = yaml.safeLoad(fs.readFileSync(files[0], "utf8"));
+            for (const [url, name] of Object.entries(input.pathofexilecom)) {
+              this.addNewConnection({
+                searchUrl: url,
+                name,
+              });
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
+    );
+  }
+
   render() {
     const {
       webSocketStore: [...webSocketStore],
@@ -196,6 +224,12 @@ class Input extends Component {
             isFreeAction: true,
             disabled: this.isWebSocketStoreEmpty() || allReconnectsAreDisabled,
             onClick: () => this.reconnectAll(),
+          },
+          {
+            icon: "create_new_folder",
+            tooltip: "Import from file",
+            isFreeAction: true,
+            onClick: () => this.import(),
           },
         ]}
         options={{
