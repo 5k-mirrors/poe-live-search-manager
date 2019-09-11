@@ -14,6 +14,7 @@ const setupMessageListener = id => {
   const limiter = notificationsLimiter.getLimiter();
 
   const ws = store.find(id);
+  if (!ws) return;
 
   ws.socket.on("message", response => {
     const parsedResponse = JSON.parse(response);
@@ -79,72 +80,78 @@ const heartbeat = ws => {
 
 export const connect = id => {
   const ws = store.find(id);
-
   if (!ws) return;
+  if (ws.isConnected) return;
 
-  if (!ws.isConnected) {
-    const webSocketUri = getWebSocketUri(ws.searchUrl);
+  const webSocketUri = getWebSocketUri(ws.searchUrl);
 
-    const newWebsocket = new WebSocket(webSocketUri, {
-      headers: {
-        Cookie: poeTrade.getCookies(),
-      },
+  javaScriptUtils.devLog(`Connect initiated - ${webSocketUri} / ${id}`);
+
+  const newWebsocket = new WebSocket(webSocketUri, {
+    headers: {
+      Cookie: poeTrade.getCookies(),
+    },
+  });
+
+  newWebsocket.on("open", () => {
+    javaScriptUtils.devLog(`SOCKET OPEN - ${webSocketUri} / ${ws.id}`);
+
+    heartbeat(newWebsocket);
+
+    updateSocket(ws.id, {
+      ...ws,
+      socket: newWebsocket,
+      isConnected: true,
     });
 
-    newWebsocket.on("open", () => {
-      javaScriptUtils.devLog(`SOCKET OPEN - ${webSocketUri} / ${ws.id}`);
+    setupMessageListener(id);
+  });
 
-      heartbeat(newWebsocket);
+  newWebsocket.on("ping", () => {
+    javaScriptUtils.devLog(`SOCKET PING - ${webSocketUri} / ${ws.id}`);
 
-      updateSocket(ws.id, {
-        ...ws,
-        socket: newWebsocket,
-        isConnected: true,
-      });
+    heartbeat(newWebsocket);
+  });
 
-      setupMessageListener(id);
+  newWebsocket.on("error", error => {
+    javaScriptUtils.devLog(
+      `SOCKET ERROR - ${webSocketUri} / ${ws.id} ${error}`
+    );
+
+    updateSocket(ws.id, {
+      ...ws,
+      isConnected: false,
     });
 
-    newWebsocket.on("ping", () => {
-      javaScriptUtils.devLog(`SOCKET PING - ${webSocketUri} / ${ws.id}`);
+    newWebsocket.close();
+  });
 
-      heartbeat(newWebsocket);
+  newWebsocket.on("close", (code, reason) => {
+    javaScriptUtils.devLog(
+      `SOCKET CLOSE - ${webSocketUri} / ${ws.id} ${code} ${reason}`
+    );
+
+    updateSocket(ws.id, {
+      ...ws,
+      isConnected: false,
     });
 
-    newWebsocket.on("error", error => {
-      javaScriptUtils.devLog(
-        `SOCKET ERROR - ${webSocketUri} / ${ws.id} ${error}`
-      );
-
-      updateSocket(ws.id, {
-        ...ws,
-        isConnected: false,
-      });
-
-      newWebsocket.close();
-    });
-
-    newWebsocket.on("close", (code, reason) => {
-      javaScriptUtils.devLog(
-        `SOCKET CLOSE - ${webSocketUri} / ${ws.id} ${code} ${reason}`
-      );
-
-      updateSocket(ws.id, {
-        ...ws,
-        isConnected: false,
-      });
-
-      if (subscription.active()) {
-        setTimeout(() => {
-          connect(id);
-        }, 500);
-      }
-    });
-  }
+    if (subscription.active()) {
+      setTimeout(() => {
+        javaScriptUtils.devLog(
+          `Auto-reconnect initiated - ${webSocketUri} / ${id}`
+        );
+        connect(id);
+      }, 500);
+    }
+  });
 };
 
 export const disconnect = id => {
   const ws = store.find(id);
+  if (!ws) return;
+
+  javaScriptUtils.devLog(`Disconnect initiated - ${id}`);
 
   if (ws.isConnected && ws.socket) {
     ws.socket.close();
@@ -164,7 +171,7 @@ export const connectToStoredWebSockets = () => {
   });
 };
 
-export const disconnectFromStoredWebSockets = () => {
+export const disconnectAll = () => {
   store.all().forEach(connectionDetails => {
     disconnect(connectionDetails.id);
   });
@@ -174,24 +181,14 @@ export const updateConnections = () => {
   if (subscription.active()) {
     connectToStoredWebSockets();
   } else {
-    disconnectFromStoredWebSockets();
+    disconnectAll();
   }
 };
 
 export const reconnect = id => {
   disconnect(id);
-
-  if (subscription.active()) {
-    // Reconnect delayed so that there's feedback to the user. Otherwise, it might be too quick.
-    setTimeout(() => connect(id), 500);
-  }
 };
 
 export const reconnectAll = () => {
-  disconnectFromStoredWebSockets();
-
-  if (subscription.active()) {
-    // Reconnect delayed so that there's feedback to the user. Otherwise, it might be too quick.
-    setTimeout(() => connectToStoredWebSockets(), 500);
-  }
+  disconnectAll();
 };
