@@ -11,7 +11,7 @@ import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWi
 
 const sessionIdEditor = () => {
   const [poeSessionId, setPoeSessionId] = useState(
-    globalStore.get(storeKeys.POE_SESSION_ID, null)
+    globalStore.get(storeKeys.POE_SESSION_ID)
   );
   const [
     successIconIsVisible,
@@ -19,10 +19,14 @@ const sessionIdEditor = () => {
     hideSuccessIconAfterMsElapsed,
   ] = customHooks.useDisplay();
 
+  function idIsDefined() {
+    return poeSessionId !== "" && typeof poeSessionId !== "undefined";
+  }
+
   function onSave() {
     globalStore.set(
       storeKeys.POE_SESSION_ID,
-      poeSessionId === "" ? null : poeSessionId
+      idIsDefined() ? poeSessionId : null
     );
 
     displaySuccessIcon();
