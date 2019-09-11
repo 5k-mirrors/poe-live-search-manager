@@ -7,7 +7,7 @@ import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdG
 import * as regExes from "../../../../resources/RegExes/RegExes";
 import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import InvalidInputError from "../../../../errors/invalid-input-error";
-import withLoggedOutRestriction from "../../withLoggedOutRedirection/withLoggedOutRedirection";
+import withRouteRestriction from "../../withRouteRestriction/withRouteRestriction";
 
 class Input extends Component {
   constructor(props) {
@@ -207,4 +207,4 @@ class Input extends Component {
   }
 }
 
-export default withLoggedOutRestriction(Input, "/account");
+export default withRouteRestriction(Input);

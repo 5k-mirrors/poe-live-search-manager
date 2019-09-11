@@ -1,7 +1,6 @@
 import React from "react";
 import MaterialTable from "material-table";
 import * as CustomHooks from "../../../utils/CustomHooks/CustomHooks";
-import withLoggedOutRedirection from "../../withLoggedOutRedirection/withLoggedOutRedirection";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
@@ -37,4 +36,4 @@ const trade = () => {
   );
 };
 
-export default withLoggedOutRedirection(trade, "/account");
+export default trade;
