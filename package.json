@@ -1,7 +1,7 @@
 {
   "name": "poe-sniper",
   "productName": "PoE Sniper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Desktop tool for Path of Exile to make instants offers for listed items without leaving the game",
   "main": "./app/main.prod.js",
   "scripts": {
