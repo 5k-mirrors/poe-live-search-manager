@@ -15,16 +15,16 @@ class Subscription {
     return fetch(userApiUrl).then(subscriptionData => subscriptionData.json());
   };
 
-  update(updatedData) {
+  update = updatedData => {
     this.data = {
       ...this.data,
       ...updatedData,
     };
-  }
+  };
 
-  active() {
+  active = () => {
     return this.data.paying;
-  }
+  };
 }
 
 class SingletonSubscription {

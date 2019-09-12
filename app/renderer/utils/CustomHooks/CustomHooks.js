@@ -89,16 +89,16 @@ export const useDisable = seconds => {
 export const useDisplay = () => {
   const [elementIsVisible, setShowElement] = useState(false);
 
-  let timeout;
+  const timeout = useRef(null);
 
   useEffect(() => {
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(timeout.current);
   }, [timeout]);
 
   const displayElement = () => setShowElement(true);
 
   const hideElementAfterMsElapsed = milliseconds => {
-    timeout = setTimeout(() => {
+    timeout.current = setTimeout(() => {
       setShowElement(false);
     }, milliseconds);
   };

@@ -23,6 +23,8 @@ yarn install
 yarn dev
 ```
 
+Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
+
 ## Portable version - Windows notifications issue
 
 See #42. Additionally, an issue has been submitted to the _electron-builder_ repository:

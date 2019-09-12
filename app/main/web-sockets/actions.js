@@ -9,11 +9,14 @@ import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+import { globalStore } from "../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 
 const setupMessageListener = id => {
   const limiter = notificationsLimiter.getLimiter();
 
   const ws = store.find(id);
+  if (!ws) return;
 
   ws.socket.on("message", response => {
     const parsedResponse = JSON.parse(response);
@@ -79,72 +82,80 @@ const heartbeat = ws => {
 
 export const connect = id => {
   const ws = store.find(id);
-
   if (!ws) return;
+  if (ws.isConnected) return;
 
-  if (!ws.isConnected) {
-    const webSocketUri = getWebSocketUri(ws.searchUrl);
+  const webSocketUri = getWebSocketUri(ws.searchUrl);
 
-    const newWebsocket = new WebSocket(webSocketUri, {
-      headers: {
-        Cookie: poeTrade.getCookies(),
-      },
+  javaScriptUtils.devLog(`Connect initiated - ${webSocketUri} / ${id}`);
+
+  const newWebsocket = new WebSocket(webSocketUri, {
+    headers: {
+      Cookie: poeTrade.getCookies(),
+    },
+  });
+
+  newWebsocket.on("open", () => {
+    javaScriptUtils.devLog(`SOCKET OPEN - ${webSocketUri} / ${ws.id}`);
+
+    heartbeat(newWebsocket);
+
+    updateSocket(ws.id, {
+      ...ws,
+      socket: newWebsocket,
+      isConnected: true,
     });
 
-    newWebsocket.on("open", () => {
-      javaScriptUtils.devLog(`SOCKET OPEN - ${webSocketUri} / ${ws.id}`);
+    setupMessageListener(id);
+  });
 
-      heartbeat(newWebsocket);
+  newWebsocket.on("ping", () => {
+    javaScriptUtils.devLog(`SOCKET PING - ${webSocketUri} / ${ws.id}`);
 
-      updateSocket(ws.id, {
-        ...ws,
-        socket: newWebsocket,
-        isConnected: true,
-      });
+    heartbeat(newWebsocket);
+  });
 
-      setupMessageListener(id);
+  newWebsocket.on("error", error => {
+    javaScriptUtils.devLog(
+      `SOCKET ERROR - ${webSocketUri} / ${ws.id} ${error}`
+    );
+
+    updateSocket(ws.id, {
+      ...ws,
+      isConnected: false,
     });
 
-    newWebsocket.on("ping", () => {
-      javaScriptUtils.devLog(`SOCKET PING - ${webSocketUri} / ${ws.id}`);
+    newWebsocket.close();
+  });
 
-      heartbeat(newWebsocket);
+  newWebsocket.on("close", (code, reason) => {
+    javaScriptUtils.devLog(
+      `SOCKET CLOSE - ${webSocketUri} / ${ws.id} ${code} ${reason}`
+    );
+
+    updateSocket(ws.id, {
+      ...ws,
+      isConnected: false,
     });
 
-    newWebsocket.on("error", error => {
-      javaScriptUtils.devLog(
-        `SOCKET ERROR - ${webSocketUri} / ${ws.id} ${error}`
-      );
+    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
-      updateSocket(ws.id, {
-        ...ws,
-        isConnected: false,
-      });
-
-      newWebsocket.close();
-    });
-
-    newWebsocket.on("close", (code, reason) => {
-      javaScriptUtils.devLog(
-        `SOCKET CLOSE - ${webSocketUri} / ${ws.id} ${code} ${reason}`
-      );
-
-      updateSocket(ws.id, {
-        ...ws,
-        isConnected: false,
-      });
-
-      if (subscription.active()) {
-        setTimeout(() => {
-          connect(id);
-        }, 500);
-      }
-    });
-  }
+    if (isLoggedIn && subscription.active()) {
+      setTimeout(() => {
+        javaScriptUtils.devLog(
+          `Auto-reconnect initiated - ${webSocketUri} / ${id}`
+        );
+        connect(id);
+      }, 500);
+    }
+  });
 };
 
 export const disconnect = id => {
   const ws = store.find(id);
+  if (!ws) return;
+
+  javaScriptUtils.devLog(`Disconnect initiated - ${id}`);
 
   if (ws.isConnected && ws.socket) {
     ws.socket.close();
@@ -158,40 +169,36 @@ export const disconnect = id => {
   }
 };
 
-export const connectToStoredWebSockets = () => {
+const connectAll = () => {
   store.all().forEach(connectionDetails => {
     connect(connectionDetails.id);
   });
 };
 
-export const disconnectFromStoredWebSockets = () => {
+export const disconnectAll = () => {
   store.all().forEach(connectionDetails => {
     disconnect(connectionDetails.id);
   });
 };
 
 export const updateConnections = () => {
-  if (subscription.active()) {
-    connectToStoredWebSockets();
-  } else {
-    disconnectFromStoredWebSockets();
+  const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
+
+  const conditionsAreFulfilled =
+    isLoggedIn && poeSessionId && subscription.active();
+
+  if (conditionsAreFulfilled) {
+    return connectAll();
   }
+
+  return disconnectAll();
 };
 
 export const reconnect = id => {
   disconnect(id);
-
-  if (subscription.active()) {
-    // Reconnect delayed so that there's feedback to the user. Otherwise, it might be too quick.
-    setTimeout(() => connect(id), 500);
-  }
 };
 
 export const reconnectAll = () => {
-  disconnectFromStoredWebSockets();
-
-  if (subscription.active()) {
-    // Reconnect delayed so that there's feedback to the user. Otherwise, it might be too quick.
-    setTimeout(() => connectToStoredWebSockets(), 500);
-  }
+  disconnectAll();
 };

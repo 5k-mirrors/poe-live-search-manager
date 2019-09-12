@@ -1,7 +1,7 @@
 {
   "name": "poe-sniper",
   "productName": "PoE Sniper",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Desktop tool for Path of Exile to make instants offers for listed items without leaving the game",
   "main": "./app/main.prod.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "lint": "eslint app",
     "package": "cross-env NODE_ENV=production npm run build && electron-builder",
     "package:all": "cross-env NODE_ENV=production npm run build && electron-builder --mwl",
-    "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish never",
+    "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish onTag",
     "package:mac": "cross-env NODE_ENV=production npm run build && electron-builder build --mac",
     "package:linux": "cross-env NODE_ENV=production npm run build && electron-builder build --linux",
     "prettify": "prettier --write app/**/*.js",
@@ -115,7 +115,12 @@
     },
     "directories": {
       "output": "release"
-    }
+    },
+    "publish": [{
+      "provider": "github",
+      "owner": "5k-mirrors",
+      "repo": "poe-sniper"
+    }]
   },
   "jest": {
     "setupFiles": [
