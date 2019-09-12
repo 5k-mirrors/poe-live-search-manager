@@ -57,7 +57,7 @@ const setupAuthenticationIpcListeners = () => {
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
     subscriptionActions.stopRefreshInterval();
 
-    webSocketActions.disconnectFromStoredWebSockets();
+    webSocketActions.disconnectAll();
 
     storeUtils.deleteIfExists(storeKeys.POE_SESSION_ID);
   });
