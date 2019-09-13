@@ -166,6 +166,20 @@ class Input extends Component {
     return webSocketStore.length === 0;
   }
 
+  deleteAll() {
+    const {
+      webSocketStore: [...webSocketStore],
+    } = this.state;
+
+    webSocketStore.forEach(connectionDetails => {
+      ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
+    });
+
+    this.setState({
+      webSocketStore: [],
+    });
+  }
+
   render() {
     const {
       webSocketStore: [...webSocketStore],
@@ -196,6 +210,12 @@ class Input extends Component {
             isFreeAction: true,
             disabled: this.isWebSocketStoreEmpty() || allReconnectsAreDisabled,
             onClick: () => this.reconnectAll(),
+          },
+          {
+            icon: "delete_outline",
+            tooltip: "Delete all",
+            isFreeAction: true,
+            onClick: () => this.deleteAll(),
           },
         ]}
         options={{
