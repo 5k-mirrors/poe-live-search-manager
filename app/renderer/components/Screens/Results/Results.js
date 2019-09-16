@@ -53,9 +53,8 @@ const trade = () => {
           <Box component="td" padding={2} fontSize="13px">
             Result count: <b>{results.length}</b>
             <Link to="/settings" style={{ marginLeft: 3 }}>
-              (limit: <b>{resultsLimit}</b>
+              (limit: <b>{resultsLimit}</b>)
             </Link>
-            )
           </Box>
         ),
       }}
