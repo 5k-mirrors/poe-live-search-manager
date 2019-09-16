@@ -59,7 +59,7 @@ const setupAuthenticationIpcListeners = () => {
 
     webSocketActions.disconnectAll();
 
-    storeUtils.deleteIfExists(storeKeys.POE_SESSION_ID);
+    storeUtils.clear(storeKeys.POE_SESSION_ID);
   });
 };
 

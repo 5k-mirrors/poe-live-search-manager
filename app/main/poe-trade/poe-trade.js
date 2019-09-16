@@ -47,9 +47,7 @@ export const getWhisperMessage = itemDetails => {
   return whisperMessage;
 };
 
-const getNotificationTitle = itemName => `New ${itemName} listed`;
-
-const getNotificationMessage = whisperMessage => {
+export const getPrice = whisperMessage => {
   const matchDetails = whisperMessage.match(/listed for [\d]+ [\S]+/);
 
   // => `match` returns `null` if there's no corresponding item in the string.
@@ -65,8 +63,11 @@ const getNotificationMessage = whisperMessage => {
   return `~b/o ${itemPrice}`;
 };
 
-export const notifyUser = (itemName, whisperMessage) =>
+export const notifyUser = (itemName, price) => {
+  const title = `New ${itemName} listed`;
+
   electronUtils.doNotify({
-    title: getNotificationTitle(itemName),
-    body: getNotificationMessage(whisperMessage),
+    title,
+    body: price,
   });
+};

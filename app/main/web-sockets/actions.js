@@ -1,8 +1,5 @@
 import WebSocket from "ws";
-import { clipboard } from "electron";
 import store from "./store";
-import notificationsLimiter from "../notifications-limiter/notifications-limiter";
-import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
@@ -11,10 +8,10 @@ import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import { windows } from "../../resources/Windows/Windows";
+import processItems from "../process-items/process-items";
 
 const setupMessageListener = id => {
-  const limiter = notificationsLimiter.getLimiter();
-
   const ws = store.find(id);
   if (!ws) return;
 
@@ -24,32 +21,7 @@ const setupMessageListener = id => {
     const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
 
     if (javaScriptUtils.isDefined(itemIds)) {
-      itemIds.forEach(itemId => {
-        poeTrade
-          .fetchItemDetails(itemId)
-          .then(itemDetails => {
-            notificationsLimiter.refreshMinTime();
-
-            limiter
-              .schedule({ id: uniqueIdGenerator() }, () => {
-                const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
-
-                if (poeTrade.copyWhisperIsEnabled()) {
-                  clipboard.writeText(whisperMessage);
-                }
-
-                poeTrade.notifyUser(ws.name, whisperMessage);
-              })
-              .catch(err => {
-                // eslint-disable-next-line no-console
-                console.error(err);
-              });
-          })
-          .catch(err => {
-            // eslint-disable-next-line no-console
-            console.error(err);
-          });
-      });
+      processItems(itemIds, ws);
     }
   });
 };
@@ -59,9 +31,7 @@ const updateSocket = (id, details) => {
     ...details,
   });
 
-  const window = electronUtils.getWindowByName("PoE Sniper");
-
-  window.webContents.send(ipcEvents.SOCKET_STATE_UPDATE, {
+  electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
     isConnected: details.isConnected,
   });

@@ -5,6 +5,7 @@ import installExtension, {
 } from "electron-devtools-installer";
 import { autoUpdater } from "electron-updater";
 import initializeProject from "./initialize-project/initialize-project";
+import { windows } from "../resources/Windows/Windows";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -59,7 +60,7 @@ app.on("ready", async () => {
   }
 
   win.webContents.on("did-finish-load", () => {
-    win.setTitle("PoE Sniper");
+    win.setTitle(windows.POE_SNIPER);
 
     initializeProject();
   });
