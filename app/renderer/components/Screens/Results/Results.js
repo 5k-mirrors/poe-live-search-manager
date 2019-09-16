@@ -19,7 +19,7 @@ const trade = () => {
     });
 
     return () => ipcRenderer.removeAllListeners();
-  });
+  }, []);
 
   function copyWhisper(whisper) {
     clipboard.writeText(whisper);
@@ -53,7 +53,7 @@ const trade = () => {
           top: 0,
         },
         maxBodyHeight: "500px",
-        pageSize: 100,
+        pageSize: Number(globalStore.get(storeKeys.RESULTS_LIMIT, 100)),
         emptyRowsWhenPaging: false,
       }}
     />

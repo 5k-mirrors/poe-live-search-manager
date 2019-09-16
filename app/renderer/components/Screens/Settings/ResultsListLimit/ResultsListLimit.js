@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
+import Input from "../../../UI/SimpleHtmlElements/Input/Input";
+import ButtonWithSuccessIcon from "../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../resources/StoreKeys/StoreKeys";
-import Input from "../../../UI/SimpleHtmlElements/Input/Input";
-import ButtonWithSuccessIcon from "../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 
-const notifications = () => {
-  const [notificationsInterval, setNotificationsInterval] = useState(
-    globalStore.get(storeKeys.NOTIFICATIONS_INTERVAL, 3)
+const resultsListLimit = () => {
+  const [limit, setLimit] = useState(
+    globalStore.get(storeKeys.RESULTS_LIMIT, 100)
   );
   const [
     successIconIsVisible,
@@ -18,7 +18,7 @@ const notifications = () => {
   ] = customHooks.useDisplay();
 
   function onSave() {
-    globalStore.set(storeKeys.NOTIFICATIONS_INTERVAL, notificationsInterval);
+    globalStore.set(storeKeys.RESULTS_LIMIT, limit);
 
     displaySuccessIcon();
 
@@ -26,12 +26,12 @@ const notifications = () => {
   }
 
   return (
-    <Box mb={2}>
-      <Typography variant="h6">Notifications interval</Typography>
+    <Box mt={2}>
+      <Typography variant="h6">Remember this many results</Typography>
       <Input
         type="number"
-        onChange={e => setNotificationsInterval(e.target.value)}
-        value={notificationsInterval}
+        onChange={e => setLimit(e.target.value)}
+        value={limit}
         margin="normal"
       />
       <Box>
@@ -45,4 +45,4 @@ const notifications = () => {
   );
 };
 
-export default notifications;
+export default resultsListLimit;

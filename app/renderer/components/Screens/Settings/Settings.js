@@ -3,6 +3,7 @@ import Box from "@material-ui/core/Box";
 import NotificationsInterval from "./NotificationsInterval/NotificationsInterval";
 import TestNotification from "./TestNotification/TestNotification";
 import Clipboard from "./Clipboard/Clipboard";
+import ResultsListLimit from "./ResultsListLimit/ResultsListLimit";
 import withRouteRestriction from "../../withRouteRestriction/withRouteRestriction";
 
 const settings = () => (
@@ -10,6 +11,7 @@ const settings = () => (
     <NotificationsInterval />
     <TestNotification />
     <Clipboard />
+    <ResultsListLimit />
   </Box>
 );
 
