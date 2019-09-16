@@ -5,5 +5,5 @@ export const storeKeys = {
   WS_CONNECTIONS: "wsConnections",
   NOTIFICATIONS_INTERVAL: "notificationsInterval",
   COPY_WHISPER: "copyWhisper",
-  RESULTS_LIMIT: "reesultsLimit",
+  RESULTS_LIMIT: "resultsLimit",
 };
