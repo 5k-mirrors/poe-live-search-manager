@@ -23,9 +23,9 @@ const resultsListLimit = () => {
     const results = globalStore.get(storeKeys.RESULTS, []);
 
     if (results.length > Number(limit)) {
-      results.slice(0, limit);
+      const updatedResults = results.slice(0, limit);
 
-      globalStore.set(storeKeys.RESULTS, results);
+      globalStore.set(storeKeys.RESULTS, updatedResults);
     }
 
     displaySuccessIcon();
