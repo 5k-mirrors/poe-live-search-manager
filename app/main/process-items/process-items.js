@@ -17,28 +17,38 @@ const processItems = (itemIds, ws) => {
       .then(itemDetails => {
         const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
         const price = poeTrade.getPrice(whisperMessage);
+        const id = uniqueIdGenerator();
 
         const currentResults = globalStore.get(storeKeys.RESULTS, []);
 
         currentResults.unshift({
+          id,
           name: ws.name,
           searchUrl: ws.searchUrl,
           price,
           whisperMessage,
         });
 
-        globalStore.set(storeKeys.RESULTS, currentResults);
+        const resultsLimit = globalStore.get(storeKeys.RESULTS_LIMIT, 100);
+
+        let updatedResults = [...currentResults];
+
+        if (currentResults.length > resultsLimit) {
+          updatedResults = currentResults.slice(0, resultsLimit);
+        }
+
+        globalStore.set(storeKeys.RESULTS, updatedResults);
 
         electronUtils.send(
           windows.POE_SNIPER,
           ipcEvents.RESULTS_UPDATE,
-          currentResults
+          updatedResults
         );
 
         notificationsLimiter.refreshMinTime();
 
         limiter
-          .schedule({ id: uniqueIdGenerator() }, () => {
+          .schedule({ id }, () => {
             if (poeTrade.copyWhisperIsEnabled()) {
               clipboard.writeText(whisperMessage);
             }

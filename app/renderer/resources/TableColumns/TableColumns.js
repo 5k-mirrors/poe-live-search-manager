@@ -20,6 +20,7 @@ export const inputScreen = [
 ];
 
 export const tradeScreen = [
+  { field: "id", hidden: true },
   {
     title: "Name",
     field: "name",

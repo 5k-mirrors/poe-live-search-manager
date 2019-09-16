@@ -1,7 +1,9 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, useEffect } from "react";
 import { clipboard, ipcRenderer } from "electron";
 import Box from "@material-ui/core/Box";
 import MaterialTable from "material-table";
+import { Link } from "react-router-dom";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
@@ -13,16 +15,30 @@ const trade = () => {
     globalStore.get(storeKeys.RESULTS, [])
   );
 
+  const resultsLimit = globalStore.get(storeKeys.RESULTS_LIMIT, 100);
+
   useEffect(() => {
-    ipcRenderer.on(ipcEvents.RESULTS_UPDATE, (_, currentResults) => {
-      setResults(currentResults);
+    ipcRenderer.on(ipcEvents.RESULTS_UPDATE, (_, updatedResults) => {
+      setResults(updatedResults);
     });
 
     return () => ipcRenderer.removeAllListeners();
-  });
+  }, []);
 
-  function copyWhisper(whisper) {
-    clipboard.writeText(whisper);
+  function deleteResult(resultDetails) {
+    const updatedResults = results.filter(
+      result => result.id !== resultDetails.id
+    );
+
+    setResults(updatedResults);
+
+    globalStore.set(storeKeys.RESULTS, updatedResults);
+  }
+
+  function deleteAll() {
+    setResults([]);
+
+    globalStore.set(storeKeys.RESULTS, []);
   }
 
   return (
@@ -30,9 +46,11 @@ const trade = () => {
       style={{ whiteSpace: "nowrap" }}
       components={{
         Pagination: () => (
-          <Box component="td" padding={2} fontSize="13px" width="100%">
-            {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
-            Results count: <b>{results.length}</b>
+          <Box component="td" padding={2} fontSize="13px">
+            Result count: <b>{results.length}</b>
+            <Link to="/settings" style={{ marginLeft: 3 }}>
+              (limit: <b>{resultsLimit}</b>)
+            </Link>
           </Box>
         ),
       }}
@@ -42,8 +60,19 @@ const trade = () => {
         result => ({
           icon: "file_copy",
           tooltip: "Copy whisper",
-          onClick: () => copyWhisper(result.whisperMessage),
+          onClick: () => clipboard.writeText(result.whisperMessage),
         }),
+        result => ({
+          icon: "delete",
+          tooltip: "Delete",
+          onClick: () => deleteResult(result),
+        }),
+        {
+          icon: "delete_outline",
+          tooltip: "Delete all",
+          isFreeAction: true,
+          onClick: () => deleteAll(),
+        },
       ]}
       options={{
         showTitle: false,
@@ -53,7 +82,7 @@ const trade = () => {
           top: 0,
         },
         maxBodyHeight: "500px",
-        pageSize: 100,
+        pageSize: resultsLimit,
         emptyRowsWhenPaging: false,
       }}
     />

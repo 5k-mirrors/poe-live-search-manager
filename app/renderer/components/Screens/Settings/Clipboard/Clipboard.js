@@ -20,7 +20,7 @@ const clipboard = () => {
   }
 
   return (
-    <Box mt={2}>
+    <Box mt={2} mb={2}>
       <Typography variant="h6">
         Copy whisper messages to the clipboard
       </Typography>
