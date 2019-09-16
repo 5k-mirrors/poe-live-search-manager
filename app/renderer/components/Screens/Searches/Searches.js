@@ -9,7 +9,7 @@ import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUt
 import InvalidInputError from "../../../../errors/invalid-input-error";
 import withRouteRestriction from "../../withRouteRestriction/withRouteRestriction";
 
-class Input extends Component {
+class Searches extends Component {
   constructor(props) {
     super(props);
 
@@ -227,4 +227,4 @@ class Input extends Component {
   }
 }
 
-export default withRouteRestriction(Input);
+export default withRouteRestriction(Searches);
