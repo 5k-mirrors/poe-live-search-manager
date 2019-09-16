@@ -1,39 +1,47 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { clipboard, ipcRenderer } from "electron";
 import MaterialTable from "material-table";
-import * as CustomHooks from "../../../utils/CustomHooks/CustomHooks";
+import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
+import withRouteRestriction from "../../withRouteRestriction/withRouteRestriction";
 
 const trade = () => {
-  const [messages, setMessages] =
-    CustomHooks.useStoreListener(storeKeys.TRADE_MESSAGES) || [];
+  const [results, setResults] = useState(
+    globalStore.get(storeKeys.RESULTS, [])
+  );
 
-  function deleteMessage(message) {
-    return new Promise(resolve => {
-      const currentMessages = [...messages];
-
-      const messageIndex = messages.indexOf(message);
-      currentMessages.splice(messageIndex, 1);
-
-      setMessages(currentMessages);
-
-      globalStore.set(storeKeys.TRADE_MESSAGES, currentMessages);
-
-      resolve();
+  useEffect(() => {
+    ipcRenderer.on(ipcEvents.RESULTS_UPDATE, (_, currentResults) => {
+      setResults(currentResults);
     });
+
+    return () => ipcRenderer.removeAllListeners();
+  });
+
+  function copyWhisper(whisper) {
+    clipboard.writeText(whisper);
   }
 
   return (
     <MaterialTable
-      title="Messages"
+      style={{ whiteSpace: "nowrap" }}
       columns={tableColumns.tradeScreen}
-      data={messages}
-      editable={{
-        onRowDelete: message => deleteMessage(message),
+      data={results}
+      actions={[
+        result => ({
+          icon: "file_copy",
+          tooltip: "Copy whisper",
+          onClick: () => copyWhisper(result.whisper),
+        }),
+      ]}
+      options={{
+        showTitle: false,
+        toolbarButtonAlignment: "left",
       }}
     />
   );
 };
 
-export default trade;
+export default withRouteRestriction(trade);

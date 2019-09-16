@@ -1,6 +1,7 @@
 import React from "react";
 import SearchUrl from "../../components/CustomTableColumns/SearchUrl/SearchUrl";
 import Connected from "../../components/CustomTableColumns/Connected/Connected";
+import ResultLink from "../../components/CustomTableColumns/ResultLink/ResultLink";
 
 export const inputScreen = [
   { field: "id", hidden: true },
@@ -19,6 +20,21 @@ export const inputScreen = [
 ];
 
 export const tradeScreen = [
-  { title: "Name", field: "itemName" },
-  { title: "Price", field: "itemPrice" },
+  {
+    title: "Name",
+    field: "name",
+    render: props => {
+      const { name, searchUrl } = props;
+
+      return <ResultLink name={name} url={searchUrl} />;
+    },
+  },
+  {
+    title: "Price",
+    field: "price",
+  },
+  {
+    title: "Whisper",
+    field: "whisperMessage",
+  },
 ];

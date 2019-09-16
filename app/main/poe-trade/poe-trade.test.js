@@ -59,43 +59,49 @@ describe("poeTrade", () => {
   describe("notifyUser", () => {
     let doNotifySpy;
 
+    const itemName = "Tabula Rasa Simple Robe";
+    const price = "~b/o 20 chaos";
+
     beforeEach(() => {
       doNotifySpy = jest
         .spyOn(electronUtils, "doNotify")
         .mockImplementationOnce(() => jest.fn());
     });
 
-    const itemName = "Tabula Rasa Simple Robe";
+    it("notifies the user with the given arguments", () => {
+      const expectedTitle = `New ${itemName} listed`;
 
-    describe("when `whisperMessage` fits the pattern", () => {
+      poeTrade.notifyUser(itemName, price);
+
+      expect(doNotifySpy).toHaveBeenCalledWith({
+        title: expectedTitle,
+        body: price,
+      });
+    });
+  });
+
+  describe("getPrice", () => {
+    describe("when the message matches with the `RegEx` pattern", () => {
       const whisperMessage =
         '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 chaos in Legion (stash tab "6"; position: left 4, top 7)';
 
-      it("sets the `body` to the formatted string", () => {
-        const expectedString = `~b/o 20 chaos`;
+      it("returns the b/o price", () => {
+        const expectedString = "~b/o 20 chaos";
 
-        poeTrade.notifyUser(itemName, whisperMessage);
+        const actualString = poeTrade.getPrice(whisperMessage);
 
-        expect(doNotifySpy).toHaveBeenCalledWith({
-          title: `New ${itemName} listed`,
-          body: expectedString,
-        });
+        expect(actualString).toEqual(expectedString);
       });
     });
 
-    describe("when `whisperMessage` does not fit the pattern", () => {
+    describe("when the message does not match with the `RegEx` pattern", () => {
       const whisperMessage =
-        '@ВжухХацыч Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
+        '@TestUser Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
 
-      it("sets the `body` to an empty string", () => {
-        const expectedString = "";
+      it("returns an empty string", () => {
+        const actualString = poeTrade.getPrice(whisperMessage);
 
-        poeTrade.notifyUser(itemName, whisperMessage);
-
-        expect(doNotifySpy).toHaveBeenCalledWith({
-          title: `New ${itemName} listed`,
-          body: expectedString,
-        });
+        expect(actualString).toEqual("");
       });
     });
   });

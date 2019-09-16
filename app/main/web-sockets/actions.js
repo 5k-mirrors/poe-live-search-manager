@@ -11,6 +11,7 @@ import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import { windows } from "../../resources/Windows/Windows";
 
 const setupMessageListener = id => {
   const limiter = notificationsLimiter.getLimiter();
@@ -28,17 +29,35 @@ const setupMessageListener = id => {
         poeTrade
           .fetchItemDetails(itemId)
           .then(itemDetails => {
+            const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
+            const price = poeTrade.getPrice(whisperMessage);
+
+            const currentResults = globalStore.get(storeKeys.RESULTS, []);
+
+            currentResults.unshift({
+              name: ws.name,
+              searchUrl: ws.searchUrl,
+              price,
+              whisperMessage,
+            });
+
+            globalStore.set(storeKeys.RESULTS, currentResults);
+
+            electronUtils.send(
+              windows.POE_SNIPER,
+              ipcEvents.RESULTS_UPDATE,
+              currentResults
+            );
+
             notificationsLimiter.refreshMinTime();
 
             limiter
               .schedule({ id: uniqueIdGenerator() }, () => {
-                const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
-
                 if (poeTrade.copyWhisperIsEnabled()) {
                   clipboard.writeText(whisperMessage);
                 }
 
-                poeTrade.notifyUser(ws.name, whisperMessage);
+                poeTrade.notifyUser(ws.name, price);
               })
               .catch(err => {
                 // eslint-disable-next-line no-console
@@ -59,9 +78,7 @@ const updateSocket = (id, details) => {
     ...details,
   });
 
-  const window = electronUtils.getWindowByName("PoE Sniper");
-
-  window.webContents.send(ipcEvents.SOCKET_STATE_UPDATE, {
+  electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
     isConnected: details.isConnected,
   });
