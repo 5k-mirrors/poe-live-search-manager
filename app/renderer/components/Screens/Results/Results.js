@@ -53,7 +53,7 @@ const trade = () => {
           top: 0,
         },
         maxBodyHeight: "500px",
-        pageSize: Number(globalStore.get(storeKeys.RESULTS_LIMIT, 100)),
+        pageSize: globalStore.get(storeKeys.RESULTS_LIMIT, 100),
         emptyRowsWhenPaging: false,
       }}
     />

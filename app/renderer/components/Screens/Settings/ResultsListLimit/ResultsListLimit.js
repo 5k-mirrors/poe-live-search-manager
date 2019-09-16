@@ -18,7 +18,7 @@ const resultsListLimit = () => {
   ] = customHooks.useDisplay();
 
   function onSave() {
-    globalStore.set(storeKeys.RESULTS_LIMIT, limit);
+    globalStore.set(storeKeys.RESULTS_LIMIT, Number(limit));
 
     displaySuccessIcon();
 
