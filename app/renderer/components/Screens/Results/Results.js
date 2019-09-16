@@ -25,6 +25,22 @@ const trade = () => {
     clipboard.writeText(whisper);
   }
 
+  function deleteResult(resultDetails) {
+    const updatedResults = results.filter(
+      result => result.id !== resultDetails.id
+    );
+
+    setResults(updatedResults);
+
+    globalStore.set(storeKeys.RESULTS, updatedResults);
+  }
+
+  function deleteAll() {
+    setResults([]);
+
+    globalStore.set(storeKeys.RESULTS, []);
+  }
+
   return (
     <MaterialTable
       style={{ whiteSpace: "nowrap" }}
@@ -44,6 +60,17 @@ const trade = () => {
           tooltip: "Copy whisper",
           onClick: () => copyWhisper(result.whisperMessage),
         }),
+        result => ({
+          icon: "delete",
+          tooltip: "Delete",
+          onClick: () => deleteResult(result),
+        }),
+        {
+          icon: "delete_outline",
+          tooltip: "Delete all",
+          isFreeAction: true,
+          onClick: () => deleteAll(),
+        },
       ]}
       options={{
         showTitle: false,

@@ -17,10 +17,12 @@ const processItems = (itemIds, ws) => {
       .then(itemDetails => {
         const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
         const price = poeTrade.getPrice(whisperMessage);
+        const id = uniqueIdGenerator();
 
         const currentResults = globalStore.get(storeKeys.RESULTS, []);
 
         currentResults.unshift({
+          id,
           name: ws.name,
           searchUrl: ws.searchUrl,
           price,
@@ -38,7 +40,7 @@ const processItems = (itemIds, ws) => {
         notificationsLimiter.refreshMinTime();
 
         limiter
-          .schedule({ id: uniqueIdGenerator() }, () => {
+          .schedule({ id }, () => {
             if (poeTrade.copyWhisperIsEnabled()) {
               clipboard.writeText(whisperMessage);
             }
