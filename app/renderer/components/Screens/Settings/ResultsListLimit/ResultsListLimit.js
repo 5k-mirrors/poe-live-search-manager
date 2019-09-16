@@ -18,11 +18,13 @@ const resultsListLimit = () => {
   ] = customHooks.useDisplay();
 
   function onSave() {
-    globalStore.set(storeKeys.RESULTS_LIMIT, Number(limit));
+    const parsedLimit = Number(limit);
+
+    globalStore.set(storeKeys.RESULTS_LIMIT, parsedLimit);
 
     const results = globalStore.get(storeKeys.RESULTS, []);
 
-    if (results.length > Number(limit)) {
+    if (results.length > parsedLimit) {
       const updatedResults = results.slice(0, limit);
 
       globalStore.set(storeKeys.RESULTS, updatedResults);
