@@ -1,8 +1,5 @@
 import WebSocket from "ws";
-import { clipboard } from "electron";
 import store from "./store";
-import notificationsLimiter from "../notifications-limiter/notifications-limiter";
-import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
@@ -12,10 +9,9 @@ import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
+import processItems from "../process-items/process-items";
 
 const setupMessageListener = id => {
-  const limiter = notificationsLimiter.getLimiter();
-
   const ws = store.find(id);
   if (!ws) return;
 
@@ -25,50 +21,7 @@ const setupMessageListener = id => {
     const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
 
     if (javaScriptUtils.isDefined(itemIds)) {
-      itemIds.forEach(itemId => {
-        poeTrade
-          .fetchItemDetails(itemId)
-          .then(itemDetails => {
-            const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
-            const price = poeTrade.getPrice(whisperMessage);
-
-            const currentResults = globalStore.get(storeKeys.RESULTS, []);
-
-            currentResults.unshift({
-              name: ws.name,
-              searchUrl: ws.searchUrl,
-              price,
-              whisperMessage,
-            });
-
-            globalStore.set(storeKeys.RESULTS, currentResults);
-
-            electronUtils.send(
-              windows.POE_SNIPER,
-              ipcEvents.RESULTS_UPDATE,
-              currentResults
-            );
-
-            notificationsLimiter.refreshMinTime();
-
-            limiter
-              .schedule({ id: uniqueIdGenerator() }, () => {
-                if (poeTrade.copyWhisperIsEnabled()) {
-                  clipboard.writeText(whisperMessage);
-                }
-
-                poeTrade.notifyUser(ws.name, price);
-              })
-              .catch(err => {
-                // eslint-disable-next-line no-console
-                console.error(err);
-              });
-          })
-          .catch(err => {
-            // eslint-disable-next-line no-console
-            console.error(err);
-          });
-      });
+      processItems(itemIds, ws);
     }
   });
 };
