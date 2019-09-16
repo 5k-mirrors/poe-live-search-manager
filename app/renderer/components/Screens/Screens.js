@@ -3,13 +3,13 @@ import { Switch, Route } from "react-router-dom";
 import Input from "./Input/Input";
 import Account from "./Account/Account";
 import Settings from "./Settings/Settings";
-import Trade from "./Trade/Trade";
+import Results from "./Results/Results";
 
 const screens = () => (
   <Switch>
     <Route path="/input" component={Input} />
     <Route path="/settings" component={Settings} />
-    <Route path="/results" component={Trade} />
+    <Route path="/results" component={Results} />
     <Route component={Account} />
   </Switch>
 );
