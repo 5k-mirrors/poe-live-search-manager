@@ -7,8 +7,6 @@ import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../resources/StoreKeys/StoreKeys";
 
-// @TODO #1 rename `trade`
-// @TODO #2 fix grammatical issues(`resultS`)
 const resultsListLimit = () => {
   const [limit, setLimit] = useState(
     globalStore.get(storeKeys.RESULTS_LIMIT, 100)
