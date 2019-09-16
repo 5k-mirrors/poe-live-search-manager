@@ -1,7 +1,9 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, useEffect } from "react";
 import { clipboard, ipcRenderer } from "electron";
 import Box from "@material-ui/core/Box";
 import MaterialTable from "material-table";
+import { Link } from "react-router-dom";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
@@ -12,6 +14,8 @@ const trade = () => {
   const [results, setResults] = useState(
     globalStore.get(storeKeys.RESULTS, [])
   );
+
+  const resultsLimit = globalStore.get(storeKeys.RESULTS_LIMIT, 100);
 
   useEffect(() => {
     ipcRenderer.on(ipcEvents.RESULTS_UPDATE, (_, updatedResults) => {
@@ -47,8 +51,11 @@ const trade = () => {
       components={{
         Pagination: () => (
           <Box component="td" padding={2} fontSize="13px">
-            {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
-            Results count: <b>{results.length}</b>
+            Result count: <b>{results.length}</b>
+            <Link to="/settings" style={{ marginLeft: 3 }}>
+              (limit: <b>{resultsLimit}</b>
+            </Link>
+            )
           </Box>
         ),
       }}
@@ -80,7 +87,7 @@ const trade = () => {
           top: 0,
         },
         maxBodyHeight: "500px",
-        pageSize: globalStore.get(storeKeys.RESULTS_LIMIT, 100),
+        pageSize: resultsLimit,
         emptyRowsWhenPaging: false,
       }}
     />
