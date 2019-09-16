@@ -14,8 +14,8 @@ const trade = () => {
   );
 
   useEffect(() => {
-    ipcRenderer.on(ipcEvents.RESULTS_UPDATE, (_, currentResults) => {
-      setResults(currentResults);
+    ipcRenderer.on(ipcEvents.RESULTS_UPDATE, (_, updatedResults) => {
+      setResults(updatedResults);
     });
 
     return () => ipcRenderer.removeAllListeners();
@@ -46,7 +46,7 @@ const trade = () => {
       style={{ whiteSpace: "nowrap" }}
       components={{
         Pagination: () => (
-          <Box component="td" padding={2} fontSize="13px" width="100%">
+          <Box component="td" padding={2} fontSize="13px">
             {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
             Results count: <b>{results.length}</b>
           </Box>

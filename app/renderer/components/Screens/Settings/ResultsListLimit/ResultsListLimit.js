@@ -20,6 +20,14 @@ const resultsListLimit = () => {
   function onSave() {
     globalStore.set(storeKeys.RESULTS_LIMIT, Number(limit));
 
+    const results = globalStore.get(storeKeys.RESULTS, []);
+
+    if (results.length > Number(limit)) {
+      results.slice(0, limit);
+
+      globalStore.set(storeKeys.RESULTS, results);
+    }
+
     displaySuccessIcon();
 
     hideSuccessIconAfterMsElapsed(2500);

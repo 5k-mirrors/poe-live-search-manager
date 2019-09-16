@@ -29,12 +29,20 @@ const processItems = (itemIds, ws) => {
           whisperMessage,
         });
 
-        globalStore.set(storeKeys.RESULTS, currentResults);
+        const resultsLimit = globalStore.get(storeKeys.RESULTS_LIMIT, 100);
+
+        let updatedResults = [...currentResults];
+
+        if (currentResults.length > resultsLimit) {
+          updatedResults = currentResults.slice(0, resultsLimit);
+        }
+
+        globalStore.set(storeKeys.RESULTS, updatedResults);
 
         electronUtils.send(
           windows.POE_SNIPER,
           ipcEvents.RESULTS_UPDATE,
-          currentResults
+          updatedResults
         );
 
         notificationsLimiter.refreshMinTime();
