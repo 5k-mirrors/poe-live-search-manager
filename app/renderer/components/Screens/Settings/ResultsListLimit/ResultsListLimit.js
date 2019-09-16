@@ -7,6 +7,8 @@ import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../resources/StoreKeys/StoreKeys";
 
+// @TODO #1 rename `trade`
+// @TODO #2 fix grammatical issues(`resultS`)
 const resultsListLimit = () => {
   const [limit, setLimit] = useState(
     globalStore.get(storeKeys.RESULTS_LIMIT, 100)
@@ -22,10 +24,10 @@ const resultsListLimit = () => {
 
     globalStore.set(storeKeys.RESULTS_LIMIT, parsedLimit);
 
-    const results = globalStore.get(storeKeys.RESULTS, []);
+    const currentResults = globalStore.get(storeKeys.RESULTS, []);
 
-    if (results.length > parsedLimit) {
-      const updatedResults = results.slice(0, limit);
+    if (currentResults.length > parsedLimit) {
+      const updatedResults = currentResults.slice(0, limit);
 
       globalStore.set(storeKeys.RESULTS, updatedResults);
     }
