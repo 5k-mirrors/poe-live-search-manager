@@ -33,7 +33,7 @@ const trade = () => {
         result => ({
           icon: "file_copy",
           tooltip: "Copy whisper",
-          onClick: () => copyWhisper(result.whisper),
+          onClick: () => copyWhisper(result.whisperMessage),
         }),
       ]}
       options={{
