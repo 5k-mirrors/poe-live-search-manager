@@ -25,10 +25,6 @@ const trade = () => {
     return () => ipcRenderer.removeAllListeners();
   }, []);
 
-  function copyWhisper(whisper) {
-    clipboard.writeText(whisper);
-  }
-
   function deleteResult(resultDetails) {
     const updatedResults = results.filter(
       result => result.id !== resultDetails.id
@@ -64,7 +60,7 @@ const trade = () => {
         result => ({
           icon: "file_copy",
           tooltip: "Copy whisper",
-          onClick: () => copyWhisper(result.whisperMessage),
+          onClick: () => clipboard.writeText(result.whisperMessage),
         }),
         result => ({
           icon: "delete",
