@@ -30,13 +30,7 @@ const trade = () => {
       style={{ whiteSpace: "nowrap" }}
       components={{
         Pagination: () => (
-          <Box
-            component="td"
-            padding={2}
-            fontSize="13px"
-            borderTop="1px solid black"
-            width="100%"
-          >
+          <Box component="td" padding={2} fontSize="13px" width="100%">
             {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
             Results count: <b>{results.length}</b>
           </Box>
