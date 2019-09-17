@@ -7,7 +7,7 @@ It is an alternative to keeping several browser tabs open but it consumes far le
 Supported trade sites:
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
 
-*You are viewing the README of version [v1.0.3](https://github.com/thisismydesign/poe-sniper/releases/tag/v1.0.3). This is a completely new app with [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) support and a graphical interface. GitHub is only used to host releases and issues. You can find the old app and other releases [here](https://github.com/thisismydesign/poe-sniper/releases).*
+*You are viewing the README of version [v1.1.0](https://github.com/thisismydesign/poe-sniper/releases/tag/v1.1.0). This is a completely new app with [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) support and a graphical interface. GitHub is only used to host releases and issues. You can find the old app and other releases [here](https://github.com/thisismydesign/poe-sniper/releases).*
 
 ## Usage
 
