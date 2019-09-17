@@ -18,6 +18,11 @@ Supported trade sites:
 - Include the Firebase API key in the `.env` file as described in the [example](./.env.example).
 - Set up notifications (if on Windows): https://electronjs.org/docs/tutorial/notifications#windows
 
+Minimal Node.js version 11.7 is required
+```bash
+n 11.7
+```
+
 ```bash
 yarn install
 yarn dev
