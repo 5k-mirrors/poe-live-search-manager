@@ -74,9 +74,11 @@ const setupGeneralIpcListeners = () => {
   ipcMain.on(
     ipcEvents.SUBSCRIPTION_UPDATE,
     (event, updatedSubscriptionData) => {
-      subscription.update(updatedSubscriptionData);
+      if (subscription.active() !== updatedSubscriptionData.paying) {
+        subscription.update(updatedSubscriptionData);
 
-      webSocketActions.updateConnections();
+        webSocketActions.updateConnections();
+      }
     }
   );
 
