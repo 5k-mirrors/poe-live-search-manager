@@ -19,7 +19,13 @@ export const inputScreen = [
     render: props => {
       const { searchUrl } = props;
 
-      return <SearchLink name={searchUrl} url={searchUrl} />;
+      return (
+        <SearchLink
+          name={searchUrl}
+          url={searchUrl}
+          style={{ textTransform: "none" }}
+        />
+      );
     },
   },
 ];
