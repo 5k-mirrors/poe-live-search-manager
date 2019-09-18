@@ -44,8 +44,7 @@
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
     "bottleneck": "^2.19.2",
-    "dotenv-webpack": "^1.7.0",
-    "electron-debug": "^3.0.1",
+    "dotenv": "^8.1.0",
     "electron-store": "^4.0.0",
     "electron-updater": "^4.0.14",
     "firebase": "^6.2.4",
@@ -72,6 +71,7 @@
     "css-loader": "^3.0.0",
     "electron": "^5.0.6",
     "electron-builder": "^20.44.4",
+    "electron-debug": "^3.0.1",
     "electron-devtools-installer": "^2.2.4",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
@@ -119,11 +119,13 @@
     "directories": {
       "output": "release"
     },
-    "publish": [{
-      "provider": "github",
-      "owner": "5k-mirrors",
-      "repo": "poe-sniper"
-    }]
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "5k-mirrors",
+        "repo": "poe-sniper"
+      }
+    ]
   },
   "jest": {
     "setupFiles": [

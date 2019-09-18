@@ -1,5 +1,3 @@
-const DotEnv = require("dotenv-webpack");
-
 module.exports = {
   devtool: "eval-source-map",
   mode: "development",
@@ -14,13 +12,6 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    // https://github.com/mrsteele/dotenv-webpack#properties
-    new DotEnv({
-      safe: true,
-      systemvars: true,
-    }),
-  ],
   resolve: {
     // Reason for adding .json
     // => https://github.com/MarshallOfSound/electron-devtools-installer/pull/60#issuecomment-320229210

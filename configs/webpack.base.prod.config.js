@@ -1,4 +1,3 @@
-const DotEnv = require("dotenv-webpack");
 const JavaScriptObfuscator = require("webpack-obfuscator");
 
 module.exports = {
@@ -14,14 +13,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    // https://github.com/mrsteele/dotenv-webpack#properties
-    new DotEnv({
-      safe: true,
-      systemvars: true,
-    }),
-    new JavaScriptObfuscator(),
-  ],
+  plugins: [new JavaScriptObfuscator()],
   resolve: {
     // Reason for adding .json
     // => https://github.com/MarshallOfSound/electron-devtools-installer/pull/60#issuecomment-320229210

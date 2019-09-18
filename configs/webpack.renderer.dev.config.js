@@ -4,6 +4,8 @@ const merge = require("webpack-merge");
 const os = require("os");
 const { spawn } = require("child_process");
 
+require("dotenv").config();
+
 const platformIsWindows = os.platform() === "win32";
 
 const revision = platformIsWindows
