@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../../UI/SimpleHtmlElements/Button/Button";
 import * as electronUtils from "../../../utils/ElectronUtils/ElectronUtils";
 
-const resultLink = ({ name, url }) => (
+const link = ({ name, url }) => (
   <Button
     clickEvent={() => electronUtils.openExternalUrl(url)}
     text={name}
@@ -11,4 +11,4 @@ const resultLink = ({ name, url }) => (
   />
 );
 
-export default resultLink;
+export default link;
