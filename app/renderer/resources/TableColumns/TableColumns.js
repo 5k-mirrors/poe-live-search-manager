@@ -1,7 +1,7 @@
 import React from "react";
-import SearchUrl from "../../components/CustomTableColumns/SearchUrl/SearchUrl";
+import EditableSearchUrl from "../../components/CustomTableColumns/EditableSearchUrl/EditableSearchUrl";
 import Connected from "../../components/CustomTableColumns/Connected/Connected";
-import ResultLink from "../../components/CustomTableColumns/ResultLink/ResultLink";
+import SearchLink from "../../components/CustomTableColumns/SearchLink/SearchLink";
 
 export const inputScreen = [
   { field: "id", hidden: true },
@@ -15,7 +15,18 @@ export const inputScreen = [
   {
     title: "Search URL",
     field: "searchUrl",
-    editComponent: props => <SearchUrl {...props} />,
+    editComponent: props => <EditableSearchUrl {...props} />,
+    render: props => {
+      const { searchUrl } = props;
+
+      return (
+        <SearchLink
+          name={searchUrl}
+          url={searchUrl}
+          style={{ textTransform: "none" }}
+        />
+      );
+    },
   },
 ];
 
@@ -27,7 +38,7 @@ export const tradeScreen = [
     render: props => {
       const { name, searchUrl } = props;
 
-      return <ResultLink name={name} url={searchUrl} />;
+      return <SearchLink name={name} url={searchUrl} />;
     },
   },
   {
