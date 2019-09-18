@@ -45,8 +45,6 @@ const processItems = (itemIds, ws) => {
           updatedResults
         );
 
-        notificationsLimiter.refreshMinTime();
-
         limiter
           .schedule({ id }, () => {
             if (poeTrade.copyWhisperIsEnabled()) {

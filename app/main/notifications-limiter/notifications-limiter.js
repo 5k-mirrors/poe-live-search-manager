@@ -7,7 +7,7 @@ class NotificationsLimiter {
   constructor() {
     this.instance = new Bottleneck({
       maxConcurrent: 1,
-      minTime: this.getMinTime(),
+      minTime: 3000,
     });
 
     this.instance.on("error", error => {
