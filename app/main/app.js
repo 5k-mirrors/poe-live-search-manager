@@ -7,6 +7,8 @@ import { autoUpdater } from "electron-updater";
 import initializeProject from "./initialize-project/initialize-project";
 import { windows } from "../resources/Windows/Windows";
 
+require("dotenv").config();
+
 const isDev = process.env.NODE_ENV === "development";
 
 let win;
