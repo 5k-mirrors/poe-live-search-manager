@@ -53,6 +53,7 @@ module.exports = merge(webpackDevConfigurations, {
   devServer: {
     port,
     publicPath: `http://localhost:${port}/dist`,
+    liveReload: false,
     before() {
       spawn("npm", ["run", "dev:main"], {
         shell: true,
