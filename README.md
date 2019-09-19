@@ -7,7 +7,7 @@ It is an alternative to keeping several browser tabs open but it consumes far le
 Supported trade sites:
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
 
-*You are viewing the README of version [v1.1.0](https://github.com/thisismydesign/poe-sniper/releases/tag/v1.1.0). This is a completely new app with [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) support and a graphical interface. GitHub is only used to host releases and issues. You can find the old app and other releases [here](https://github.com/thisismydesign/poe-sniper/releases).*
+*You are viewing the README of version [v1.1.0](/../../releases/tag/v1.1.0). This is a completely new app with [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) support and a graphical interface. GitHub is only used to host releases and issues. You can find the old app and other releases [here](/../../releases).*
 
 ## Usage
 
@@ -35,11 +35,17 @@ Supported trade sites:
 - A destop shortcut is created and updates are installed on app start.
 - Enjoy!
 
-Known issues:
-- **If the account is configured correctly (`Session ID` is set and `Public beta` subscripion is visible) but the searches don't connect try restarting the app.**
-
-
 ![install](install.gif)
+
+*If you encounter an issue, [report it](/../../issues/new). Restarting the app can help resolve it.*
+
+#### Notifications not showing up?
+
+- Make sure Path of Exile runs in Windowed mode
+- See if the "Test notification" on the Settings screen works. If it does, it's most likely an issue with Windows notification settings.
+- Turn off "Focus assist" or add PoE Sniper to priority apps
+- Turn on "Get notifications from apps and other senders" in Notification settings
+- Turn on notifications for PoE Sniper in Notification settings
 
 ## Caveats
 
