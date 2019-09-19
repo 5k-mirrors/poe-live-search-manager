@@ -1,13 +1,13 @@
 import Bottleneck from "bottleneck";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
-import { globalStore } from "../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 
 class NotificationsLimiter {
   constructor() {
+    // The limit is set to Windows default 5 seconds.
+    // https://www.pcworld.com/article/3054228/how-to-make-windows-10-notifications-last-a-little-or-a-lot-longer.html
     this.instance = new Bottleneck({
       maxConcurrent: 1,
-      minTime: 3000,
+      minTime: 5000,
     });
 
     this.instance.on("error", error => {
@@ -21,25 +21,8 @@ class NotificationsLimiter {
     });
   }
 
-  getMinTime = () => {
-    const oneSecondInMilliseconds = 1000;
-
-    const notificationsInterval = globalStore.get(
-      storeKeys.NOTIFICATIONS_INTERVAL,
-      3
-    );
-
-    return notificationsInterval * oneSecondInMilliseconds;
-  };
-
   getLimiter() {
     return this.instance;
-  }
-
-  refreshMinTime() {
-    this.instance.updateSettings({
-      minTime: this.getMinTime(),
-    });
   }
 }
 
