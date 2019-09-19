@@ -23,7 +23,11 @@ module.exports = {
         new JavaScriptObfuscator(),
         new webpack.EnvironmentPlugin(["FIREBASE_API_KEY", "FIREBASE_API_URL"]),
       ]
-    : [new DotEnv()],
+    : [
+        new DotEnv({
+          safe: true,
+        }),
+      ],
   resolve: {
     // Reason for adding .json
     // => https://github.com/MarshallOfSound/electron-devtools-installer/pull/60#issuecomment-320229210
