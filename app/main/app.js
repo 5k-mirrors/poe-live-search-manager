@@ -39,6 +39,11 @@ const createWindow = () => {
     },
   });
 
+  if (process.platform !== "darwin") {
+    // https://electronjs.org/docs/api/browser-window#winremovemenu-linux-windows
+    win.removeMenu();
+  }
+
   if (isDev) {
     win.loadURL(`file://${process.cwd()}/app/index.html`);
   } else {
