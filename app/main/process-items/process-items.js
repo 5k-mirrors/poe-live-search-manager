@@ -1,5 +1,5 @@
 import { clipboard } from "electron";
-import notificationsLimiter from "../notifications-limiter/notifications-limiter";
+import resultYieldLimiter from "../result-yield-limiter/result-yield-limiter";
 import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as poeTrade from "../poe-trade/poe-trade";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
@@ -9,7 +9,7 @@ import { windows } from "../../resources/Windows/Windows";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 
 const processItems = (itemIds, ws) => {
-  const limiter = notificationsLimiter.getLimiter();
+  const limiter = resultYieldLimiter.getLimiter();
 
   itemIds.forEach(itemId => {
     poeTrade

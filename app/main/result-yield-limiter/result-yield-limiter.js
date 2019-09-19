@@ -1,7 +1,7 @@
 import Bottleneck from "bottleneck";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
-class NotificationsLimiter {
+class ResultYieldLimiter {
   constructor() {
     // The limit is set to Windows default 5 seconds.
     // https://www.pcworld.com/article/3054228/how-to-make-windows-10-notifications-last-a-little-or-a-lot-longer.html
@@ -26,16 +26,16 @@ class NotificationsLimiter {
   }
 }
 
-class SingletonNotificationsLimiter {
+class SingletonResultYieldLimiter {
   constructor() {
-    if (!javaScriptUtils.isDefined(SingletonNotificationsLimiter.instance)) {
-      SingletonNotificationsLimiter.instance = new NotificationsLimiter();
+    if (!javaScriptUtils.isDefined(SingletonResultYieldLimiter.instance)) {
+      SingletonResultYieldLimiter.instance = new ResultYieldLimiter();
     }
 
-    return SingletonNotificationsLimiter.instance;
+    return SingletonResultYieldLimiter.instance;
   }
 }
 
-const singletonNotificationsLimiter = new SingletonNotificationsLimiter();
+const singletonResultYieldLimiter = new SingletonResultYieldLimiter();
 
-export default singletonNotificationsLimiter;
+export default singletonResultYieldLimiter;
