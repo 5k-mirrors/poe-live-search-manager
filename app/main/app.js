@@ -6,7 +6,6 @@ import installExtension, {
 import { autoUpdater } from "electron-updater";
 import initializeProject from "./initialize-project/initialize-project";
 import { windows } from "../resources/Windows/Windows";
-import { systemIs } from "../utils/JavaScriptUtils/JavaScriptUtils";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -40,7 +39,7 @@ const createWindow = () => {
     },
   });
 
-  if (!systemIs("darwin")) {
+  if (process.platform !== "darwin") {
     // https://electronjs.org/docs/api/browser-window#winremovemenu-linux-windows
     win.removeMenu();
   }
@@ -73,7 +72,7 @@ app.on("ready", async () => {
 });
 
 app.on("window-all-closed", () => {
-  if (!systemIs("darwin")) {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });

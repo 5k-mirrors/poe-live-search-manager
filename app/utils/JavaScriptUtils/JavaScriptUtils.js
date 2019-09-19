@@ -16,5 +16,3 @@ export const devLog = message => {
     console.log(message);
   }
 };
-
-export const systemIs = system => process.platform === system;
