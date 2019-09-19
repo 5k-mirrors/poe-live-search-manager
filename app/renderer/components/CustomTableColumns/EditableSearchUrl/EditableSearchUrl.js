@@ -2,7 +2,7 @@ import React from "react";
 import { MTableEditField } from "material-table";
 import * as regExes from "../../../../resources/RegExes/RegExes";
 
-const searchUrl = ({ ...props }) => {
+const editableSearchUrl = ({ ...props }) => {
   const { value } = props;
 
   return (
@@ -13,4 +13,4 @@ const searchUrl = ({ ...props }) => {
   );
 };
 
-export default searchUrl;
+export default editableSearchUrl;
