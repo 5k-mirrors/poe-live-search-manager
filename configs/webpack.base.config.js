@@ -1,8 +1,12 @@
+const webpack = require("webpack");
+const JavaScriptObfuscator = require("webpack-obfuscator");
 const DotEnv = require("dotenv-webpack");
 
+const isProduction = process.env.NODE_ENV === "production";
+
 module.exports = {
-  devtool: "eval-source-map",
-  mode: "development",
+  mode: isProduction ? "production" : "development",
+  devtool: isProduction ? "" : "eval-source-map",
   module: {
     rules: [
       {
@@ -14,13 +18,16 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    // https://github.com/mrsteele/dotenv-webpack#properties
-    new DotEnv({
-      safe: true,
-      systemvars: true,
-    }),
-  ],
+  plugins: isProduction
+    ? [
+        new JavaScriptObfuscator(),
+        new webpack.EnvironmentPlugin(["FIREBASE_API_KEY", "FIREBASE_API_URL"]),
+      ]
+    : [
+        new DotEnv({
+          safe: true,
+        }),
+      ],
   resolve: {
     // Reason for adding .json
     // => https://github.com/MarshallOfSound/electron-devtools-installer/pull/60#issuecomment-320229210

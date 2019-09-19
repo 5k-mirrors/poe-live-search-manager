@@ -1,6 +1,5 @@
 // => `fetch` is not defined in the main process.
 import fetch from "node-fetch";
-import * as baseUrls from "../resources/BaseUrls/BaseUrls";
 
 class Subscription {
   constructor() {
@@ -10,7 +9,7 @@ class Subscription {
   }
 
   query = id => {
-    const userApiUrl = `${baseUrls.firebaseUserAPI}/user/${id}`;
+    const userApiUrl = `${process.env.FIREBASE_API_URL}/user/${id}`;
 
     return fetch(userApiUrl).then(subscriptionData => subscriptionData.json());
   };
