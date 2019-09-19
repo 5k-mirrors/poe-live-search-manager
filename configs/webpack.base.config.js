@@ -5,8 +5,8 @@ require("dotenv").config();
 const isProduction = process.env.NODE_ENV === "production";
 
 module.exports = {
-  devtool: "eval-source-map",
-  mode: "development",
+  mode: isProduction ? "production" : "development",
+  devtool: isProduction ? "" : "eval-source-map",
   module: {
     rules: [
       {
