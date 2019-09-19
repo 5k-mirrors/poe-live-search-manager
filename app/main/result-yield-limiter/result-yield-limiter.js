@@ -7,7 +7,7 @@ class ResultYieldLimiter {
     // https://www.pcworld.com/article/3054228/how-to-make-windows-10-notifications-last-a-little-or-a-lot-longer.html
     this.instance = new Bottleneck({
       maxConcurrent: 1,
-      minTime: 6500,
+      minTime: 7500,
     });
 
     this.instance.on("error", error => {
