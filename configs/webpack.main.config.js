@@ -1,8 +1,8 @@
 const path = require("path");
 const merge = require("webpack-merge");
-const webpackProdConfigurations = require("./webpack.base.prod.config");
+const webpackBaseConfigurations = require("./webpack.base.config");
 
-module.exports = merge(webpackProdConfigurations, {
+module.exports = merge(webpackBaseConfigurations, {
   // => @babel/polyfill https://stackoverflow.com/a/33527883/9599137
   entry: ["@babel/polyfill", path.resolve("app", "main", "app.js")],
   output: {
