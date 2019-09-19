@@ -1,12 +1,8 @@
 const webpack = require("webpack");
 const JavaScriptObfuscator = require("webpack-obfuscator");
+const DotEnv = require("dotenv-webpack");
 
 const isProduction = process.env.NODE_ENV === "production";
-
-if (!isProduction) {
-  // eslint-disable-next-line global-require
-  require("dotenv").config();
-}
 
 module.exports = {
   mode: isProduction ? "production" : "development",
@@ -27,7 +23,7 @@ module.exports = {
         new JavaScriptObfuscator(),
         new webpack.EnvironmentPlugin(["FIREBASE_API_KEY", "FIREBASE_API_URL"]),
       ]
-    : [],
+    : [new DotEnv()],
   resolve: {
     // Reason for adding .json
     // => https://github.com/MarshallOfSound/electron-devtools-installer/pull/60#issuecomment-320229210
