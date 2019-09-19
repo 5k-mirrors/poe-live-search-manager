@@ -1,14 +1,13 @@
 const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
-const os = require("os");
 const { spawn } = require("child_process");
+const { systemIs } = require("../app/utils/JavaScriptUtils/JavaScriptUtils");
 
-const platformIsWindows = os.platform() === "win32";
-
-const revision = platformIsWindows
+const revision = systemIs("win32")
   ? "revision not supported on win dev"
-  : require("child_process")
+  : // eslint-disable-next-line import/order
+    require("child_process")
       .execSync(
         "git describe --tags --exact-match 2> /dev/null || git describe --always"
       )
