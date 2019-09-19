@@ -3,7 +3,7 @@ import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 class ResultYieldLimiter {
   constructor() {
-    // The limit is set to Windows default 5 seconds.
+    // The limit is set to 7500ms to align with Windows notifications(5 seconds by default, but the notification's effect lasts for ~2500 ms).
     // https://www.pcworld.com/article/3054228/how-to-make-windows-10-notifications-last-a-little-or-a-lot-longer.html
     this.instance = new Bottleneck({
       maxConcurrent: 1,
