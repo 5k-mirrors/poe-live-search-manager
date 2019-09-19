@@ -62,6 +62,9 @@ app.on("ready", async () => {
   win.webContents.on("did-finish-load", () => {
     win.setTitle(windows.POE_SNIPER);
 
+    // https://electronjs.org/docs/api/browser-window#winremovemenu-linux-windows
+    win.removeMenu();
+
     initializeProject();
   });
 });
