@@ -15,7 +15,7 @@ Supported trade sites:
 
 ## Development
 
-- Include the Firebase API key in the `.env` file as described in the [example](./.env.example).
+- Set up environment variables, see the hints in the [example](./.env.example) file.
 - Set up notifications (if on Windows): https://electronjs.org/docs/tutorial/notifications#windows
 
 ```bash
