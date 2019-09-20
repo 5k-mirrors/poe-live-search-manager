@@ -51,8 +51,8 @@ Supported trade sites:
 
 #### Notification settings
 
-- Windows allows you to [change or turn off notification sounds](https://lmgtfy.com/?q=windows+notification+sound)
-- Windows allows you to [change notification length](https://lmgtfy.com/?q=windows+notification+length). This is _not_ supported currently. Changing it from the default 5 seconds will cause the clipboard to be out of sync with the notifications.
+- Windows allows you to [change or turn off notification sounds](https://www.google.com/search?q=windows+notification+sound)
+- Windows allows you to [change notification length](https://www.google.com/search?q=windows+notification+length). This is _not_ supported currently. Changing it from the default 5 seconds will cause the clipboard to be out of sync with the notifications.
 
 ## Caveats
 
