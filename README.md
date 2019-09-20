@@ -46,6 +46,13 @@ Supported trade sites:
 - Turn off "Focus assist" or add PoE Sniper to priority apps
 - Turn on "Get notifications from apps and other senders" in Notification settings
 - Turn on notifications for PoE Sniper in Notification settings
+- Enable notification sound in Sound settings
+- Search for further notification settings according to your Windows version
+
+#### Notification settings
+
+- Windows allows you to [change or turn off notification sounds](https://lmgtfy.com/?q=windows+notification+sound)
+- Windows allows you to [change notification length](https://lmgtfy.com/?q=windows+notification+length). This is _not_ supported currently. Changing it from the default 5 seconds will cause the clipboard to be out of sync with the notifications.
 
 ## Caveats
 
