@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Switch from "@material-ui/core/Switch";
-import { globalStore } from "../../../../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../../../../resources/StoreKeys/StoreKeys";
+import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import { useClipboardStyles } from "./Clipboard.style";
 
 const clipboard = () => {
@@ -21,7 +21,7 @@ const clipboard = () => {
 
   return (
     <Box mt={2} mb={2}>
-      <Typography variant="h6">
+      <Typography variant="subtitle1">
         Copy whisper messages to the clipboard
       </Typography>
       <Switch
