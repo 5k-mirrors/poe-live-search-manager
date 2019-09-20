@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Input from "../../../UI/SimpleHtmlElements/Input/Input";
-import ButtonWithSuccessIcon from "../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
-import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
-import { globalStore } from "../../../../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../../../../resources/StoreKeys/StoreKeys";
+import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
+import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
+import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
+import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
+import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 
 const resultsListLimit = () => {
   const [limit, setLimit] = useState(
@@ -37,7 +37,7 @@ const resultsListLimit = () => {
 
   return (
     <Box mt={2}>
-      <Typography variant="h6">Remember this many results</Typography>
+      <Typography variant="subtitle1">Remember this many results</Typography>
       <Input
         type="number"
         onChange={e => setLimit(e.target.value)}
