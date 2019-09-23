@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export const useClipboardStyles = makeStyles(theme => ({
+export const useToggleButtonStyles = makeStyles(theme => ({
   root: {
     marginLeft: -12,
   },

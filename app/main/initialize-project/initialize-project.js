@@ -8,6 +8,7 @@ import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 import subscription from "../../Subscription/Subscription";
+import limiterGroup from "../limiter-group/limiter-group";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -84,6 +85,10 @@ const setupGeneralIpcListeners = () => {
 
   ipcMain.on(ipcEvents.GET_PAYING_STATUS, event => {
     event.sender.send(ipcEvents.SEND_PAYING_STATUS, subscription.active());
+  });
+
+  ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
+    limiterGroup.drop();
   });
 };
 

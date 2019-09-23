@@ -5,4 +5,5 @@ export const storeKeys = {
   WS_CONNECTIONS: "wsConnections",
   COPY_WHISPER: "copyWhisper",
   RESULTS_LIMIT: "resultsLimit",
+  SCHEDULE_RESULTS: "scheduleResults",
 };
