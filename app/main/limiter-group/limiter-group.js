@@ -11,7 +11,6 @@ class LimiterGroup {
   }
 
   get() {
-    // If key is not specified explicitly, it defaults to an empty string.
     // https://github.com/SGrondin/bottleneck#key
     return this.instance.key();
   }
