@@ -41,7 +41,7 @@ const scheduleResult = args => {
   const limiter = limiterGroup.get();
 
   return limiter.schedule({ id: args.id }, () => {
-    if (storeUtils.isEnabled(storeKeys.COPY_WHISPER, true)) {
+    if (storeUtils.isEnabled(storeKeys.COPY_WHISPER)) {
       clipboard.writeText(args.whisperMessage);
     }
 
@@ -66,7 +66,7 @@ const processItems = (itemIds, ws) => {
           price,
         });
 
-        if (storeUtils.isEnabled(storeKeys.SCHEDULE_RESULTS, true)) {
+        if (storeUtils.isEnabled(storeKeys.SCHEDULE_RESULTS)) {
           scheduleResult({
             id,
             name: ws.name,
@@ -76,7 +76,7 @@ const processItems = (itemIds, ws) => {
             // eslint-disable-next-line no-console
             console.error(err);
           });
-        } else if (storeUtils.isEnabled(storeKeys.COPY_WHISPER, true)) {
+        } else if (storeUtils.isEnabled(storeKeys.COPY_WHISPER)) {
           clipboard.writeText(whisperMessage);
         }
       })

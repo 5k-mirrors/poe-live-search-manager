@@ -6,7 +6,7 @@ export const clear = storeKey => {
   }
 };
 
-export const isEnabled = (storeKey, defaultValue) => {
+export const isEnabled = (storeKey, defaultValue = true) => {
   const value = globalStore.get(storeKey, defaultValue);
 
   return typeof value === "boolean" && value === true;
