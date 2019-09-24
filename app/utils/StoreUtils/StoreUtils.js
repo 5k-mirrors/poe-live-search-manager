@@ -5,3 +5,9 @@ export const clear = storeKey => {
     globalStore.delete(storeKey);
   }
 };
+
+export const isEnabled = (storeKey, defaultValue = true) => {
+  const value = globalStore.get(storeKey, defaultValue);
+
+  return typeof value === "boolean" && value === true;
+};

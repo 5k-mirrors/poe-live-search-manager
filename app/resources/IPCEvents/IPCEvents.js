@@ -13,4 +13,5 @@ export const ipcEvents = {
   SUBSCRIPTION_UPDATE: "subscriptionUpdate",
   GET_PAYING_STATUS: "getPayingStatus",
   SEND_PAYING_STATUS: "sendPayingStatus",
+  DROP_SCHEDULED_RESULTS: "dropScheduledResults",
 };
