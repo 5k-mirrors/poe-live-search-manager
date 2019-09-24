@@ -1,4 +1,5 @@
 import WebSocket from "ws";
+import { Mutex } from "async-mutex";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
@@ -31,9 +32,14 @@ const updateSocket = (id, details) => {
     ...details,
   });
 
-  electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
+  /* electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
     isConnected: details.isConnected,
+  }); */
+
+  electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
+    id,
+    isConnected: store.open(id),
   });
 };
 
@@ -50,8 +56,97 @@ const heartbeat = ws => {
   }, (serverPingTimeframeSeconds + pingAllowedDelaySeconds) * 1000);
 };
 
-export const connect = id => {
+const mutex = new Mutex();
+
+const setupListeners = ws => {
+  ws.socket.on("open", () => {
+    javaScriptUtils.devLog(`SOCKET OPEN - ${ws.webSocketUri} / ${ws.id}`);
+
+    heartbeat(ws.socket);
+
+    setupMessageListener(ws.id);
+  });
+
+  ws.socket.on("ping", () => {
+    javaScriptUtils.devLog(`SOCKET PING - ${ws.webSocketUri} / ${ws.id}`);
+
+    heartbeat(ws.socket);
+  });
+
+  ws.socket.on("error", error => {
+    javaScriptUtils.devLog(
+      `SOCKET ERROR - ${ws.webSocketUri} / ${ws.id} ${error}`
+    );
+
+    ws.socket.close();
+  });
+
+  ws.socket.on("close", (code, reason) => {
+    javaScriptUtils.devLog(
+      `SOCKET CLOSE - ${ws.webSocketUri} / ${ws.id} ${code} ${reason}`
+    );
+
+    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+
+    if (isLoggedIn && subscription.active()) {
+      setTimeout(() => {
+        javaScriptUtils.devLog(
+          `Auto-reconnect initiated - ${ws.webSocketUri} / ${ws.id}`
+        );
+        connect(ws.id);
+      }, 500);
+    }
+  });
+};
+
+const create = id => {
   const ws = store.find(id);
+
+  // When the socket is not defined.
+  if (!ws) {
+    // return release();
+    return;
+  }
+
+  // So when the socket exists and it's not in CLOSED state.
+  // But what if it's in CLOSING state?
+  /* if (ws.socket && ws.socket.readyState !== 3) {
+    return release();
+  } */
+
+  if (!store.closed(ws.id)) {
+    // return release();
+    return;
+  }
+
+  const webSocketUri = getWebSocketUri(ws.searchUrl);
+
+  javaScriptUtils.devLog(`Connect initiated - ${webSocketUri} / ${id}`);
+
+  ws.socket = new WebSocket(webSocketUri, {
+    headers: {
+      Cookie: poeTrade.getCookies(),
+    },
+  });
+
+  updateSocket(ws.id, {
+    ...ws,
+    webSocketUri,
+  });
+
+  setupListeners(ws);
+
+  // return release();
+};
+
+export const connect = id => {
+  mutex.acquire().then(release => {
+    create(id);
+
+    release();
+  });
+
+  /* const ws = store.find(id);
   if (!ws) return;
   if (ws.isConnected) return;
 
@@ -118,7 +213,7 @@ export const connect = id => {
         connect(id);
       }, 500);
     }
-  });
+  }); */
 };
 
 export const disconnect = id => {
@@ -127,7 +222,15 @@ export const disconnect = id => {
 
   javaScriptUtils.devLog(`Disconnect initiated - ${id}`);
 
-  if (ws.isConnected && ws.socket) {
+  if (!store.closed(id)) {
+    ws.socket.close();
+
+    updateSocket(ws.id, {
+      ...ws,
+    });
+  }
+
+  /* if (ws.isConnected && ws.socket) {
     ws.socket.close();
 
     delete ws.socket;
@@ -136,7 +239,7 @@ export const disconnect = id => {
       ...ws,
       isConnected: false,
     });
-  }
+  } */
 };
 
 const connectAll = () => {

@@ -58,6 +58,22 @@ class Store {
       this.add(searchDetails);
     });
   }
+
+  open(id) {
+    const ws = this.find(id);
+
+    // if (!ws) return false???
+
+    return ws.socket && ws.socket.readyState === 1;
+  }
+
+  closed(id) {
+    const ws = this.find(id);
+
+    // if (!ws) return false???;
+
+    return ws.socket && ws.socket.readyState === 3;
+  }
 }
 
 class SingletonStore {
