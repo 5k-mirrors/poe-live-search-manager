@@ -1,4 +1,3 @@
-import { clipboard } from "electron";
 import limiterGroup from "../limiter-group/limiter-group";
 import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as poeTrade from "../poe-trade/poe-trade";
@@ -41,9 +40,7 @@ const scheduleResult = args => {
   const limiter = limiterGroup.get();
 
   return limiter.schedule({ id: args.id }, () => {
-    if (storeUtils.isEnabled(storeKeys.COPY_WHISPER)) {
-      clipboard.writeText(args.whisperMessage);
-    }
+    electronUtils.copy(args.whisperMessage);
 
     poeTrade.notifyUser(args.name, args.price);
   });
@@ -76,8 +73,8 @@ const processItems = (itemIds, ws) => {
             // eslint-disable-next-line no-console
             console.error(err);
           });
-        } else if (storeUtils.isEnabled(storeKeys.COPY_WHISPER)) {
-          clipboard.writeText(whisperMessage);
+        } else {
+          electronUtils.copy(whisperMessage);
         }
       })
       .catch(err => {
