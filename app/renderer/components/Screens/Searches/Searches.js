@@ -144,9 +144,9 @@ class Searches extends Component {
 
       ipcRenderer.send(ipcEvents.WS_ADD, connectionDetailsWithUniqueId);
 
+      // isConnected: false,
       webSocketStore.push({
         ...connectionDetailsWithUniqueId,
-        isConnected: false,
         reconnectIsDisabled: false,
       });
 

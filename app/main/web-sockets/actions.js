@@ -1,5 +1,4 @@
 import WebSocket from "ws";
-import { Mutex } from "async-mutex";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
 import * as poeTrade from "../poe-trade/poe-trade";
@@ -32,92 +31,31 @@ const updateSocket = (id, details) => {
     ...details,
   });
 
-  /* electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
-    id,
-    isConnected: details.isConnected,
-  }); */
-
   electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
-    isConnected: store.open(id),
+    isConnected: store.stateIs(details.socket, 1),
   });
 };
 
 const serverPingTimeframeSeconds = 30;
 const pingAllowedDelaySeconds = 1;
 
-const heartbeat = ws => {
-  clearTimeout(ws.pingTimeout);
+const heartbeat = socket => {
+  clearTimeout(socket.pingTimeout);
 
   // Timeouts need to be defined per WebSocket
   // eslint-disable-next-line no-param-reassign
-  ws.pingTimeout = setTimeout(() => {
-    ws.terminate();
+  socket.pingTimeout = setTimeout(() => {
+    socket.terminate();
   }, (serverPingTimeframeSeconds + pingAllowedDelaySeconds) * 1000);
 };
 
-const mutex = new Mutex();
-
-const setupListeners = ws => {
-  ws.socket.on("open", () => {
-    javaScriptUtils.devLog(`SOCKET OPEN - ${ws.webSocketUri} / ${ws.id}`);
-
-    heartbeat(ws.socket);
-
-    setupMessageListener(ws.id);
-  });
-
-  ws.socket.on("ping", () => {
-    javaScriptUtils.devLog(`SOCKET PING - ${ws.webSocketUri} / ${ws.id}`);
-
-    heartbeat(ws.socket);
-  });
-
-  ws.socket.on("error", error => {
-    javaScriptUtils.devLog(
-      `SOCKET ERROR - ${ws.webSocketUri} / ${ws.id} ${error}`
-    );
-
-    ws.socket.close();
-  });
-
-  ws.socket.on("close", (code, reason) => {
-    javaScriptUtils.devLog(
-      `SOCKET CLOSE - ${ws.webSocketUri} / ${ws.id} ${code} ${reason}`
-    );
-
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-    if (isLoggedIn && subscription.active()) {
-      setTimeout(() => {
-        javaScriptUtils.devLog(
-          `Auto-reconnect initiated - ${ws.webSocketUri} / ${ws.id}`
-        );
-        connect(ws.id);
-      }, 500);
-    }
-  });
-};
-
-const create = id => {
+export const connect = id => {
   const ws = store.find(id);
+  if (!ws) return;
 
-  // When the socket is not defined.
-  if (!ws) {
-    // return release();
-    return;
-  }
-
-  // So when the socket exists and it's not in CLOSED state.
-  // But what if it's in CLOSING state?
-  /* if (ws.socket && ws.socket.readyState !== 3) {
-    return release();
-  } */
-
-  if (!store.closed(ws.id)) {
-    // return release();
-    return;
-  }
+  // store.stateIs() does not work here for some reason.
+  if (ws.socket && ws.socket.readyState !== 3) return;
 
   const webSocketUri = getWebSocketUri(ws.searchUrl);
 
@@ -129,78 +67,43 @@ const create = id => {
     },
   });
 
-  updateSocket(ws.id, {
-    ...ws,
-    webSocketUri,
-  });
-
-  setupListeners(ws);
-
-  // return release();
-};
-
-export const connect = id => {
-  mutex.acquire().then(release => {
-    create(id);
-
-    release();
-  });
-
-  /* const ws = store.find(id);
-  if (!ws) return;
-  if (ws.isConnected) return;
-
-  const webSocketUri = getWebSocketUri(ws.searchUrl);
-
-  javaScriptUtils.devLog(`Connect initiated - ${webSocketUri} / ${id}`);
-
-  const newWebsocket = new WebSocket(webSocketUri, {
-    headers: {
-      Cookie: poeTrade.getCookies(),
-    },
-  });
-
-  newWebsocket.on("open", () => {
+  ws.socket.on("open", () => {
     javaScriptUtils.devLog(`SOCKET OPEN - ${webSocketUri} / ${ws.id}`);
 
-    heartbeat(newWebsocket);
+    heartbeat(ws.socket);
 
     updateSocket(ws.id, {
       ...ws,
-      socket: newWebsocket,
-      isConnected: true,
     });
 
     setupMessageListener(id);
   });
 
-  newWebsocket.on("ping", () => {
+  ws.socket.on("ping", () => {
     javaScriptUtils.devLog(`SOCKET PING - ${webSocketUri} / ${ws.id}`);
 
-    heartbeat(newWebsocket);
+    heartbeat(ws.socket);
   });
 
-  newWebsocket.on("error", error => {
+  ws.socket.on("error", error => {
     javaScriptUtils.devLog(
       `SOCKET ERROR - ${webSocketUri} / ${ws.id} ${error}`
     );
 
     updateSocket(ws.id, {
       ...ws,
-      isConnected: false,
     });
 
-    newWebsocket.close();
+    ws.socket.close();
   });
 
-  newWebsocket.on("close", (code, reason) => {
+  ws.socket.on("close", (code, reason) => {
     javaScriptUtils.devLog(
       `SOCKET CLOSE - ${webSocketUri} / ${ws.id} ${code} ${reason}`
     );
 
     updateSocket(ws.id, {
       ...ws,
-      isConnected: false,
     });
 
     const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
@@ -213,7 +116,7 @@ export const connect = id => {
         connect(id);
       }, 500);
     }
-  }); */
+  });
 };
 
 export const disconnect = id => {
@@ -222,24 +125,13 @@ export const disconnect = id => {
 
   javaScriptUtils.devLog(`Disconnect initiated - ${id}`);
 
-  if (!store.closed(id)) {
+  if (store.stateIs(ws.socket, 1)) {
     ws.socket.close();
 
     updateSocket(ws.id, {
       ...ws,
     });
   }
-
-  /* if (ws.isConnected && ws.socket) {
-    ws.socket.close();
-
-    delete ws.socket;
-
-    updateSocket(ws.id, {
-      ...ws,
-      isConnected: false,
-    });
-  } */
 };
 
 const connectAll = () => {

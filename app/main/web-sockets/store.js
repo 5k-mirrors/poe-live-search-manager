@@ -9,7 +9,6 @@ class Store {
   add(connectionDetails) {
     this.storage.push({
       ...connectionDetails,
-      isConnected: false,
     });
   }
 
@@ -38,8 +37,7 @@ class Store {
 
   sanitized() {
     return this.all().map(
-      ({ socket, isConnected, ...remainingSocketDetails }) =>
-        remainingSocketDetails
+      ({ socket, ...remainingSocketDetails }) => remainingSocketDetails
     );
   }
 
@@ -59,21 +57,7 @@ class Store {
     });
   }
 
-  open(id) {
-    const ws = this.find(id);
-
-    // if (!ws) return false???
-
-    return ws.socket && ws.socket.readyState === 1;
-  }
-
-  closed(id) {
-    const ws = this.find(id);
-
-    // if (!ws) return false???;
-
-    return ws.socket && ws.socket.readyState === 3;
-  }
+  stateIs = (socket, state) => socket && socket.readyState === state;
 }
 
 class SingletonStore {
