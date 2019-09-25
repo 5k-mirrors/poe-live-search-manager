@@ -1,6 +1,7 @@
 import WebSocket from "ws";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
+import processItems from "../process-items/process-items";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
@@ -9,22 +10,7 @@ import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
-import processItems from "../process-items/process-items";
-
-const setupMessageListener = id => {
-  const ws = store.find(id);
-  if (!ws) return;
-
-  ws.socket.on("message", response => {
-    const parsedResponse = JSON.parse(response);
-
-    const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
-
-    if (javaScriptUtils.isDefined(itemIds)) {
-      processItems(itemIds, ws);
-    }
-  });
-};
+import mutex from "../mutex/mutex";
 
 const updateSocket = (id, details) => {
   store.update(id, {
@@ -50,44 +36,38 @@ const heartbeat = socket => {
   }, (serverPingTimeframeSeconds + pingAllowedDelaySeconds) * 1000);
 };
 
-export const connect = id => {
+const setupListeners = id => {
   const ws = store.find(id);
-  if (!ws) return;
-
-  // store.stateIs() does not work here for some reason.
-  if (ws.socket && ws.socket.readyState !== 3) return;
-
-  const webSocketUri = getWebSocketUri(ws.searchUrl);
-
-  javaScriptUtils.devLog(`Connect initiated - ${webSocketUri} / ${id}`);
-
-  ws.socket = new WebSocket(webSocketUri, {
-    headers: {
-      Cookie: poeTrade.getCookies(),
-    },
-  });
 
   ws.socket.on("open", () => {
-    javaScriptUtils.devLog(`SOCKET OPEN - ${webSocketUri} / ${ws.id}`);
+    javaScriptUtils.devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
 
     heartbeat(ws.socket);
 
     updateSocket(ws.id, {
       ...ws,
     });
+  });
 
-    setupMessageListener(id);
+  ws.socket.on("message", response => {
+    const parsedResponse = JSON.parse(response);
+
+    const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
+
+    if (javaScriptUtils.isDefined(itemIds)) {
+      processItems(itemIds, ws);
+    }
   });
 
   ws.socket.on("ping", () => {
-    javaScriptUtils.devLog(`SOCKET PING - ${webSocketUri} / ${ws.id}`);
+    javaScriptUtils.devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
 
     heartbeat(ws.socket);
   });
 
   ws.socket.on("error", error => {
     javaScriptUtils.devLog(
-      `SOCKET ERROR - ${webSocketUri} / ${ws.id} ${error}`
+      `SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`
     );
 
     updateSocket(ws.id, {
@@ -99,7 +79,7 @@ export const connect = id => {
 
   ws.socket.on("close", (code, reason) => {
     javaScriptUtils.devLog(
-      `SOCKET CLOSE - ${webSocketUri} / ${ws.id} ${code} ${reason}`
+      `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
     );
 
     updateSocket(ws.id, {
@@ -111,11 +91,40 @@ export const connect = id => {
     if (isLoggedIn && subscription.active()) {
       setTimeout(() => {
         javaScriptUtils.devLog(
-          `Auto-reconnect initiated - ${webSocketUri} / ${id}`
+          `Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`
         );
-        connect(id);
+        connect(ws.id);
       }, 500);
     }
+  });
+};
+
+export const connect = async id => {
+  return mutex.acquire().then(release => {
+    const ws = store.find(id);
+
+    if (!ws) return release();
+
+    if (ws.socket && ws.socket.readyState !== 3) return release();
+
+    const webSocketUri = getWebSocketUri(ws.searchUrl);
+
+    javaScriptUtils.devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
+
+    const socket = new WebSocket(webSocketUri, {
+      headers: {
+        Cookie: poeTrade.getCookies(),
+      },
+    });
+
+    store.update(ws.id, {
+      ...ws,
+      socket,
+    });
+
+    setupListeners(ws.id);
+
+    return release();
   });
 };
 
