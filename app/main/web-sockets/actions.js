@@ -37,69 +37,6 @@ const heartbeat = socket => {
   }, (serverPingTimeframeSeconds + pingAllowedDelaySeconds) * 1000);
 };
 
-const setupListeners = id => {
-  const ws = store.find(id);
-
-  ws.socket.on("open", () => {
-    javaScriptUtils.devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
-
-    heartbeat(ws.socket);
-
-    updateSocket(ws.id, {
-      ...ws,
-    });
-  });
-
-  ws.socket.on("message", response => {
-    const parsedResponse = JSON.parse(response);
-
-    const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
-
-    if (javaScriptUtils.isDefined(itemIds)) {
-      processItems(itemIds, ws);
-    }
-  });
-
-  ws.socket.on("ping", () => {
-    javaScriptUtils.devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
-
-    heartbeat(ws.socket);
-  });
-
-  ws.socket.on("error", error => {
-    javaScriptUtils.devLog(
-      `SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`
-    );
-
-    updateSocket(ws.id, {
-      ...ws,
-    });
-
-    ws.socket.close();
-  });
-
-  ws.socket.on("close", (code, reason) => {
-    javaScriptUtils.devLog(
-      `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
-    );
-
-    updateSocket(ws.id, {
-      ...ws,
-    });
-
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-    if (isLoggedIn && subscription.active()) {
-      setTimeout(() => {
-        javaScriptUtils.devLog(
-          `Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`
-        );
-        connect(ws.id);
-      }, 500);
-    }
-  });
-};
-
 const connect = id => {
   return mutex.acquire().then(release => {
     const ws = store.find(id);
@@ -123,7 +60,64 @@ const connect = id => {
       socket,
     });
 
-    setupListeners(ws.id);
+    ws.socket.on("open", () => {
+      javaScriptUtils.devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
+
+      heartbeat(ws.socket);
+
+      updateSocket(ws.id, {
+        ...ws,
+      });
+    });
+
+    ws.socket.on("message", response => {
+      const parsedResponse = JSON.parse(response);
+
+      const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
+
+      if (javaScriptUtils.isDefined(itemIds)) {
+        processItems(itemIds, ws);
+      }
+    });
+
+    ws.socket.on("ping", () => {
+      javaScriptUtils.devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
+
+      heartbeat(ws.socket);
+    });
+
+    ws.socket.on("error", error => {
+      javaScriptUtils.devLog(
+        `SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`
+      );
+
+      updateSocket(ws.id, {
+        ...ws,
+      });
+
+      ws.socket.close();
+    });
+
+    ws.socket.on("close", (code, reason) => {
+      javaScriptUtils.devLog(
+        `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
+      );
+
+      updateSocket(ws.id, {
+        ...ws,
+      });
+
+      const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+
+      if (isLoggedIn && subscription.active()) {
+        setTimeout(() => {
+          javaScriptUtils.devLog(
+            `Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`
+          );
+          connect(ws.id);
+        }, 500);
+      }
+    });
 
     return release();
   });
