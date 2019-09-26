@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier, no-useless-escape */
 
 export const searchUrlLeagueAndIdMatcher = new RegExp(
-  // https://regex101.com/r/czwDtz/4
+  // https://regex101.com/r/czwDtz/2
   "^(?:https?:\/\/)?(?:www\.)?pathofexile\.com\/trade\/search\/([a-zA-Z%]+?)\/([a-zA-Z0-9]+?)(?:\/|\/live|\/live\/)?$"
 );
 
