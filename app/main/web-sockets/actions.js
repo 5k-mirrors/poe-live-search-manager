@@ -10,6 +10,7 @@ import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
+import socketStates from "../../resources/SocketStates/SocketStates";
 import mutex from "../mutex/mutex";
 
 const updateSocket = (id, details) => {
@@ -19,7 +20,7 @@ const updateSocket = (id, details) => {
 
   electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
-    isConnected: store.stateIs(details.socket, 1),
+    isConnected: store.stateIs(details.socket, socketStates.OPEN),
   });
 };
 
@@ -134,7 +135,7 @@ export const disconnect = id => {
 
   javaScriptUtils.devLog(`Disconnect initiated - ${id}`);
 
-  if (store.stateIs(ws.socket, 1)) {
+  if (store.stateIs(ws.socket, socketStates.OPEN)) {
     ws.socket.close();
 
     updateSocket(ws.id, {

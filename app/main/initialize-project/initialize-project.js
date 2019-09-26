@@ -2,6 +2,7 @@ import { ipcMain } from "electron";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import socketStates from "../../resources/SocketStates/SocketStates";
 import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
@@ -14,7 +15,7 @@ const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
     const storeWithStates = store.all().map(ws => ({
       ...ws,
-      isConnected: store.stateIs(ws.socket, 1),
+      isConnected: store.stateIs(ws.socket, socketStates.OPEN),
     }));
 
     event.sender.send(ipcEvents.SEND_SOCKETS, storeWithStates);
