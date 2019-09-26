@@ -100,7 +100,7 @@ const setupListeners = id => {
   });
 };
 
-export const connect = async id => {
+export const connect = id => {
   return mutex.acquire().then(release => {
     const ws = store.find(id);
 
