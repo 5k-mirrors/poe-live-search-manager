@@ -6,8 +6,11 @@ import installExtension, {
 import { autoUpdater } from "electron-updater";
 import initializeProject from "./initialize-project/initialize-project";
 import { windows } from "../resources/Windows/Windows";
+import { envIs } from "../utils/JavaScriptUtils/JavaScriptUtils";
 
-const isDev = process.env.NODE_ENV === "development";
+require("electron-unhandled")({
+  showDialog: envIs("development"),
+});
 
 let win;
 
@@ -44,7 +47,7 @@ const createWindow = () => {
     win.removeMenu();
   }
 
-  if (isDev) {
+  if (envIs("development")) {
     win.loadURL(`file://${process.cwd()}/app/index.html`);
   } else {
     win.loadURL(`file://${__dirname}/index.html`);
@@ -60,7 +63,7 @@ app.on("ready", async () => {
 
   autoUpdater.checkForUpdatesAndNotify();
 
-  if (isDev) {
+  if (envIs("development")) {
     await setupDevelopmentWorkflow();
   }
 

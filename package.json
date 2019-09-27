@@ -1,7 +1,7 @@
 {
   "name": "poe-sniper",
   "productName": "PoE Sniper",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Desktop tool for Path of Exile to make instants offers for listed items without leaving the game",
   "main": "./app/main.prod.js",
   "scripts": {
@@ -46,6 +46,7 @@
     "async-mutex": "^0.1.3",
     "bottleneck": "^2.19.2",
     "electron-store": "^4.0.0",
+    "electron-unhandled": "^3.0.0",
     "electron-updater": "^4.0.14",
     "firebase": "^6.2.4",
     "material-table": "^1.36.1",

@@ -16,3 +16,5 @@ export const devLog = message => {
     console.log(message);
   }
 };
+
+export const envIs = env => process.env.NODE_ENV === env;
