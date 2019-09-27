@@ -20,7 +20,8 @@ const updateSocket = (id, details) => {
 
   electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
-    isConnected: store.stateIs(details.socket, socketStates.OPEN),
+    isConnected:
+      details.socket && store.stateIs(details.socket, socketStates.OPEN),
   });
 };
 
@@ -38,89 +39,95 @@ const heartbeat = socket => {
 };
 
 const connect = id => {
-  return mutex.acquire().then(release => {
-    const ws = store.find(id);
+  mutex
+    .acquire()
+    .then(release => {
+      const ws = store.find(id);
 
-    if (!ws) return release();
+      if (!ws) return release();
 
-    if (ws.socket && ws.socket.readyState !== 3) return release();
+      if (ws.socket && !store.stateIs(ws.socket, socketStates.CLOSED))
+        return release();
 
-    const webSocketUri = getWebSocketUri(ws.searchUrl);
+      const webSocketUri = getWebSocketUri(ws.searchUrl);
 
-    javaScriptUtils.devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
+      javaScriptUtils.devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
 
-    const socket = new WebSocket(webSocketUri, {
-      headers: {
-        Cookie: poeTrade.getCookies(),
-      },
-    });
-
-    store.update(ws.id, {
-      ...ws,
-      socket,
-    });
-
-    ws.socket.on("open", () => {
-      javaScriptUtils.devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
-
-      heartbeat(ws.socket);
-
-      updateSocket(ws.id, {
-        ...ws,
+      ws.socket = new WebSocket(webSocketUri, {
+        headers: {
+          Cookie: poeTrade.getCookies(),
+        },
       });
-    });
 
-    ws.socket.on("message", response => {
-      const parsedResponse = JSON.parse(response);
-
-      const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
-
-      if (javaScriptUtils.isDefined(itemIds)) {
-        processItems(itemIds, ws);
-      }
-    });
-
-    ws.socket.on("ping", () => {
-      javaScriptUtils.devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
-
-      heartbeat(ws.socket);
-    });
-
-    ws.socket.on("error", error => {
-      javaScriptUtils.devLog(
-        `SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`
-      );
-
-      updateSocket(ws.id, {
+      store.update(ws.id, {
         ...ws,
       });
 
-      ws.socket.close();
-    });
+      ws.socket.on("open", () => {
+        javaScriptUtils.devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
 
-    ws.socket.on("close", (code, reason) => {
-      javaScriptUtils.devLog(
-        `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
-      );
+        heartbeat(ws.socket);
 
-      updateSocket(ws.id, {
-        ...ws,
+        updateSocket(ws.id, {
+          ...ws,
+        });
       });
 
-      const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+      ws.socket.on("message", response => {
+        const parsedResponse = JSON.parse(response);
 
-      if (isLoggedIn && subscription.active()) {
-        setTimeout(() => {
-          javaScriptUtils.devLog(
-            `Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`
-          );
-          connect(ws.id);
-        }, 500);
-      }
+        const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
+
+        if (javaScriptUtils.isDefined(itemIds)) {
+          processItems(itemIds, ws);
+        }
+      });
+
+      ws.socket.on("ping", () => {
+        javaScriptUtils.devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
+
+        heartbeat(ws.socket);
+      });
+
+      ws.socket.on("error", error => {
+        javaScriptUtils.devLog(
+          `SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`
+        );
+
+        updateSocket(ws.id, {
+          ...ws,
+        });
+
+        ws.socket.close();
+      });
+
+      ws.socket.on("close", (code, reason) => {
+        javaScriptUtils.devLog(
+          `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
+        );
+
+        updateSocket(ws.id, {
+          ...ws,
+        });
+
+        const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+
+        if (isLoggedIn && subscription.active()) {
+          setTimeout(() => {
+            javaScriptUtils.devLog(
+              `Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`
+            );
+            connect(ws.id);
+          }, 500);
+        }
+      });
+
+      return release();
+    })
+    .catch(err => {
+      // eslint-disable-next-line no-console
+      console.error(`LOCK ERROR - ${err}`);
     });
-
-    return release();
-  });
 };
 
 export const disconnect = id => {
@@ -129,7 +136,7 @@ export const disconnect = id => {
 
   javaScriptUtils.devLog(`Disconnect initiated - ${id}`);
 
-  if (store.stateIs(ws.socket, socketStates.OPEN)) {
+  if (ws.socket && store.stateIs(ws.socket, socketStates.OPEN)) {
     ws.socket.close();
 
     updateSocket(ws.id, {

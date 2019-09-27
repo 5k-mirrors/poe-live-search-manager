@@ -15,7 +15,7 @@ const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
     const storeWithStates = store.all().map(ws => ({
       ...ws,
-      isConnected: store.stateIs(ws.socket, socketStates.OPEN),
+      isConnected: ws.socket && store.stateIs(ws.socket, socketStates.OPEN),
     }));
 
     event.sender.send(ipcEvents.SEND_SOCKETS, storeWithStates);
