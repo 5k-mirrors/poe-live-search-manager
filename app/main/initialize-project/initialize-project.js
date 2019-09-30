@@ -13,10 +13,12 @@ import limiterGroup from "../limiter-group/limiter-group";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
-    const storeWithStates = store.all().map(ws => ({
-      ...ws,
-      isConnected: ws.socket && store.stateIs(ws.socket, socketStates.OPEN),
-    }));
+    const storeWithStates = store
+      .all()
+      .map(({ socket, ...remainingSocketDetails }) => ({
+        ...remainingSocketDetails,
+        isConnected: socket && store.stateIs(socket, socketStates.OPEN),
+      }));
 
     event.sender.send(ipcEvents.SEND_SOCKETS, storeWithStates);
   });

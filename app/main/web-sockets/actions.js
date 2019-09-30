@@ -13,15 +13,10 @@ import { windows } from "../../resources/Windows/Windows";
 import socketStates from "../../resources/SocketStates/SocketStates";
 import mutex from "../mutex/mutex";
 
-const updateSocket = (id, details) => {
-  store.update(id, {
-    ...details,
-  });
-
+const updateState = (id, socket) => {
   electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
-    isConnected:
-      details.socket && store.stateIs(details.socket, socketStates.OPEN),
+    isConnected: socket && store.stateIs(socket, socketStates.OPEN),
   });
 };
 
@@ -68,9 +63,7 @@ const connect = id => {
 
         heartbeat(ws.socket);
 
-        updateSocket(ws.id, {
-          ...ws,
-        });
+        updateState(ws.id, ws.socket);
       });
 
       ws.socket.on("message", response => {
@@ -94,9 +87,7 @@ const connect = id => {
           `SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`
         );
 
-        updateSocket(ws.id, {
-          ...ws,
-        });
+        updateState(ws.id, ws.socket);
 
         ws.socket.close();
       });
@@ -106,9 +97,7 @@ const connect = id => {
           `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
         );
 
-        updateSocket(ws.id, {
-          ...ws,
-        });
+        updateState(ws.id, ws.socket);
 
         const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
@@ -139,9 +128,7 @@ export const disconnect = id => {
   if (ws.socket && store.stateIs(ws.socket, socketStates.OPEN)) {
     ws.socket.close();
 
-    updateSocket(ws.id, {
-      ...ws,
-    });
+    updateState(ws.id, ws.socket);
   }
 };
 
