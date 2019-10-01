@@ -9,6 +9,7 @@ import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 import subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
+import RateLimiter from "../rate-limiter/rate-limiter";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -93,6 +94,8 @@ const setupGeneralIpcListeners = () => {
 };
 
 const initializeProject = () => {
+  RateLimiter.initialize();
+
   store.load();
 
   setupStoreIpcListeners();

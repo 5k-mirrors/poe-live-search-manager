@@ -6,10 +6,6 @@ import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
 
-const headerKeys = {
-  XRateLimitAccount: "x-rate-limit-account",
-};
-
 export const getCookies = () => {
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 
@@ -24,14 +20,7 @@ export const fetchItemDetails = id => {
       Cookie: getCookies(),
     },
   })
-    .then(response => {
-      if (response.headers.has(headerKeys.XRateLimitAccount)) {
-        // eslint-disable-next-line no-console
-        console.log(response.headers.get(headerKeys.XRateLimitAccount));
-      }
-
-      return response.json();
-    })
+    .then(response => response.json())
     .then(parsedResponse => {
       const itemDetails = javaScriptUtils.safeGet(parsedResponse, [
         "result",
