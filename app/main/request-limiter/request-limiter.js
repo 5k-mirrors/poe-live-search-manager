@@ -17,8 +17,30 @@ class MissingXRateLimitAccountHeaderError extends Error {
   }
 }
 
-export default class RateLimiter {
-  static dummyFetch() {
+class RequestLimiter {
+  constructor() {
+    this.limiter = new Bottleneck();
+  }
+
+  initialize() {
+    return this.dummyFetch().then(details => {
+      this.limiter
+        .updateSettings({
+          maxConcurrent: details.limit,
+          minTime: details.interval,
+          penalty: details.timeout,
+        })
+        .catch(err => {
+          if (err instanceof MissingXRateLimitAccountHeaderError) {
+            // eslint-disable-next-line no-console
+            console.warn(err);
+          }
+        });
+    });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  dummyFetch() {
     return fetch(`${baseUrls.poeFetchAPI}1`, {
       headers: {
         Cookie: poeTrade.getCookies(),
@@ -40,21 +62,19 @@ export default class RateLimiter {
     });
   }
 
-  static initialize() {
-    return this.dummyFetch()
-      .then(details => {
-        // eslint-disable-next-line no-new
-        new Bottleneck({
-          maxConcurrent: details.limit,
-          minTime: details.interval,
-          penalty: details.timeout,
-        });
-      })
-      .catch(err => {
-        if (err instanceof MissingXRateLimitAccountHeaderError) {
-          // eslint-disable-next-line no-console
-          console.warn(err);
-        }
-      });
+  get() {
+    return this.limiter;
   }
 }
+
+class SingletonRequestLimiter {
+  constructor() {
+    if (!SingletonRequestLimiter.instance) {
+      SingletonRequestLimiter.instance = new RequestLimiter();
+    }
+
+    return SingletonRequestLimiter.instance;
+  }
+}
+
+export default new SingletonRequestLimiter();
