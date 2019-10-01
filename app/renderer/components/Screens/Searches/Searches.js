@@ -32,9 +32,11 @@ class Searches extends Component {
     });
 
     ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, socketDetails) => {
-      this.update(socketDetails.id, {
-        isConnected: socketDetails.isConnected,
-      });
+      if (this.stateHasChanged(socketDetails.id, socketDetails.isConnected)) {
+        this.update(socketDetails.id, {
+          isConnected: socketDetails.isConnected,
+        });
+      }
     });
   }
 
@@ -56,6 +58,16 @@ class Searches extends Component {
     this.disableAllReconnects();
 
     ipcRenderer.send(ipcEvents.RECONNECT_ALL);
+  };
+
+  stateHasChanged = (id, isConnected) => {
+    const {
+      webSocketStore: [...webSocketStore],
+    } = this.state;
+
+    const searchEl = webSocketStore.find(el => el.id === id);
+
+    return searchEl && searchEl.isConnected !== isConnected;
   };
 
   update(id, data) {
