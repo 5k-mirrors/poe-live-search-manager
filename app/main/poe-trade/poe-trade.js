@@ -15,11 +15,7 @@ export const getCookies = () => {
 export const fetchItemDetails = id => {
   const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
-  return fetch(itemUrl, {
-    headers: {
-      Cookie: getCookies(),
-    },
-  })
+  return fetch(itemUrl)
     .then(response => response.json())
     .then(parsedResponse => {
       const itemDetails = javaScriptUtils.safeGet(parsedResponse, [
