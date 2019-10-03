@@ -34,11 +34,7 @@ const setupWebSocketIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-    if (isLoggedIn) {
-      webSocketActions.disconnect(connectionDetails.id);
-    }
+    webSocketActions.disconnect(connectionDetails.id);
 
     store.remove(connectionDetails.id);
 

@@ -33,7 +33,7 @@ const heartbeat = socket => {
   }, (serverPingTimeframeSeconds + pingAllowedDelaySeconds) * 1000);
 };
 
-const connect = id => {
+const connect = id =>
   mutex
     .acquire()
     .then(release => {
@@ -106,6 +106,7 @@ const connect = id => {
             javaScriptUtils.devLog(
               `Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`
             );
+
             connect(ws.id);
           }, 500);
         }
@@ -117,32 +118,30 @@ const connect = id => {
       // eslint-disable-next-line no-console
       console.error(`LOCK ERROR - ${err}`);
     });
-};
 
 export const disconnect = id => {
   const ws = store.find(id);
+
   if (!ws) return;
 
   javaScriptUtils.devLog(`Disconnect initiated - ${id}`);
 
-  if (ws.socket && store.stateIs(ws.socket, socketStates.OPEN)) {
+  if (
+    ws.socket &&
+    (store.stateIs(ws.socket, socketStates.OPEN) ||
+      store.stateIs(ws.socket, socketStates.CONNECTING))
+  ) {
     ws.socket.close();
 
     updateState(ws.id, ws.socket);
   }
 };
 
-const connectAll = () => {
-  store.all().forEach(connectionDetails => {
-    connect(connectionDetails.id);
-  });
-};
+const connectAll = () =>
+  store.all().forEach(connectionDetails => connect(connectionDetails.id));
 
-export const disconnectAll = () => {
-  store.all().forEach(connectionDetails => {
-    disconnect(connectionDetails.id);
-  });
-};
+export const disconnectAll = () =>
+  store.all().forEach(connectionDetails => disconnect(connectionDetails.id));
 
 export const updateConnections = () => {
   const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
@@ -158,10 +157,6 @@ export const updateConnections = () => {
   return disconnectAll();
 };
 
-export const reconnect = id => {
-  disconnect(id);
-};
+export const reconnect = id => disconnect(id);
 
-export const reconnectAll = () => {
-  disconnectAll();
-};
+export const reconnectAll = () => disconnectAll();
