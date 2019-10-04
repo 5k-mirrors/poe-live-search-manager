@@ -25,11 +25,10 @@ yarn dev
 
 Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
 
-## Portable version - Windows notifications issue
+## Known issues
 
-See #42. Additionally, an issue has been submitted to the _electron-builder_ repository:
-
-- https://github.com/electron-userland/electron-builder/issues/4054
+- [Portable version - Windows notifications do not appear](https://github.com/electron-userland/electron-builder/issues/4054)
+- [NSIS installer keeps hanging around when the app is not uninstalled properly](https://github.com/electron-userland/electron-builder/issues/4057#issuecomment-537684523)
 
 ## QA
 

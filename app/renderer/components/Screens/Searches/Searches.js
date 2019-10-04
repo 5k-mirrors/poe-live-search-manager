@@ -190,6 +190,9 @@ class Searches extends Component {
       <MaterialTable
         title="Active connections"
         columns={tableColumns.inputScreen}
+        components={{
+          Pagination: () => null,
+        }}
         data={webSocketStore}
         editable={{
           onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),
@@ -221,6 +224,14 @@ class Searches extends Component {
         options={{
           showTitle: false,
           toolbarButtonAlignment: "left",
+          headerStyle: {
+            position: "sticky",
+            top: 0,
+          },
+          maxBodyHeight: "600px",
+          pageSize: 9999,
+          emptyRowsWhenPaging: false,
+          addRowPosition: "first",
         }}
       />
     );
