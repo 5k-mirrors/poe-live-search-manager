@@ -240,7 +240,7 @@ class Searches extends Component {
             top: 0,
           },
           maxBodyHeight: "600px",
-          pageSize: 100,
+          pageSize: 9999,
           emptyRowsWhenPaging: false,
           addRowPosition: "first",
         }}
