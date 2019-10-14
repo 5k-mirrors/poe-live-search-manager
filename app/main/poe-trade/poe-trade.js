@@ -6,6 +6,9 @@ import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
 
+// eslint-disable-next-line import/no-cycle
+import requestLimiter from "../request-limiter/request-limiter";
+
 export const getCookies = () => {
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 
@@ -13,22 +16,57 @@ export const getCookies = () => {
 };
 
 export const fetchItemDetails = id => {
+  const limiter = requestLimiter.get();
+
   const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
-  return fetch(itemUrl)
-    .then(response => response.json())
-    .then(parsedResponse => {
-      const itemDetails = javaScriptUtils.safeGet(parsedResponse, [
-        "result",
-        0,
-      ]);
+  return new Promise((resolve, reject) => {
+    return limiter.removeTokens(1, (err, remainingRequests) => {
+      console.log("[err]", err);
+      console.log("[remainingRequests]", remainingRequests);
 
-      if (javaScriptUtils.isDefined(itemDetails)) {
-        return itemDetails;
-      }
+      if (err) return reject(err);
 
-      throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+      return fetch(itemUrl)
+        .then(response => response.json())
+        .then(parsedResponse => {
+          const itemDetails = javaScriptUtils.safeGet(parsedResponse, [
+            "result",
+            0,
+          ]);
+
+          if (javaScriptUtils.isDefined(itemDetails)) {
+            // return itemDetails;
+            return resolve(itemDetails);
+          }
+
+          // throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+          return reject(
+            new ItemFetchError(`Item details not found for ${itemUrl}`)
+          );
+        });
     });
+  });
+
+  /* return limiter.removeTokens(1, (err, remainingRequests) => {
+    console.log("[err]", err);
+    console.log("[remainingRequests]", remainingRequests);
+
+    return fetch(itemUrl)
+      .then(response => response.json())
+      .then(parsedResponse => {
+        const itemDetails = javaScriptUtils.safeGet(parsedResponse, [
+          "result",
+          0,
+        ]);
+
+        if (javaScriptUtils.isDefined(itemDetails)) {
+          return itemDetails;
+        }
+
+        throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+      });
+  }); */
 };
 
 export const getWhisperMessage = itemDetails => {

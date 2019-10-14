@@ -1,4 +1,4 @@
-import Bottleneck from "bottleneck";
+import { RateLimiter } from "limiter";
 import fetch from "node-fetch";
 import * as poeTrade from "../poe-trade/poe-trade";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
@@ -19,48 +19,51 @@ class MissingXRateLimitAccountHeaderError extends Error {
 
 class RequestLimiter {
   constructor() {
-    this.limiter = new Bottleneck();
+    this.defaulValues = {
+      limit: 6,
+      intervalInMs: 4000,
+    };
+
+    this.limiter = new RateLimiter(
+      this.defaulValues.limit,
+      this.defaulValues.intervalInMs
+    );
   }
 
   initialize() {
-    return this.dummyFetch().then(details => {
-      this.limiter
-        .updateSettings({
-          maxConcurrent: details.limit,
-          minTime: details.interval,
-          penalty: details.timeout,
-        })
-        .catch(err => {
-          if (err instanceof MissingXRateLimitAccountHeaderError) {
-            // eslint-disable-next-line no-console
-            console.warn(err);
-          }
-        });
-    });
+    return this.dummyFetch()
+      .then(details => {
+        this.limiter = new RateLimiter(details.limit, details.intervalInMs);
+      })
+      .catch(err => {
+        if (err instanceof MissingXRateLimitAccountHeaderError) {
+          // eslint-disable-next-line no-console
+          console.warn(err);
+        }
+      });
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  dummyFetch() {
+  dummyFetch = () => {
     return fetch(`${baseUrls.poeFetchAPI}1`, {
       headers: {
         Cookie: poeTrade.getCookies(),
       },
     }).then(response => {
       if (response.headers.has(headerKeys.XRateLimitAccount)) {
-        const splittedLimiterValues = response.headers
+        // return response.headers.get(headerKeys.XRateLimitAccount);
+        const xRateLimitAccountValues = response.headers
           .get(headerKeys.XRateLimitAccount)
           .split(":");
 
         return {
-          limit: splittedLimiterValues[0],
-          interval: splittedLimiterValues[1],
-          timeout: splittedLimiterValues[2],
+          limit: xRateLimitAccountValues[0],
+          intervalInMs: xRateLimitAccountValues[1] * 1000,
         };
       }
 
       throw new MissingXRateLimitAccountHeaderError();
     });
-  }
+  };
 
   get() {
     return this.limiter;
