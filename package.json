@@ -48,7 +48,6 @@
     "electron-unhandled": "^3.0.0",
     "electron-updater": "^4.0.14",
     "firebase": "^6.2.4",
-    "limiter": "^1.1.4",
     "material-table": "^1.36.1",
     "node-fetch": "^2.6.0",
     "react": "^16.8.6",

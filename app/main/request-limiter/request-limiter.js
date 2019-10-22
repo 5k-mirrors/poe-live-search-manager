@@ -1,39 +1,37 @@
-import { RateLimiter } from "limiter";
+import Bottleneck from "bottleneck";
 import fetch from "node-fetch";
-import * as poeTrade from "../poe-trade/poe-trade";
+import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
+import MissingXRateLimitAccountHeaderError from "../../errors/missing-x-rate-limit-account-header-error";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 
 const headerKeys = {
   XRateLimitAccount: "x-rate-limit-account",
 };
 
-class MissingXRateLimitAccountHeaderError extends Error {
-  constructor(...args) {
-    super(...args);
-
-    Error.captureStackTrace(this, MissingXRateLimitAccountHeaderError);
-
-    this.name = this.constructor.name;
-  }
-}
-
 class RequestLimiter {
   constructor() {
     this.defaulValues = {
-      limit: 6,
-      intervalInMs: 4000,
+      limit: 16,
+      interval: 4000,
     };
 
-    this.limiter = new RateLimiter(
-      this.defaulValues.limit,
-      this.defaulValues.intervalInMs
-    );
+    this.instance = new Bottleneck({
+      reservoir: this.defaulValues.limit,
+      reservoirRefreshAmount: this.defaulValues.limit,
+      reservoirRefreshInterval: this.defaulValues.interval,
+      maxConcurrent: 1,
+      minTime: 333,
+    });
   }
 
   initialize() {
     return this.dummyFetch()
-      .then(details => {
-        this.limiter = new RateLimiter(details.limit, details.intervalInMs);
+      .then(limitDetails => {
+        return this.instance.updateSettings({
+          reservoir: limitDetails.requestLimit,
+          reservoirRefreshAmount: limitDetails.requestLimit,
+          reservoirRefreshInterval: limitDetails.interval,
+        });
       })
       .catch(err => {
         if (err instanceof MissingXRateLimitAccountHeaderError) {
@@ -46,18 +44,17 @@ class RequestLimiter {
   dummyFetch = () => {
     return fetch(`${baseUrls.poeFetchAPI}1`, {
       headers: {
-        Cookie: poeTrade.getCookies(),
+        Cookie: getCookieHeader(),
       },
     }).then(response => {
       if (response.headers.has(headerKeys.XRateLimitAccount)) {
-        // return response.headers.get(headerKeys.XRateLimitAccount);
         const xRateLimitAccountValues = response.headers
           .get(headerKeys.XRateLimitAccount)
           .split(":");
 
         return {
-          limit: xRateLimitAccountValues[0],
-          intervalInMs: xRateLimitAccountValues[1] * 1000,
+          requestLimit: xRateLimitAccountValues[0],
+          interval: xRateLimitAccountValues[1] * 1000,
         };
       }
 
@@ -66,7 +63,7 @@ class RequestLimiter {
   };
 
   get() {
-    return this.limiter;
+    return this.instance;
   }
 }
 

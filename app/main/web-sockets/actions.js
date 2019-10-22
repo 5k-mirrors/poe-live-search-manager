@@ -1,7 +1,6 @@
 import WebSocket from "ws";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
-import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
@@ -10,6 +9,7 @@ import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
 import processItems from "../process-items/process-items";
+import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 
 const setupMessageListener = id => {
   const ws = store.find(id);
@@ -61,7 +61,7 @@ export const connect = id => {
 
   const newWebsocket = new WebSocket(webSocketUri, {
     headers: {
-      Cookie: poeTrade.getCookies(),
+      Cookie: getCookieHeader(),
     },
   });
 
