@@ -5,7 +5,7 @@ import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
 import requestLimiter from "../request-limiter/request-limiter";
 
-export const fetchItemDetails = async id => {
+export const fetchItemDetails = id => {
   const limiter = requestLimiter.get();
   const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 

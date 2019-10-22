@@ -94,7 +94,7 @@ const setupGeneralIpcListeners = () => {
 };
 
 const initializeProject = () => {
-  requestLimiter.inialize();
+  requestLimiter.initialize();
 
   store.load();
 

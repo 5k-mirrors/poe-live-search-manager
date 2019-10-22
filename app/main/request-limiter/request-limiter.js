@@ -13,9 +13,6 @@ class RequestLimiter {
     };
 
     this.instance = new Bottleneck({
-      reservoir: this.defaulValues.limit,
-      reservoirRefreshAmount: this.defaulValues.limit,
-      reservoirRefreshInterval: this.defaulValues.interval,
       maxConcurrent: 1,
       minTime: 333,
     });
@@ -23,18 +20,22 @@ class RequestLimiter {
 
   initialize() {
     return this.dummyFetch()
-      .then(limitDetails => {
-        return this.instance.updateSettings({
+      .then(limitDetails =>
+        this.instance.updateSettings({
           reservoir: limitDetails.requestLimit,
           reservoirRefreshAmount: limitDetails.requestLimit,
           reservoirRefreshInterval: limitDetails.interval,
-        });
-      })
+        })
+      )
       .catch(err => {
-        if (err instanceof MissingXRateLimitAccountHeaderError) {
-          // eslint-disable-next-line no-console
-          console.warn(err);
-        }
+        // eslint-disable-next-line no-console
+        console.warn(err);
+
+        return this.instance.updateSettings({
+          reservoir: this.defaulValues.limit,
+          reservoirRefreshAmount: this.defaulValues.limit,
+          reservoirRefreshInterval: this.defaulValues.interval,
+        });
       });
   }
 
