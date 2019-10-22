@@ -3,10 +3,7 @@ import fetch from "node-fetch";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import MissingXRateLimitAccountHeaderError from "../../errors/missing-x-rate-limit-account-header-error";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
-
-const headerKeys = {
-  XRateLimitAccount: "x-rate-limit-account",
-};
+import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
 class RequestLimiter {
   constructor() {
