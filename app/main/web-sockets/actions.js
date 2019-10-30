@@ -12,11 +12,12 @@ import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
 import socketStates from "../../resources/SocketStates/SocketStates";
 import mutex from "../mutex/mutex";
+import stateIs from "../utils/state-is/state-is";
 
 const updateState = (id, socket) => {
   electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
-    isConnected: socket && store.stateIs(socket, socketStates.OPEN),
+    isConnected: socket && stateIs(socket, socketStates.OPEN),
   });
 };
 
@@ -41,7 +42,7 @@ const connect = id =>
 
       if (!ws) return release();
 
-      if (ws.socket && !store.stateIs(ws.socket, socketStates.CLOSED))
+      if (ws.socket && !stateIs(ws.socket, socketStates.CLOSED))
         return release();
 
       const webSocketUri = getWebSocketUri(ws.searchUrl);
@@ -128,8 +129,8 @@ export const disconnect = id => {
 
   if (
     ws.socket &&
-    (store.stateIs(ws.socket, socketStates.OPEN) ||
-      store.stateIs(ws.socket, socketStates.CONNECTING))
+    (stateIs(ws.socket, socketStates.OPEN) ||
+      stateIs(ws.socket, socketStates.CONNECTING))
   ) {
     ws.socket.close();
 

@@ -56,8 +56,6 @@ class Store {
       this.add(searchDetails);
     });
   }
-
-  stateIs = (socket, state) => socket.readyState === state;
 }
 
 class SingletonStore {

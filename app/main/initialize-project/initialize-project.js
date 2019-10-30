@@ -10,6 +10,7 @@ import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 import subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
+import stateIs from "../utils/state-is/state-is";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -17,7 +18,7 @@ const setupStoreIpcListeners = () => {
       .all()
       .map(({ socket, ...remainingSocketDetails }) => ({
         ...remainingSocketDetails,
-        isConnected: socket && store.stateIs(socket, socketStates.OPEN),
+        isConnected: socket && stateIs(socket, socketStates.OPEN),
       }));
 
     event.sender.send(ipcEvents.SEND_SOCKETS, storeWithStates);
