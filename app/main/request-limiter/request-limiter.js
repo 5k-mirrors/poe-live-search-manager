@@ -22,8 +22,8 @@ class RequestLimiter {
     return this.dummyFetch()
       .then(limitDetails =>
         this.instance.updateSettings({
-          reservoir: limitDetails.requestLimit,
-          reservoirRefreshAmount: limitDetails.requestLimit,
+          reservoir: limitDetails.limit,
+          reservoirRefreshAmount: limitDetails.limit,
           reservoirRefreshInterval: limitDetails.interval,
         })
       )
@@ -51,7 +51,7 @@ class RequestLimiter {
           .split(":");
 
         return {
-          requestLimit: xRateLimitAccountValues[0],
+          limit: xRateLimitAccountValues[0],
           interval: xRateLimitAccountValues[1] * 1000,
         };
       }
