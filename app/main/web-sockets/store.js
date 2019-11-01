@@ -9,7 +9,6 @@ class Store {
   add(connectionDetails) {
     this.storage.push({
       ...connectionDetails,
-      isConnected: false,
     });
   }
 
@@ -38,8 +37,7 @@ class Store {
 
   sanitized() {
     return this.all().map(
-      ({ socket, isConnected, ...remainingSocketDetails }) =>
-        remainingSocketDetails
+      ({ socket, ...remainingSocketDetails }) => remainingSocketDetails
     );
   }
 
