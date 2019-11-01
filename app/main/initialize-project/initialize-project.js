@@ -2,6 +2,7 @@ import { ipcMain } from "electron";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import socketStates from "../../resources/SocketStates/SocketStates";
 import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
@@ -10,14 +11,18 @@ import store from "../web-sockets/store";
 import subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
 import requestLimiter from "../request-limiter/request-limiter";
+import stateIs from "../utils/state-is/state-is";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
-    const sanitizedStore = store
+    const storeWithStates = store
       .all()
-      .map(({ socket, ...remainingSocketDetails }) => remainingSocketDetails);
+      .map(({ socket, ...remainingSocketDetails }) => ({
+        ...remainingSocketDetails,
+        isConnected: socket && stateIs(socket, socketStates.OPEN),
+      }));
 
-    event.sender.send(ipcEvents.SEND_SOCKETS, sanitizedStore);
+    event.sender.send(ipcEvents.SEND_SOCKETS, storeWithStates);
   });
 };
 
@@ -31,11 +36,7 @@ const setupWebSocketIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-    if (isLoggedIn) {
-      webSocketActions.disconnect(connectionDetails.id);
-    }
+    webSocketActions.disconnect(connectionDetails.id);
 
     store.remove(connectionDetails.id);
 
