@@ -2,7 +2,6 @@ import WebSocket from "ws";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
 import processItems from "../process-items/process-items";
-import * as poeTrade from "../poe-trade/poe-trade";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
@@ -13,6 +12,7 @@ import { windows } from "../../resources/Windows/Windows";
 import socketStates from "../../resources/SocketStates/SocketStates";
 import mutex from "../mutex/mutex";
 import stateIs from "../utils/state-is/state-is";
+import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 
 const updateState = (id, socket) => {
   electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
@@ -51,7 +51,7 @@ const connect = id =>
 
       ws.socket = new WebSocket(webSocketUri, {
         headers: {
-          Cookie: poeTrade.getCookies(),
+          Cookie: getCookieHeader(),
         },
       });
 
