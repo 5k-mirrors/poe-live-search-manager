@@ -3,6 +3,7 @@ import * as poeTrade from "./poe-trade";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
+import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 
 jest.mock("node-fetch", () => jest.fn());
 
@@ -82,7 +83,7 @@ describe("poeTrade", () => {
 
   describe("getPrice", () => {
     describe("when the message matches with the `RegEx` pattern", () => {
-      it("should return the decimal price with the currency", () => {
+      it("returns the decimal price with the currency", () => {
         const whisperMessage =
           '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 2.0 chaos in Legion (stash tab"6"; position: left 4, top 7)';
         const expectedString = "~b/o 2.0 chaos";
@@ -92,26 +93,18 @@ describe("poeTrade", () => {
         expect(actualString).toEqual(expectedString);
       });
 
-      it("should return the price with the right currency", () => {
-        const currencies = [
-          "chaos",
-          "fusing",
-          "alch",
-          "gcp",
-          "chrom",
-          "jew",
-          "chance",
-          "chisel",
-          "scour",
-          "blessed",
-          "regret",
-          "regal",
-          "divine",
-          "vaal",
-          "exa",
-          "alt",
-        ];
-        currencies.forEach(currency => {
+      it("returns the price even if the message is not english", () => {
+        const whisperMessage =
+          '@TestUser Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
+        const expectedString = "~b/o 40 chaos";
+
+        const actualString = poeTrade.getPrice(whisperMessage);
+
+        expect(actualString).toEqual(expectedString);
+      });
+
+      it("returns the price with the right currency", () => {
+        currencyNames.forEach(currency => {
           const whisperMessage = `@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 ${currency} in Legion (stash tab "6"; position: left 4, top 7)`;
           const expectedString = `~b/o 20 ${currency}`;
 
