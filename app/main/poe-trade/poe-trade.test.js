@@ -82,21 +82,49 @@ describe("poeTrade", () => {
 
   describe("getPrice", () => {
     describe("when the message matches with the `RegEx` pattern", () => {
-      const whisperMessage =
-        '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 chaos in Legion (stash tab "6"; position: left 4, top 7)';
-
-      it("returns the b/o price", () => {
-        const expectedString = "~b/o 20 chaos";
+      it("should return the decimal price with the currency", () => {
+        const whisperMessage =
+          '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 2.0 chaos in Legion (stash tab"6"; position: left 4, top 7)';
+        const expectedString = "~b/o 2.0 chaos";
 
         const actualString = poeTrade.getPrice(whisperMessage);
 
         expect(actualString).toEqual(expectedString);
       });
+
+      it("should return the price with the right currency", () => {
+        const currencies = [
+          "chaos",
+          "fusing",
+          "alch",
+          "gcp",
+          "chrom",
+          "jew",
+          "chance",
+          "chisel",
+          "scour",
+          "blessed",
+          "regret",
+          "regal",
+          "divine",
+          "vaal",
+          "exa",
+          "alt",
+        ];
+        currencies.forEach(currency => {
+          const whisperMessage = `@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 ${currency} in Legion (stash tab "6"; position: left 4, top 7)`;
+          const expectedString = `~b/o 20 ${currency}`;
+
+          const actualString = poeTrade.getPrice(whisperMessage);
+
+          expect(actualString).toEqual(expectedString);
+        });
+      });
     });
 
     describe("when the message does not match with the `RegEx` pattern", () => {
       const whisperMessage =
-        '@TestUser Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
+        "@TestUser Hi this is not a whisper message but contains numbers 34 and some currency name: chaos, exa.";
 
       it("returns an empty string", () => {
         const actualString = poeTrade.getPrice(whisperMessage);

@@ -42,19 +42,15 @@ export const getWhisperMessage = itemDetails => {
 };
 
 export const getPrice = whisperMessage => {
-  const matchDetails = whisperMessage.match(/listed for [\d]+ [\S]+/);
+  const pattern = /\d+\.?\d* (chaos|fusing|alch|gcp|chrom|jew|chance|chisel|scour|blessed|regret|regal|divine|vaal|exa|alt)+/;
+  const matchDetails = whisperMessage.match(pattern);
 
   // => `match` returns `null` if there's no corresponding item in the string.
   if (!javaScriptUtils.isDefined(matchDetails)) {
     return "";
   }
 
-  const itemPrice = matchDetails[0]
-    .split(" ")
-    .splice(2, 3)
-    .join(" ");
-
-  return `~b/o ${itemPrice}`;
+  return `~b/o ${matchDetails[0]}`;
 };
 
 export const notifyUser = (itemName, price) => {
