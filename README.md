@@ -11,6 +11,7 @@ Supported trade sites:
 ## Services
 
 - [GitHub](https://github.com/5k-mirrors/poe-sniper) is used as a landing page and for tracking external issues
+- [Test firebase instace](https://console.firebase.google.com/u/0/project/poe-sniper/overview)
 - [Production firebase instace](https://console.firebase.google.com/u/0/project/poe-sniper-gateway/overview)
 
 ## Development
