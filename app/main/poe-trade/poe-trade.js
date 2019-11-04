@@ -5,6 +5,7 @@ import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
+import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 
 export const getCookies = () => {
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
@@ -42,19 +43,17 @@ export const getWhisperMessage = itemDetails => {
 };
 
 export const getPrice = whisperMessage => {
-  const matchDetails = whisperMessage.match(/listed for [\d]+ [\S]+/);
+  const currencies = currencyNames.join("|");
+  const pattern = `\\d+\\.?\\d* (${currencies})+`;
+  const regexp = new RegExp(pattern);
+  const matchDetails = whisperMessage.match(regexp);
 
   // => `match` returns `null` if there's no corresponding item in the string.
   if (!javaScriptUtils.isDefined(matchDetails)) {
     return "";
   }
 
-  const itemPrice = matchDetails[0]
-    .split(" ")
-    .splice(2, 3)
-    .join(" ");
-
-  return `~b/o ${itemPrice}`;
+  return `~b/o ${matchDetails[0]}`;
 };
 
 export const notifyUser = (itemName, price) => {
