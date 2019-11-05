@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import MissingXRateLimitAccountHeaderError from "../../errors/missing-x-rate-limit-account-header-error";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
 class RequestLimiter {
@@ -20,16 +21,20 @@ class RequestLimiter {
 
   initialize() {
     return this.initialFetch()
-      .then(limitDetails =>
-        this.instance.updateSettings({
-          reservoir: limitDetails.limit,
-          reservoirRefreshAmount: limitDetails.limit,
-          reservoirRefreshInterval: limitDetails.interval,
-        })
-      )
+      .then(({ requestLimit, interval }) => {
+        javaScriptUtils.devLog(`REQUEST LIMIT - ${requestLimit}`);
+        javaScriptUtils.devLog(`INTERVAL - ${interval}`);
+
+        return this.instance.updateSettings({
+          reservoir: requestLimit,
+          reservoirRefreshAmount: requestLimit,
+          reservoirRefreshInterval: interval,
+        });
+      })
       .catch(err => {
-        // eslint-disable-next-line no-console
-        console.warn(err);
+        javaScriptUtils.devLog(
+          `RATE LIMIT INIT ERROR - ${JSON.stringify(err)}`
+        );
 
         return this.instance.updateSettings({
           reservoir: this.defaulValues.limit,
@@ -51,7 +56,7 @@ class RequestLimiter {
           .split(":");
 
         return {
-          limit: xRateLimitAccountValues[0],
+          requestLimit: xRateLimitAccountValues[0],
           interval: xRateLimitAccountValues[1] * 1000,
         };
       }
