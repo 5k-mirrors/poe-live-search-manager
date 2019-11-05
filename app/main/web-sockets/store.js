@@ -47,9 +47,6 @@ class Store {
   }
 
   load() {
-    /* The store must be emptied beforehand, otherwise FE hot-reload causes dudplicated items. */
-    this.clear();
-
     const localSearches = globalStore.get(storeKeys.WS_CONNECTIONS, []);
 
     localSearches.forEach(searchDetails => {
