@@ -33,7 +33,7 @@ Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
 
 ## Caveats
 
-- Querying the [`current reservoir`](https://github.com/SGrondin/bottleneck#currentreservoir) doesn't reflect its decremented value in case of simultaneous calls.
+- [`bottleneck.currentReservoir()`](https://github.com/SGrondin/bottleneck#currentreservoir) doesn't always reflect its current value as it is being returned asynchronously ("Returns a promise that returns the current reservoir value.")
 
 ## QA
 
