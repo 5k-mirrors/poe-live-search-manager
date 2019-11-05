@@ -23,7 +23,7 @@ class RequestLimiter {
     return this.initialFetch()
       .then(({ requestLimit, interval }) => {
         javaScriptUtils.devLog(
-          `LIMIT - ${requestLimit} / INTERVAL - ${interval}`
+          `Requests are limited to ${requestLimit} requests / ${interval} ms.`
         );
 
         return this.instance.updateSettings({
@@ -35,6 +35,10 @@ class RequestLimiter {
       .catch(err => {
         javaScriptUtils.devLog(
           `RATE LIMIT INIT ERROR - ${JSON.stringify(err)}`
+        );
+
+        javaScriptUtils.devLog(
+          `Requests are limitied to ${this.defaulValues.limit} / ${this.defaulValues.interval} ms.`
         );
 
         return this.instance.updateSettings({
