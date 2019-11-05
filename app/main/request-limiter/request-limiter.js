@@ -19,7 +19,7 @@ class RequestLimiter {
   }
 
   initialize() {
-    return this.dummyFetch()
+    return this.initialFetch()
       .then(limitDetails =>
         this.instance.updateSettings({
           reservoir: limitDetails.limit,
@@ -39,7 +39,7 @@ class RequestLimiter {
       });
   }
 
-  dummyFetch = () => {
+  initialFetch = () => {
     return fetch(`${baseUrls.poeFetchAPI}1`, {
       headers: {
         Cookie: getCookieHeader(),
