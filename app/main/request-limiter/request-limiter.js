@@ -8,8 +8,8 @@ import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
 class RequestLimiter {
   constructor() {
-    this.defaulValues = {
-      limit: 16,
+    this.defaultValues = {
+      requestLimit: 16,
       interval: 4000,
     };
 
@@ -38,13 +38,13 @@ class RequestLimiter {
         );
 
         javaScriptUtils.devLog(
-          `Requests are limitied to ${this.defaulValues.limit} / ${this.defaulValues.interval} ms.`
+          `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} ms.`
         );
 
         return this.instance.updateSettings({
-          reservoir: this.defaulValues.limit,
-          reservoirRefreshAmount: this.defaulValues.limit,
-          reservoirRefreshInterval: this.defaulValues.interval,
+          reservoir: this.defaultValues.requestLimit,
+          reservoirRefreshAmount: this.defaultValues.requestLimit,
+          reservoirRefreshInterval: this.defaultValues.interval,
         });
       });
   }
