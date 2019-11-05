@@ -22,8 +22,9 @@ class RequestLimiter {
   initialize() {
     return this.initialFetch()
       .then(({ requestLimit, interval }) => {
-        javaScriptUtils.devLog(`REQUEST LIMIT - ${requestLimit}`);
-        javaScriptUtils.devLog(`INTERVAL - ${interval}`);
+        javaScriptUtils.devLog(
+          `LIMIT - ${requestLimit} / INTERVAL - ${interval}`
+        );
 
         return this.instance.updateSettings({
           reservoir: requestLimit,
