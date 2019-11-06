@@ -4,9 +4,9 @@ export const useNavigationBarStyles = makeStyles({
   container: {
     display: "flex",
     position: "relative",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center",
-    padding: 10,
+    padding: 5,
     marginBottom: 15,
   },
 });

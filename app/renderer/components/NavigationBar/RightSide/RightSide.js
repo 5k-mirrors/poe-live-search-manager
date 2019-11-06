@@ -18,7 +18,7 @@ const rightSide = () => {
   const versionNumber = `v${version}`;
 
   return (
-    <Box display="flex" alignItems="center" className={classes.root}>
+    <Box display="flex" alignItems="center">
       <Typograpghy data-tip variant="subtitle2">
         {versionNumber}
       </Typograpghy>
