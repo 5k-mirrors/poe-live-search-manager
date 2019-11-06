@@ -10,7 +10,7 @@ class RequestLimiter {
   constructor() {
     this.defaultValues = {
       requestLimit: 16,
-      interval: 4000,
+      interval: 4,
     };
 
     this.instance = new Bottleneck({
@@ -23,13 +23,13 @@ class RequestLimiter {
     return this.initialFetch()
       .then(({ requestLimit, interval }) => {
         javaScriptUtils.devLog(
-          `Requests are limited to ${requestLimit} requests / ${interval} ms.`
+          `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
         );
 
         return this.instance.updateSettings({
           reservoir: requestLimit,
           reservoirRefreshAmount: requestLimit,
-          reservoirRefreshInterval: interval,
+          reservoirRefreshInterval: interval * 1000,
         });
       })
       .catch(err => {
@@ -38,13 +38,13 @@ class RequestLimiter {
         );
 
         javaScriptUtils.devLog(
-          `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} ms.`
+          `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} seconds.`
         );
 
         return this.instance.updateSettings({
           reservoir: this.defaultValues.requestLimit,
           reservoirRefreshAmount: this.defaultValues.requestLimit,
-          reservoirRefreshInterval: this.defaultValues.interval,
+          reservoirRefreshInterval: this.defaultValues.interval * 1000,
         });
       });
   }
@@ -62,7 +62,7 @@ class RequestLimiter {
 
         return {
           requestLimit: xRateLimitAccountValues[0],
-          interval: xRateLimitAccountValues[1] * 1000,
+          interval: xRateLimitAccountValues[1],
         };
       }
 
