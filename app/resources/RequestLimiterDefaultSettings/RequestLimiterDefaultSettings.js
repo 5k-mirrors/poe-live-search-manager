@@ -1,4 +1,4 @@
 export default {
-  requestLimit: 16,
+  requestLimit: 6,
   interval: 4,
 };
