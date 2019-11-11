@@ -7,6 +7,7 @@ import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
+import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import store from "../web-sockets/store";
 import subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
@@ -94,9 +95,14 @@ const setupGeneralIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.GET_REMAINING_REQUESTS, event =>
-    requestLimiter.getSettingsWithRemainingRequests().then(settings => {
-      event.sender.send(ipcEvents.SEND_REMAINING_REQUESTS, settings);
-    })
+    requestLimiter
+      .getSettingsWithRemainingRequests()
+      .then(settings => {
+        event.sender.send(ipcEvents.SEND_REMAINING_REQUESTS, settings);
+      })
+      .catch(err => {
+        javaScriptUtils.devLog(`GET_REMAINING_REQUESTS ERROR - ${err}`);
+      })
   );
 };
 

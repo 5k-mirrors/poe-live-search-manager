@@ -5,12 +5,13 @@ import MissingXRateLimitAccountHeaderError from "../../errors/missing-x-rate-lim
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
+import requestLimiterDefaultSettings from "../../resources/RequestLimiterDefaultSettings/RequestLimiterDefaultSettings";
 
 class RequestLimiter {
   constructor() {
     this.settings = {
-      requestLimit: 16,
-      interval: 4,
+      requestLimit: requestLimiterDefaultSettings.requestLimit,
+      interval: requestLimiterDefaultSettings.interval,
     };
 
     this.instance = new Bottleneck({

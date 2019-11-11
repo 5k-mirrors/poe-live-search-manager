@@ -7,13 +7,13 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { ipcRenderer } from "electron";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import tooltipIds from "../../../resources/TooltipIds/TooltipIds";
+import requestLimiterDefaultValues from "../../../../resources/RequestLimiterDefaultSettings/RequestLimiterDefaultSettings";
 
 export default () => {
-  // The default value is set to 16 to adapt to the request limiter's default value.
   const [settings, setSettings] = useState({
-    requestLimit: 16,
-    interval: 4,
-    remainingRequests: 16,
+    requestLimit: requestLimiterDefaultValues.requestLimit,
+    interval: requestLimiterDefaultValues.interval,
+    remainingRequests: requestLimiterDefaultValues.requestLimit,
   });
 
   useEffect(() => {
@@ -60,7 +60,8 @@ export default () => {
 
     return (
       <span>
-        Requests to pathofexile.com are limited to {settings.requestLimit}requests /{settings.interval} seconds / user. Requests left in the current period: {settings.remainingRequests} / {settings.requestLimit}.
+        Requests to pathofexile.com are limited to {settings.requestLimit}requests /{settings.interval} seconds / user.<br />
+        Requests left in the current period: {settings.remainingRequests} / {settings.requestLimit}.
       </span>
     );
   }
@@ -68,17 +69,13 @@ export default () => {
   return (
     <div>
       {requestsAreDenied() ? (
-        <WarningIcon
-          data-tip
-          data-for={tooltipIds.RATE_LIMIT_FEEDBACK}
-          style={{ color: "#F7A24D" }}
-        />
+        <div data-tip data-for={tooltipIds.RATE_LIMIT_FEEDBACK}>
+          <WarningIcon style={{ color: "#F7A24D" }} />
+        </div>
       ) : (
-        <CheckCircleIcon
-          data-tip
-          data-for={tooltipIds.RATE_LIMIT_FEEDBACK}
-          style={{ color: "#228B22" }}
-        />
+        <div data-tip data-for={tooltipIds.RATE_LIMIT_FEEDBACK}>
+          <CheckCircleIcon style={{ color: "#228B22" }} />
+        </div>
       )}
       <ReactTooltip
         id={tooltipIds.RATE_LIMIT_FEEDBACK}
