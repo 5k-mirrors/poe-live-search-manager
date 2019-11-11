@@ -38,12 +38,12 @@ export default () => {
     };
   }, []);
 
-  function requestsAreDenied() {
+  function requestsExhausted() {
     return settings.remainingRequests === 0;
   }
 
   function buildMessage() {
-    if (requestsAreDenied()) {
+    if (requestsExhausted()) {
       return (
         <span>
           Requests to pathofexile.com are limited to<br />
@@ -68,7 +68,7 @@ export default () => {
 
   return (
     <div>
-      {requestsAreDenied() ? (
+      {requestsExhausted() ? (
         <div data-tip data-for={tooltipIds.RATE_LIMIT_FEEDBACK}>
           <WarningIcon style={{ color: "#F7A24D" }} />
         </div>
@@ -80,7 +80,7 @@ export default () => {
       <ReactTooltip
         id={tooltipIds.RATE_LIMIT_FEEDBACK}
         place="bottom"
-        type={requestsAreDenied() ? "warning" : "info"}
+        type={requestsExhausted() ? "warning" : "info"}
         multiline
       >
         {buildMessage()}
