@@ -60,7 +60,7 @@ export default () => {
 
     return (
       <span>
-        Requests to pathofexile.com are limited to {settings.requestLimit}requests /{settings.interval} seconds / user.<br />
+        Requests to pathofexile.com are limited to {settings.requestLimit} requests / {settings.interval} seconds / user.<br />
         Requests left in the current period: {settings.remainingRequests} / {settings.requestLimit}.
       </span>
     );
