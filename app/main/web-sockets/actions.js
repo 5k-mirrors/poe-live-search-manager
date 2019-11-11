@@ -48,6 +48,7 @@ const connect = id =>
 
       const limiter = requestLimiter.get();
 
+      // This returns a Promise but the mutex is released within the promise so locking still works.
       return limiter.schedule({ id }, () => {
         const webSocketUri = getWebSocketUri(ws.searchUrl);
 
