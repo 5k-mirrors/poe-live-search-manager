@@ -92,6 +92,12 @@ const setupGeneralIpcListeners = () => {
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
     limiterGroup.drop();
   });
+
+  ipcMain.on(ipcEvents.GET_REMAINING_REQUESTS, event =>
+    requestLimiter.getSettingsWithRemainingRequests().then(settings => {
+      event.sender.send(ipcEvents.SEND_REMAINING_REQUESTS, settings);
+    })
+  );
 };
 
 export default () =>

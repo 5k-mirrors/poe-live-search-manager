@@ -46,7 +46,7 @@ const connect = id =>
       if (ws.socket && !stateIs(ws.socket, socketStates.CLOSED))
         return release();
 
-      const limiter = requestLimiter.get();
+      const limiter = requestLimiter.getInstance();
 
       // This returns a Promise but the mutex is released within the promise so locking still works.
       return limiter.schedule({ id }, () => {
