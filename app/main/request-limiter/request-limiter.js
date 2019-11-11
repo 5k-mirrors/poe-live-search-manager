@@ -6,6 +6,9 @@ import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 import requestLimiterDefaultSettings from "../../resources/RequestLimiterDefaultSettings/RequestLimiterDefaultSettings";
+import * as electronUtils from "../utils/electron-utils/electron-utils";
+import { windows } from "../../resources/Windows/Windows";
+import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 
 class RequestLimiter {
   constructor() {
@@ -32,6 +35,14 @@ class RequestLimiter {
           requestLimit,
           interval,
         };
+
+        electronUtils.send(
+          windows.POE_SNIPER,
+          ipcEvents.SEND_REQUEST_LIMITER_SETTINGS,
+          {
+            ...this.settings,
+          }
+        );
 
         return this.instance.updateSettings({
           reservoir: requestLimit,
@@ -79,13 +90,6 @@ class RequestLimiter {
 
   getInstance() {
     return this.instance;
-  }
-
-  getSettingsWithRemainingRequests() {
-    return this.instance.currentReservoir().then(remainingRequests => ({
-      ...this.settings,
-      remainingRequests,
-    }));
   }
 }
 

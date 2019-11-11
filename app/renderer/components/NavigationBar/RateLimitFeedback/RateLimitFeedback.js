@@ -22,11 +22,21 @@ export default () => {
     }, 1000);
 
     ipcRenderer.on(
-      ipcEvents.SEND_REMAINING_REQUESTS,
+      ipcEvents.SEND_REQUEST_LIMITER_SETTINGS,
       (event, currentSettings) => {
         setSettings({
           ...settings,
           ...currentSettings,
+        });
+      }
+    );
+
+    ipcRenderer.on(
+      ipcEvents.SEND_REMAINING_REQUESTS,
+      (event, remainingRequests) => {
+        setSettings({
+          ...settings,
+          remainingRequests,
         });
       }
     );

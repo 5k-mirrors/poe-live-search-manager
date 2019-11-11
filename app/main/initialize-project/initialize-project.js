@@ -94,16 +94,18 @@ const setupGeneralIpcListeners = () => {
     limiterGroup.drop();
   });
 
-  ipcMain.on(ipcEvents.GET_REMAINING_REQUESTS, event =>
-    requestLimiter
-      .getSettingsWithRemainingRequests()
-      .then(settings => {
-        event.sender.send(ipcEvents.SEND_REMAINING_REQUESTS, settings);
+  ipcMain.on(ipcEvents.GET_REMAINING_REQUESTS, event => {
+    const limiter = requestLimiter.getInstance();
+
+    return limiter
+      .currentReservoir()
+      .then(remainingRequests => {
+        event.sender.send(ipcEvents.SEND_REMAINING_REQUESTS, remainingRequests);
       })
       .catch(err => {
         javaScriptUtils.devLog(`GET_REMAINING_REQUESTS ERROR - ${err}`);
-      })
-  );
+      });
+  });
 };
 
 export default () =>

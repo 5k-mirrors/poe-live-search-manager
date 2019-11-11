@@ -14,6 +14,7 @@ export const ipcEvents = {
   GET_PAYING_STATUS: "getPayingStatus",
   SEND_PAYING_STATUS: "sendPayingStatus",
   DROP_SCHEDULED_RESULTS: "dropScheduledResults",
+  SEND_REQUEST_LIMITER_SETTINGS: "sendRequestLimiterSettings",
   GET_REMAINING_REQUESTS: "requestRemainingRequests",
   SEND_REMAINING_REQUESTS: "sendRemainingRequests",
 };
