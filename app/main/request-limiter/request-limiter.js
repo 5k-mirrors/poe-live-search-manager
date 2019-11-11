@@ -8,7 +8,7 @@ import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
 class RequestLimiter {
   constructor() {
-    this.defaultValues = {
+    this.settings = {
       requestLimit: 16,
       interval: 4,
     };
@@ -26,6 +26,12 @@ class RequestLimiter {
           `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
         );
 
+        this.settings = {
+          ...this.settings,
+          requestLimit,
+          interval,
+        };
+
         return this.instance.updateSettings({
           reservoir: requestLimit,
           reservoirRefreshAmount: requestLimit,
@@ -38,13 +44,13 @@ class RequestLimiter {
         );
 
         javaScriptUtils.devLog(
-          `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} seconds.`
+          `Requests are limitied to ${this.settings.requestLimit} requests / ${this.settings.interval} seconds.`
         );
 
         return this.instance.updateSettings({
-          reservoir: this.defaultValues.requestLimit,
-          reservoirRefreshAmount: this.defaultValues.requestLimit,
-          reservoirRefreshInterval: this.defaultValues.interval * 1000,
+          reservoir: this.settings.requestLimit,
+          reservoirRefreshAmount: this.settings.requestLimit,
+          reservoirRefreshInterval: this.settings.interval * 1000,
         });
       });
   }
@@ -70,8 +76,15 @@ class RequestLimiter {
     });
   };
 
-  get() {
+  getInstance() {
     return this.instance;
+  }
+
+  getSettingsWithRemainingRequests() {
+    return this.instance.currentReservoir().then(remainingRequests => ({
+      ...this.settings,
+      remainingRequests,
+    }));
   }
 }
 

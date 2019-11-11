@@ -7,7 +7,7 @@ import requestLimiter from "../request-limiter/request-limiter";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 
 export const fetchItemDetails = id => {
-  const limiter = requestLimiter.get();
+  const limiter = requestLimiter.getInstance();
   const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
   return limiter
