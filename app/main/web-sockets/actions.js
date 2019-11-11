@@ -13,6 +13,7 @@ import socketStates from "../../resources/SocketStates/SocketStates";
 import mutex from "../mutex/mutex";
 import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
+import requestLimiter from "../request-limiter/request-limiter";
 
 const updateState = (id, socket) => {
   electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
@@ -45,79 +46,85 @@ const connect = id =>
       if (ws.socket && !stateIs(ws.socket, socketStates.CLOSED))
         return release();
 
-      const webSocketUri = getWebSocketUri(ws.searchUrl);
+      const limiter = requestLimiter.get();
 
-      javaScriptUtils.devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
+      // This returns a Promise but the mutex is released within the promise so locking still works.
+      return limiter.schedule({ id }, () => {
+        const webSocketUri = getWebSocketUri(ws.searchUrl);
 
-      ws.socket = new WebSocket(webSocketUri, {
-        headers: {
-          Cookie: getCookieHeader(),
-        },
-      });
-
-      store.update(ws.id, {
-        ...ws,
-      });
-
-      ws.socket.on("open", () => {
-        javaScriptUtils.devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
-
-        heartbeat(ws.socket);
-
-        updateState(ws.id, ws.socket);
-      });
-
-      ws.socket.on("message", response => {
-        const parsedResponse = JSON.parse(response);
-
-        const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
-
-        if (javaScriptUtils.isDefined(itemIds)) {
-          processItems(itemIds, ws);
-        }
-      });
-
-      ws.socket.on("ping", () => {
-        javaScriptUtils.devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
-
-        heartbeat(ws.socket);
-      });
-
-      ws.socket.on("error", error => {
         javaScriptUtils.devLog(
-          `SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`
+          `Connect initiated - ${webSocketUri} / ${ws.id}`
         );
 
-        updateState(ws.id, ws.socket);
+        ws.socket = new WebSocket(webSocketUri, {
+          headers: {
+            Cookie: getCookieHeader(),
+          },
+        });
 
-        ws.socket.close();
+        store.update(ws.id, {
+          ...ws,
+        });
+
+        ws.socket.on("open", () => {
+          javaScriptUtils.devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
+
+          heartbeat(ws.socket);
+
+          updateState(ws.id, ws.socket);
+        });
+
+        ws.socket.on("message", response => {
+          const parsedResponse = JSON.parse(response);
+
+          const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
+
+          if (javaScriptUtils.isDefined(itemIds)) {
+            processItems(itemIds, ws);
+          }
+        });
+
+        ws.socket.on("ping", () => {
+          javaScriptUtils.devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
+
+          heartbeat(ws.socket);
+        });
+
+        ws.socket.on("error", error => {
+          javaScriptUtils.devLog(
+            `SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`
+          );
+
+          updateState(ws.id, ws.socket);
+
+          ws.socket.close();
+        });
+
+        ws.socket.on("close", (code, reason) => {
+          javaScriptUtils.devLog(
+            `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
+          );
+
+          updateState(ws.id, ws.socket);
+
+          const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+
+          if (isLoggedIn && subscription.active()) {
+            setTimeout(() => {
+              javaScriptUtils.devLog(
+                `Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`
+              );
+
+              connect(ws.id);
+            }, 500);
+          }
+        });
+
+        return release();
       });
-
-      ws.socket.on("close", (code, reason) => {
-        javaScriptUtils.devLog(
-          `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
-        );
-
-        updateState(ws.id, ws.socket);
-
-        const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-        if (isLoggedIn && subscription.active()) {
-          setTimeout(() => {
-            javaScriptUtils.devLog(
-              `Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`
-            );
-
-            connect(ws.id);
-          }, 500);
-        }
-      });
-
-      return release();
     })
     .catch(err => {
-      // eslint-disable-next-line no-console
-      console.error(`LOCK ERROR - ${err}`);
+      javaScriptUtils.devLog(`CONNECT ERROR - ${JSON.stringify(err)}`);
     });
 
 export const disconnect = id => {
