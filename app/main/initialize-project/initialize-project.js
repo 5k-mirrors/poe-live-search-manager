@@ -103,7 +103,9 @@ const setupGeneralIpcListeners = () => {
         event.sender.send(ipcEvents.SEND_REMAINING_REQUESTS, remainingRequests);
       })
       .catch(err => {
-        javaScriptUtils.devLog(`GET_REMAINING_REQUESTS ERROR - ${err}`);
+        javaScriptUtils.devLog(
+          `ERROR WHILE REQUESTING FOR CURRENT RESERVOIR - ${err}`
+        );
       });
   });
 };
