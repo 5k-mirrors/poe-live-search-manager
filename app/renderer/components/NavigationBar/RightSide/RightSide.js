@@ -8,6 +8,7 @@ import * as baseUrls from "../../../../resources/BaseUrls/BaseUrls";
 import * as regExes from "../../../../resources/RegExes/RegExes";
 import { useRightSideStyles } from "./RightSide.style";
 import { version } from "../../../../../package.json";
+import tooltipIds from "../../../resources/TooltipIds/TooltipIds";
 
 const displayRevisionTooltip = !regExes.semanticVersionNumberMatcher.test(
   process.env.REVISION
@@ -19,11 +20,11 @@ const rightSide = () => {
 
   return (
     <Box display="flex" alignItems="center">
-      <Typograpghy data-tip variant="subtitle2">
+      <Typograpghy data-tip data-for={tooltipIds.REVISION} variant="subtitle2">
         {versionNumber}
       </Typograpghy>
       {displayRevisionTooltip ? (
-        <ReactTooltip place="bottom" type="info">
+        <ReactTooltip id={tooltipIds.REVISION} place="bottom" type="info">
           {process.env.REVISION}
         </ReactTooltip>
       ) : null}
