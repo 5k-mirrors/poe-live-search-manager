@@ -1,12 +1,10 @@
 import Bottleneck from "bottleneck";
-import { ipcMain } from "electron";
 import fetch from "node-fetch";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import MissingXRateLimitAccountHeaderError from "../../errors/missing-x-rate-limit-account-header-error";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 
 class RequestLimiter {
   constructor() {
@@ -22,11 +20,6 @@ class RequestLimiter {
   }
 
   initialize() {
-    ipcMain.send(
-      ipcEvents.REMAINING_REQUESTS_UPDATE,
-      this.defaultValues.requestLimit
-    );
-
     return this.initialFetch()
       .then(({ requestLimit, interval }) => {
         javaScriptUtils.devLog(
