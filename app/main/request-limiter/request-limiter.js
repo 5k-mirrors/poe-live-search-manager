@@ -17,10 +17,7 @@ class RequestLimiter {
       interval: requestLimiterDefaultSettings.interval,
     };
 
-    this.instance = new Bottleneck({
-      maxConcurrent: 1,
-      minTime: 333,
-    });
+    this.instance = new Bottleneck();
   }
 
   initialize() {
