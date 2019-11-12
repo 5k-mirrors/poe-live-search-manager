@@ -200,7 +200,7 @@ class Searches extends Component {
     return (
       <MaterialTable
         title="Active connections"
-        columns={tableColumns.inputScreen}
+        columns={tableColumns.searchesScreen}
         components={{
           Pagination: () => null,
         }}

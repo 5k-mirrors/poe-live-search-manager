@@ -54,7 +54,7 @@ const trade = () => {
           </Box>
         ),
       }}
-      columns={tableColumns.tradeScreen}
+      columns={tableColumns.resultsScreen}
       data={results}
       actions={[
         result => ({

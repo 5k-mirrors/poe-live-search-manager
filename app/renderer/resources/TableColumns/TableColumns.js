@@ -3,7 +3,7 @@ import EditableSearchUrl from "../../components/CustomTableColumns/EditableSearc
 import Connected from "../../components/CustomTableColumns/Connected/Connected";
 import SearchLink from "../../components/CustomTableColumns/SearchLink/SearchLink";
 
-export const inputScreen = [
+export const searchesScreen = [
   { field: "id", hidden: true },
   {
     title: "Connected",
@@ -30,7 +30,7 @@ export const inputScreen = [
   },
 ];
 
-export const tradeScreen = [
+export const resultsScreen = [
   { field: "id", hidden: true },
   {
     title: "Name",
