@@ -32,6 +32,7 @@ export const searchesScreen = [
 
 export const resultsScreen = [
   { field: "id", hidden: true },
+  { title: "Timestamp", field: "timestamp" },
   {
     title: "Name",
     field: "name",
