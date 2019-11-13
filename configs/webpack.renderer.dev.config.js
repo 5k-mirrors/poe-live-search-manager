@@ -12,7 +12,8 @@ const revision = platformIsWindows
       .execSync(
         "git describe --tags --exact-match 2> /dev/null || git describe --always"
       )
-      .toString();
+      .toString()
+      .trim();
 
 const webpackBaseConfigurations = require("./webpack.base.config");
 
