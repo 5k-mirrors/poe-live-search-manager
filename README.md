@@ -24,7 +24,9 @@ yarn install
 yarn dev
 ```
 
-Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
+- Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
+- Data location on win10: `%APPDATA%/PoE Sniper`
+- electron-store data location on win10: `%APPDATA%/PoE Sniper/config.json`
 
 ## Known issues
 
