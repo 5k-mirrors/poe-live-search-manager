@@ -257,7 +257,7 @@ class Searches extends Component {
             position: "sticky",
             top: 0,
           },
-          maxBodyHeight: "600px",
+          maxBodyHeight: "525px",
           pageSize: 9999,
           emptyRowsWhenPaging: false,
           addRowPosition: "first",
