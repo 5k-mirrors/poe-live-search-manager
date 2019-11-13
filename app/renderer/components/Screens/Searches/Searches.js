@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { ipcRenderer } from "electron";
+import { remote, ipcRenderer } from "electron";
 import MaterialTable from "material-table";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as regExes from "../../../../resources/RegExes/RegExes";
 import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
+import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 import withRouteRestriction from "../../withRouteRestriction/withRouteRestriction";
 
@@ -177,18 +178,29 @@ class Searches extends Component {
     return webSocketStore.length === 0;
   }
 
+  // Electron's doc is misleading because showMessageBox() does not return a Promise.
+  // Instead, it returns the clicked button's index based on the button's array.
+  // https://stackoverflow.com/questions/57839415/electron-dialog-showopendialog-not-returning-a-promise
   deleteAll() {
-    const {
-      webSocketStore: [...webSocketStore],
-    } = this.state;
-
-    webSocketStore.forEach(connectionDetails => {
-      ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
+    const clickedButtonIndex = remote.dialog.showMessageBox({
+      ...deleteAllSearchesMessageBoxOptions,
     });
 
-    this.setState({
-      webSocketStore: [],
-    });
+    const deleteAllSearchesConfirmed = clickedButtonIndex === 1;
+
+    if (deleteAllSearchesConfirmed) {
+      const {
+        webSocketStore: [...webSocketStore],
+      } = this.state;
+
+      webSocketStore.forEach(connectionDetails => {
+        ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
+      });
+
+      this.setState({
+        webSocketStore: [],
+      });
+    }
   }
 
   render() {
