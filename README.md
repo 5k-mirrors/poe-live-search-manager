@@ -31,16 +31,6 @@ Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
 - [Portable version - Windows notifications do not appear](https://github.com/electron-userland/electron-builder/issues/4054)
 - [NSIS installer keeps hanging around when the app is not uninstalled properly](https://github.com/electron-userland/electron-builder/issues/4057#issuecomment-537684523)
 
-## Caveats
-
-- [`bottleneck.currentReservoir()`](https://github.com/SGrondin/bottleneck#currentreservoir) doesn't always reflect its current value as it is being returned asynchronously ("Returns a promise that returns the current reservoir value.")
-
-## Rate limiting
-
-Actions that count towards the rate limit:
-- 1 per socket for opening connection
-- 1 per result for fetching item details
-
 ## QA
 
 As a user, I can login, so that my subscription is recognized and can access gated content

@@ -10,7 +10,6 @@ import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 import subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
-import requestLimiter from "../request-limiter/request-limiter";
 import stateIs from "../utils/state-is/state-is";
 
 const setupStoreIpcListeners = () => {
@@ -94,15 +93,16 @@ const setupGeneralIpcListeners = () => {
   });
 };
 
-export default () =>
-  requestLimiter.initialize().then(() => {
-    store.load();
+const initializeProject = () => {
+  store.load();
 
-    setupStoreIpcListeners();
+  setupStoreIpcListeners();
 
-    setupWebSocketIpcListeners();
+  setupWebSocketIpcListeners();
 
-    setupAuthenticationIpcListeners();
+  setupAuthenticationIpcListeners();
 
-    setupGeneralIpcListeners();
-  });
+  setupGeneralIpcListeners();
+};
+
+export default initializeProject;
