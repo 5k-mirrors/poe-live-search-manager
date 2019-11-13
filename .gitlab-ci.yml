@@ -28,6 +28,9 @@ electron-win-build:
   image: electronuserland/builder:wine
   script:
     - export REVISION="$(git describe --tags --exact-match 2> /dev/null || git describe --always)"
+    - echo $REVISION
+    - export REVISION="$(echo 'v1.0.0' || git describe --always)"
+    - echo $REVISION
     - yarn install
     - yarn package:win
   artifacts:
