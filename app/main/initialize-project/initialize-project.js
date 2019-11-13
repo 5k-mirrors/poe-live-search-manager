@@ -94,15 +94,18 @@ const setupGeneralIpcListeners = () => {
   });
 };
 
-export default () =>
-  requestLimiter.initialize().then(() => {
-    store.load();
+const initializeProject = () => {
+  requestLimiter.initialize();
 
-    setupStoreIpcListeners();
+  store.load();
 
-    setupWebSocketIpcListeners();
+  setupStoreIpcListeners();
 
-    setupAuthenticationIpcListeners();
+  setupWebSocketIpcListeners();
 
-    setupGeneralIpcListeners();
-  });
+  setupAuthenticationIpcListeners();
+
+  setupGeneralIpcListeners();
+};
+
+export default initializeProject;

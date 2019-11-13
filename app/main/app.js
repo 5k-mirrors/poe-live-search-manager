@@ -67,10 +67,10 @@ app.on("ready", async () => {
     await setupDevelopmentWorkflow();
   }
 
-  win.webContents.on("did-finish-load", async () => {
+  win.webContents.on("did-finish-load", () => {
     win.setTitle(windows.POE_SNIPER);
 
-    await initializeProject();
+    initializeProject();
   });
 });
 
