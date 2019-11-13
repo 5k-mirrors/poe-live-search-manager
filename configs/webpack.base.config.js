@@ -21,7 +21,11 @@ module.exports = {
   plugins: isProduction
     ? [
         new JavaScriptObfuscator(),
-        new webpack.EnvironmentPlugin(["FIREBASE_API_KEY", "FIREBASE_API_URL"]),
+        new webpack.EnvironmentPlugin([
+          "FIREBASE_API_KEY",
+          "FIREBASE_API_URL",
+          "REVISION",
+        ]),
       ]
     : [
         new DotEnv({
