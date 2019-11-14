@@ -38,7 +38,6 @@ Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
 ## Rate limiting
 
 Actions that count towards the rate limit:
-- 1 per socket for opening connection
 - 1 per result for fetching item details
 
 ## QA
