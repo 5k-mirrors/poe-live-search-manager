@@ -26,6 +26,82 @@ yarn dev
 
 Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
 
+## Testing
+
+To prove there's no rate limit on connecting websockets (execute in a browser window console logged in at pathofexile.com):
+```
+const connectToAll = (sockets = []) => {
+  sockets.forEach((socket, i) => {
+    console.log(`Connecting to ${i} ${socket}`);
+
+    const ws = new WebSocket(`wss://www.pathofexile.com/api/trade/live/${socket}`);
+
+    ws.onopen = function onOpen() {
+      console.log(`Socket open - ${i} ${socket}`);
+    };
+
+    ws.onclose = function onClose() {
+      console.log(`Socket close - ${i} ${socket}`);
+    };
+  });
+};
+
+ids = [
+"Standard/NK6Ec5",
+"Standard/24PVIk",
+"Standard/QMgpcw",
+"Standard/E6zLC5",
+"Standard/On3YlHE",
+"Standard/zb6as4",
+"Standard/WaRRSm",
+"Standard/PPXrJMUL",
+"Standard/Ag0aIQ",
+"Standard/A3DZc5",
+"Standard/GnyZL9Ub",
+"Standard/3XO0F5",
+"Standard/gLyOiQ",
+"Standard/l5a2tV",
+"Standard/vlQZSE",
+"Standard/ypRBiR",
+"Standard/yYnWnOCR",
+"Standard/9DnOtK",
+"Standard/V5bbpaCp",
+"Standard/AL0BTn",
+"Standard/A4GQs9",
+"Standard/19lOHK",
+"Standard/z9gRF4",
+"Standard/nw4zc0",
+"Standard/ve2XFE",
+"Standard/1qykFg",
+"Standard/NK6Ec5",
+"Standard/AevgUL",
+"Standard/8KW8cV",
+"Standard/RJ2rs7",
+"Standard/vyyWFE",
+"Standard/x7BRH5",
+"Standard/9ajYiK",
+"Standard/pwWeC0",
+"Standard/grZKsQ",
+"Standard/WGDLpRfm",
+"Standard/xWXmfm",
+"Standard/AMXPsJ",
+"Standard/7K527T5",
+"Standard/z8vR3Rc4",
+"Standard/pJ7YDeS0",
+"Standard/GKKDFb",
+"Standard/mjarELH6",
+"Standard/yEqqsR",
+"Standard/9dOmCK",
+"Standard/mkVZf6",
+"Standard/ZWe9TQ",
+"Standard/G6OWUb",
+"Standard/JZP9cl",
+"Standard/BgnQ3at8",
+"Standard/RJkqI7"];
+
+connectToAll(ids);
+```
+
 ## Known issues
 
 - [Portable version - Windows notifications do not appear](https://github.com/electron-userland/electron-builder/issues/4054)
