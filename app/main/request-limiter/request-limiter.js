@@ -8,21 +8,20 @@ import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
 class RequestLimiter {
   constructor() {
-    this.defaulValues = {
+    this.defaultValues = {
       requestLimit: 6,
       interval: 4,
     };
 
     this.instance = new Bottleneck({
-      reservoir: this.defaulValues.requestLimit,
-      reservoirRefreshAmount: this.defaulValues.requestLimit,
-      reservoirRefreshInterval: this.defaulValues.interval * 1000,
+      reservoir: this.defaultValues.requestLimit,
+      reservoirRefreshAmount: this.defaultValues.requestLimit,
+      reservoirRefreshInterval: this.defaultValues.interval * 1000,
     });
   }
 
   initialize() {
-    return this.instance
-      .schedule(() => this.initialFetch())
+    return this.initialFetch()
       .then(({ requestLimit, interval }) => {
         javaScriptUtils.devLog(
           `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
