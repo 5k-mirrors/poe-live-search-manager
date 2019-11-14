@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { remote, ipcRenderer } from "electron";
 import MaterialTable from "material-table";
+import Box from "@material-ui/core/Box";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
@@ -214,7 +215,12 @@ class Searches extends Component {
         title="Active connections"
         columns={tableColumns.searchesScreen}
         components={{
-          Pagination: () => null,
+          Pagination: () => (
+            <Box component="td" padding={2} fontSize="13px">
+              {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
+              Search count: <b>{webSocketStore.length}</b>
+            </Box>
+          ),
         }}
         data={webSocketStore}
         editable={{
@@ -252,7 +258,7 @@ class Searches extends Component {
             position: "sticky",
             top: 0,
           },
-          maxBodyHeight: "600px",
+          maxBodyHeight: "525px",
           pageSize: 9999,
           emptyRowsWhenPaging: false,
           addRowPosition: "first",

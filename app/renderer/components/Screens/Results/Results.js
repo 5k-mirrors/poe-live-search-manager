@@ -94,7 +94,7 @@ const trade = () => {
           position: "sticky",
           top: 0,
         },
-        maxBodyHeight: "500px",
+        maxBodyHeight: "525px",
         pageSize: resultsLimit,
         emptyRowsWhenPaging: false,
       }}
