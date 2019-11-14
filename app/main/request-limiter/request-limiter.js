@@ -20,7 +20,8 @@ class RequestLimiter {
   }
 
   initialize() {
-    return this.initialFetch()
+    return this.instance
+      .schedule(() => this.initialFetch())
       .then(limitDetails =>
         this.instance.updateSettings({
           reservoir: limitDetails.limit,
