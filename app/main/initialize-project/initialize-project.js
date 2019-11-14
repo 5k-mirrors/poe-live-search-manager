@@ -98,7 +98,7 @@ export default () =>
   requestLimiter.initialize().then(() => {
     const limiter = requestLimiter.get();
 
-    // The reservoir's value must be decremented by one because the initial fetch already counts towards the rate limit.
+    // The reservoir's value must be decremented by one because the initialization contains a fetch which already counts towards the rate limit.
     return limiter.incrementReservoir(-1).then(() => {
       store.load();
 
