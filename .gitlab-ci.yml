@@ -27,7 +27,8 @@ electron-win-build:
   stage: build
   image: electronuserland/builder:wine
   script:
-    - export REVISION="$(git describe --tags --exact-match 2> /dev/null || git describe --always)"
+    # Required for `artifactName` in build config
+    - export REVISION="$(git describe --always --tags --dirty)"
     - yarn install
     - yarn package:win
   artifacts:

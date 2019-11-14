@@ -5,17 +5,13 @@ import Button from "@material-ui/core/Button";
 import ReactTooltip from "react-tooltip";
 import * as electronUtils from "../../../utils/ElectronUtils/ElectronUtils";
 import * as baseUrls from "../../../../resources/BaseUrls/BaseUrls";
-import * as regExes from "../../../../resources/RegExes/RegExes";
 import { useRightSideStyles } from "./RightSide.style";
 import { version } from "../../../../../package.json";
-
-const displayRevisionTooltip = !regExes.semanticVersionNumberMatcher.test(
-  process.env.REVISION
-);
 
 const rightSide = () => {
   const classes = useRightSideStyles();
   const versionNumber = `v${version}`;
+  const displayRevisionTooltip = versionNumber !== process.env.REVISION;
 
   return (
     <Box display="flex" alignItems="center" className={classes.root}>
@@ -24,7 +20,7 @@ const rightSide = () => {
       </Typograpghy>
       {displayRevisionTooltip ? (
         <ReactTooltip place="bottom" type="info">
-          {process.env.REVISION}
+          {`Internal revision: ${process.env.REVISION}`}
         </ReactTooltip>
       ) : null}
       <Button
