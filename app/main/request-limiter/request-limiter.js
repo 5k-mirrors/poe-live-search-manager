@@ -3,35 +3,45 @@ import fetch from "node-fetch";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import MissingXRateLimitAccountHeaderError from "../../errors/missing-x-rate-limit-account-header-error";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
 class RequestLimiter {
   constructor() {
     this.defaulValues = {
-      limit: 6,
-      interval: 4000,
+      requestLimit: 6,
+      interval: 4,
     };
 
     this.instance = new Bottleneck({
-      reservoir: this.defaulValues.limit,
-      reservoirRefreshAmount: this.defaulValues.limit,
-      reservoirRefreshInterval: this.defaulValues.interval,
+      reservoir: this.defaulValues.requestLimit,
+      reservoirRefreshAmount: this.defaulValues.requestLimit,
+      reservoirRefreshInterval: this.defaulValues.interval * 1000,
     });
   }
 
   initialize() {
     return this.instance
       .schedule(() => this.initialFetch())
-      .then(limitDetails =>
-        this.instance.updateSettings({
-          reservoir: limitDetails.limit,
-          reservoirRefreshAmount: limitDetails.limit,
-          reservoirRefreshInterval: limitDetails.interval,
-        })
-      )
+      .then(({ requestLimit, interval }) => {
+        javaScriptUtils.devLog(
+          `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
+        );
+
+        return this.instance.updateSettings({
+          reservoir: requestLimit,
+          reservoirRefreshAmount: requestLimit,
+          reservoirRefreshInterval: interval * 1000,
+        });
+      })
       .catch(err => {
-        // eslint-disable-next-line no-console
-        console.warn(err);
+        javaScriptUtils.devLog(
+          `RATE LIMIT INIT ERROR - ${JSON.stringify(err)}`
+        );
+
+        javaScriptUtils.devLog(
+          `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} seconds.`
+        );
       });
   }
 
@@ -47,8 +57,8 @@ class RequestLimiter {
           .split(":");
 
         return {
-          limit: xRateLimitAccountValues[0],
-          interval: xRateLimitAccountValues[1] * 1000,
+          requestLimit: xRateLimitAccountValues[0],
+          interval: xRateLimitAccountValues[1],
         };
       }
 

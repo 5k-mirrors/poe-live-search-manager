@@ -116,8 +116,7 @@ const connect = id =>
       return release();
     })
     .catch(err => {
-      // eslint-disable-next-line no-console
-      console.error(`LOCK ERROR - ${err}`);
+      javaScriptUtils.devLog(`CONNECT ERROR - ${JSON.stringify(err)}`);
     });
 
 export const disconnect = id => {
