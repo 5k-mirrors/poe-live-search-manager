@@ -242,6 +242,7 @@ class Searches extends Component {
             tooltip: "Delete all",
             isFreeAction: true,
             onClick: () => this.deleteAll(),
+            disabled: this.isWebSocketStoreEmpty(),
           },
         ]}
         options={{

@@ -84,6 +84,7 @@ const trade = () => {
           tooltip: "Delete all",
           isFreeAction: true,
           onClick: () => deleteAll(),
+          disabled: results.length === 0,
         },
       ]}
       options={{
