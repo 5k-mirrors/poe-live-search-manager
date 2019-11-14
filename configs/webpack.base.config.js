@@ -5,7 +5,7 @@ const DotEnv = require("dotenv-webpack");
 const isProduction = process.env.NODE_ENV === "production";
 
 const revision = require("child_process")
-  .execSync("git describe --always --tags")
+  .execSync("git describe --always --tags --dirty")
   .toString()
   .trim();
 
