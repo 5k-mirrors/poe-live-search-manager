@@ -8,13 +8,14 @@ import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 class RequestLimiter {
   constructor() {
     this.defaulValues = {
-      limit: 16,
+      limit: 6,
       interval: 4000,
     };
 
     this.instance = new Bottleneck({
-      maxConcurrent: 1,
-      minTime: 333,
+      reservoir: this.defaulValues.limit,
+      reservoirRefreshAmount: this.defaulValues.limit,
+      reservoirRefreshInterval: this.defaulValues.interval,
     });
   }
 
@@ -30,12 +31,6 @@ class RequestLimiter {
       .catch(err => {
         // eslint-disable-next-line no-console
         console.warn(err);
-
-        return this.instance.updateSettings({
-          reservoir: this.defaulValues.limit,
-          reservoirRefreshAmount: this.defaulValues.limit,
-          reservoirRefreshInterval: this.defaulValues.interval,
-        });
       });
   }
 
