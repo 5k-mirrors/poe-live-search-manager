@@ -28,16 +28,11 @@ class RequestLimiter {
           `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
         );
 
-        return this.instance
-          .updateSettings({
-            reservoir: requestLimit,
-            reservoirRefreshAmount: requestLimit,
-            reservoirRefreshInterval: interval * 1000,
-          })
-          .then(() => {
-            // The reservoir's value must be decremented by one because the initial fetch already counts towards the rate limit.
-            return this.instance.incrementReservoir(-1);
-          });
+        return this.instance.updateSettings({
+          reservoir: requestLimit,
+          reservoirRefreshAmount: requestLimit,
+          reservoirRefreshInterval: interval * 1000,
+        });
       })
       .catch(err => {
         javaScriptUtils.devLog(

@@ -96,13 +96,18 @@ const setupGeneralIpcListeners = () => {
 
 export default () =>
   requestLimiter.initialize().then(() => {
-    store.load();
+    const limiter = requestLimiter.get();
 
-    setupStoreIpcListeners();
+    // The reservoir's value must be decremented by one because the initial fetch already counts towards the rate limit.
+    return limiter.incrementReservoir(-1).then(() => {
+      store.load();
 
-    setupWebSocketIpcListeners();
+      setupStoreIpcListeners();
 
-    setupAuthenticationIpcListeners();
+      setupWebSocketIpcListeners();
 
-    setupGeneralIpcListeners();
+      setupAuthenticationIpcListeners();
+
+      setupGeneralIpcListeners();
+    });
   });
