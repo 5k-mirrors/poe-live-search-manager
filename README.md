@@ -32,18 +32,18 @@ yarn dev
 
 To prove there's no rate limit on connecting websockets (execute in a browser window console logged in at pathofexile.com):
 ```
-const connectToAll = (sockets = []) => {
-  sockets.forEach((socket, i) => {
-    console.log(`Connecting to ${i} ${socket}`);
+const connectToAll = (ids = []) => {
+  ids.forEach((id, index) => {
+    console.log(`Connecting to ${index} ${id}`);
 
-    const ws = new WebSocket(`wss://www.pathofexile.com/api/trade/live/${socket}`);
+    const ws = new WebSocket(`wss://www.pathofexile.com/api/trade/live/${id}`);
 
     ws.onopen = function onOpen() {
-      console.log(`Socket open - ${i} ${socket}`);
+      console.log(`Socket open - ${index} ${id}`);
     };
 
     ws.onclose = function onClose() {
-      console.log(`Socket close - ${i} ${socket}`);
+      console.log(`Socket close - ${index} ${id}`);
     };
   });
 };
