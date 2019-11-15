@@ -1,28 +1,49 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import breaks from "remark-breaks";
 import Link from "@material-ui/core/Link";
 import Divider from "@material-ui/core/Divider";
 import { openExternalUrl } from "../../../../utils/ElectronUtils/ElectronUtils";
-import * as javaScripUtils from "../../../../../utils/JavaScriptUtils/JavaScriptUtils";
 
-export default ({ ...details }) => (
+const Url = ({ ...props }) => {
+  const {
+    href,
+    children: [...children],
+  } = props;
+
+  return (
+    <Link
+      component="button"
+      variant="subtitle1"
+      onClick={() => openExternalUrl(href)}
+    >
+      {children[0].props.value}
+    </Link>
+  );
+};
+
+export default ({ ...itemDetails }) => (
   <div>
-    <h1>
-      {javaScripUtils.isDefined(details.link) ? (
-        /* eslint-disable-next-line jsx-a11y/anchor-is-valid */
-        <Link
-          component="button"
-          variant="h4"
-          onClick={() => openExternalUrl(details.link)}
-          size="large"
-        >
-          {details.title}
-        </Link>
-      ) : (
-        details.title
-      )}
-    </h1>
-    <ReactMarkdown source={details.description} />
+    {itemDetails.link ? (
+      <Link
+        component="button"
+        variant="h4"
+        onClick={() => openExternalUrl(itemDetails.link)}
+        size="large"
+      >
+        {itemDetails.title}
+      </Link>
+    ) : (
+      itemDetails.title
+    )}
+    <ReactMarkdown
+      source={itemDetails.description}
+      renderers={{
+        link: props => <Url {...props} />,
+      }}
+      plugins={[breaks]}
+    />
     <Divider />
   </div>
 );
