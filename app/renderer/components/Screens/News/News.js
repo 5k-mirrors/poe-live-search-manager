@@ -12,7 +12,7 @@ export default () => {
       {newsFeedItems.map(itemDetails => {
         switch (itemDetails.type) {
           case newsFeedItemTypes.RELEASE_NOTE:
-            return <ReleaseNote {...itemDetails} />;
+            return <ReleaseNote key={itemDetails.title} {...itemDetails} />;
           default:
             return null;
         }
