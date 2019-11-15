@@ -7,7 +7,7 @@ It is an alternative to keeping several browser tabs open but it consumes far le
 Supported trade sites:
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
 
-*You are viewing the README of version [v1.5.0](/../../releases/tag/v1.5.0). This is a completely new app with [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) support and a graphical interface. GitHub is only used to host releases and issues. You can find the old app and other releases [here](/../../releases).*
+*You are viewing the README of version [v1.6.0](/../../releases/tag/v1.6.0). This is a completely new app with [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) support and a graphical interface. GitHub is only used to host releases and issues. You can find the old app and other releases [here](/../../releases).*
 
 ## Usage
 
