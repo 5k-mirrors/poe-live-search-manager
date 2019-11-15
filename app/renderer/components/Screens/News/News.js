@@ -1,6 +1,6 @@
 import React from "react";
 import Paper from "@material-ui/core/Paper";
-import { ReleaseNote, Unknown } from "./Types";
+import { ReleaseNote } from "./Types";
 import { useNewsStyles } from "./News.style";
 import { newsFeedItems, newsFeedItemTypes } from "../../../resources/NewsFeed";
 
@@ -14,7 +14,7 @@ export default () => {
           case newsFeedItemTypes.RELEASE_NOTE:
             return <ReleaseNote {...itemDetails} />;
           default:
-            return <Unknown />;
+            return null;
         }
       })}
     </Paper>
