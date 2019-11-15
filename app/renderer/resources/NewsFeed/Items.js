@@ -7,8 +7,7 @@ export default [
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.5.0",
     description: `New features:
 - Include result timestamp([#57](https://github.com/5k-mirrors/poe-sniper/issues/57))
-- Pop up a confirmation window upon deleting ALL searches and results to avoid accidental removals
-    `,
+- Pop up a confirmation window upon deleting ALL searches and results to avoid accidental removals`,
   },
   {
     type: types.RELEASE_NOTE,
