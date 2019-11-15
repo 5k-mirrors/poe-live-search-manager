@@ -15,9 +15,11 @@ export default () => {
           case newsFeedItemTypes.RELEASE_NOTE:
             return <ReleaseNote key={itemDetails.title} {...itemDetails} />;
           default:
-            return javaScriptUtils.devLog(
+            javaScriptUtils.devLog(
               `${itemDetails.type} type is not supported on news feed.`
             );
+
+            return null;
         }
       })}
     </Paper>
