@@ -5,5 +5,11 @@ export const useNewsStyles = makeStyles({
     overflow: "auto",
     height: "600px",
     padding: 20,
+    "& > div": {
+      marginBottom: 30,
+      "&:last-child": {
+        marginBottom: 0,
+      },
+    },
   },
 });

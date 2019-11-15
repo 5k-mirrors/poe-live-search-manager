@@ -8,6 +8,7 @@ export default [
     description: `New features:
 - Include result timestamp([#57](https://github.com/5k-mirrors/poe-sniper/issues/57))
 - Pop up a confirmation window upon deleting ALL searches and results to avoid accidental removals`,
+    date: "2019-11-13T14:51:00Z",
   },
   {
     type: types.RELEASE_NOTE,
@@ -18,6 +19,7 @@ export default [
 
 Fixes:
 - Eliminate another instance of duplicate socket connections`,
+    date: "2019-11-04T17:25:00Z",
   },
   {
     type: types.RELEASE_NOTE,
@@ -25,6 +27,7 @@ Fixes:
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.3.0",
     description:
       "Improve searches screen(vertical scrolling & remove pagination).",
+    date: "2019-10-02T11:36:00Z",
   },
   {
     type: types.RELEASE_NOTE,
@@ -32,6 +35,7 @@ Fixes:
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.2.1",
     description:
       "Support encoded characters in search URLs([#51](https://github.com/5k-mirrors/poe-sniper/issues/51)).",
+    date: "2019-09-28T11:47:00Z",
   },
   {
     type: types.RELEASE_NOTE,
@@ -43,6 +47,7 @@ Fixes:
 
 Improvements:
 - Remove application menu bar.`,
+    date: "2019-09-26T08:17:00Z",
   },
   {
     type: types.RELEASE_NOTE,
@@ -54,12 +59,14 @@ Improvements:
 Fixes:
 - Fixed another instance of duplicate notifications ([#48](https://github.com/5k-mirrors/poe-sniper/issues/48))
   - In case of encountering this issue again, report it here and restart the app the temporarily fix it`,
+    date: "2019-09-17T21:07:00Z",
   },
   {
     type: types.RELEASE_NOTE,
     title: "v1.0.3",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.0.3",
     description: "Add delete all button",
+    date: "2019-09-14T13:30:00Z",
   },
   {
     type: types.RELEASE_NOTE,
@@ -67,6 +74,7 @@ Fixes:
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.0.2",
     description:
       "Fixes [#48](https://github.com/5k-mirrors/poe-sniper/issues/48) - Notifications come in multiple times for the same result",
+    date: "2019-09-12T11:09:00Z",
   },
   {
     type: types.RELEASE_NOTE,
@@ -74,6 +82,7 @@ Fixes:
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.0.1",
     description:
       "Users can no longer navigate away from the account tab until the setup is completed.",
+    date: "2019-09-12T08:07:00Z",
   },
   {
     type: types.RELEASE_NOTE,
@@ -82,5 +91,6 @@ Fixes:
     description: `\`v1.0.0\` ships a completely new app with [pathofexile.com/trade](https://www.pathofexile.com/trade) support and a graphical interface.
 
 Going forward we're working new features, such as showing the items in the app and the ability to ignore users. As always, we're welcoming feedback, ideas and bug reports at https://github.com/5k-mirrors/poe-sniper/issues.`,
+    date: "2019-09-12T14:20:00Z",
   },
 ];
