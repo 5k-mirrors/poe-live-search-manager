@@ -3,6 +3,27 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.7.0",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.7.0",
+    description:
+      'Shipping an all-new "News" tab to keep up with the latest updates.',
+    date: "2019-11-15T14:03:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
+    title: "v1.6.0",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.6.0",
+    description: `New features:
+- Display number of Searches on the bottom of the Searches screen
+
+Fixes:
+- Disable "delete all" action in case of no entries
+- Remove tooltip displaying true upon hovering version number
+- Adjust the layout of the Searches screen`,
+    date: "2019-11-15T13:37:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.5.0",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.5.0",
     description: `New features:
@@ -87,7 +108,7 @@ Fixes:
   {
     type: types.RELEASE_NOTE,
     title: "v1.0.0",
-    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.0.1",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.0.0",
     description: `\`v1.0.0\` ships a completely new app with [pathofexile.com/trade](https://www.pathofexile.com/trade) support and a graphical interface.
 
 Going forward we're working new features, such as showing the items in the app and the ability to ignore users. As always, we're welcoming feedback, ideas and bug reports at https://github.com/5k-mirrors/poe-sniper/issues.`,
