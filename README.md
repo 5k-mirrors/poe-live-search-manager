@@ -7,6 +7,8 @@ It is an alternative to keeping several browser tabs open but it consumes far le
 Supported trade sites:
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
 
+[According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](https://github.com/5k-mirrors/poe-sniper/releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
+
 *You are viewing the README of version [v1.6.0](/../../releases/tag/v1.6.0). This is a completely new app with [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) support and a graphical interface. GitHub is only used to host releases and issues. You can find the old app and other releases [here](/../../releases).*
 
 ## Usage
