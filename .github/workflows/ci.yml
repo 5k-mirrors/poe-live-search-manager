@@ -48,3 +48,24 @@ jobs:
       run: yarn install
     - name: Test
       run: yarn test
+
+  build:
+    runs-on: windows-latest
+    needs: [lint, test]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Cache JS dependencies
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-js-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-js-dependencies-
+    - name: Install JS dependencies
+      run: yarn install
+    - name: Build
+      run: yarn package:win
