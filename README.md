@@ -1,5 +1,7 @@
 # Poe::Sniper
 
+# This repository has been transfered to: https://github.com/c-hive/poe-sniper
+
 #### Desktop tool for Path of Exile to make instant offers for listed items without leaving the game.
 
 
