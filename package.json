@@ -16,6 +16,7 @@
     "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish onTag",
     "package:mac": "cross-env NODE_ENV=production npm run build && electron-builder build --mac",
     "package:linux": "cross-env NODE_ENV=production npm run build && electron-builder build --linux",
+    "win:package:win": "node scripts/build.js",
     "prettify": "prettier --write app/**/*.js",
     "test": "jest",
     "test:coverage": "jest --coverage"
