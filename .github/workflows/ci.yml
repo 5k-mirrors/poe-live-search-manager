@@ -54,9 +54,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: TEST
-      run: dir %USERPROFILE%
+      run: ls $env:USERPROFILE
     - name: TEST2
-      run: dir %LOCALAPPDATA%
+      run: ls $env:LOCALAPPDATA
 
   build:
     runs-on: windows-latest
