@@ -52,6 +52,7 @@ jobs:
   cache_test:
     runs-on: windows-latest
     steps:
+    - uses: actions/checkout@v1
     - name: Cache Electron dependencies
       uses: actions/cache@v1
       with:
