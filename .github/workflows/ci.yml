@@ -49,15 +49,6 @@ jobs:
     - name: Test
       run: yarn test
 
-  tmp-test:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: TEST
-      run: ls $env:USERPROFILE
-    - name: TEST2
-      run: ls $env:LOCALAPPDATA
-
   build:
     runs-on: windows-latest
     needs: [lint, test]
@@ -82,6 +73,10 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_DEPLOY_TOKEN }}
         FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
         FIREBASE_API_URL: ${{ secrets.FIREBASE_API_URL }}
+    - name: TEST
+      run: ls $env:USERPROFILE
+    - name: TEST2
+      run: ls $env:LOCALAPPDATA
     - uses: actions/upload-artifact@master
       with:
         name: deliverables
