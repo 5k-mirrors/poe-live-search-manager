@@ -1,0 +1,44 @@
+name: GitHub Actions Workflow with NPM cache
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js 8
+      uses: actions/setup-node@v1
+      with:
+        node-version: 8.x
+    - name: Cache JS dependencies
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-js-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-js-dependencies-
+    - name: Install JS dependencies
+      run: yarn install
+    - name: Lint
+      run: yarn lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js 8
+      uses: actions/setup-node@v1
+      with:
+        node-version: 8.x
+    - name: Cache JS dependencies
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-js-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-js-dependencies-
+    - name: Install JS dependencies
+      run: yarn install
+    - name: Test
+      run: yarn test
