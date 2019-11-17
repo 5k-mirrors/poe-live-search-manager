@@ -1,4 +1,4 @@
-name: GitHub Actions Workflow with NPM cache
+name: Verify
 
 on: [push]
 
