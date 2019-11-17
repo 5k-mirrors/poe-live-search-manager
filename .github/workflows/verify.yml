@@ -27,10 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Use Node.js 8
+    - name: Use Node.js 12
       uses: actions/setup-node@v1
       with:
-        node-version: 8.x
+        node-version: 12.x
     - name: Cache JS dependencies
       uses: actions/cache@v1
       with:
