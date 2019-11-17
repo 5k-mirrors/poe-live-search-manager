@@ -80,4 +80,4 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: deliverables
-        path: release/*.exe
+        path: release
