@@ -65,6 +65,20 @@ jobs:
         key: ${{ runner.OS }}-js-dependencies-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.OS }}-js-dependencies-
+    - name: Cache Electron dependencies
+      uses: actions/cache@v1
+      with:
+        path: $env:LOCALAPPDATA/electron
+        key: ${{ runner.OS }}-electron-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-electron-dependencies-
+    - name: Cache electron-builder dependencies
+      uses: actions/cache@v1
+      with:
+        path: $env:LOCALAPPDATA/electron-builder
+        key: ${{ runner.OS }}-electron-builder-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-electron-builder-dependencies-
     - name: Install JS dependencies
       run: yarn install
     - name: Build
@@ -73,10 +87,6 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_DEPLOY_TOKEN }}
         FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
         FIREBASE_API_URL: ${{ secrets.FIREBASE_API_URL }}
-    - name: TEST
-      run: ls $env:USERPROFILE
-    - name: TEST2
-      run: ls $env:LOCALAPPDATA
     - uses: actions/upload-artifact@master
       with:
         name: deliverables
