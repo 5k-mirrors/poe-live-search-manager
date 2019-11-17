@@ -87,7 +87,13 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_DEPLOY_TOKEN }}
         FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
         FIREBASE_API_URL: ${{ secrets.FIREBASE_API_URL }}
+    - name: Copy deliverables
+      run: |
+        mkdir deliverables
+        cp release/*.exe deliverables
+        cp release/latest.yml deliverables
+        cp release/*.exe.blockmap deliverables
     - uses: actions/upload-artifact@master
       with:
         name: deliverables
-        path: release
+        path: deliverables
