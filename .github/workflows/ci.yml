@@ -69,3 +69,7 @@ jobs:
       run: yarn install
     - name: Build
       run: yarn win:package:win
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_DEPLOY_TOKEN }}
+        FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+        FIREBASE_API_URL: ${{ secrets.FIREBASE_API_URL }}
