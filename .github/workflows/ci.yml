@@ -49,6 +49,15 @@ jobs:
     - name: Test
       run: yarn test
 
+  tmp-test:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: TEST
+      run: dir %USERPROFILE%
+    - name: TEST2
+      run: dir %LOCALAPPDATA%
+
   build:
     runs-on: windows-latest
     needs: [lint, test]
