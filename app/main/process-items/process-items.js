@@ -1,3 +1,4 @@
+import moment from "moment";
 import limiterGroup from "../limiter-group/limiter-group";
 import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as poeTrade from "../poe-trade/poe-trade";
@@ -12,11 +13,7 @@ const updateResults = args => {
   const currentResults = globalStore.get(storeKeys.RESULTS, []);
 
   currentResults.unshift({
-    id: args.id,
-    name: args.name,
-    searchUrl: args.searchUrl,
-    whisperMessage: args.whisperMessage,
-    price: args.price,
+    ...args,
   });
 
   const resultsLimit = globalStore.get(storeKeys.RESULTS_LIMIT, 100);
@@ -47,6 +44,8 @@ const scheduleResult = args => {
 };
 
 const processItems = (itemIds, ws) => {
+  const timestamp = moment().format("YYYY-MM-DD hh:mm:ss");
+
   return itemIds.forEach(itemId =>
     poeTrade
       .fetchItemDetails(itemId)
@@ -57,6 +56,7 @@ const processItems = (itemIds, ws) => {
 
         updateResults({
           id,
+          timestamp,
           name: ws.name,
           searchUrl: ws.searchUrl,
           whisperMessage,
