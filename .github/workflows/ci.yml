@@ -5,6 +5,7 @@ on: [push]
 jobs:
   lint:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -28,6 +29,7 @@ jobs:
 
   test:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -51,6 +53,7 @@ jobs:
 
   build:
     runs-on: windows-latest
+    timeout-minutes: 10
     needs: [lint, test]
     steps:
     - uses: actions/checkout@v1
