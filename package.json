@@ -16,6 +16,7 @@
     "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish onTag",
     "package:mac": "cross-env NODE_ENV=production npm run build && electron-builder build --mac",
     "package:linux": "cross-env NODE_ENV=production npm run build && electron-builder build --linux",
+    "unix:package:win": "cross-env REVISION=\"$(git describe --always --tags --dirty)\" yarn package:win",
     "win:package:win": "node scripts/build.js",
     "prettify": "prettier --write app/**/*.js",
     "test": "jest",
