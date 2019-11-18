@@ -30,7 +30,7 @@ yarn dev
 - Data location on win10: `%APPDATA%/PoE Sniper`
 - electron-store data location on win10: `%APPDATA%/PoE Sniper/config.json`
 
-For Issues and PRs older than 2019.11.16 refer to: https://gitlab.com/c-hive/poe-sniper-electron
+For Issues and PRs older than 2019.11.16 refer to: https://gitlab.com/c-hive/poe-sniper-electron and https://github.com/c-hive/poe-sniper/issues/108
 
 ## Testing
 
