@@ -75,14 +75,14 @@ jobs:
     - name: Cache Electron dependencies
       uses: actions/cache@v1
       with:
-        path: C:\Users\runneradmin\AppData\Local\electron
+        path: ~\AppData\Local\electron
         key: ${{ runner.OS }}-electron-dependencies-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.OS }}-electron-dependencies-
     - name: Cache electron-builder dependencies
       uses: actions/cache@v1
       with:
-        path: C:\Users\runneradmin\AppData\Local\electron-builder
+        path: ~\AppData\Local\electron-builder
         key: ${{ runner.OS }}-electron-builder-dependencies-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.OS }}-electron-builder-dependencies-
