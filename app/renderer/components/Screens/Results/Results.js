@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, useEffect } from "react";
-import { clipboard, ipcRenderer } from "electron";
+import { remote, clipboard, ipcRenderer } from "electron";
 import Box from "@material-ui/core/Box";
 import MaterialTable from "material-table";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
+import { deleteAllResults as deleteAllResultsMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 import withRouteRestriction from "../../withRouteRestriction/withRouteRestriction";
 
 const trade = () => {
@@ -36,9 +37,20 @@ const trade = () => {
   }
 
   function deleteAll() {
-    setResults([]);
+    const clickedButtonIndex = remote.dialog.showMessageBox({
+      ...deleteAllResultsMessageBoxOptions,
+    });
 
-    globalStore.set(storeKeys.RESULTS, []);
+    // Electron's doc is misleading because showMessageBox() does not return a Promise.
+    // Instead, it returns the clicked button's index based on the button's array.
+    // https://stackoverflow.com/questions/57839415/electron-dialog-showopendialog-not-returning-a-promise
+    const deleteAllResultsConfirmed = clickedButtonIndex === 1;
+
+    if (deleteAllResultsConfirmed) {
+      setResults([]);
+
+      globalStore.set(storeKeys.RESULTS, []);
+    }
   }
 
   return (
@@ -54,7 +66,7 @@ const trade = () => {
           </Box>
         ),
       }}
-      columns={tableColumns.tradeScreen}
+      columns={tableColumns.resultsScreen}
       data={results}
       actions={[
         result => ({
@@ -72,6 +84,7 @@ const trade = () => {
           tooltip: "Delete all",
           isFreeAction: true,
           onClick: () => deleteAll(),
+          disabled: results.length === 0,
         },
       ]}
       options={{
@@ -81,7 +94,7 @@ const trade = () => {
           position: "sticky",
           top: 0,
         },
-        maxBodyHeight: "500px",
+        maxBodyHeight: "525px",
         pageSize: resultsLimit,
         emptyRowsWhenPaging: false,
       }}

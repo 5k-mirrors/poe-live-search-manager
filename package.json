@@ -1,7 +1,7 @@
 {
   "name": "poe-sniper",
   "productName": "PoE Sniper",
-  "version": "1.4.0",
+  "version": "1.7.0",
   "description": "Desktop tool for Path of Exile to make instants offers for listed items without leaving the game",
   "main": "./app/main.prod.js",
   "scripts": {
@@ -16,6 +16,8 @@
     "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish onTag",
     "package:mac": "cross-env NODE_ENV=production npm run build && electron-builder build --mac",
     "package:linux": "cross-env NODE_ENV=production npm run build && electron-builder build --linux",
+    "unix:package:win": "cross-env REVISION=\"$(git describe --always --tags --dirty)\" yarn package:win",
+    "win:package:win": "node scripts/build.js",
     "prettify": "prettier --write app/**/*.js",
     "test": "jest",
     "test:coverage": "jest --coverage"
@@ -50,12 +52,15 @@
     "electron-updater": "^4.0.14",
     "firebase": "^6.2.4",
     "material-table": "^1.36.1",
+    "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-firebaseui": "^3.1.2",
+    "react-markdown": "^4.2.2",
     "react-router-dom": "^5.0.1",
     "react-tooltip": "^3.10.0",
+    "remark-breaks": "^1.0.3",
     "ws": "^7.1.0"
   },
   "devDependencies": {

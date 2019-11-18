@@ -8,6 +8,8 @@ It is an alternative to keeping several browser tabs open but it consumes far le
 Supported trade sites:
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
 
+[According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](https://github.com/5k-mirrors/poe-sniper/releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
+
 ## Services
 
 - [GitHub](https://github.com/5k-mirrors/poe-sniper) is used as a landing page and for tracking external issues
@@ -24,7 +26,87 @@ yarn install
 yarn dev
 ```
 
-Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
+- Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
+- Data location on win10: `%APPDATA%/PoE Sniper`
+- electron-store data location on win10: `%APPDATA%/PoE Sniper/config.json`
+
+For Issues and PRs older than 2019.11.16 refer to: https://gitlab.com/c-hive/poe-sniper-electron and https://github.com/c-hive/poe-sniper/issues/108
+
+## Testing
+
+To prove there's no rate limit on connecting websockets (execute in a browser window console logged in at pathofexile.com):
+```
+const connectToAll = (ids = []) => {
+  ids.forEach((id, index) => {
+    console.log(`Connecting to ${index} ${id}`);
+
+    const ws = new WebSocket(`wss://www.pathofexile.com/api/trade/live/${id}`);
+
+    ws.onopen = function onOpen() {
+      console.log(`Socket open - ${index} ${id}`);
+    };
+
+    ws.onclose = function onClose() {
+      console.log(`Socket close - ${index} ${id}`);
+    };
+  });
+};
+
+ids = [
+"Standard/NK6Ec5",
+"Standard/24PVIk",
+"Standard/QMgpcw",
+"Standard/E6zLC5",
+"Standard/On3YlHE",
+"Standard/zb6as4",
+"Standard/WaRRSm",
+"Standard/PPXrJMUL",
+"Standard/Ag0aIQ",
+"Standard/A3DZc5",
+"Standard/GnyZL9Ub",
+"Standard/3XO0F5",
+"Standard/gLyOiQ",
+"Standard/l5a2tV",
+"Standard/vlQZSE",
+"Standard/ypRBiR",
+"Standard/yYnWnOCR",
+"Standard/9DnOtK",
+"Standard/V5bbpaCp",
+"Standard/AL0BTn",
+"Standard/A4GQs9",
+"Standard/19lOHK",
+"Standard/z9gRF4",
+"Standard/nw4zc0",
+"Standard/ve2XFE",
+"Standard/1qykFg",
+"Standard/NK6Ec5",
+"Standard/AevgUL",
+"Standard/8KW8cV",
+"Standard/RJ2rs7",
+"Standard/vyyWFE",
+"Standard/x7BRH5",
+"Standard/9ajYiK",
+"Standard/pwWeC0",
+"Standard/grZKsQ",
+"Standard/WGDLpRfm",
+"Standard/xWXmfm",
+"Standard/AMXPsJ",
+"Standard/7K527T5",
+"Standard/z8vR3Rc4",
+"Standard/pJ7YDeS0",
+"Standard/GKKDFb",
+"Standard/mjarELH6",
+"Standard/yEqqsR",
+"Standard/9dOmCK",
+"Standard/mkVZf6",
+"Standard/ZWe9TQ",
+"Standard/G6OWUb",
+"Standard/JZP9cl",
+"Standard/BgnQ3at8",
+"Standard/RJkqI7"];
+
+connectToAll(ids);
+```
 
 ## Known issues
 
@@ -38,7 +120,6 @@ Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
 ## Rate limiting
 
 Actions that count towards the rate limit:
-- 1 per socket for opening connection
 - 1 per result for fetching item details
 
 ## QA
