@@ -1,7 +1,5 @@
 # Poe::Sniper
 
-# This repository has been transfered to: https://github.com/c-hive/poe-sniper
-
 #### Desktop tool for Path of Exile to make instant offers for listed items without leaving the game.
 
 
@@ -31,6 +29,8 @@ yarn dev
 - Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
 - Data location on win10: `%APPDATA%/PoE Sniper`
 - electron-store data location on win10: `%APPDATA%/PoE Sniper/config.json`
+
+For Issues and PRs older than 2019.11.16 refer to: https://gitlab.com/c-hive/poe-sniper-electron
 
 ## Testing
 
