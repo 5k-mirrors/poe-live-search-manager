@@ -23,8 +23,6 @@ class RequestLimiter {
           `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
         );
 
-        console.log(interval * 1000);
-
         return this.instance.updateSettings({
           reservoir: requestLimit,
           reservoirRefreshAmount: requestLimit,
@@ -59,8 +57,6 @@ class RequestLimiter {
           .get(headerKeys.XRateLimitAccount)
           .split(":");
 
-        console.log(xRateLimitAccountValues);
-
         return {
           requestLimit: Number(xRateLimitAccountValues[0]),
           interval: Number(xRateLimitAccountValues[1]),
@@ -73,14 +69,6 @@ class RequestLimiter {
 
   getInstance() {
     return this.instance;
-  }
-
-  isActive() {
-    return this.instance.currentReservoir().then(currentReservoir => {
-      console.log("[currentReservoir]", currentReservoir);
-
-      return currentReservoir === 0;
-    });
   }
 }
 

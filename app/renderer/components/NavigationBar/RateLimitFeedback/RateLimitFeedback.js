@@ -7,34 +7,21 @@ import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import tooltipIds from "../../../resources/TooltipIds/TooltipIds";
 
 export default () => {
-  const [isActive, setIsActive] = useState(false);
+  const [requestsExhausted, setRequestsExhausted] = useState(false);
 
   useEffect(() => {
-    /* ipcRenderer.on(ipcEvents.RATE_LIMIT_CHANGE, (event, details) => {
-      setIsActive(details.isActive);
-    }); */
-
-    /* ipcRenderer.on(
-      ipcEvents.SEND_RATE_LIMIT_STATUS,
-      (event, rateLimitIsActive) => {
-        console.log("[rateLimitIsActive]", rateLimitIsActive);
-
-        setIsActive(rateLimitIsActive);
+    ipcRenderer.on(
+      ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+      (event, currentStatus) => {
+        setRequestsExhausted(currentStatus);
       }
     );
 
-    setInterval(() => {
-      ipcRenderer.send(ipcEvents.GET_RATE_LIMIT_STATUS);
-    }, 2000); */
-
-    return () => {
-      // clearInterval(intervalId);
-      // ipcRenderer.removeAllListeners();
-    };
+    return () => ipcRenderer.removeAllListeners();
   }, []);
 
   function buildMessage() {
-    if (isActive) {
+    if (requestsExhausted) {
       return (
         <span>
           Requests reached rate limit. There may be a delay in displaying
@@ -48,7 +35,7 @@ export default () => {
 
   return (
     <div>
-      {isActive ? (
+      {requestsExhausted ? (
         <div data-tip data-for={tooltipIds.RATE_LIMIT_FEEDBACK}>
           <WarningIcon style={{ color: "#F7A24D" }} />
         </div>
@@ -60,7 +47,7 @@ export default () => {
       <ReactTooltip
         id={tooltipIds.RATE_LIMIT_FEEDBACK}
         place="bottom"
-        type={isActive ? "warning" : "info"}
+        type={requestsExhausted ? "warning" : "info"}
         multiline
       >
         {buildMessage()}
