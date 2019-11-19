@@ -115,7 +115,7 @@ connectToAll(ids);
 
 ## Caveats
 
-- [`bottleneck.currentReservoir()`](https://github.com/SGrondin/bottleneck#currentreservoir) doesn't always reflect its current value as it is being returned asynchronously ("Returns a promise that returns the current reservoir value.")
+- Specify which listeners should be detached with [`ipcRenderer.removeListener()`](https://electronjs.org/docs/api/ipc-renderer#ipcrendererremovelistenerchannel-listener) upon the component unmounts. Using [`ipcRenderer.removeAllListeners()`](https://electronjs.org/docs/api/ipc-renderer#ipcrendererremovealllistenerschannel) could cause side-effects because the function not only removes the component-specific listeners, but also the "global" ones.
 
 ## Rate limiting
 
