@@ -13,16 +13,22 @@ const withRouteRestriction = WrappedComponent => {
     const [isPaying, setIsPaying] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    function sendPayingStatusListener(event, payingStatus) {
+      setIsPaying(payingStatus);
+
+      setIsLoading(false);
+    }
+
     useEffect(() => {
       ipcRenderer.send(ipcEvents.GET_PAYING_STATUS);
 
-      ipcRenderer.on(ipcEvents.SEND_PAYING_STATUS, (event, payingStatus) => {
-        setIsPaying(payingStatus);
+      ipcRenderer.on(ipcEvents.SEND_PAYING_STATUS, sendPayingStatusListener);
 
-        setIsLoading(false);
-      });
-
-      return () => ipcRenderer.removeAllListeners();
+      return () =>
+        ipcRenderer.removeListener(
+          ipcEvents.SEND_PAYING_STATUS,
+          sendPayingStatusListener
+        );
     }, []);
 
     function conditionsAreFulfilled() {

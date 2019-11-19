@@ -9,15 +9,21 @@ import tooltipIds from "../../../resources/TooltipIds/TooltipIds";
 export default () => {
   const [requestsExhausted, setRequestsExhausted] = useState(false);
 
+  function rateLimitStatusChangeListener(event, currentStatus) {
+    setRequestsExhausted(currentStatus);
+  }
+
   useEffect(() => {
     ipcRenderer.on(
       ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-      (event, currentStatus) => {
-        setRequestsExhausted(currentStatus);
-      }
+      rateLimitStatusChangeListener
     );
 
-    return () => ipcRenderer.removeAllListeners();
+    return () =>
+      ipcRenderer.removeListener(
+        ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+        rateLimitStatusChangeListener
+      );
   }, []);
 
   function buildMessage() {
