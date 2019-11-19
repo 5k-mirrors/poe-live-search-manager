@@ -5,9 +5,6 @@ import MissingXRateLimitAccountHeaderError from "../../errors/missing-x-rate-lim
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
-import * as electronUtils from "../utils/electron-utils/electron-utils";
-import { windows } from "../../resources/Windows/Windows";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 
 class RequestLimiter {
   constructor() {
@@ -30,19 +27,7 @@ class RequestLimiter {
           `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
         );
 
-        this.settings = {
-          ...this.settings,
-          requestLimit,
-          interval,
-        };
-
-        electronUtils.send(
-          windows.POE_SNIPER,
-          ipcEvents.SEND_REQUEST_LIMITER_SETTINGS,
-          {
-            ...this.settings,
-          }
-        );
+        console.log(interval * 1000);
 
         return this.instance.updateSettings({
           reservoir: requestLimit,
@@ -56,7 +41,7 @@ class RequestLimiter {
         );
 
         javaScriptUtils.devLog(
-          `Requests are limitied to ${this.settings.requestLimit} requests / ${this.settings.interval} seconds.`
+          `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} seconds.`
         );
       });
   }
@@ -72,6 +57,8 @@ class RequestLimiter {
           .get(headerKeys.XRateLimitAccount)
           .split(":");
 
+        console.log(xRateLimitAccountValues);
+
         return {
           requestLimit: Number(xRateLimitAccountValues[0]),
           interval: Number(xRateLimitAccountValues[1]),
@@ -84,6 +71,14 @@ class RequestLimiter {
 
   getInstance() {
     return this.instance;
+  }
+
+  isActive() {
+    return this.instance.currentReservoir().then(currentReservoir => {
+      console.log("[currentReservoir]", currentReservoir);
+
+      return currentReservoir === 0;
+    });
   }
 }
 

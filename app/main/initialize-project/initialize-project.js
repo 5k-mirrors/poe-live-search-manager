@@ -7,7 +7,6 @@ import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
-import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import store from "../web-sockets/store";
 import subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
@@ -94,7 +93,13 @@ const setupGeneralIpcListeners = () => {
     limiterGroup.drop();
   });
 
-  ipcMain.on(ipcEvents.GET_REMAINING_REQUESTS, event => {
+  ipcMain.on(ipcEvents.GET_RATE_LIMIT_STATUS, event => {
+    return requestLimiter.isActive().then(isActive => {
+      event.sender.send(ipcEvents.SEND_RATE_LIMIT_STATUS, isActive);
+    });
+  });
+
+  /* ipcMain.on(ipcEvents.GET_REMAINING_REQUESTS, event => {
     const limiter = requestLimiter.getInstance();
 
     return limiter
@@ -107,12 +112,12 @@ const setupGeneralIpcListeners = () => {
           `ERROR WHILE REQUESTING FOR CURRENT RESERVOIR - ${err}`
         );
       });
-  });
+  }); */
 };
 
 export default () =>
   requestLimiter.initialize().then(() => {
-    const limiter = requestLimiter.get();
+    const limiter = requestLimiter.getInstance();
 
     // The reservoir's value must be decremented by one because the initialization contains a fetch which already counts towards the rate limit.
     return limiter.incrementReservoir(-1).then(() => {
