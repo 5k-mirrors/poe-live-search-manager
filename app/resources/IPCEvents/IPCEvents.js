@@ -15,6 +15,4 @@ export const ipcEvents = {
   SEND_PAYING_STATUS: "sendPayingStatus",
   DROP_SCHEDULED_RESULTS: "dropScheduledResults",
   RATE_LIMIT_STATUS_CHANGE: "rateLimitStatusChange",
-  GET_RATE_LIMIT_STATUS: "getRateLimitStatus",
-  SEND_RATE_LIMIT_STATUS: "sendRateLimitStatus",
 };
