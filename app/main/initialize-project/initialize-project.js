@@ -92,27 +92,6 @@ const setupGeneralIpcListeners = () => {
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
     limiterGroup.drop();
   });
-
-  ipcMain.on(ipcEvents.GET_RATE_LIMIT_STATUS, event => {
-    return requestLimiter.isActive().then(isActive => {
-      event.sender.send(ipcEvents.SEND_RATE_LIMIT_STATUS, isActive);
-    });
-  });
-
-  /* ipcMain.on(ipcEvents.GET_REMAINING_REQUESTS, event => {
-    const limiter = requestLimiter.getInstance();
-
-    return limiter
-      .currentReservoir()
-      .then(remainingRequests => {
-        event.sender.send(ipcEvents.SEND_REMAINING_REQUESTS, remainingRequests);
-      })
-      .catch(err => {
-        javaScriptUtils.devLog(
-          `ERROR WHILE REQUESTING FOR CURRENT RESERVOIR - ${err}`
-        );
-      });
-  }); */
 };
 
 export default () =>
