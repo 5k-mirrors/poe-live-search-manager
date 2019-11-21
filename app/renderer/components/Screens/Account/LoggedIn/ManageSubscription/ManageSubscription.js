@@ -3,6 +3,7 @@ import Box from "@material-ui/core/Box";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 import { useFirebaseContext } from "../../../../../utils/FirebaseUtils/FirebaseUtils";
 import { openExternalUrl } from "../../../../../utils/ElectronUtils/ElectronUtils";
+import { devLog } from "../../../../../../utils/JavaScriptUtils/JavaScriptUtils";
 
 export default () => {
   const firebaseContext = useFirebaseContext();
@@ -16,8 +17,7 @@ export default () => {
         openExternalUrl(parsedResponse.access_url);
       })
       .catch(err => {
-        // eslint-disable-next-line no-console
-        console.error(`PORTAL SESSION REQUEST ERROR - ${err}`);
+        devLog(`PORTAL SESSION REQUEST ERROR - ${err}`);
       });
   }, [firebaseContext.currentUser.uid]);
 
