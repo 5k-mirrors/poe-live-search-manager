@@ -44,7 +44,7 @@ const subscriptionDetails = () => {
   }
 
   return (
-    <Box mt={3} mb={3}>
+    <Box mt={3}>
       <Input
         type="text"
         value={subscriptionText()}
