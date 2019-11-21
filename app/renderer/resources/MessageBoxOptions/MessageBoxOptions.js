@@ -13,11 +13,3 @@ export const deleteAllResults = {
   buttons: ["Cancel", "Confirm"],
   defaultId: 1,
 };
-
-export const ssoPortal = {
-  title: "Manage subscriptions",
-  message: "Would you like to proceed?",
-  type: "info",
-  buttons: ["Proceed"],
-  defaultId: 1,
-};
