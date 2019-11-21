@@ -14,7 +14,7 @@ const startReservoirIncreaseListener = () => {
 
   const intervalId = setInterval(() => {
     return limiter.currentReservoir().then(currentReservoir => {
-      if (currentReservoir > 0 && !mutex.isLocked()) {
+      if (currentReservoir > 0) {
         electronUtils.send(
           windows.POE_SNIPER,
           ipcEvents.RATE_LIMIT_STATUS_CHANGE,
@@ -28,27 +28,28 @@ const startReservoirIncreaseListener = () => {
 };
 
 export const fetchItemDetails = id => {
-  return mutex.acquire().then(release => {
-    const limiter = requestLimiter.getInstance();
+  const limiter = requestLimiter.getInstance();
 
-    return limiter.currentReservoir().then(currentReservoir => {
-      if (currentReservoir === 0) {
-        electronUtils.send(
-          windows.POE_SNIPER,
-          ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-          true
-        );
-
-        startReservoirIncreaseListener();
-      }
+  return mutex.acquire().then(release =>
+    limiter.schedule(() => {
+      release();
 
       const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
-      return limiter
-        .schedule(() => fetch(itemUrl))
+      return fetch(itemUrl)
         .then(data => data.json())
-        .then(parsedData => {
-          release();
+        .then(async parsedData => {
+          const currentReservoir = await limiter.currentReservoir();
+
+          if (currentReservoir === 0) {
+            electronUtils.send(
+              windows.POE_SNIPER,
+              ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+              true
+            );
+
+            startReservoirIncreaseListener();
+          }
 
           const itemDetails = javaScriptUtils.safeGet(parsedData, [
             "result",
@@ -61,8 +62,8 @@ export const fetchItemDetails = id => {
 
           throw new ItemFetchError(`Item details not found for ${itemUrl}`);
         });
-    });
-  });
+    })
+  );
 };
 
 export const getWhisperMessage = itemDetails => {
