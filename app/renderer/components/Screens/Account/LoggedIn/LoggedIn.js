@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import ChargebeeWidget from "./ChargebeeWidget/ChargebeeWidget";
+import ManageSubscription from "./ManageSubscription/ManageSubscription";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/SimpleHtmlElements/Button/Button";
@@ -37,8 +37,8 @@ const loggedIn = () => {
         />
       </Box>
       <SessionIdEditor />
+      <ManageSubscription />
       <SubscriptionDetails />
-      <ChargebeeWidget />
     </div>
   );
 };
