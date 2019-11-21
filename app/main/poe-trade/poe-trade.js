@@ -14,7 +14,7 @@ const startReservoirIncreaseListener = () => {
 
   const intervalId = setInterval(() => {
     return limiter.currentReservoir().then(currentReservoir => {
-      if (currentReservoir > 0) {
+      if (currentReservoir > 0 && !mutex.isLocked()) {
         electronUtils.send(
           windows.POE_SNIPER,
           ipcEvents.RATE_LIMIT_STATUS_CHANGE,
