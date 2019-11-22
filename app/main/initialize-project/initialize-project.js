@@ -95,11 +95,9 @@ const setupGeneralIpcListeners = () => {
 };
 
 export default () =>
-  requestLimiter.initialize().then(() => {
-    const limiter = requestLimiter.getInstance();
-
+  requestLimiter.initialize().then(() =>
     // The reservoir's value must be decremented by one because the initialization contains a fetch which already counts towards the rate limit.
-    return limiter.incrementReservoir(-1).then(() => {
+    requestLimiter.bottleneckInstance.incrementReservoir(-1).then(() => {
       store.load();
 
       setupStoreIpcListeners();
@@ -109,5 +107,5 @@ export default () =>
       setupAuthenticationIpcListeners();
 
       setupGeneralIpcListeners();
-    });
-  });
+    })
+  );

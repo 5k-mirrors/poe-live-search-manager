@@ -10,60 +10,64 @@ import { windows } from "../../resources/Windows/Windows";
 import mutex from "../mutex/mutex";
 
 const startReservoirIncreaseListener = () => {
-  const limiter = requestLimiter.getInstance();
-
   const intervalId = setInterval(() => {
-    return limiter.currentReservoir().then(currentReservoir => {
-      if (currentReservoir > 0) {
-        electronUtils.send(
-          windows.POE_SNIPER,
-          ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-          false
-        );
+    return requestLimiter.bottleneckInstance
+      .currentReservoir()
+      .then(currentReservoir => {
+        if (currentReservoir > 0 && requestLimiter.isActive === true) {
+          requestLimiter.isActive = false;
 
-        clearInterval(intervalId);
-      }
-    });
+          electronUtils.send(
+            windows.POE_SNIPER,
+            ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+            requestLimiter.isActive
+          );
+
+          clearInterval(intervalId);
+        }
+      });
   }, 1000);
 };
 
 export const fetchItemDetails = id => {
-  const limiter = requestLimiter.getInstance();
-
-  return mutex.acquire().then(release =>
-    limiter.schedule(() => {
+  return mutex.acquire().then(release => {
+    return requestLimiter.bottleneckInstance.schedule(() => {
       release();
 
       const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
       return fetch(itemUrl)
         .then(data => data.json())
-        .then(async parsedData => {
-          const currentReservoir = await limiter.currentReservoir();
+        .then(parsedData =>
+          requestLimiter.bottleneckInstance
+            .currentReservoir()
+            .then(currentReservoir => {
+              if (currentReservoir === 0 && requestLimiter.isActive === false) {
+                requestLimiter.isActive = true;
 
-          if (currentReservoir === 0) {
-            electronUtils.send(
-              windows.POE_SNIPER,
-              ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-              true
-            );
+                electronUtils.send(
+                  windows.POE_SNIPER,
+                  ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+                  requestLimiter.isActive
+                );
 
-            startReservoirIncreaseListener();
-          }
+                startReservoirIncreaseListener();
+              }
 
-          const itemDetails = javaScriptUtils.safeGet(parsedData, [
-            "result",
-            0,
-          ]);
+              const itemDetails = javaScriptUtils.safeGet(parsedData, [
+                "result",
+                0,
+              ]);
 
-          if (javaScriptUtils.isDefined(itemDetails)) {
-            return itemDetails;
-          }
+              if (javaScriptUtils.isDefined(itemDetails)) {
+                return itemDetails;
+              }
 
-          throw new ItemFetchError(`Item details not found for ${itemUrl}`);
-        });
-    })
-  );
+              throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+            })
+        );
+    });
+  });
 };
 
 export const getWhisperMessage = itemDetails => {
