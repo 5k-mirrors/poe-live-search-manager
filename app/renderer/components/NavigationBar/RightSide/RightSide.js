@@ -15,15 +15,14 @@ const rightSide = () => {
 
   return (
     <Box display="flex" alignItems="center">
-      <Tooltip
-        title={
-          displayRevisionTooltip
-            ? `Internal revision: ${process.env.REVISION}`
-            : null
-        }
-      >
+      {displayRevisionTooltip ? (
+        <Tooltip title={`Internal revision: ${process.env.REVISION}`}>
+          <Typography variant="subtitle2">{versionNumber}</Typography>
+        </Tooltip>
+      ) : (
         <Typography variant="subtitle2">{versionNumber}</Typography>
-      </Tooltip>
+      )}
+
       <Button
         className={classes.button}
         onClick={() => electronUtils.openExternalUrl(baseUrls.reportIssue)}
