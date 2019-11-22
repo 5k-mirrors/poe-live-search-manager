@@ -13,9 +13,9 @@ class RequestLimiter {
       interval: 4,
     };
 
-    this._bottleneckInstance = new Bottleneck();
+    this.bottleneckInstance = new Bottleneck();
 
-    this._isActive = false;
+    this.isActive = false;
   }
 
   initialize() {
@@ -25,7 +25,7 @@ class RequestLimiter {
           `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
         );
 
-        return this._bottleneckInstance.updateSettings({
+        return this.bottleneckInstance.updateSettings({
           reservoir: requestLimit,
           reservoirRefreshAmount: requestLimit,
           reservoirRefreshInterval: interval * 1000,
@@ -40,7 +40,7 @@ class RequestLimiter {
           `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} seconds.`
         );
 
-        this._bottleneckInstance.updateSettings({
+        this.bottleneckInstance.updateSettings({
           reservoir: this.defaultValues.requestLimit,
           reservoirRefreshAmount: this.defaultValues.requestLimit,
           reservoirRefreshInterval: this.defaultValues.interval * 1000,
@@ -68,18 +68,6 @@ class RequestLimiter {
       throw new MissingXRateLimitAccountHeaderError();
     });
   };
-
-  get bottleneckInstance() {
-    return this._bottleneckInstance;
-  }
-
-  get isActive() {
-    return this._isActive;
-  }
-
-  set isActive(newIsActive) {
-    this._isActive = newIsActive;
-  }
 }
 
 class SingletonRequestLimiter {

@@ -14,7 +14,11 @@ const startReservoirIncreaseListener = () => {
     return requestLimiter.bottleneckInstance
       .currentReservoir()
       .then(currentReservoir => {
-        if (currentReservoir > 0 && requestLimiter.isActive === true) {
+        if (
+          currentReservoir > 0 &&
+          requestLimiter.isActive === true &&
+          !mutex.isLocked()
+        ) {
           requestLimiter.isActive = false;
 
           electronUtils.send(
