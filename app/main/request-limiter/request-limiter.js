@@ -68,6 +68,10 @@ class RequestLimiter {
       throw new MissingXRateLimitAccountHeaderError();
     });
   };
+
+  getInstance() {
+    return this.bottleneckInstance;
+  }
 }
 
 class SingletonRequestLimiter {
