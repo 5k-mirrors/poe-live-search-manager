@@ -1,22 +1,17 @@
 import fetch from "node-fetch";
-import { globalStore } from "../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
+import requestLimiter from "../request-limiter/request-limiter";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 
-export const getCookies = () => {
-  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
-
-  return `POESESSID=${poeSessionId}`;
-};
-
 export const fetchItemDetails = id => {
+  const limiter = requestLimiter.get();
   const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
-  return fetch(itemUrl)
+  return limiter
+    .schedule(() => fetch(itemUrl))
     .then(data => data.json())
     .then(parsedData => {
       const itemDetails = javaScriptUtils.safeGet(parsedData, ["result", 0]);

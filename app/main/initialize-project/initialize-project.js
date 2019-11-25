@@ -10,6 +10,7 @@ import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 import subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
+import requestLimiter from "../request-limiter/request-limiter";
 import stateIs from "../utils/state-is/state-is";
 
 const setupStoreIpcListeners = () => {
@@ -93,16 +94,20 @@ const setupGeneralIpcListeners = () => {
   });
 };
 
-const initializeProject = () => {
-  store.load();
+export default () =>
+  requestLimiter.initialize().then(() => {
+    const limiter = requestLimiter.get();
 
-  setupStoreIpcListeners();
+    // The reservoir's value must be decremented by one because the initialization contains a fetch which already counts towards the rate limit.
+    return limiter.incrementReservoir(-1).then(() => {
+      store.load();
 
-  setupWebSocketIpcListeners();
+      setupStoreIpcListeners();
 
-  setupAuthenticationIpcListeners();
+      setupWebSocketIpcListeners();
 
-  setupGeneralIpcListeners();
-};
+      setupAuthenticationIpcListeners();
 
-export default initializeProject;
+      setupGeneralIpcListeners();
+    });
+  });
