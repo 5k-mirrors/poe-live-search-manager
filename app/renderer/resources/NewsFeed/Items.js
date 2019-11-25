@@ -3,6 +3,17 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.8.0",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.8.0",
+    description: `Requests are now rate-limitied to adapt to Path of Exile's tracking policies.
+
+New features:
+- Reflect rate-limit state on the left side of the navigation bar with icons.
+    `,
+    date: "2019-11-25T14:03:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.7.0",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.7.0",
     description:
