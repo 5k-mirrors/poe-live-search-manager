@@ -10,7 +10,7 @@ export default [
 New features:
 - Reflect rate-limit state on the left side of the navigation bar with icons.
     `,
-    date: "2019-11-25T14:03:00Z",
+    date: "2019-11-25T10:00:00Z",
   },
   {
     type: types.RELEASE_NOTE,
