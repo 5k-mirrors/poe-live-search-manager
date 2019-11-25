@@ -13,7 +13,9 @@ class RequestLimiter {
       interval: 4,
     };
 
-    this.instance = new Bottleneck();
+    this.bottleneckInstance = new Bottleneck();
+
+    this.isActive = false;
   }
 
   initialize() {
@@ -23,7 +25,7 @@ class RequestLimiter {
           `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
         );
 
-        return this.instance.updateSettings({
+        return this.bottleneckInstance.updateSettings({
           reservoir: requestLimit,
           reservoirRefreshAmount: requestLimit,
           reservoirRefreshInterval: interval * 1000,
@@ -38,7 +40,7 @@ class RequestLimiter {
           `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} seconds.`
         );
 
-        this.instance.updateSettings({
+        this.bottleneckInstance.updateSettings({
           reservoir: this.defaultValues.requestLimit,
           reservoirRefreshAmount: this.defaultValues.requestLimit,
           reservoirRefreshInterval: this.defaultValues.interval * 1000,
@@ -67,8 +69,8 @@ class RequestLimiter {
     });
   };
 
-  get() {
-    return this.instance;
+  getInstance() {
+    return this.bottleneckInstance;
   }
 }
 

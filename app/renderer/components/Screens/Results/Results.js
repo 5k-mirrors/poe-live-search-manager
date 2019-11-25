@@ -18,12 +18,18 @@ const trade = () => {
 
   const resultsLimit = globalStore.get(storeKeys.RESULTS_LIMIT, 100);
 
-  useEffect(() => {
-    ipcRenderer.on(ipcEvents.RESULTS_UPDATE, (_, updatedResults) => {
-      setResults(updatedResults);
-    });
+  function resultsUpdateListener(_, currentResults) {
+    setResults(currentResults);
+  }
 
-    return () => ipcRenderer.removeAllListeners();
+  useEffect(() => {
+    ipcRenderer.on(ipcEvents.RESULTS_UPDATE, resultsUpdateListener);
+
+    return () =>
+      ipcRenderer.removeListener(
+        ipcEvents.RESULTS_UPDATE,
+        resultsUpdateListener
+      );
   }, []);
 
   function deleteResult(resultDetails) {

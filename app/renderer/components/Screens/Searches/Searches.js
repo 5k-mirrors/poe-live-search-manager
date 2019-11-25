@@ -27,28 +27,43 @@ class Searches extends Component {
   componentDidMount() {
     ipcRenderer.send(ipcEvents.GET_SOCKETS);
 
-    ipcRenderer.on(ipcEvents.SEND_SOCKETS, (event, currentSockets) => {
-      this.setState({
-        webSocketStore: currentSockets,
-      });
-    });
+    ipcRenderer.on(ipcEvents.SEND_SOCKETS, this.sendSocketsListener);
 
-    ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, (event, socketDetails) => {
-      if (this.stateHasChanged(socketDetails.id, socketDetails.isConnected)) {
-        this.update(socketDetails.id, {
-          isConnected: socketDetails.isConnected,
-        });
-      }
-    });
+    ipcRenderer.on(
+      ipcEvents.SOCKET_STATE_UPDATE,
+      this.socketStateUpdateListener
+    );
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeAllListeners();
+    ipcRenderer.removeListener(
+      ipcEvents.SEND_SOCKETS,
+      this.sendSocketsListener
+    );
+
+    ipcRenderer.removeListener(
+      ipcEvents.SOCKET_STATE_UPDATE,
+      this.socketStateUpdateListener
+    );
 
     this.reconnectTimeoutIds.forEach(timeout => {
       clearTimeout(timeout);
     });
   }
+
+  sendSocketsListener = (event, currentSockets) => {
+    this.setState({
+      webSocketStore: currentSockets,
+    });
+  };
+
+  socketStateUpdateListener = (event, socketDetails) => {
+    if (this.stateHasChanged(socketDetails.id, socketDetails.isConnected)) {
+      this.update(socketDetails.id, {
+        isConnected: socketDetails.isConnected,
+      });
+    }
+  };
 
   reconnect = connectionDetails => {
     this.disableReconnect(connectionDetails.id);

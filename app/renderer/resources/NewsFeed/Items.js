@@ -3,6 +3,16 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.8.0",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.8.0",
+    description: `New features:
+- Requests are now throttled according to Path of Exile's policies. This ensures you won't get rate-limited by the trade server.
+- Added a status icon to the navigation bar which shows when you hit the rate limit.
+    `,
+    date: "2019-11-25T12:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.7.0",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.7.0",
     description:
