@@ -8,7 +8,7 @@ export default [
     description: `Requests are now rate-limitied to adapt to Path of Exile's tracking policies.
 
 New features:
-- Reflect rate-limit state on the left side of the navigation bar with icons.
+- Reflect rate-limit state on the left side of the navigation bar.
     `,
     date: "2019-11-25T10:00:00Z",
   },
