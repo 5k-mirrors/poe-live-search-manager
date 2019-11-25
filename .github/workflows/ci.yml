@@ -68,10 +68,6 @@ jobs:
         key: ${{ runner.OS }}-js-dependencies-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.OS }}-js-dependencies-
-    - name: Test print stuff
-      run: |
-        echo $env:LOCALAPPDATA
-        ls $env:LOCALAPPDATA
     - name: Cache Electron dependencies
       uses: actions/cache@v1
       with:
