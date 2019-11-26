@@ -13,9 +13,10 @@ const semverRegExp = new RegExp(/^v[0-9]\.[0-9]\.[0-9]$/);
 
 function isTaggedCommit() {
   // process.argv[2] represents `github.ref` coming from the CI, e.g. refs/tags/v1.8.0.
-  const value = process.argv[2].split("/")[2];
+  const git_ref = process.argv[2]
+  const git_tag = git_ref.split("/")[2];
 
-  return semverRegExp.test(value);
+  return semverRegExp.test(git_tag);
 }
 
 if (isTaggedCommit()) {
