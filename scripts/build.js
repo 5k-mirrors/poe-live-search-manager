@@ -9,9 +9,6 @@ env.REVISION = execSync("git describe --always --tags --dirty")
   .toString()
   .trim();
 
-// eslint-disable-next-line no-console
-console.log(`github.ref is ${process.argv[2]}`);
-
 const semverRegExp = new RegExp(/^v[0-9]\.[0-9]\.[0-9]$/);
 
 // process.argv[2] represents `github.ref` coming from the CI.
