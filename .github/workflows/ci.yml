@@ -57,15 +57,10 @@ jobs:
     needs: [lint, test]
     steps:
     - uses: actions/checkout@v1
-      with:
-        ref: ${{ github.ref }}
     - name: Use Node.js 12
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
-    - name: Print GH stuff
-      run: |
-        echo ${{ github.ref }}
     - name: Cache JS dependencies
       uses: actions/cache@v1
       with:
