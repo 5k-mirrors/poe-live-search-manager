@@ -85,7 +85,7 @@ jobs:
     - name: Install JS dependencies
       run: yarn install
     - name: Build
-      run: yarn win:package:win --ref=${{ github.ref }}
+      run: yarn win:package:win ${{ github.ref }}
       env:
         GH_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
         FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
