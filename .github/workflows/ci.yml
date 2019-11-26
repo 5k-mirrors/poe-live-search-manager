@@ -56,6 +56,8 @@ jobs:
     timeout-minutes: 10
     needs: [lint, test]
     steps:
+    - name: Print ref
+      run: echo "Current ref: ${{ github.ref }}"
     - uses: actions/checkout@v1
     - name: Use Node.js 12
       uses: actions/setup-node@v1
