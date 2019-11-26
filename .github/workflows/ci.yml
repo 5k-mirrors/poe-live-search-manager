@@ -1,11 +1,6 @@
 name: CI
 
-on:
-  push:
-    branches:
-      - '*'
-    tags:
-      - 'v*'
+on: [push]
 
 jobs:
   lint:
@@ -90,7 +85,7 @@ jobs:
     - name: Install JS dependencies
       run: yarn install
     - name: Build
-      run: yarn win:package:win
+      run: yarn package:win
       env:
         GH_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
         FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
