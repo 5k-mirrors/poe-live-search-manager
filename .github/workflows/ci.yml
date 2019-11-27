@@ -56,6 +56,8 @@ jobs:
     timeout-minutes: 10
     needs: [lint, test]
     steps:
+    - name: Show current ref
+      run: echo ${{ github.ref }}
     - uses: actions/checkout@v1
     - name: Use Node.js 12
       uses: actions/setup-node@v1
@@ -85,7 +87,7 @@ jobs:
     - name: Install JS dependencies
       run: yarn install
     - name: Build
-      run: yarn win:package:win --ref=${{ github.ref }}
+      run: yarn win:package:win ${{ github.ref }}
       env:
         GH_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
         FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
