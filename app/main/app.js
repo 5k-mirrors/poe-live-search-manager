@@ -4,7 +4,10 @@ import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
 import { autoUpdater } from "electron-updater";
-import initializeProject from "./initialize-project/initialize-project";
+import {
+  initListeners,
+  initRateLimiter,
+} from "./initialize-project/initialize-project";
 import { windows } from "../resources/Windows/Windows";
 import { envIs } from "../utils/JavaScriptUtils/JavaScriptUtils";
 
@@ -63,6 +66,8 @@ app.on("ready", async () => {
 
   autoUpdater.checkForUpdatesAndNotify();
 
+  initListeners();
+
   if (envIs("development")) {
     await setupDevelopmentWorkflow();
   }
@@ -70,7 +75,7 @@ app.on("ready", async () => {
   win.webContents.on("did-finish-load", async () => {
     win.setTitle(windows.POE_SNIPER);
 
-    await initializeProject();
+    await initRateLimiter();
   });
 });
 
