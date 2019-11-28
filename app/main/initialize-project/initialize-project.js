@@ -75,18 +75,18 @@ const setupGeneralIpcListeners = () => {
   });
 
   ipcMain.on(
-    ipcEvents.SUBSCRIPTION_UPDATE,
+    ipcEvents.SUBSCRIPTION_UPDATE_IN_RENDERER,
     (event, updatedSubscriptionData) => {
-      if (subscription.active() !== updatedSubscriptionData.paying) {
-        subscription.update(updatedSubscriptionData);
+      subscription.update(updatedSubscriptionData);
 
-        webSocketActions.updateConnections();
-      }
+      webSocketActions.updateConnections();
     }
   );
 
-  ipcMain.on(ipcEvents.GET_PAYING_STATUS, event => {
-    event.sender.send(ipcEvents.SEND_PAYING_STATUS, subscription.active());
+  ipcMain.on(ipcEvents.GET_SUBSCRIPTION_DETAILS, event => {
+    event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+      ...subscription.data,
+    });
   });
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {

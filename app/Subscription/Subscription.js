@@ -4,12 +4,20 @@ import fetch from "node-fetch";
 class Subscription {
   constructor() {
     this.data = {
+      email: "",
       paying: false,
+      type: "",
     };
   }
 
   query = id => {
-    const userApiUrl = `${process.env.FIREBASE_API_URL}/user/${id}`;
+    console.log(process.env.FIREBASE_API_URL);
+
+    const userApiUrl = `${
+      process.env.FIREBASE_API_URL
+        ? process.env.FIREBASE_API_URL
+        : "https://us-central1-payment-gateway-staging-a3b8e.cloudfunctions.net/api"
+    }/user/${id}`;
 
     return fetch(userApiUrl).then(subscriptionData => subscriptionData.json());
   };
