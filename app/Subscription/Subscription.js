@@ -11,8 +11,7 @@ class Subscription {
   }
 
   query = id => {
-    console.log(process.env.FIREBASE_API_URL);
-
+    // @TODO process.env.FIREBASE_API_URL randomly becomes undefined upon starting the app.
     const userApiUrl = `${
       process.env.FIREBASE_API_URL
         ? process.env.FIREBASE_API_URL

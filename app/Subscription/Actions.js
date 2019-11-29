@@ -6,7 +6,7 @@ import { windows } from "../resources/Windows/Windows";
 
 let refreshInterval;
 
-export const subscriptionUpdated = (
+const subscriptionUpdated = (
   prevSubscriptionDetails,
   nextSubscriptionDetails
 ) => {
@@ -20,23 +20,34 @@ export const subscriptionUpdated = (
 };
 
 const refresh = id => {
-  subscription.query(id).then(subscriptionData => {
-    if (subscriptionUpdated(subscription.data, subscriptionData)) {
-      sendRenderer(windows.POE_SNIPER, ipcEvents.SUBSCRIPTION_UPDATE_IN_MAIN, {
-        ...subscriptionData,
+  subscription.query(id).then(nextSubscriptionDetails => {
+    const prevSubscriptionDetails = {
+      ...subscription.data,
+    };
+
+    if (subscriptionUpdated(prevSubscriptionDetails, nextSubscriptionDetails)) {
+      sendRenderer(windows.POE_SNIPER, ipcEvents.REFRESH_SUBSCRIPTION_DETAILS, {
+        data: nextSubscriptionDetails,
       });
+
+      subscription.update(nextSubscriptionDetails);
+
+      webSocketActions.updateConnections();
     }
-
-    subscription.update(subscriptionData);
-
-    webSocketActions.updateConnections();
   });
+  /* .catch(err => {
+      devLog(`Subscription fetch error: ${err}`);
+
+      sendRenderer(windows.POE_SNIPER, ipcEvents.REFRESH_SUBSCRIPTION_DETAILS, {
+        isErr: true,
+      });
+    }); */
 };
 
 export const startRefreshInterval = id => {
   refresh(id);
 
-  const oneHourInMilliseconds = 10000;
+  const oneHourInMilliseconds = 100000;
 
   refreshInterval = setInterval(() => {
     refresh(id);
