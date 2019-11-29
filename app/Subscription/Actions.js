@@ -47,7 +47,7 @@ const refresh = id => {
 export const startRefreshInterval = id => {
   refresh(id);
 
-  const oneHourInMilliseconds = 100000;
+  const oneHourInMilliseconds = 3600000;
 
   refreshInterval = setInterval(() => {
     refresh(id);
