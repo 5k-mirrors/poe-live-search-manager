@@ -41,6 +41,14 @@ Supported trade sites:
 
 *If you encounter an issue, [report it](/../../issues/new). Restarting the app can help resolve it.*
 
+#### Searches not connecting?
+
+- Make sure `pathofexile.com/trade` live search service works: open search in browser, click `Activate Live Search`, make sure new items are showing up.
+- Your session ID can change. Make sure it's up-to-date.
+- Restart the app, try reconnecting to all sockets and sockets 1-by-1.
+- Make sure rate limit indicator is green while connecting.
+- Search links can become invalid. If a few searches are not connecting make sure they are valid via checking them in the browser.
+
 #### Notifications not showing up?
 
 - Make sure Path of Exile runs in Windowed mode
