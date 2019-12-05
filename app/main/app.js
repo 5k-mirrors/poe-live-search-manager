@@ -62,11 +62,12 @@ const createWindow = () => {
 };
 
 app.on("ready", async () => {
+  // Subscribing to the listeners happens even before creating the window to be ready to actively respond to initial events coming from renderer.
+  initListeners();
+
   createWindow();
 
   autoUpdater.checkForUpdatesAndNotify();
-
-  initListeners();
 
   if (envIs("development")) {
     await setupDevelopmentWorkflow();
