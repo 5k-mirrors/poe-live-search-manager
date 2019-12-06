@@ -94,20 +94,22 @@ const setupGeneralIpcListeners = () => {
   });
 };
 
-export default () =>
+export const initListeners = () => {
+  store.load();
+
+  setupStoreIpcListeners();
+
+  setupWebSocketIpcListeners();
+
+  setupAuthenticationIpcListeners();
+
+  setupGeneralIpcListeners();
+};
+
+export const initRateLimiter = () =>
   requestLimiter.initialize().then(() => {
     const limiter = requestLimiter.getInstance();
 
     // The reservoir's value must be decremented by one because the initialization contains a fetch which already counts towards the rate limit.
-    return limiter.incrementReservoir(-1).then(() => {
-      store.load();
-
-      setupStoreIpcListeners();
-
-      setupWebSocketIpcListeners();
-
-      setupAuthenticationIpcListeners();
-
-      setupGeneralIpcListeners();
-    });
+    return limiter.incrementReservoir(-1);
   });

@@ -4,7 +4,10 @@ import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
 import { autoUpdater } from "electron-updater";
-import initializeProject from "./initialize-project/initialize-project";
+import {
+  initListeners,
+  initRateLimiter,
+} from "./initialize-project/initialize-project";
 import { windows } from "../resources/Windows/Windows";
 import { envIs } from "../utils/JavaScriptUtils/JavaScriptUtils";
 
@@ -59,6 +62,9 @@ const createWindow = () => {
 };
 
 app.on("ready", async () => {
+  // Subscribing to the listeners happens even before creating the window to be ready to actively respond to initial events coming from renderer.
+  initListeners();
+
   createWindow();
 
   autoUpdater.checkForUpdatesAndNotify();
@@ -70,7 +76,7 @@ app.on("ready", async () => {
   win.webContents.on("did-finish-load", async () => {
     win.setTitle(windows.POE_SNIPER);
 
-    await initializeProject();
+    await initRateLimiter();
   });
 });
 
