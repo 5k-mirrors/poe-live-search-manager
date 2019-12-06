@@ -20,8 +20,8 @@ export default () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isDisabled, disableRefreshButton] = customHooks.useDisable(1);
 
-  function foo(event, nextSubscriptionDetails) {
-    dispatch({ type: actions.UPDATE, payload: nextSubscriptionDetails });
+  function sendSubscriptionDetailsListener(event, nextSubscriptionDetails) {
+    dispatch({ type: actions.UPDATE, payload: { ...nextSubscriptionDetails } });
   }
 
   useEffect(() => {
@@ -29,10 +29,16 @@ export default () => {
 
     ipcRenderer.send(ipcEvents.GET_SUBSCRIPTION_DETAILS);
 
-    ipcRenderer.on(ipcEvents.SEND_SUBSCRIPTION_DETAILS, foo);
+    ipcRenderer.on(
+      ipcEvents.SEND_SUBSCRIPTION_DETAILS,
+      sendSubscriptionDetailsListener
+    );
 
     return () => {
-      ipcRenderer.removeListener(ipcEvents.SEND_SUBSCRIPTION_DETAILS, foo);
+      ipcRenderer.removeListener(
+        ipcEvents.SEND_SUBSCRIPTION_DETAILS,
+        sendSubscriptionDetailsListener
+      );
     };
   }, []);
 

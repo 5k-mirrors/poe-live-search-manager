@@ -12,6 +12,7 @@ import subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
 import requestLimiter from "../request-limiter/request-limiter";
 import stateIs from "../utils/state-is/state-is";
+import { devLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -75,21 +76,25 @@ const setupGeneralIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.GET_SUBSCRIPTION_DETAILS, event => {
-    event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, subscription.data);
+    event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+      data: { ...subscription.data },
+    });
   });
 
   ipcMain.on(ipcEvents.REFRESH_SUBSCRIPTION_DETAILS, (event, userId) =>
     subscription
       .query(userId)
       .then(subscriptionDetails => {
-        event.sender.send(
-          ipcEvents.SEND_SUBSCRIPTION_DETAILS,
-          subscriptionDetails
-        );
+        event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+          data: { ...subscriptionDetails },
+        });
       })
       .catch(err => {
-        // @TODO Handle errors ...
-        console.error(err);
+        devLog(err.message);
+
+        event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+          isErr: true,
+        });
       })
   );
 

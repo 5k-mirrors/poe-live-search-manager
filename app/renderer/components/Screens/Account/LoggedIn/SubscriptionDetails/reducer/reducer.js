@@ -14,17 +14,10 @@ export default (state, action) => {
         ...state,
         data: {
           ...state.data,
-          ...action.payload,
+          ...action.payload.data,
         },
         isLoading: false,
-        isErr: false,
-      };
-    }
-    case actions.ERROR: {
-      return {
-        ...state,
-        isLoading: false,
-        isErr: true,
+        isErr: action.payload.isErr ? action.payload.isErr : state.isErr,
       };
     }
     default:

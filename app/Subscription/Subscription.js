@@ -18,7 +18,11 @@ class Subscription {
         : "https://us-central1-poe-sniper-gateway-staging.cloudfunctions.net/api"
     }/user/${id}`;
 
-    return fetch(userApiUrl).then(subscriptionData => subscriptionData.json());
+    return fetch(userApiUrl)
+      .then(subscriptionData => subscriptionData.json())
+      .catch(err => {
+        throw new Error(`Subscription query error: ${err}`);
+      });
   };
 
   update = updatedData => {
