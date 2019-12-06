@@ -6,42 +6,24 @@ import { windows } from "../resources/Windows/Windows";
 
 let refreshInterval;
 
-const subscriptionUpdated = (
-  prevSubscriptionDetails,
-  nextSubscriptionDetails
-) => {
-  const payingStatusChanged =
-    prevSubscriptionDetails.paying !== nextSubscriptionDetails.paying;
-  const subscriptionTypeChanged =
-    prevSubscriptionDetails.subscription_type !==
-    nextSubscriptionDetails.subscription_type;
-
-  return payingStatusChanged || subscriptionTypeChanged;
-};
-
 const refresh = id => {
-  subscription.query(id).then(nextSubscriptionDetails => {
-    const prevSubscriptionDetails = {
-      ...subscription.data,
-    };
-
-    if (subscriptionUpdated(prevSubscriptionDetails, nextSubscriptionDetails)) {
-      sendRenderer(windows.POE_SNIPER, ipcEvents.REFRESH_SUBSCRIPTION_DETAILS, {
-        data: nextSubscriptionDetails,
-      });
+  subscription
+    .query(id)
+    .then(nextSubscriptionDetails => {
+      sendRenderer(
+        windows.POE_SNIPER,
+        ipcEvents.SEND_SUBSCRIPTION_DETAILS,
+        nextSubscriptionDetails
+      );
 
       subscription.update(nextSubscriptionDetails);
 
       webSocketActions.updateConnections();
-    }
-  });
-  /* .catch(err => {
-      devLog(`Subscription fetch error: ${err}`);
-
-      sendRenderer(windows.POE_SNIPER, ipcEvents.REFRESH_SUBSCRIPTION_DETAILS, {
-        isErr: true,
-      });
-    }); */
+    })
+    .catch(err => {
+      // @TODO Handle errors ...
+      console.error(`Subscription fetch error: ${err}`);
+    });
 };
 
 export const startRefreshInterval = id => {

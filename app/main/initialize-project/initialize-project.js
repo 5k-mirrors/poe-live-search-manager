@@ -75,33 +75,23 @@ const setupGeneralIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.GET_SUBSCRIPTION_DETAILS, event => {
-    event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-      data: {
-        ...subscription.data,
-      },
-    });
+    event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, subscription.data);
   });
 
-  ipcMain.on(ipcEvents.REFRESH_SUBSCRIPTION_DETAILS, (event, userId) => {
-    // @TODO Use Symbols() to map object properties?
-    return subscription
+  ipcMain.on(ipcEvents.REFRESH_SUBSCRIPTION_DETAILS, (event, userId) =>
+    subscription
       .query(userId)
       .then(subscriptionDetails => {
-        event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-          data: subscriptionDetails,
-          isErr: false,
-        });
+        event.sender.send(
+          ipcEvents.SEND_SUBSCRIPTION_DETAILS,
+          subscriptionDetails
+        );
       })
       .catch(err => {
-        // @TOOD Use devLog()
-        // eslint-disable-next-line no-console
+        // @TODO Handle errors ...
         console.error(err);
-
-        event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-          isErr: true,
-        });
-      });
-  });
+      })
+  );
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
     limiterGroup.drop();
