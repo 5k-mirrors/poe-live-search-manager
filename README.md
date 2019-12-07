@@ -45,6 +45,7 @@ Supported trade sites:
 
 - Make sure `pathofexile.com/trade` live search service works: open search in browser, click `Activate Live Search`, make sure new items are showing up.
 - Your session ID can change. Make sure it's up-to-date.
+- There's a limit of 80 simultaneous connections. This is `pathofexile.com/trade` limitation, you can't connect more in the browser either.
 - Restart the app, try reconnecting to all sockets and sockets 1-by-1.
 - Make sure rate limit indicator is green while connecting.
 - Search links can become invalid. If a few searches are not connecting make sure they are valid via checking them in the browser.
