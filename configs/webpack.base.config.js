@@ -1,8 +1,12 @@
 const webpack = require("webpack");
 const JavaScriptObfuscator = require("webpack-obfuscator");
-const DotEnv = require("dotenv-webpack");
 
 const isProduction = process.env.NODE_ENV === "production";
+
+if (!isProduction) {
+  // eslint-disable-next-line global-require
+  require("dotenv").config({ path: `${process.cwd()}/.env` });
+}
 
 const revision = require("child_process")
   .execSync("git describe --always --tags --dirty")
@@ -36,11 +40,7 @@ module.exports = {
             "FIREBASE_API_URL",
           ]),
         ]
-      : [
-          new DotEnv({
-            safe: true,
-          }),
-        ]
+      : []
   ),
   resolve: {
     // Reason for adding .json
