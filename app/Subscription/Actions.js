@@ -11,11 +11,11 @@ const refresh = id =>
   subscription
     .query(id)
     .then(nextSubscriptionDetails => {
-      sendRenderer(windows.POE_SNIPER, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-        data: { ...nextSubscriptionDetails },
-      });
-
       subscription.update(nextSubscriptionDetails);
+
+      sendRenderer(windows.POE_SNIPER, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+        data: { ...subscription.data },
+      });
 
       webSocketActions.updateConnections();
     })
