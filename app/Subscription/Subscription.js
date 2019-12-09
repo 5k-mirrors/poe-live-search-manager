@@ -11,12 +11,7 @@ class Subscription {
   }
 
   query = id => {
-    // @TODO process.env.FIREBASE_API_URL randomly becomes undefined upon starting the app.
-    const userApiUrl = `${
-      process.env.FIREBASE_API_URL
-        ? process.env.FIREBASE_API_URL
-        : "https://us-central1-poe-sniper-gateway-staging.cloudfunctions.net/api"
-    }/user/${id}`;
+    const userApiUrl = `${process.env.FIREBASE_API_URL}/user/${id}`;
 
     return fetch(userApiUrl)
       .then(subscriptionData => subscriptionData.json())
