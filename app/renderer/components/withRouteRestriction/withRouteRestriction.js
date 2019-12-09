@@ -14,7 +14,7 @@ const withRouteRestriction = WrappedComponent => {
     const [isLoading, setIsLoading] = useState(true);
 
     function sendSubscriptionDetailsListener(e, subscriptionDetails) {
-      setIsPaying(subscriptionDetails.paying === true);
+      setIsPaying(subscriptionDetails.data.paying === true);
 
       setIsLoading(false);
     }
