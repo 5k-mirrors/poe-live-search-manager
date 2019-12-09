@@ -6,12 +6,41 @@ import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import * as firebaseUtils from "../../../../../utils/FirebaseUtils/FirebaseUtils";
-import { actions, reducer } from "./reducer";
 
 const initialState = {
   data: null,
   isLoading: false,
   isErr: false,
+};
+
+const actions = {
+  REFRESH: "refresh",
+  UPDATE: "update",
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case actions.REFRESH: {
+      return {
+        ...state,
+        isLoading: true,
+        isErr: false,
+      };
+    }
+    case actions.UPDATE: {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          ...action.payload.data,
+        },
+        isLoading: false,
+        isErr: action.payload.isErr ? action.payload.isErr : state.isErr,
+      };
+    }
+    default:
+      throw new Error(`Undefined reducer action: ${action}`);
+  }
 };
 
 export default () => {
