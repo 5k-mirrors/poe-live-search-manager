@@ -20,7 +20,7 @@ const refresh = id =>
       webSocketActions.updateConnections();
     })
     .catch(err => {
-      devLog(err.message);
+      devLog(`Subscription refresh error: ${err}`);
 
       sendRenderer(windows.POE_SNIPER, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
         isErr: true,
@@ -30,7 +30,7 @@ const refresh = id =>
 export const startRefreshInterval = id => {
   refresh(id);
 
-  const oneHourInMilliseconds = 10000;
+  const oneHourInMilliseconds = 3600000;
 
   refreshInterval = setInterval(() => {
     refresh(id);

@@ -90,7 +90,7 @@ const setupGeneralIpcListeners = () => {
         });
       })
       .catch(err => {
-        devLog(err.message);
+        devLog(`REFRESH_SUBSCRIPTION_DETAILS event error: ${err}`);
 
         event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
           isErr: true,

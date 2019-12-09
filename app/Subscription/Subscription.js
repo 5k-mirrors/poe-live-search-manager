@@ -13,11 +13,7 @@ class Subscription {
   query = id => {
     const userApiUrl = `${process.env.FIREBASE_API_URL}/user/${id}`;
 
-    return fetch(userApiUrl)
-      .then(subscriptionData => subscriptionData.json())
-      .catch(err => {
-        throw new Error(`Subscription query error: ${err}`);
-      });
+    return fetch(userApiUrl).then(subscriptionData => subscriptionData.json());
   };
 
   update = updatedData => {

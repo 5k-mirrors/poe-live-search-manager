@@ -21,6 +21,6 @@ export default (state, action) => {
       };
     }
     default:
-      throw new Error();
+      throw new Error(`Undefined reducer action: ${action}`);
   }
 };
