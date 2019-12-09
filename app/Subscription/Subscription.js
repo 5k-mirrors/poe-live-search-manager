@@ -4,7 +4,6 @@ import fetch from "node-fetch";
 class Subscription {
   constructor() {
     this.data = {
-      email: "",
       paying: false,
       type: "",
     };
@@ -19,7 +18,8 @@ class Subscription {
   update = updatedData => {
     this.data = {
       ...this.data,
-      ...updatedData,
+      paying: updatedData.paying,
+      type: updatedData.subscription_type,
     };
   };
 
