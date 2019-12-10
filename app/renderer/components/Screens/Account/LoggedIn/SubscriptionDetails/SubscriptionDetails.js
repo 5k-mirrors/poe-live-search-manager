@@ -95,7 +95,7 @@ export default () => {
       return state.data.type ? state.data.type : "Active";
     }
 
-    return "Inactive";
+    return "Loading...";
   }
 
   return (
