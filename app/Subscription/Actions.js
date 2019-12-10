@@ -7,7 +7,7 @@ import { devLog } from "../utils/JavaScriptUtils/JavaScriptUtils";
 
 let refreshInterval;
 
-const refresh = id =>
+export const refresh = id =>
   subscription
     .query(id)
     .then(nextSubscriptionDetails => {

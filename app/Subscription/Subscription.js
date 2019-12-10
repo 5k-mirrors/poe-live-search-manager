@@ -19,7 +19,7 @@ class Subscription {
     this.data = {
       ...this.data,
       paying: updatedData.paying,
-      type: updatedData.subscription_type,
+      type: updatedData.type,
     };
   };
 
