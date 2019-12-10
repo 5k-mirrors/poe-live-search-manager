@@ -91,6 +91,10 @@ export default () => {
       return "Error while fetching data";
     }
 
+    if (state.data && !state.data.paying) {
+      return "Inactive";
+    }
+
     if (state.data && state.data.paying) {
       return state.data.type ? state.data.type : "Active";
     }
