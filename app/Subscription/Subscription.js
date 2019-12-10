@@ -5,6 +5,7 @@ class Subscription {
   constructor() {
     this.data = {
       paying: false,
+      type: "",
     };
   }
 
@@ -17,7 +18,8 @@ class Subscription {
   update = updatedData => {
     this.data = {
       ...this.data,
-      ...updatedData,
+      paying: updatedData.paying,
+      type: updatedData.type,
     };
   };
 
