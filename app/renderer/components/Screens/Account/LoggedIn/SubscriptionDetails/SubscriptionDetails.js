@@ -1,86 +1,35 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect } from "react";
 import Box from "@material-ui/core/Box";
-import { ipcRenderer } from "electron";
-import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import * as firebaseUtils from "../../../../../utils/FirebaseUtils/FirebaseUtils";
-
-const initialState = {
-  data: null,
-  isLoading: false,
-  isErr: false,
-};
-
-const actions = {
-  REFRESH: "refresh",
-  UPDATE: "update",
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case actions.REFRESH: {
-      return {
-        ...state,
-        isLoading: true,
-        isErr: false,
-      };
-    }
-    case actions.UPDATE: {
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          ...action.payload.data,
-        },
-        isLoading: false,
-        isErr: action.payload.isErr ? action.payload.isErr : state.isErr,
-      };
-    }
-    default:
-      throw new Error(`Undefined reducer action: ${action}`);
-  }
-};
+import {
+  useDisable,
+  useIpc,
+} from "../../../../../utils/CustomHooks/CustomHooks";
 
 export default () => {
   const firebaseContext = firebaseUtils.useFirebaseContext();
 
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [isDisabled, disableRefreshButton] = customHooks.useDisable(1);
-
-  function sendSubscriptionDetailsListener(event, nextSubscriptionDetails) {
-    dispatch({ type: actions.UPDATE, payload: { ...nextSubscriptionDetails } });
-  }
+  const [state, send] = useIpc(
+    ipcEvents.GET_SUBSCRIPTION_DETAILS,
+    ipcEvents.SEND_SUBSCRIPTION_DETAILS
+  );
+  const [isDisabled, disableRefreshButton] = useDisable(1);
 
   useEffect(() => {
-    dispatch({ type: actions.REFRESH });
+    send();
+  }, [send]);
 
-    ipcRenderer.send(ipcEvents.GET_SUBSCRIPTION_DETAILS);
-
-    ipcRenderer.on(
-      ipcEvents.SEND_SUBSCRIPTION_DETAILS,
-      sendSubscriptionDetailsListener
-    );
-
-    return () => {
-      ipcRenderer.removeListener(
-        ipcEvents.SEND_SUBSCRIPTION_DETAILS,
-        sendSubscriptionDetailsListener
-      );
-    };
-  }, []);
-
-  function onRefresh() {
-    dispatch({ type: actions.REFRESH });
-
-    ipcRenderer.send(
+  const onRefresh = () => {
+    send(
       ipcEvents.REFRESH_SUBSCRIPTION_DETAILS,
       firebaseContext.currentUser.uid
     );
 
     disableRefreshButton();
-  }
+  };
 
   function subscriptionText() {
     if (state.isLoading) {

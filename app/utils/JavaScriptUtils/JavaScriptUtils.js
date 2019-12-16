@@ -18,3 +18,5 @@ export const devLog = message => {
 };
 
 export const envIs = env => process.env.NODE_ENV === env;
+
+export const isObj = value => typeof value === "object" && value !== null;

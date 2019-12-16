@@ -1,54 +1,35 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useReducer, useCallback } from "react";
+import { ipcRenderer } from "electron";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
+import { ipcActions, ipcReducer } from "../../reducers";
 
-export const useGenericFetch = (fetchFunction, ...args) => {
-  const defaultState = {
+export const useIpc = (senderEvent, receiverEvent) => {
+  const [state, dispatch] = useReducer(ipcReducer, {
     data: null,
-    isLoading: true,
-    err: false,
+    isLoading: false,
+    isErr: false,
+  });
+
+  const listener = (_, data) => {
+    dispatch({ type: ipcActions.RECEIVE_DATA, payload: data });
   };
 
-  const [data, setData] = useState(defaultState);
-  const isMounted = useRef(true);
+  const send = useCallback(
+    (event, ...args) => {
+      dispatch({ type: ipcActions.REQUEST_DATA });
 
-  async function fetchData() {
-    setData({
-      ...data,
-      isLoading: true,
-    });
-
-    try {
-      const fetchedData = await fetchFunction(...args);
-
-      if (isMounted.current) {
-        setData({
-          ...defaultState,
-          data: fetchedData,
-          isLoading: false,
-          err: false,
-        });
-      }
-    } catch (e) {
-      if (isMounted.current) {
-        setData({
-          ...defaultState,
-          data: null,
-          isLoading: false,
-          err: true,
-        });
-      }
-    }
-  }
+      ipcRenderer.send(event || senderEvent, ...args);
+    },
+    [senderEvent]
+  );
 
   useEffect(() => {
-    fetchData();
+    ipcRenderer.on(receiverEvent, listener);
 
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
+    return () => ipcRenderer.removeListener(receiverEvent, listener);
+  }, [receiverEvent]);
 
-  return [data, fetchData];
+  return [state, send];
 };
 
 export const useStoreListener = storeKey => {
