@@ -5,7 +5,7 @@ import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/SimpleHtmlElements/Button/Button";
 import getFirebaseApp from "../../../../utils/GetFirebaseApp/GetFirebaseApp";
-import { useAuthDataContext } from "../../../../contexts/AuthData";
+import { useAuthDataContext } from "../../../../contexts";
 
 const loggedIn = () => {
   const authData = useAuthDataContext();

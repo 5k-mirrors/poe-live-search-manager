@@ -1,21 +1,11 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import getFirebaseApp from "../utils/GetFirebaseApp/GetFirebaseApp";
 
-const AuthDataContext = createContext();
-
-const factoryContext = context => () => {
-  const ctx = useContext(context);
-
-  if (typeof ctx === "undefined") {
-    throw new Error("Context value cannot be consumed outside providers.");
-  }
-
-  return ctx;
-};
+export const AuthDataContext = createContext();
 
 export const AuthDataProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
@@ -50,5 +40,3 @@ export const AuthDataProvider = ({ children }) => {
     </AuthDataContext.Provider>
   );
 };
-
-export const useAuthDataContext = factoryContext(AuthDataContext);

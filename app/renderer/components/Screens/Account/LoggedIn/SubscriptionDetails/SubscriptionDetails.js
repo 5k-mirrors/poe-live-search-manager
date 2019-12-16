@@ -1,26 +1,18 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Box from "@material-ui/core/Box";
 import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
-import { useAuthDataContext } from "../../../../../contexts/AuthData";
 import {
-  useDisable,
-  useIpc,
-} from "../../../../../utils/CustomHooks/CustomHooks";
+  useAuthDataContext,
+  useSubscriptionDataContext,
+} from "../../../../../contexts";
+import { useDisable } from "../../../../../utils/CustomHooks/CustomHooks";
 
 export default () => {
   const authData = useAuthDataContext();
-
-  const [state, send] = useIpc(
-    ipcEvents.GET_SUBSCRIPTION_DETAILS,
-    ipcEvents.SEND_SUBSCRIPTION_DETAILS
-  );
+  const [state, send] = useSubscriptionDataContext();
   const [isDisabled, disableRefreshButton] = useDisable(1);
-
-  useEffect(() => {
-    send();
-  }, [send]);
 
   const onRefresh = () => {
     send(ipcEvents.REFRESH_SUBSCRIPTION_DETAILS, authData.uid);
@@ -37,15 +29,11 @@ export default () => {
       return "Error while fetching data";
     }
 
-    if (state.data && !state.data.paying) {
-      return "Inactive";
-    }
-
     if (state.data && state.data.paying) {
       return state.data.type ? state.data.type : "Active";
     }
 
-    return "Loading...";
+    return "Inactive";
   }
 
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import SignIn from "./SignIn/SignIn";
 import LoggedIn from "./LoggedIn/LoggedIn";
-import { useAuthDataContext } from "../../../contexts/AuthData";
+import { useAuthDataContext } from "../../../contexts";
 
 const account = () => {
   const authData = useAuthDataContext();
