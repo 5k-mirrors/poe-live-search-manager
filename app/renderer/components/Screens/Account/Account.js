@@ -1,14 +1,16 @@
 import React from "react";
 import SignIn from "./SignIn/SignIn";
 import LoggedIn from "./LoggedIn/LoggedIn";
-import * as CustomHooks from "../../../utils/CustomHooks/CustomHooks";
-import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
+import { useAuthDataContext } from "../../../contexts/AuthData";
 
 const account = () => {
-  const [isLoggedIn] =
-    CustomHooks.useStoreListener(storeKeys.IS_LOGGED_IN) || false;
+  const authData = useAuthDataContext();
 
-  return isLoggedIn ? <LoggedIn /> : <SignIn />;
+  if (authData) {
+    return <LoggedIn />;
+  }
+
+  return <SignIn />;
 };
 
 export default account;
