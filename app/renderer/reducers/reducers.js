@@ -19,6 +19,13 @@ export const ipcReducer = (state, action) => {
         isErr: action.payload.isErr ? action.payload.isErr : false,
       };
 
+      if (Array.isArray(action.payload.data)) {
+        return {
+          ...defaultState,
+          data: [...action.payload.data],
+        };
+      }
+
       if (isObj(action.payload.data)) {
         return {
           ...defaultState,
