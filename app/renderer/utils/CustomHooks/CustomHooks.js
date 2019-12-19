@@ -17,9 +17,12 @@ export const useRequestDataViaIpc = receiver => {
     isLoading: false,
     isErr: false,
   });
-  useListenToDataUpdatesViaIpc(receiver, (_, payload) => {
+
+  const listener = useCallback((_, payload) => {
     dispatch({ type: genericAsyncActions.END_REQUEST, payload });
-  });
+  }, []);
+
+  useListenToDataUpdatesViaIpc(receiver, listener);
 
   const requestDataViaIpc = useCallback((requester, ...args) => {
     dispatch({ type: genericAsyncActions.BEGIN_REQUEST });
