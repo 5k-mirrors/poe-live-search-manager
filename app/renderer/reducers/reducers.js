@@ -1,21 +1,25 @@
-import { genericAsyncActions } from "./actions";
 import { cloneDeep } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
-export const genericAsyncReducer = (state, action) => {
+export const asyncFetchActions = {
+  SEND_REQUEST: "sendRequest",
+  RECEIVE_RESPONSE: "receiveResponse",
+};
+
+export const asyncFetchReducer = (state, action) => {
   switch (action.type) {
-    case genericAsyncActions.BEGIN_REQUEST:
+    case asyncFetchActions.SEND_REQUEST:
       return {
         ...cloneDeep(state),
         isLoading: true,
         isErr: false,
       };
-    case genericAsyncActions.END_REQUEST:
+    case asyncFetchActions.RECEIVE_RESPONSE:
       return {
         ...cloneDeep(state),
         isLoading: false,
-        ...action.payload,
+        ...cloneDeep(action.payload),
       };
     default:
-      throw new Error(`Undefined asyncReducer() event: ${action.type}`);
+      throw new Error(`Undefined reducer action type: ${action.type}`);
   }
 };
