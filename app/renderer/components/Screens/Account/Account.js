@@ -1,16 +1,13 @@
 import React from "react";
 import SignIn from "./SignIn/SignIn";
 import LoggedIn from "./LoggedIn/LoggedIn";
-import { useAuthDataContext } from "../../../contexts/AuthData";
+import { useListenToPersistentStorageChangeViaKey } from "../../../utils/CustomHooks/CustomHooks";
+import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 
-const account = () => {
-  const authData = useAuthDataContext();
+export default () => {
+  const isLoggedIn = useListenToPersistentStorageChangeViaKey(
+    storeKeys.IS_LOGGED_IN
+  );
 
-  if (authData) {
-    return <LoggedIn />;
-  }
-
-  return <SignIn />;
+  return isLoggedIn ? <LoggedIn /> : <SignIn />;
 };
-
-export default account;

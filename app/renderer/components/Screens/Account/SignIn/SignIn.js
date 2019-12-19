@@ -4,7 +4,9 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import * as firebaseConfigs from "../../../../resources/FirebaseConfigs/FirebaseConfigs";
-import getFirebaseApp from "../../../../utils/GetFirebaseApp/GetFirebaseApp";
+import { getApp as getFirebaseApp } from "../../../../utils/Firebase/Firebase";
+
+const firebaseAuth = getFirebaseApp().auth();
 
 const signIn = () => (
   <Box textAlign="center">
@@ -16,7 +18,7 @@ const signIn = () => (
     </Box>
     <StyledFirebaseAuth
       uiConfig={firebaseConfigs.ui}
-      firebaseAuth={getFirebaseApp().auth()}
+      firebaseAuth={firebaseAuth}
     />
   </Box>
 );
