@@ -7,12 +7,15 @@ import { getApp as getFirebaseApp } from "../utils/Firebase/Firebase";
 import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
 
 const AuthContext = createContext(null);
+AuthContext.displayName = "AuthContext";
 
 const factoryContext = context => () => {
   const ctx = useContext(context);
 
   if (typeof ctx === "undefined") {
-    throw new Error("Context value cannot be consumed outside providers.");
+    throw new Error(
+      `${context.displayName} cannot be used outside the provider.`
+    );
   }
 
   return ctx;
