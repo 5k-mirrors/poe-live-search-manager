@@ -1,4 +1,4 @@
-import { ipcActions } from "./actions";
-import { ipcReducer } from "./reducers";
+import { genericAsyncActions } from "./actions";
+import { genericAsyncReducer } from "./reducers";
 
-export { ipcActions, ipcReducer };
+export { genericAsyncActions, genericAsyncReducer };

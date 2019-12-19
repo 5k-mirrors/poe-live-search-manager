@@ -1,47 +1,21 @@
-import { ipcRenderer } from "electron";
-import { ipcActions } from "./actions";
-import { isObj } from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import { genericAsyncActions } from "./actions";
+import { cloneDeep } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
-export const ipcReducer = (state, action) => {
+export const genericAsyncReducer = (state, action) => {
   switch (action.type) {
-    case ipcActions.REQUEST_DATA:
-      ipcRenderer.send(action.payload);
-
+    case genericAsyncActions.BEGIN_REQUEST:
       return {
-        ...state,
+        ...cloneDeep(state),
         isLoading: true,
         isErr: false,
       };
-    case ipcActions.RECEIVE_DATA: {
-      const defaultState = {
-        ...state,
-        isLoading: false,
-        isErr: action.payload.isErr ? action.payload.isErr : false,
-      };
-
-      if (Array.isArray(action.payload.data)) {
-        return {
-          ...defaultState,
-          data: [...action.payload.data],
-        };
-      }
-
-      if (isObj(action.payload.data)) {
-        return {
-          ...defaultState,
-          data: {
-            ...state.data,
-            ...action.payload.data,
-          },
-        };
-      }
-
+    case genericAsyncActions.END_REQUEST:
       return {
-        ...state,
-        data: action.payload.data,
+        ...cloneDeep(state),
+        isLoading: false,
+        ...action.payload,
       };
-    }
     default:
-      throw new Error(`Undefined ipcReducer() event: ${action.type}`);
+      throw new Error(`Undefined asyncReducer() event: ${action.type}`);
   }
 };

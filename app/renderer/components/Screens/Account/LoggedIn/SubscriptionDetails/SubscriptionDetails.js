@@ -6,25 +6,24 @@ import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import * as firebaseUtils from "../../../../../utils/FirebaseUtils/FirebaseUtils";
 import {
   useDisable,
-  useIpc,
+  useRequestDataViaIpc,
 } from "../../../../../utils/CustomHooks/CustomHooks";
 
 export default () => {
   const firebaseContext = firebaseUtils.useFirebaseContext();
 
-  const [state, send] = useIpc(
-    ipcEvents.GET_SUBSCRIPTION_DETAILS,
+  const [state, requestDataViaIpc] = useRequestDataViaIpc(
     ipcEvents.SEND_SUBSCRIPTION_DETAILS
   );
   const [isDisabled, disableRefreshButton] = useDisable(1);
 
   useEffect(() => {
-    send();
-  }, [send]);
+    requestDataViaIpc(ipcEvents.GET_SUBSCRIPTION_DETAILS);
+  }, [requestDataViaIpc]);
 
   const onRefresh = () => {
-    send(
-      ipcEvents.REFRESH_SUBSCRIPTION_DETAILS,
+    requestDataViaIpc(
+      ipcEvents.FETCH_SUBSCRIPTION_DETALS,
       firebaseContext.currentUser.uid
     );
 
