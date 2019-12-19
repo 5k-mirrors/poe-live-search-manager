@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import { ipcRenderer } from "electron";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
-import { genericAsyncActions, genericAsyncReducer } from "../../reducers";
+import { asyncFetchActions, asyncFetchReducer } from "../../reducers/reducers";
 
 export const useListenToDataUpdatesViaIpc = (receiver, listener) => {
   useEffect(() => {
@@ -12,20 +12,20 @@ export const useListenToDataUpdatesViaIpc = (receiver, listener) => {
 };
 
 export const useRequestDataViaIpc = receiver => {
-  const [state, dispatch] = useReducer(genericAsyncReducer, {
+  const [state, dispatch] = useReducer(asyncFetchReducer, {
     data: null,
     isLoading: false,
     isErr: false,
   });
 
   const listener = useCallback((_, payload) => {
-    dispatch({ type: genericAsyncActions.END_REQUEST, payload });
+    dispatch({ type: asyncFetchActions.RECEIVE_RESPONSE, payload });
   }, []);
 
   useListenToDataUpdatesViaIpc(receiver, listener);
 
   const requestDataViaIpc = useCallback((requester, ...args) => {
-    dispatch({ type: genericAsyncActions.BEGIN_REQUEST });
+    dispatch({ type: asyncFetchActions.SEND_REQUEST });
 
     ipcRenderer.send(requester, ...args);
   }, []);
