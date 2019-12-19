@@ -4,11 +4,12 @@ import { Redirect } from "react-router-dom";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
+import { useAuthContext } from "../../contexts/Auth";
 import Loader from "../UI/Loader/Loader";
 
 const withRouteRestriction = WrappedComponent => {
   return ({ ...props }) => {
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+    const auth = useAuthContext();
     const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
     const [isPaying, setIsPaying] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +36,7 @@ const withRouteRestriction = WrappedComponent => {
     }, []);
 
     function conditionsAreFulfilled() {
-      return isLoggedIn && poeSessionId && isPaying;
+      return auth.isLoggedIn && poeSessionId && isPaying;
     }
 
     if (isLoading) {
