@@ -18,3 +18,13 @@ export const devLog = message => {
 };
 
 export const envIs = env => process.env.NODE_ENV === env;
+
+export const cloneDeep = obj => {
+  try {
+    return JSON.parse(JSON.stringify(obj));
+  } catch (err) {
+    devLog(`Object deep clone error: ${err}`);
+
+    return {};
+  }
+};
