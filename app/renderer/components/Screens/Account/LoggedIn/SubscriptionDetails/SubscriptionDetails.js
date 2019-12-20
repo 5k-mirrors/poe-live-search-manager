@@ -23,7 +23,7 @@ export default () => {
 
   const onRefresh = () => {
     requestDataViaIpc(
-      ipcEvents.FETCH_SUBSCRIPTION_DETALS,
+      ipcEvents.FETCH_SUBSCRIPTION_DETAILS,
       firebaseContext.currentUser.uid
     );
 
