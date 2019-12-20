@@ -5,7 +5,7 @@ import * as electronUtils from "../../../../../../utils/ElectronUtils/ElectronUt
 import * as baseUrls from "../../../../../../../resources/BaseUrls/BaseUrls";
 import { useInfoButtonStyles } from "./InfoButton.style";
 
-const infoButton = () => {
+export default () => {
   const classes = useInfoButtonStyles();
 
   return (
@@ -17,5 +17,3 @@ const infoButton = () => {
     </IconButton>
   );
 };
-
-export default infoButton;

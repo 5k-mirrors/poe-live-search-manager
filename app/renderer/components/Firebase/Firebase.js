@@ -21,28 +21,26 @@ const Firebase = ({ children }) => {
     });
   }
 
-  function startAuthObserver() {
-    const firebaseApp = getApp();
-
-    return firebaseApp.auth().onAuthStateChanged(user => {
-      setCurrentUser(user);
-
-      const isLoggedIn = !!user;
-
-      globalStore.set(storeKeys.IS_LOGGED_IN, isLoggedIn);
-
-      if (isLoggedIn) {
-        ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid);
-      } else {
-        ipcRenderer.send(ipcEvents.USER_LOGOUT);
-      }
-    });
-  }
-
-  let unregisterAuthObserver;
-
   useEffect(() => {
-    unregisterAuthObserver = startAuthObserver();
+    function startAuthObserver() {
+      const firebaseApp = getApp();
+
+      return firebaseApp.auth().onAuthStateChanged(user => {
+        setCurrentUser(user);
+
+        const isLoggedIn = !!user;
+
+        globalStore.set(storeKeys.IS_LOGGED_IN, isLoggedIn);
+
+        if (isLoggedIn) {
+          ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid);
+        } else {
+          ipcRenderer.send(ipcEvents.USER_LOGOUT);
+        }
+      });
+    }
+
+    const unregisterAuthObserver = startAuthObserver();
 
     return () => unregisterAuthObserver();
   }, []);

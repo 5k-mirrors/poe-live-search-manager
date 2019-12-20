@@ -9,7 +9,7 @@ import InfoButton from "./InfoButton/InfoButton";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 
-const sessionIdEditor = () => {
+export default () => {
   const [poeSessionId, setPoeSessionId] = useState(
     globalStore.get(storeKeys.POE_SESSION_ID)
   );
@@ -56,5 +56,3 @@ const sessionIdEditor = () => {
     </Fragment>
   );
 };
-
-export default sessionIdEditor;

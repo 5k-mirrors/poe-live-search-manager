@@ -1,56 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { globalStore } from "../../../GlobalStore/GlobalStore";
 
-export const useGenericFetch = (fetchFunction, ...args) => {
-  const defaultState = {
-    data: null,
-    isLoading: true,
-    err: false,
-  };
-
-  const [data, setData] = useState(defaultState);
-  const isMounted = useRef(true);
-
-  async function fetchData() {
-    setData({
-      ...data,
-      isLoading: true,
-    });
-
-    try {
-      const fetchedData = await fetchFunction(...args);
-
-      if (isMounted.current) {
-        setData({
-          ...defaultState,
-          data: fetchedData,
-          isLoading: false,
-          err: false,
-        });
-      }
-    } catch (e) {
-      if (isMounted.current) {
-        setData({
-          ...defaultState,
-          data: null,
-          isLoading: false,
-          err: true,
-        });
-      }
-    }
-  }
-
-  useEffect(() => {
-    fetchData();
-
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  return [data, fetchData];
-};
-
 export const useStoreListener = storeKey => {
   const [value, setValue] = useState(globalStore.get(storeKey));
 
