@@ -4,11 +4,11 @@ import Typography from "@material-ui/core/Typography";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/SimpleHtmlElements/Button/Button";
-import getFirebaseApp from "../../../../utils/GetFirebaseApp/GetFirebaseApp";
-import { useAuthDataContext } from "../../../../contexts";
+import { getApp as getFirebaseApp } from "../../../../utils/Firebase/Firebase";
+import { useAuthContext } from "../../../../contexts/Auth";
 
-const loggedIn = () => {
-  const authData = useAuthDataContext();
+export default () => {
+  const auth = useAuthContext();
 
   return (
     <div>
@@ -19,7 +19,7 @@ const loggedIn = () => {
         justifyContent="space-between"
       >
         <Typography variant="h6" gutterBottom>
-          {`Logged in as ${authData.displayName || authData.email}`}
+          {`Logged in as ${auth.data.displayName || auth.data.email}`}
         </Typography>
         <Button
           clickEvent={() =>
@@ -35,5 +35,3 @@ const loggedIn = () => {
     </div>
   );
 };
-
-export default loggedIn;

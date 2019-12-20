@@ -1,40 +1,43 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
-import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import {
-  useAuthDataContext,
-  useSubscriptionDataContext,
+  useAuthContext,
+  useSubscriptionContext,
 } from "../../../../../contexts";
 import { useDisable } from "../../../../../utils/CustomHooks/CustomHooks";
 
 export default () => {
-  const authData = useAuthDataContext();
-  const [state, send] = useSubscriptionDataContext();
+  const auth = useAuthContext();
+  const [subscription, fetchSubscriptionDetails] = useSubscriptionContext();
   const [isDisabled, disableRefreshButton] = useDisable(1);
 
   const onRefresh = () => {
-    send(ipcEvents.REFRESH_SUBSCRIPTION_DETAILS, authData.uid);
+    fetchSubscriptionDetails(auth.data.uid);
 
     disableRefreshButton();
   };
 
-  function subscriptionText() {
-    if (state.isLoading) {
+  const subscriptionText = () => {
+    if (subscription.isLoading) {
       return "Loading...";
     }
 
-    if (state.isErr || !state.data) {
+    if (subscription.isErr || !subscription.data) {
       return "Error while fetching data";
     }
 
-    if (state.data && state.data.paying) {
-      return state.data.type ? state.data.type : "Active";
+    if (subscription.data && !subscription.data.paying) {
+      return "Inactive";
     }
 
-    return "Inactive";
-  }
+    if (subscription.data && subscription.data.paying) {
+      return subscription.data.type ? subscription.data.type : "Active";
+    }
+
+    return "Loading...";
+  };
 
   return (
     <Box mt={3}>
@@ -43,7 +46,9 @@ export default () => {
         value={subscriptionText()}
         label="Subscription"
         error={
-          state.isLoading || state.isErr || (state.data && !state.data.paying)
+          subscription.isLoading ||
+          subscription.isErr ||
+          (subscription.data && !subscription.data.paying)
         }
         InputProps={{
           readOnly: true,

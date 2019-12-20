@@ -1,47 +1,25 @@
-import { ipcRenderer } from "electron";
-import { ipcActions } from "./actions";
-import { isObj } from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import { cloneDeep } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
-export const ipcReducer = (state, action) => {
+export const asyncFetchActions = {
+  SEND_REQUEST: "sendRequest",
+  RECEIVE_RESPONSE: "receiveResponse",
+};
+
+export const asyncFetchReducer = (state, action) => {
   switch (action.type) {
-    case ipcActions.REQUEST_DATA:
-      ipcRenderer.send(action.payload);
-
+    case asyncFetchActions.SEND_REQUEST:
       return {
-        ...state,
+        ...cloneDeep(state),
         isLoading: true,
         isErr: false,
       };
-    case ipcActions.RECEIVE_DATA: {
-      const defaultState = {
-        ...state,
-        isLoading: false,
-        isErr: action.payload.isErr ? action.payload.isErr : false,
-      };
-
-      if (Array.isArray(action.payload.data)) {
-        return {
-          ...defaultState,
-          data: [...action.payload.data],
-        };
-      }
-
-      if (isObj(action.payload.data)) {
-        return {
-          ...defaultState,
-          data: {
-            ...state.data,
-            ...action.payload.data,
-          },
-        };
-      }
-
+    case asyncFetchActions.RECEIVE_RESPONSE:
       return {
-        ...state,
-        data: action.payload.data,
+        ...cloneDeep(state),
+        isLoading: false,
+        ...cloneDeep(action.payload),
       };
-    }
     default:
-      throw new Error(`Undefined ipcReducer() event: ${action.type}`);
+      throw new Error(`Undefined reducer action type: ${action.type}`);
   }
 };
