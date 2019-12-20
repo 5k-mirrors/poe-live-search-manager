@@ -10,7 +10,7 @@ export const ipcEvents = {
   GET_SOCKETS: "getSockets",
   SEND_SOCKETS: "sendSockets",
   TEST_NOTIFICATION: "testNotification",
-  FETCH_SUBSCRIPTION_DETALS: "refreshSubscriptionDetails",
+  FETCH_SUBSCRIPTION_DETAILS: "fetchSubscriptionDetails",
   GET_SUBSCRIPTION_DETAILS: "getSubscriptionDetails",
   SEND_SUBSCRIPTION_DETAILS: "sendSubscriptionDetails",
   DROP_SCHEDULED_RESULTS: "dropScheduledResults",

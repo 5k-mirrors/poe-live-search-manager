@@ -21,7 +21,7 @@ export default () => {
   }, [requestDataViaIpc]);
 
   const onRefresh = () => {
-    requestDataViaIpc(ipcEvents.FETCH_SUBSCRIPTION_DETALS, auth.data.uid);
+    requestDataViaIpc(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, auth.data.uid);
 
     disableRefreshButton();
   };

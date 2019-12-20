@@ -80,7 +80,7 @@ const setupGeneralIpcListeners = () => {
     });
   });
 
-  ipcMain.on(ipcEvents.FETCH_SUBSCRIPTION_DETALS, (event, userId) =>
+  ipcMain.on(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, (event, userId) =>
     subscriptionActions.refresh(userId)
   );
 
