@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import { ipcRenderer } from "electron";
-import { globalStore } from "../../../GlobalStore/GlobalStore";
 import { asyncFetchActions, asyncFetchReducer } from "../../reducers/reducers";
 
 export const useListenToDataUpdatesViaIpc = (receiver, listener) => {
@@ -31,22 +30,6 @@ export const useRequestDataViaIpc = receiver => {
   }, []);
 
   return [state, requestDataViaIpc];
-};
-
-export const useStoreListener = storeKey => {
-  const [value, setValue] = useState(globalStore.get(storeKey));
-
-  useEffect(() => {
-    const removeListener = globalStore.onDidChange(storeKey, updatedData => {
-      setValue(updatedData);
-    });
-
-    return () => {
-      removeListener();
-    };
-  }, [storeKey]);
-
-  return [value, setValue];
 };
 
 export const useDisable = seconds => {

@@ -3,15 +3,14 @@ import Box from "@material-ui/core/Box";
 import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
-import * as firebaseUtils from "../../../../../utils/FirebaseUtils/FirebaseUtils";
 import {
   useDisable,
   useRequestDataViaIpc,
 } from "../../../../../utils/CustomHooks/CustomHooks";
+import { useAuthContext } from "../../../../../contexts/Auth";
 
 export default () => {
-  const firebaseContext = firebaseUtils.useFirebaseContext();
-
+  const auth = useAuthContext();
   const [state, requestDataViaIpc] = useRequestDataViaIpc(
     ipcEvents.SEND_SUBSCRIPTION_DETAILS
   );
@@ -22,10 +21,7 @@ export default () => {
   }, [requestDataViaIpc]);
 
   const onRefresh = () => {
-    requestDataViaIpc(
-      ipcEvents.FETCH_SUBSCRIPTION_DETAILS,
-      firebaseContext.currentUser.uid
-    );
+    requestDataViaIpc(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, auth.data.uid);
 
     disableRefreshButton();
   };
