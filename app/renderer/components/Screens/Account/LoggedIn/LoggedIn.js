@@ -7,7 +7,7 @@ import Button from "../../../UI/SimpleHtmlElements/Button/Button";
 import { getApp as getFirebaseApp } from "../../../../utils/Firebase/Firebase";
 import { useAuthContext } from "../../../../contexts/Auth";
 
-export default () => {
+const loggedIn = () => {
   const auth = useAuthContext();
 
   return (
@@ -35,3 +35,5 @@ export default () => {
     </div>
   );
 };
+
+export default loggedIn;
