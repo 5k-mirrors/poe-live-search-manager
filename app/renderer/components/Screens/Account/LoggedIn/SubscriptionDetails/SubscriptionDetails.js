@@ -1,50 +1,43 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Box from "@material-ui/core/Box";
-import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import {
-  useDisable,
-  useRequestDataViaIpc,
-} from "../../../../../utils/CustomHooks/CustomHooks";
-import { useAuthContext } from "../../../../../contexts/Auth";
+  useAuthContext,
+  useSubscriptionContext,
+} from "../../../../../contexts";
+import { useDisable } from "../../../../../utils/CustomHooks/CustomHooks";
 
 export default () => {
   const auth = useAuthContext();
-  const [state, requestDataViaIpc] = useRequestDataViaIpc(
-    ipcEvents.SEND_SUBSCRIPTION_DETAILS
-  );
+  const [subscription, fetchSubscriptionDetails] = useSubscriptionContext();
   const [isDisabled, disableRefreshButton] = useDisable(1);
 
-  useEffect(() => {
-    requestDataViaIpc(ipcEvents.GET_SUBSCRIPTION_DETAILS);
-  }, [requestDataViaIpc]);
-
   const onRefresh = () => {
-    requestDataViaIpc(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, auth.data.uid);
+    fetchSubscriptionDetails(auth.data.uid);
 
     disableRefreshButton();
   };
 
-  function subscriptionText() {
-    if (state.isLoading) {
+  const subscriptionText = () => {
+    if (subscription.isLoading) {
       return "Loading...";
     }
 
-    if (state.isErr || !state.data) {
+    if (subscription.isErr || !subscription.data) {
       return "Error while fetching data";
     }
 
-    if (state.data && !state.data.paying) {
+    if (subscription.data && !subscription.data.paying) {
       return "Inactive";
     }
 
-    if (state.data && state.data.paying) {
-      return state.data.type ? state.data.type : "Active";
+    if (subscription.data && subscription.data.paying) {
+      return subscription.data.type ? subscription.data.type : "Active";
     }
 
     return "Loading...";
-  }
+  };
 
   return (
     <Box mt={3}>
@@ -53,7 +46,9 @@ export default () => {
         value={subscriptionText()}
         label="Subscription"
         error={
-          state.isLoading || state.isErr || (state.data && !state.data.paying)
+          subscription.isLoading ||
+          subscription.isErr ||
+          (subscription.data && !subscription.data.paying)
         }
         InputProps={{
           readOnly: true,

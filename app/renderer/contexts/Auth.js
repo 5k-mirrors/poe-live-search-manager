@@ -1,25 +1,14 @@
-import React, { createContext, useReducer, useEffect, useContext } from "react";
+import React, { createContext, useReducer, useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { getApp as getFirebaseApp } from "../utils/Firebase/Firebase";
 import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
+import { factoryContext } from "../utils/ReactUtils/ReactUtils";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
-
-const factoryContext = context => () => {
-  const ctx = useContext(context);
-
-  if (typeof ctx === "undefined") {
-    throw new Error(
-      `${context.displayName} cannot be used outside the provider.`
-    );
-  }
-
-  return ctx;
-};
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(asyncFetchReducer, {
