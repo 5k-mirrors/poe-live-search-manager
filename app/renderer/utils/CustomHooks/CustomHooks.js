@@ -1,20 +1,35 @@
-import { useState, useEffect, useRef } from "react";
-import { globalStore } from "../../../GlobalStore/GlobalStore";
+import { useState, useEffect, useRef, useReducer, useCallback } from "react";
+import { ipcRenderer } from "electron";
+import { asyncFetchActions, asyncFetchReducer } from "../../reducers/reducers";
 
-export const useStoreListener = storeKey => {
-  const [value, setValue] = useState(globalStore.get(storeKey));
-
+export const useListenToDataUpdatesViaIpc = (receiver, listener) => {
   useEffect(() => {
-    const removeListener = globalStore.onDidChange(storeKey, updatedData => {
-      setValue(updatedData);
-    });
+    ipcRenderer.on(receiver, listener);
 
-    return () => {
-      removeListener();
-    };
-  }, [storeKey]);
+    return () => ipcRenderer.removeListener(receiver, listener);
+  }, [listener, receiver]);
+};
 
-  return [value, setValue];
+export const useRequestDataViaIpc = receiver => {
+  const [state, dispatch] = useReducer(asyncFetchReducer, {
+    data: null,
+    isLoading: false,
+    isErr: false,
+  });
+
+  const listener = useCallback((_, payload) => {
+    dispatch({ type: asyncFetchActions.RECEIVE_RESPONSE, payload });
+  }, []);
+
+  useListenToDataUpdatesViaIpc(receiver, listener);
+
+  const requestDataViaIpc = useCallback((requester, ...args) => {
+    dispatch({ type: asyncFetchActions.SEND_REQUEST });
+
+    ipcRenderer.send(requester, ...args);
+  }, []);
+
+  return [state, requestDataViaIpc];
 };
 
 export const useDisable = seconds => {

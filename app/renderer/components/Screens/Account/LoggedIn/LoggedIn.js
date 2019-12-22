@@ -4,20 +4,11 @@ import Typography from "@material-ui/core/Typography";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/SimpleHtmlElements/Button/Button";
-import Loader from "../../../UI/Loader/Loader";
-import * as firebaseUtils from "../../../../utils/FirebaseUtils/FirebaseUtils";
+import { getApp as getFirebaseApp } from "../../../../utils/Firebase/Firebase";
+import { useAuthContext } from "../../../../contexts/Auth";
 
-const loggedIn = () => {
-  const firebaseContext = firebaseUtils.useFirebaseContext();
-
-  function getMessage() {
-    return `Logged in as ${firebaseContext.currentUser.displayName ||
-      firebaseContext.currentUser.email}`;
-  }
-
-  if (firebaseContext.userIsLoading) {
-    return <Loader />;
-  }
+export default () => {
+  const auth = useAuthContext();
 
   return (
     <div>
@@ -28,10 +19,14 @@ const loggedIn = () => {
         justifyContent="space-between"
       >
         <Typography variant="h6" gutterBottom>
-          {getMessage()}
+          {`Logged in as ${auth.data.displayName || auth.data.email}`}
         </Typography>
         <Button
-          clickEvent={() => firebaseContext.app.auth().signOut()}
+          clickEvent={() =>
+            getFirebaseApp()
+              .auth()
+              .signOut()
+          }
           text="Sign out"
         />
       </Box>
@@ -40,5 +35,3 @@ const loggedIn = () => {
     </div>
   );
 };
-
-export default loggedIn;
