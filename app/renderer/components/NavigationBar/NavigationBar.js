@@ -6,7 +6,7 @@ import RightSide from "./RightSide/RightSide";
 import RateLimitFeedback from "./RateLimitFeedback/RateLimitFeedback";
 import { useNavigationBarStyles } from "./NavigationBar.style";
 
-const navigationBar = () => {
+export default () => {
   const classes = useNavigationBarStyles();
 
   return (
@@ -19,5 +19,3 @@ const navigationBar = () => {
     </Container>
   );
 };
-
-export default navigationBar;

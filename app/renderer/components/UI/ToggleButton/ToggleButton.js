@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Switch from "@material-ui/core/Switch";
 import { useToggleButtonStyles } from "./ToggleButton.style";
 
-const toggleButton = ({ defaultState, changed }) => {
+export default ({ defaultState, changed }) => {
   const classes = useToggleButtonStyles();
 
   const [toggleState, setToggleState] = useState(defaultState);
@@ -27,5 +27,3 @@ const toggleButton = ({ defaultState, changed }) => {
     />
   );
 };
-
-export default toggleButton;

@@ -3,7 +3,7 @@ import Done from "@material-ui/icons/Done";
 import Button from "@material-ui/core/Button";
 import { useButtonWithSuccessIconStyles } from "./ButtonWithSuccessIcon.style";
 
-const buttonWithSuccessIcon = ({ iconIsVisible, text, clickEvent }) => {
+export default ({ iconIsVisible, text, clickEvent }) => {
   const classes = useButtonWithSuccessIconStyles();
 
   return (
@@ -19,5 +19,3 @@ const buttonWithSuccessIcon = ({ iconIsVisible, text, clickEvent }) => {
     </Button>
   );
 };
-
-export default buttonWithSuccessIcon;

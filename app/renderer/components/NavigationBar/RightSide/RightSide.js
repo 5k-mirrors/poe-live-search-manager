@@ -8,7 +8,7 @@ import * as baseUrls from "../../../../resources/BaseUrls/BaseUrls";
 import { useRightSideStyles } from "./RightSide.style";
 import { version } from "../../../../../package.json";
 
-const rightSide = () => {
+export default () => {
   const classes = useRightSideStyles();
   const versionNumber = `v${version}`;
   const displayRevisionTooltip = versionNumber !== process.env.REVISION;
@@ -32,5 +32,3 @@ const rightSide = () => {
     </Box>
   );
 };
-
-export default rightSide;

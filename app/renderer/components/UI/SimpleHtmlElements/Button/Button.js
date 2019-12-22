@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import { useButtonStyles } from "./Button.style";
 
-const button = ({ clickEvent, text, ...props }) => {
+export default ({ clickEvent, text, ...props }) => {
   const classes = useButtonStyles();
 
   return (
@@ -18,4 +18,3 @@ const button = ({ clickEvent, text, ...props }) => {
     </Button>
   );
 };
-export default button;

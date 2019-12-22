@@ -11,7 +11,7 @@ import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { deleteAllResults as deleteAllResultsMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 import withRouteRestriction from "../../withRouteRestriction/withRouteRestriction";
 
-const trade = () => {
+export default withRouteRestriction(() => {
   const [results, setResults] = useState(
     globalStore.get(storeKeys.RESULTS, [])
   );
@@ -106,6 +106,4 @@ const trade = () => {
       }}
     />
   );
-};
-
-export default withRouteRestriction(trade);
+});
