@@ -5,7 +5,7 @@ import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { getApp as getFirebaseApp } from "../utils/Firebase/Firebase";
 import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
-import { factoryContext } from "../utils/ReactAppUtils/ReactAppUtils";
+import { factoryContext } from "../utils/ReactUtils/ReactUtils";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";

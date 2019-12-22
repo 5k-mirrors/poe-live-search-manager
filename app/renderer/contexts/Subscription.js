@@ -1,7 +1,7 @@
 import React, { createContext, useEffect } from "react";
 import { useRequestDataViaIpc } from "../utils/CustomHooks/CustomHooks";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import { factoryContext } from "../utils/ReactAppUtils/ReactAppUtils";
+import { factoryContext } from "../utils/ReactUtils/ReactUtils";
 
 const SubscriptionContext = createContext();
 SubscriptionContext.displayName = "SubscriptionContext";
