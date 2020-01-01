@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-export const factoryContext = context => () => {
+export const useFactoryContext = context => {
   const ctx = useContext(context);
 
   if (typeof ctx === "undefined") {
