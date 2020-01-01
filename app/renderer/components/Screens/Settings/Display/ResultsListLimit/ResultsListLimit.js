@@ -7,7 +7,7 @@ import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
 import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 
-const resultsListLimit = () => {
+export default () => {
   const [limit, setLimit] = useState(
     globalStore.get(storeKeys.RESULTS_LIMIT, 100)
   );
@@ -54,5 +54,3 @@ const resultsListLimit = () => {
     </Box>
   );
 };
-
-export default resultsListLimit;

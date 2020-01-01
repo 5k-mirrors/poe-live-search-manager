@@ -1,13 +1,13 @@
 import React from "react";
 import Container from "@material-ui/core/Container";
-import { AuthDataProvider, SubscriptionDataProvider } from "../../contexts";
+import { AuthProvider, SubscriptionProvider } from "../../contexts";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Screens from "../../components/Screens/Screens";
 
 const CombinedProviders = ({ children }) => (
-  <AuthDataProvider>
-    <SubscriptionDataProvider>{children}</SubscriptionDataProvider>
-  </AuthDataProvider>
+  <AuthProvider>
+    <SubscriptionProvider>{children}</SubscriptionProvider>
+  </AuthProvider>
 );
 
 const app = () => (

@@ -1,34 +1,35 @@
 import { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import { ipcRenderer } from "electron";
-import { ipcActions, ipcReducer } from "../../reducers";
+import { asyncFetchActions, asyncFetchReducer } from "../../reducers/reducers";
 
-export const useIpc = (senderEvent, receiverEvent) => {
-  const [state, dispatch] = useReducer(ipcReducer, {
+export const useListenToDataUpdatesViaIpc = (receiver, listener) => {
+  useEffect(() => {
+    ipcRenderer.on(receiver, listener);
+
+    return () => ipcRenderer.removeListener(receiver, listener);
+  }, [listener, receiver]);
+};
+
+export const useRequestDataViaIpc = receiver => {
+  const [state, dispatch] = useReducer(asyncFetchReducer, {
     data: null,
     isLoading: false,
     isErr: false,
   });
 
-  const listener = (_, data) => {
-    dispatch({ type: ipcActions.RECEIVE_DATA, payload: data });
-  };
+  const listener = useCallback((_, payload) => {
+    dispatch({ type: asyncFetchActions.RECEIVE_RESPONSE, payload });
+  }, []);
 
-  const send = useCallback(
-    (event, ...args) => {
-      dispatch({ type: ipcActions.REQUEST_DATA });
+  useListenToDataUpdatesViaIpc(receiver, listener);
 
-      ipcRenderer.send(event || senderEvent, ...args);
-    },
-    [senderEvent]
-  );
+  const requestDataViaIpc = useCallback((requester, ...args) => {
+    dispatch({ type: asyncFetchActions.SEND_REQUEST });
 
-  useEffect(() => {
-    ipcRenderer.on(receiverEvent, listener);
+    ipcRenderer.send(requester, ...args);
+  }, []);
 
-    return () => ipcRenderer.removeListener(receiverEvent, listener);
-  }, [receiverEvent]);
-
-  return [state, send];
+  return [state, requestDataViaIpc];
 };
 
 export const useDisable = seconds => {

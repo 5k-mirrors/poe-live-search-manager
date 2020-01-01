@@ -1,16 +1,15 @@
 import React from "react";
 import SignIn from "./SignIn/SignIn";
 import LoggedIn from "./LoggedIn/LoggedIn";
-import { useAuthDataContext } from "../../../contexts";
+import Loader from "../../UI/Loader/Loader";
+import { useAuthContext } from "../../../contexts/Auth";
 
-const account = () => {
-  const authData = useAuthDataContext();
+export default () => {
+  const auth = useAuthContext();
 
-  if (authData) {
-    return <LoggedIn />;
+  if (auth.isLoading) {
+    return <Loader />;
   }
 
-  return <SignIn />;
+  return auth.isLoggedIn ? <LoggedIn /> : <SignIn />;
 };
-
-export default account;
