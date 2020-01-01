@@ -5,7 +5,7 @@ import { globalStore } from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { getApp as getFirebaseApp } from "../utils/Firebase/Firebase";
 import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
-import { factoryContext } from "../utils/ReactUtils/ReactUtils";
+import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
@@ -52,4 +52,4 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
 };
 
-export const useAuthContext = factoryContext(AuthContext);
+export const useAuthContext = () => useFactoryContext(AuthContext);
