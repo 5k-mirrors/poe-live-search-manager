@@ -9,9 +9,8 @@ import { globalStore } from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { deleteAllResults as deleteAllResultsMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
-import withRouteRestriction from "../../withRouteRestriction/withRouteRestriction";
 
-export default withRouteRestriction(() => {
+export default () => {
   const [results, setResults] = useState(
     globalStore.get(storeKeys.RESULTS, [])
   );
@@ -106,4 +105,4 @@ export default withRouteRestriction(() => {
       }}
     />
   );
-});
+};

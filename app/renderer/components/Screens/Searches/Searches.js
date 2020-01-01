@@ -9,9 +9,8 @@ import * as regExes from "../../../../resources/RegExes/RegExes";
 import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 import InvalidInputError from "../../../../errors/invalid-input-error";
-import withRouteRestriction from "../../withRouteRestriction/withRouteRestriction";
 
-class Searches extends Component {
+export default class Searches extends Component {
   constructor(props) {
     super(props);
 
@@ -282,5 +281,3 @@ class Searches extends Component {
     );
   }
 }
-
-export default withRouteRestriction(Searches);
