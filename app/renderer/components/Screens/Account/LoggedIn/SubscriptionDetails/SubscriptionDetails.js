@@ -28,15 +28,11 @@ export default () => {
       return "Error while fetching data";
     }
 
-    if (subscription.data && !subscription.data.paying) {
-      return "Inactive";
-    }
-
     if (subscription.data && subscription.data.paying) {
       return subscription.data.type ? subscription.data.type : "Active";
     }
 
-    return "Loading...";
+    return "Inactive";
   };
 
   return (
