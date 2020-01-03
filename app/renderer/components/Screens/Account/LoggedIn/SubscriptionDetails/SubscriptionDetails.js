@@ -28,11 +28,14 @@ export default () => {
       return "Error while fetching data";
     }
 
-    if (subscription.data && subscription.data.paying) {
-      return subscription.data.type ? subscription.data.type : "Active";
+    if (
+      subscription.data &&
+      (!subscription.data.plan || !subscription.data.plan.type)
+    ) {
+      return "No subscription";
     }
 
-    return "Inactive";
+    return subscription.data.plan.type;
   };
 
   return (
@@ -44,7 +47,7 @@ export default () => {
         error={
           subscription.isLoading ||
           subscription.isErr ||
-          (subscription.data && !subscription.data.paying)
+          (subscription.data && !subscription.data.plan)
         }
         InputProps={{
           readOnly: true,
