@@ -1,5 +1,6 @@
 // => `fetch` is not defined in the main process.
 import fetch from "node-fetch";
+import { isDefined } from "../utils/JavaScriptUtils/JavaScriptUtils";
 
 class Subscription {
   constructor() {
@@ -24,7 +25,7 @@ class Subscription {
   };
 
   active = () => {
-    return this.data.plan;
+    return isDefined(this.data.plan);
   };
 }
 
