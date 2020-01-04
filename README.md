@@ -7,7 +7,7 @@ It is an alternative to keeping several browser tabs open but it consumes far le
 Supported trade sites:
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
 
-[According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](https://github.com/5k-mirrors/poe-sniper/releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
+[According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](/../../releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
 
 *You are viewing the README of version [v1.8.0](/../../releases/tag/v1.8.0). This is a completely new app with [pathofexile.com/trade](https://www.pathofexile.com/trade/search/) support and a graphical interface. GitHub is only used to host releases and issues. You can find the old app and other releases [here](/../../releases).*
 
@@ -33,7 +33,7 @@ Supported trade sites:
 
 ## Installation
 
-- Download and run the latest [release](https://github.com/5k-mirrors/poe-sniper/releases).
+- Download and run the latest [release](/../../releases).
 - Windows sometimes warns you about installing unsigned apps. If prompted, click `More info` and `Run anyway`.
 - The app will install and start.
 - A destop shortcut is created and updates are installed on app start.
@@ -72,9 +72,5 @@ Supported trade sites:
 
 ## Caveats
 
-- PoE needs to run in windowed or windowed fullscreen mode for the notifications to show while in-game
-- Your clipboard will be altered with every new whisper message (can be turned off)
-
-## Contributing
-
-Bug reports are welcome on GitHub at https://github.com/5k-mirrors/poe-sniper.
+- For the notifications to show while in-game PoE needs to run in windowed or windowed fullscreen mode
+- When enabled, your clipboard will be altered with every new whisper message
