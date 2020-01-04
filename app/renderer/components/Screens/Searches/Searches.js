@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { remote, ipcRenderer } from "electron";
 import MaterialTable from "material-table";
 import Box from "@material-ui/core/Box";
+import yaml from "js-yaml";
+import fs from "fs";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
@@ -9,10 +11,6 @@ import * as regExes from "../../../../resources/RegExes/RegExes";
 import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 import InvalidInputError from "../../../../errors/invalid-input-error";
-
-const { dialog } = require("electron").remote;
-const yaml = require("js-yaml");
-const fs = require("fs");
 
 export default class Searches extends Component {
   constructor(props) {
@@ -198,7 +196,7 @@ export default class Searches extends Component {
   }
 
   import() {
-    dialog.showOpenDialog(
+    remote.dialog.showOpenDialog(
       {
         properties: ["openFile"],
         filters: [{ name: "YAML", extensions: ["yml", "yaml"] }],
