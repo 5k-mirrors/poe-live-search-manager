@@ -41,6 +41,8 @@ Supported trade sites:
 
 ![install](install.gif)
 
+## Troubleshooting
+
 *If you encounter an issue, [report it](/../../issues/new). Restarting the app can help resolve it.*
 
 #### Searches not connecting?
