@@ -1,5 +1,7 @@
 # Testing
 
+## [Example YML input](example-import-input.yml)
+
 ## Search IDs
 
 ```js
