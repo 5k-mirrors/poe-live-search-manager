@@ -1,16 +1,11 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
-import withLoggedOutRestriction from "../../withLoggedOutRedirection/withLoggedOutRedirection";
-import NotificationsInterval from "./NotificationsInterval/NotificationsInterval";
-import TestNotification from "./TestNotification/TestNotification";
-import Clipboard from "./Clipboard/Clipboard";
+import Display from "./Display/Display";
+import Notifications from "./Notifications/Notifications";
 
-const settings = () => (
+export default () => (
   <Box>
-    <NotificationsInterval />
-    <TestNotification />
-    <Clipboard />
+    <Notifications />
+    <Display />
   </Box>
 );
-
-export default withLoggedOutRestriction(settings, "/account");

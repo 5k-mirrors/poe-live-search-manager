@@ -1,7 +1,7 @@
 {
   "name": "poe-sniper",
   "productName": "PoE Sniper",
-  "version": "1.0.0",
+  "version": "1.8.0",
   "description": "Desktop tool for Path of Exile to make instants offers for listed items without leaving the game",
   "main": "./app/main.prod.js",
   "scripts": {
@@ -13,9 +13,11 @@
     "lint": "eslint app",
     "package": "cross-env NODE_ENV=production npm run build && electron-builder",
     "package:all": "cross-env NODE_ENV=production npm run build && electron-builder --mwl",
-    "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish never",
+    "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish onTag",
     "package:mac": "cross-env NODE_ENV=production npm run build && electron-builder build --mac",
     "package:linux": "cross-env NODE_ENV=production npm run build && electron-builder build --linux",
+    "unix:package:win": "cross-env REVISION=\"$(git describe --always --tags --dirty)\" yarn package:win",
+    "win:package:win": "node scripts/build.js",
     "prettify": "prettier --write app/**/*.js",
     "test": "jest",
     "test:coverage": "jest --coverage"
@@ -37,23 +39,28 @@
     "url": "https://github.com/5k-mirrors/poe-sniper/issues"
   },
   "homepage": "https://github.com/5k-mirrors/poe-sniper",
+  "engines": {
+    "node": ">=11.7"
+  },
   "dependencies": {
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
+    "async-mutex": "^0.1.3",
     "bottleneck": "^2.19.2",
-    "dotenv-webpack": "^1.7.0",
-    "electron-debug": "^3.0.1",
     "electron-store": "^4.0.0",
+    "electron-unhandled": "^3.0.0",
     "electron-updater": "^4.0.14",
     "firebase": "^6.2.4",
     "js-yaml": "^3.13.1",
     "material-table": "^1.36.1",
+    "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-firebaseui": "^3.1.2",
+    "react-markdown": "^4.2.2",
     "react-router-dom": "^5.0.1",
-    "react-tooltip": "^3.10.0",
+    "remark-breaks": "^1.0.3",
     "ws": "^7.1.0"
   },
   "devDependencies": {
@@ -68,8 +75,10 @@
     "babel-loader": "^8.0.6",
     "cross-env": "^5.2.0",
     "css-loader": "^3.0.0",
+    "dotenv": "^8.2.0",
     "electron": "^5.0.6",
     "electron-builder": "^20.44.4",
+    "electron-debug": "^3.0.1",
     "electron-devtools-installer": "^2.2.4",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
@@ -116,7 +125,14 @@
     },
     "directories": {
       "output": "release"
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "5k-mirrors",
+        "repo": "poe-sniper"
+      }
+    ]
   },
   "jest": {
     "setupFiles": [

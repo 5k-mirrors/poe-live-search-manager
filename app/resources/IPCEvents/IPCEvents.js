@@ -1,7 +1,7 @@
 export const ipcEvents = {
   WS_ADD: "wsAdd",
   WS_REMOVE: "wsRemove",
-  TRADE_MESSAGE: "tradeMessage",
+  RESULTS_UPDATE: "resultsUpdate",
   USER_LOGIN: "userLogin",
   USER_LOGOUT: "userLogout",
   SOCKET_STATE_UPDATE: "socketStateUpdate",
@@ -10,5 +10,9 @@ export const ipcEvents = {
   GET_SOCKETS: "getSockets",
   SEND_SOCKETS: "sendSockets",
   TEST_NOTIFICATION: "testNotification",
-  SUBSCRIPTION_UPDATE: "subscriptionUpdate",
+  FETCH_SUBSCRIPTION_DETAILS: "fetchSubscriptionDetails",
+  GET_SUBSCRIPTION_DETAILS: "getSubscriptionDetails",
+  SEND_SUBSCRIPTION_DETAILS: "sendSubscriptionDetails",
+  DROP_SCHEDULED_RESULTS: "dropScheduledResults",
+  RATE_LIMIT_STATUS_CHANGE: "rateLimitStatusChange",
 };

@@ -2,20 +2,27 @@ import { ipcMain } from "electron";
 import { globalStore } from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import socketStates from "../../resources/SocketStates/SocketStates";
 import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 import subscription from "../../Subscription/Subscription";
+import limiterGroup from "../limiter-group/limiter-group";
+import requestLimiter from "../request-limiter/request-limiter";
+import stateIs from "../utils/state-is/state-is";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
-    const sanitizedStore = store
+    const storeWithStates = store
       .all()
-      .map(({ socket, ...remainingSocketDetails }) => remainingSocketDetails);
+      .map(({ socket, ...remainingSocketDetails }) => ({
+        ...remainingSocketDetails,
+        isConnected: socket && stateIs(socket, socketStates.OPEN),
+      }));
 
-    event.sender.send(ipcEvents.SEND_SOCKETS, sanitizedStore);
+    event.sender.send(ipcEvents.SEND_SOCKETS, storeWithStates);
   });
 };
 
@@ -25,19 +32,11 @@ const setupWebSocketIpcListeners = () => {
 
     globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
 
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-    if (isLoggedIn) {
-      webSocketActions.updateConnections();
-    }
+    webSocketActions.updateConnections();
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-    if (isLoggedIn) {
-      webSocketActions.disconnect(connectionDetails.id);
-    }
+    webSocketActions.disconnect(connectionDetails.id);
 
     store.remove(connectionDetails.id);
 
@@ -61,9 +60,9 @@ const setupAuthenticationIpcListeners = () => {
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
     subscriptionActions.stopRefreshInterval();
 
-    webSocketActions.disconnectFromStoredWebSockets();
+    webSocketActions.disconnectAll();
 
-    storeUtils.deleteIfExists(storeKeys.POE_SESSION_ID);
+    storeUtils.clear(storeKeys.POE_SESSION_ID);
   });
 };
 
@@ -75,17 +74,22 @@ const setupGeneralIpcListeners = () => {
     });
   });
 
-  ipcMain.on(
-    ipcEvents.SUBSCRIPTION_UPDATE,
-    (event, updatedSubscriptionData) => {
-      subscription.update(updatedSubscriptionData);
+  ipcMain.on(ipcEvents.GET_SUBSCRIPTION_DETAILS, event => {
+    event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+      data: { ...subscription.data },
+    });
+  });
 
-      webSocketActions.updateConnections();
-    }
+  ipcMain.on(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, (event, userId) =>
+    subscriptionActions.refresh(userId)
   );
+
+  ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
+    limiterGroup.drop();
+  });
 };
 
-const initializeProject = () => {
+export const initListeners = () => {
   store.load();
 
   setupStoreIpcListeners();
@@ -97,4 +101,10 @@ const initializeProject = () => {
   setupGeneralIpcListeners();
 };
 
-export default initializeProject;
+export const initRateLimiter = () =>
+  requestLimiter.initialize().then(() => {
+    const limiter = requestLimiter.getInstance();
+
+    // The reservoir's value must be decremented by one because the initialization contains a fetch which already counts towards the rate limit.
+    return limiter.incrementReservoir(-1);
+  });

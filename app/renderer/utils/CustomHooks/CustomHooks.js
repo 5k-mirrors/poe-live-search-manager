@@ -1,70 +1,35 @@
-import { useState, useEffect, useRef } from "react";
-import { globalStore } from "../../../GlobalStore/GlobalStore";
+import { useState, useEffect, useRef, useReducer, useCallback } from "react";
+import { ipcRenderer } from "electron";
+import { asyncFetchActions, asyncFetchReducer } from "../../reducers/reducers";
 
-export const useGenericFetch = (fetchFunction, ...args) => {
-  const defaultState = {
-    data: null,
-    isLoading: true,
-    err: false,
-  };
-
-  const [data, setData] = useState(defaultState);
-  const isMounted = useRef(true);
-
-  async function fetchData() {
-    setData({
-      ...data,
-      isLoading: true,
-    });
-
-    try {
-      const fetchedData = await fetchFunction(...args);
-
-      if (isMounted.current) {
-        setData({
-          ...defaultState,
-          data: fetchedData,
-          isLoading: false,
-          err: false,
-        });
-      }
-    } catch (e) {
-      if (isMounted.current) {
-        setData({
-          ...defaultState,
-          data: null,
-          isLoading: false,
-          err: true,
-        });
-      }
-    }
-  }
-
+export const useListenToDataUpdatesViaIpc = (receiver, listener) => {
   useEffect(() => {
-    fetchData();
+    ipcRenderer.on(receiver, listener);
 
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  return [data, fetchData];
+    return () => ipcRenderer.removeListener(receiver, listener);
+  }, [listener, receiver]);
 };
 
-export const useStoreListener = storeKey => {
-  const [value, setValue] = useState(globalStore.get(storeKey));
+export const useRequestDataViaIpc = receiver => {
+  const [state, dispatch] = useReducer(asyncFetchReducer, {
+    data: null,
+    isLoading: false,
+    isErr: false,
+  });
 
-  useEffect(() => {
-    const removeListener = globalStore.onDidChange(storeKey, updatedData => {
-      setValue(updatedData);
-    });
+  const listener = useCallback((_, payload) => {
+    dispatch({ type: asyncFetchActions.RECEIVE_RESPONSE, payload });
+  }, []);
 
-    return () => {
-      removeListener();
-    };
-  }, [storeKey]);
+  useListenToDataUpdatesViaIpc(receiver, listener);
 
-  return [value, setValue];
+  const requestDataViaIpc = useCallback((requester, ...args) => {
+    dispatch({ type: asyncFetchActions.SEND_REQUEST });
+
+    ipcRenderer.send(requester, ...args);
+  }, []);
+
+  return [state, requestDataViaIpc];
 };
 
 export const useDisable = seconds => {
@@ -89,16 +54,16 @@ export const useDisable = seconds => {
 export const useDisplay = () => {
   const [elementIsVisible, setShowElement] = useState(false);
 
-  let timeout;
+  const timeout = useRef(null);
 
   useEffect(() => {
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(timeout.current);
   }, [timeout]);
 
   const displayElement = () => setShowElement(true);
 
   const hideElementAfterMsElapsed = milliseconds => {
-    timeout = setTimeout(() => {
+    timeout.current = setTimeout(() => {
       setShowElement(false);
     }, milliseconds);
   };

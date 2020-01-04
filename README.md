@@ -8,14 +8,17 @@ It is an alternative to keeping several browser tabs open but it consumes far le
 Supported trade sites:
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
 
+[According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](https://github.com/5k-mirrors/poe-sniper/releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
+
 ## Services
 
 - [GitHub](https://github.com/5k-mirrors/poe-sniper) is used as a landing page and for tracking external issues
+- [Test firebase instace](https://console.firebase.google.com/u/0/project/poe-sniper/overview)
 - [Production firebase instace](https://console.firebase.google.com/u/0/project/poe-sniper-gateway/overview)
 
 ## Development
 
-- Include the Firebase API key in the `.env` file as described in the [example](./.env.example).
+- Set up environment variables, see the hints in the [example](./.env.example) file.
 - Set up notifications (if on Windows): https://electronjs.org/docs/tutorial/notifications#windows
 
 ```bash
@@ -23,11 +26,27 @@ yarn install
 yarn dev
 ```
 
-## Portable version - Windows notifications issue
+- Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
+- Data location on win10: `%APPDATA%/PoE Sniper`
+- electron-store data location on win10: `%APPDATA%/PoE Sniper/config.json`
 
-See #42. Additionally, an issue has been submitted to the _electron-builder_ repository:
+For Issues and PRs older than 2019.11.16 refer to: https://gitlab.com/c-hive/poe-sniper-electron and https://github.com/c-hive/poe-sniper/issues/108#issuecomment-554977101
 
-- https://github.com/electron-userland/electron-builder/issues/4054
+## [Testing](doc/testing.md)
+
+## Known issues
+
+- [Portable version - Windows notifications do not appear](https://github.com/electron-userland/electron-builder/issues/4054)
+- [NSIS installer keeps hanging around when the app is not uninstalled properly](https://github.com/electron-userland/electron-builder/issues/4057#issuecomment-537684523)
+
+## Caveats
+
+- Specify which listeners should be detached with [`ipcRenderer.removeListener()`](https://electronjs.org/docs/api/ipc-renderer#ipcrendererremovelistenerchannel-listener) upon the component unmounts. Using [`ipcRenderer.removeAllListeners()`](https://electronjs.org/docs/api/ipc-renderer#ipcrendererremovealllistenerschannel) could cause side-effects because the function not only removes the component-specific listeners, but also the "global" ones.
+
+## Rate limiting
+
+Actions that count towards the rate limit:
+- 1 per result for fetching item details
 
 ## QA
 

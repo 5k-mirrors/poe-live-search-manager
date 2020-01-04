@@ -1,37 +1,77 @@
 import fetch from "node-fetch";
-import { globalStore } from "../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
+import requestLimiter from "../request-limiter/request-limiter";
+import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
+import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+import { windows } from "../../resources/Windows/Windows";
+import mutex from "../mutex/mutex";
 
-export const getCookies = () => {
-  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID, "");
+const startReservoirIncreaseListener = () => {
+  const intervalId = setInterval(() => {
+    const limiter = requestLimiter.getInstance();
 
-  return `POESESSID=${poeSessionId}`;
-};
+    return limiter.currentReservoir().then(currentReservoir => {
+      if (
+        currentReservoir > 0 &&
+        requestLimiter.isActive === true &&
+        !mutex.isLocked()
+      ) {
+        requestLimiter.isActive = false;
 
-export const copyWhisperIsEnabled = () => {
-  const copyWhisper = globalStore.get(storeKeys.COPY_WHISPER, true);
+        electronUtils.send(
+          windows.POE_SNIPER,
+          ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+          requestLimiter.isActive
+        );
 
-  return copyWhisper;
+        clearInterval(intervalId);
+      }
+    });
+  }, 1000);
 };
 
 export const fetchItemDetails = id => {
-  const itemUrl = `${baseUrls.poeFetchAPI + id}`;
+  return mutex.acquire().then(release => {
+    const limiter = requestLimiter.getInstance();
 
-  return fetch(itemUrl)
-    .then(data => data.json())
-    .then(parsedData => {
-      const itemDetails = javaScriptUtils.safeGet(parsedData, ["result", 0]);
+    return limiter.schedule(() => {
+      release();
 
-      if (javaScriptUtils.isDefined(itemDetails)) {
-        return itemDetails;
-      }
+      const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
-      throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+      return fetch(itemUrl)
+        .then(data => data.json())
+        .then(parsedData =>
+          limiter.currentReservoir().then(currentReservoir => {
+            if (currentReservoir === 0 && requestLimiter.isActive === false) {
+              requestLimiter.isActive = true;
+
+              electronUtils.send(
+                windows.POE_SNIPER,
+                ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+                requestLimiter.isActive
+              );
+
+              startReservoirIncreaseListener();
+            }
+
+            const itemDetails = javaScriptUtils.safeGet(parsedData, [
+              "result",
+              0,
+            ]);
+
+            if (javaScriptUtils.isDefined(itemDetails)) {
+              return itemDetails;
+            }
+
+            throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+          })
+        );
     });
+  });
 };
 
 export const getWhisperMessage = itemDetails => {
@@ -47,26 +87,25 @@ export const getWhisperMessage = itemDetails => {
   return whisperMessage;
 };
 
-const getNotificationTitle = itemName => `New ${itemName} listed`;
-
-const getNotificationMessage = whisperMessage => {
-  const matchDetails = whisperMessage.match(/listed for [\d]+ [\S]+/);
+export const getPrice = whisperMessage => {
+  const currencies = currencyNames.join("|");
+  const pattern = `\\d+\\.?\\d* (${currencies})+`;
+  const regexp = new RegExp(pattern);
+  const matchDetails = whisperMessage.match(regexp);
 
   // => `match` returns `null` if there's no corresponding item in the string.
   if (!javaScriptUtils.isDefined(matchDetails)) {
     return "";
   }
 
-  const itemPrice = matchDetails[0]
-    .split(" ")
-    .splice(2, 3)
-    .join(" ");
-
-  return `~b/o ${itemPrice}`;
+  return `~b/o ${matchDetails[0]}`;
 };
 
-export const notifyUser = (itemName, whisperMessage) =>
+export const notifyUser = (itemName, price) => {
+  const title = `New ${itemName} listed`;
+
   electronUtils.doNotify({
-    title: getNotificationTitle(itemName),
-    body: getNotificationMessage(whisperMessage),
+    title,
+    body: price,
   });
+};

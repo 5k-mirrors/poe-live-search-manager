@@ -3,6 +3,7 @@ import * as poeTrade from "./poe-trade";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
+import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 
 jest.mock("node-fetch", () => jest.fn());
 
@@ -59,43 +60,69 @@ describe("poeTrade", () => {
   describe("notifyUser", () => {
     let doNotifySpy;
 
+    const itemName = "Tabula Rasa Simple Robe";
+    const price = "~b/o 20 chaos";
+
     beforeEach(() => {
       doNotifySpy = jest
         .spyOn(electronUtils, "doNotify")
         .mockImplementationOnce(() => jest.fn());
     });
 
-    const itemName = "Tabula Rasa Simple Robe";
+    it("notifies the user with the given arguments", () => {
+      const expectedTitle = `New ${itemName} listed`;
 
-    describe("when `whisperMessage` fits the pattern", () => {
-      const whisperMessage =
-        '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 chaos in Legion (stash tab "6"; position: left 4, top 7)';
+      poeTrade.notifyUser(itemName, price);
 
-      it("sets the `body` to the formatted string", () => {
-        const expectedString = `~b/o 20 chaos`;
+      expect(doNotifySpy).toHaveBeenCalledWith({
+        title: expectedTitle,
+        body: price,
+      });
+    });
+  });
 
-        poeTrade.notifyUser(itemName, whisperMessage);
+  describe("getPrice", () => {
+    describe("when the message matches with the `RegEx` pattern", () => {
+      it("returns the decimal price with the currency", () => {
+        const whisperMessage =
+          '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 2.0 chaos in Legion (stash tab"6"; position: left 4, top 7)';
+        const expectedString = "~b/o 2.0 chaos";
 
-        expect(doNotifySpy).toHaveBeenCalledWith({
-          title: `New ${itemName} listed`,
-          body: expectedString,
+        const actualString = poeTrade.getPrice(whisperMessage);
+
+        expect(actualString).toEqual(expectedString);
+      });
+
+      it("returns the price even if the message is not english", () => {
+        const whisperMessage =
+          '@TestUser Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
+        const expectedString = "~b/o 40 chaos";
+
+        const actualString = poeTrade.getPrice(whisperMessage);
+
+        expect(actualString).toEqual(expectedString);
+      });
+
+      it("returns the price with the right currency", () => {
+        currencyNames.forEach(currency => {
+          const whisperMessage = `@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 ${currency} in Legion (stash tab "6"; position: left 4, top 7)`;
+          const expectedString = `~b/o 20 ${currency}`;
+
+          const actualString = poeTrade.getPrice(whisperMessage);
+
+          expect(actualString).toEqual(expectedString);
         });
       });
     });
 
-    describe("when `whisperMessage` does not fit the pattern", () => {
+    describe("when the message does not match with the `RegEx` pattern", () => {
       const whisperMessage =
-        '@ВжухХацыч Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
+        "@TestUser Hi this is not a whisper message but contains numbers 34 and some currency name: chaos, exa.";
 
-      it("sets the `body` to an empty string", () => {
-        const expectedString = "";
+      it("returns an empty string", () => {
+        const actualString = poeTrade.getPrice(whisperMessage);
 
-        poeTrade.notifyUser(itemName, whisperMessage);
-
-        expect(doNotifySpy).toHaveBeenCalledWith({
-          title: `New ${itemName} listed`,
-          body: expectedString,
-        });
+        expect(actualString).toEqual("");
       });
     });
   });

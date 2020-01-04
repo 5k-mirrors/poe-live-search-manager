@@ -1,0 +1,104 @@
+name: CI
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Cache JS dependencies
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-js-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-js-dependencies-
+    - name: Install JS dependencies
+      run: yarn install
+    - name: Lint
+      run: yarn lint
+
+  test:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Cache JS dependencies
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-js-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-js-dependencies-
+    - name: Install JS dependencies
+      run: yarn install
+    - name: Test
+      run: yarn test
+
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    needs: [lint, test]
+    steps:
+    - name: Show current ref
+      run: echo ${{ github.ref }}
+    - uses: actions/checkout@v1
+    - name: Use Node.js 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Cache JS dependencies
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-js-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-js-dependencies-
+    - name: Cache Electron dependencies
+      uses: actions/cache@v1
+      with:
+        path: ~\AppData\Local\electron
+        key: ${{ runner.OS }}-electron-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-electron-dependencies-
+    - name: Cache electron-builder dependencies
+      uses: actions/cache@v1
+      with:
+        path: ~\AppData\Local\electron-builder
+        key: ${{ runner.OS }}-electron-builder-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-electron-builder-dependencies-
+    - name: Install JS dependencies
+      run: yarn install
+    - name: Build
+      run: yarn win:package:win ${{ github.ref }}
+      env:
+        GH_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
+        FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+        FIREBASE_API_URL: ${{ secrets.FIREBASE_API_URL }}
+    - name: Copy deliverables
+      run: |
+        mkdir deliverables
+        cp release/*.exe deliverables
+        cp release/latest.yml deliverables
+        cp release/*.exe.blockmap deliverables
+    - uses: actions/upload-artifact@master
+      with:
+        name: deliverables
+        path: deliverables

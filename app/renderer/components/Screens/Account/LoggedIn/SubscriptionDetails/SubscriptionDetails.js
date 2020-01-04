@@ -1,47 +1,42 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
-import { ipcRenderer } from "electron";
-import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
-import subscription from "../../../../../../Subscription/Subscription";
-import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import Button from "../../../../UI/SimpleHtmlElements/Button/Button";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
-import * as firebaseUtils from "../../../../../utils/FirebaseUtils/FirebaseUtils";
+import {
+  useAuthContext,
+  useSubscriptionContext,
+} from "../../../../../contexts";
+import { useDisable } from "../../../../../utils/CustomHooks/CustomHooks";
 
-const subscriptionDetails = () => {
-  const firebaseContext = firebaseUtils.useFirebaseContext();
+export default () => {
+  const auth = useAuthContext();
+  const [subscription, fetchSubscriptionDetails] = useSubscriptionContext();
+  const [isDisabled, disableRefreshButton] = useDisable(1);
 
-  const [fetchedData, refreshFetchedData] = customHooks.useGenericFetch(
-    subscription.query,
-    firebaseContext.currentUser.uid
-  );
-  const [isDisabled, disableRefreshButton] = customHooks.useDisable(1);
-
-  function onRefreshButtonClick() {
-    refreshFetchedData();
+  const onRefresh = () => {
+    fetchSubscriptionDetails(auth.data.uid);
 
     disableRefreshButton();
-  }
+  };
 
-  function subscriptionText() {
-    if (fetchedData.isLoading) {
+  const subscriptionText = () => {
+    if (subscription.isLoading) {
       return "Loading...";
     }
 
-    if (fetchedData.err || !fetchedData.data) {
+    if (subscription.isErr || !subscription.data) {
       return "Error while fetching data";
     }
 
-    if (fetchedData.data) {
-      ipcRenderer.send(ipcEvents.SUBSCRIPTION_UPDATE, fetchedData.data);
-
-      if (fetchedData.data.paying) {
-        return fetchedData.data.type ? fetchedData.data.type : "Active";
-      }
+    if (
+      subscription.data &&
+      (!subscription.data.plan || !subscription.data.plan.type)
+    ) {
+      return "No subscription";
     }
 
-    return "Inactive";
-  }
+    return subscription.data.plan.type;
+  };
 
   return (
     <Box mt={3}>
@@ -50,23 +45,17 @@ const subscriptionDetails = () => {
         value={subscriptionText()}
         label="Subscription"
         error={
-          fetchedData.isLoading ||
-          fetchedData.err ||
-          (fetchedData.data && !fetchedData.data.paying)
+          subscription.isLoading ||
+          subscription.isErr ||
+          (subscription.data && !subscription.data.plan)
         }
         InputProps={{
           readOnly: true,
         }}
       />
       <Box mt={3}>
-        <Button
-          clickEvent={onRefreshButtonClick}
-          text="Refresh"
-          disabled={isDisabled}
-        />
+        <Button clickEvent={onRefresh} text="Refresh" disabled={isDisabled} />
       </Box>
     </Box>
   );
 };
-
-export default subscriptionDetails;

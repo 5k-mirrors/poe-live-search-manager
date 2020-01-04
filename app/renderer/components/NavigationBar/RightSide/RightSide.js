@@ -1,32 +1,28 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
-import Typograpghy from "@material-ui/core/Typography";
+import Typography from "@material-ui/core/Typography";
+import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
-import ReactTooltip from "react-tooltip";
 import * as electronUtils from "../../../utils/ElectronUtils/ElectronUtils";
 import * as baseUrls from "../../../../resources/BaseUrls/BaseUrls";
-import * as regExes from "../../../../resources/RegExes/RegExes";
 import { useRightSideStyles } from "./RightSide.style";
 import { version } from "../../../../../package.json";
 
-const displayRevisionTooltip = !regExes.semanticVersionNumberMatcher.test(
-  process.env.REVISION
-);
-
-const rightSide = () => {
+export default () => {
   const classes = useRightSideStyles();
   const versionNumber = `v${version}`;
+  const displayRevisionTooltip = versionNumber !== process.env.REVISION;
 
   return (
-    <Box display="flex" alignItems="center" className={classes.root}>
-      <Typograpghy data-tip variant="subtitle2">
-        {versionNumber}
-      </Typograpghy>
+    <Box display="flex" alignItems="center">
       {displayRevisionTooltip ? (
-        <ReactTooltip place="bottom" type="info">
-          {process.env.REVISION}
-        </ReactTooltip>
-      ) : null}
+        <Tooltip title={`Internal revision: ${process.env.REVISION}`}>
+          <Typography variant="subtitle2">{versionNumber}</Typography>
+        </Tooltip>
+      ) : (
+        <Typography variant="subtitle2">{versionNumber}</Typography>
+      )}
+
       <Button
         className={classes.button}
         onClick={() => electronUtils.openExternalUrl(baseUrls.reportIssue)}
@@ -36,5 +32,3 @@ const rightSide = () => {
     </Box>
   );
 };
-
-export default rightSide;

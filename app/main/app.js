@@ -4,9 +4,16 @@ import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
 import { autoUpdater } from "electron-updater";
-import initializeProject from "./initialize-project/initialize-project";
+import {
+  initListeners,
+  initRateLimiter,
+} from "./initialize-project/initialize-project";
+import { windows } from "../resources/Windows/Windows";
+import { envIs } from "../utils/JavaScriptUtils/JavaScriptUtils";
 
-const isDev = process.env.NODE_ENV === "development";
+require("electron-unhandled")({
+  showDialog: envIs("development"),
+});
 
 let win;
 
@@ -38,7 +45,12 @@ const createWindow = () => {
     },
   });
 
-  if (isDev) {
+  if (process.platform !== "darwin") {
+    // https://electronjs.org/docs/api/browser-window#winremovemenu-linux-windows
+    win.removeMenu();
+  }
+
+  if (envIs("development")) {
     win.loadURL(`file://${process.cwd()}/app/index.html`);
   } else {
     win.loadURL(`file://${__dirname}/index.html`);
@@ -50,18 +62,21 @@ const createWindow = () => {
 };
 
 app.on("ready", async () => {
+  // Subscribing to the listeners happens even before creating the window to be ready to actively respond to initial events coming from renderer.
+  initListeners();
+
   createWindow();
 
   autoUpdater.checkForUpdatesAndNotify();
 
-  if (isDev) {
+  if (envIs("development")) {
     await setupDevelopmentWorkflow();
   }
 
-  win.webContents.on("did-finish-load", () => {
-    win.setTitle("PoE Sniper");
+  win.webContents.on("did-finish-load", async () => {
+    win.setTitle(windows.POE_SNIPER);
 
-    initializeProject();
+    await initRateLimiter();
   });
 });
 

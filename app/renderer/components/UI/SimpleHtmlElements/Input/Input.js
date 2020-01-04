@@ -2,7 +2,7 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import { useInputStyles } from "./Input.style";
 
-const input = ({ ...props }) => {
+export default ({ ...props }) => {
   const classes = useInputStyles();
   const { InputProps, ...otherProps } = props;
 
@@ -23,5 +23,3 @@ const input = ({ ...props }) => {
     />
   );
 };
-
-export default input;

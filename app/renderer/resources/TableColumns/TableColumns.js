@@ -1,8 +1,9 @@
 import React from "react";
-import SearchUrl from "../../components/CustomTableColumns/SearchUrl/SearchUrl";
+import EditableSearchUrl from "../../components/CustomTableColumns/EditableSearchUrl/EditableSearchUrl";
 import Connected from "../../components/CustomTableColumns/Connected/Connected";
+import SearchLink from "../../components/CustomTableColumns/SearchLink/SearchLink";
 
-export const inputScreen = [
+export const searchesScreen = [
   { field: "id", hidden: true },
   {
     title: "Connected",
@@ -14,11 +15,39 @@ export const inputScreen = [
   {
     title: "Search URL",
     field: "searchUrl",
-    editComponent: props => <SearchUrl {...props} />,
+    editComponent: props => <EditableSearchUrl {...props} />,
+    render: props => {
+      const { searchUrl } = props;
+
+      return (
+        <SearchLink
+          name={searchUrl}
+          url={searchUrl}
+          style={{ textTransform: "none" }}
+        />
+      );
+    },
   },
 ];
 
-export const tradeScreen = [
-  { title: "Name", field: "itemName" },
-  { title: "Price", field: "itemPrice" },
+export const resultsScreen = [
+  { field: "id", hidden: true },
+  { title: "Timestamp", field: "timestamp" },
+  {
+    title: "Name",
+    field: "name",
+    render: props => {
+      const { name, searchUrl } = props;
+
+      return <SearchLink name={name} url={searchUrl} />;
+    },
+  },
+  {
+    title: "Price",
+    field: "price",
+  },
+  {
+    title: "Whisper",
+    field: "whisperMessage",
+  },
 ];
