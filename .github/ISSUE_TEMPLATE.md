@@ -9,4 +9,6 @@ Otherwise try to describe your issue as detailed as possible providing as much i
 - screenshots
 - when and how often does it happen
 
+Make sure to create separate issues per topic, therefore it's easier to keep the discussion on point.
+
 I will get back to you as soon as possible.
