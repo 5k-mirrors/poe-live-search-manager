@@ -53,6 +53,7 @@ Supported trade sites:
 - Restart the app, try reconnecting to all sockets and sockets 1-by-1.
 - Make sure rate limit indicator is green while connecting.
 - Search links can become invalid. If a few searches are not connecting make sure they are valid via checking them in the browser.
+- You can have an IP which is blacklisted by Cloudflare ([1](https://www.reddit.com/r/pathofexile/comments/aw2p9j/trying_to_visit_pathofexilecom_and_i_get_this/), [2](https://www.reddit.com/r/pathofexile/comments/awscxe/anyone_issues_with_poe_website_captcha/)). You'll know this by getting a captcha when visiting `pathofexile.com`. Getting a new IP will resolve the issue.
 
 #### Notifications not showing up?
 
