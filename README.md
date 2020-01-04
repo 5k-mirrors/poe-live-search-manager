@@ -22,10 +22,12 @@ Supported trade sites:
 - ToS compliant, not breaking any rules
 - Queries new listings instantly via live mode
 - Handles any custom search
+- Gathers all results in one screen
 - Uses Windows notifications which:
   - don't remove focus from the game
   - are easily dismissable anytime
-- Places whisper message on clipboard for faster interaction
+  - can be turned off
+- Places whisper message on clipboard for faster interaction (can be turned off)
 - Consumes far less resources than running browser tabs
 - Queues notifications if there are multiple ones
 
