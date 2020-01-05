@@ -202,7 +202,7 @@ export default class Searches extends Component {
         filters: [{ name: "YAML", extensions: ["yml", "yaml"] }],
       },
       files => {
-        if (files !== undefined) {
+        if (!files) {
           try {
             const input = yaml.safeLoad(fs.readFileSync(files[0], "utf8"));
             for (const [url, name] of Object.entries(input.pathofexilecom)) {
