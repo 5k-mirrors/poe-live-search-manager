@@ -3,6 +3,15 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.8.1",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.8.1",
+    description: `Fixes:
+- Several fixes and improvements under the hood.
+    `,
+    date: "2020-01-05T20:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.8.0",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.8.0",
     description: `New features:
