@@ -4,6 +4,7 @@ import MaterialTable from "material-table";
 import Box from "@material-ui/core/Box";
 import yaml from "js-yaml";
 import fs from "fs";
+import Snackbar from "@material-ui/core/Snackbar";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
@@ -17,6 +18,7 @@ export default class Searches extends Component {
     super(props);
 
     this.state = {
+      importErrorOpen: false,
       webSocketStore: [],
       allReconnectsAreDisabled: false,
     };
@@ -86,6 +88,12 @@ export default class Searches extends Component {
     const searchEl = webSocketStore.find(el => el.id === id);
 
     return searchEl && searchEl.isConnected !== isConnected;
+  };
+
+  handleImportErrorClose = () => {
+    this.setState({
+      importErrorOpen: false,
+    });
   };
 
   update(id, data) {
@@ -202,7 +210,7 @@ export default class Searches extends Component {
         filters: [{ name: "YAML", extensions: ["yml", "yaml"] }],
       },
       files => {
-        if (!files) {
+        if (files) {
           try {
             const input = yaml.safeLoad(fs.readFileSync(files[0], "utf8"));
             for (const [url, name] of Object.entries(input.pathofexilecom)) {
@@ -213,6 +221,9 @@ export default class Searches extends Component {
             }
           } catch (e) {
             javaScriptUtils.devErrorLog(e);
+            this.setState({
+              importErrorOpen: true,
+            });
           }
         }
       }
@@ -248,68 +259,84 @@ export default class Searches extends Component {
     const {
       webSocketStore: [...webSocketStore],
       allReconnectsAreDisabled,
+      importErrorOpen,
     } = this.state;
 
     return (
-      <MaterialTable
-        title="Active connections"
-        columns={tableColumns.searchesScreen}
-        components={{
-          Pagination: () => (
-            <Box component="td" padding={2} fontSize="13px">
-              {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
-              Search count: <b>{webSocketStore.length}</b>
-            </Box>
-          ),
-        }}
-        data={webSocketStore}
-        editable={{
-          onRowAdd: wsConnectionData => this.addNewConnection(wsConnectionData),
-          onRowDelete: wsConnectionData =>
-            this.deleteConnection(wsConnectionData),
-        }}
-        actions={[
-          webSocket => ({
-            icon: "cached",
-            tooltip: "Reconnect",
-            onClick: (event, connectionDetails) =>
-              this.reconnect(connectionDetails),
-            disabled: webSocket.reconnectIsDisabled || allReconnectsAreDisabled,
-          }),
-          {
-            icon: "cached",
-            tooltip: "Reconnect all",
-            isFreeAction: true,
-            disabled: this.isWebSocketStoreEmpty() || allReconnectsAreDisabled,
-            onClick: () => this.reconnectAll(),
-          },
-          {
-            icon: "create_new_folder",
-            tooltip: "Import from file",
-            isFreeAction: true,
-            onClick: () => this.import(),
-          },
-          {
-            icon: "delete_outline",
-            tooltip: "Delete all",
-            isFreeAction: true,
-            onClick: () => this.deleteAll(),
-            disabled: this.isWebSocketStoreEmpty(),
-          },
-        ]}
-        options={{
-          showTitle: false,
-          toolbarButtonAlignment: "left",
-          headerStyle: {
-            position: "sticky",
-            top: 0,
-          },
-          maxBodyHeight: "525px",
-          pageSize: 9999,
-          emptyRowsWhenPaging: false,
-          addRowPosition: "first",
-        }}
-      />
+      <>
+        <Snackbar
+          open={importErrorOpen}
+          autoHideDuration={4000}
+          message="Invalid YAML format"
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          onClose={this.handleImportErrorClose}
+        />
+        <MaterialTable
+          title="Active connections"
+          columns={tableColumns.searchesScreen}
+          components={{
+            Pagination: () => (
+              <Box component="td" padding={2} fontSize="13px">
+                {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
+                Search count: <b>{webSocketStore.length}</b>
+              </Box>
+            ),
+          }}
+          data={webSocketStore}
+          editable={{
+            onRowAdd: wsConnectionData =>
+              this.addNewConnection(wsConnectionData),
+            onRowDelete: wsConnectionData =>
+              this.deleteConnection(wsConnectionData),
+          }}
+          actions={[
+            webSocket => ({
+              icon: "cached",
+              tooltip: "Reconnect",
+              onClick: (event, connectionDetails) =>
+                this.reconnect(connectionDetails),
+              disabled:
+                webSocket.reconnectIsDisabled || allReconnectsAreDisabled,
+            }),
+            {
+              icon: "cached",
+              tooltip: "Reconnect all",
+              isFreeAction: true,
+              disabled:
+                this.isWebSocketStoreEmpty() || allReconnectsAreDisabled,
+              onClick: () => this.reconnectAll(),
+            },
+            {
+              icon: "create_new_folder",
+              tooltip: "Import from file",
+              isFreeAction: true,
+              onClick: () => this.import(),
+            },
+            {
+              icon: "delete_outline",
+              tooltip: "Delete all",
+              isFreeAction: true,
+              onClick: () => this.deleteAll(),
+              disabled: this.isWebSocketStoreEmpty(),
+            },
+          ]}
+          options={{
+            showTitle: false,
+            toolbarButtonAlignment: "left",
+            headerStyle: {
+              position: "sticky",
+              top: 0,
+            },
+            maxBodyHeight: "525px",
+            pageSize: 9999,
+            emptyRowsWhenPaging: false,
+            addRowPosition: "first",
+          }}
+        />
+      </>
     );
   }
 }
