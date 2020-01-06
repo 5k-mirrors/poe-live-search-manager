@@ -211,20 +211,23 @@ export default class Searches extends Component {
       },
       files => {
         if (files) {
-          try {
-            const input = yaml.safeLoad(fs.readFileSync(files[0], "utf8"));
-            for (const [url, name] of Object.entries(input.pathofexilecom)) {
-              this.addNewConnection({
-                searchUrl: url,
-                name,
+          fs.readFile(files[0], "utf8", (err, data) => {
+            try {
+              if (err) throw err;
+              const input = yaml.safeLoad(data);
+              for (const [url, name] of Object.entries(input.pathofexilecom)) {
+                this.addNewConnection({
+                  searchUrl: url,
+                  name,
+                });
+              }
+            } catch (e) {
+              javaScriptUtils.devErrorLog(e);
+              this.setState({
+                importErrorOpen: true,
               });
             }
-          } catch (e) {
-            javaScriptUtils.devErrorLog(e);
-            this.setState({
-              importErrorOpen: true,
-            });
-          }
+          });
         }
       }
     );
