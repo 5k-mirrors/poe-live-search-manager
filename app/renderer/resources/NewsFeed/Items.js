@@ -3,6 +3,15 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.9.0",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.9.0",
+    description: `New features:
+- Manage and import searches from YAML files. The import supports comments which you can also use to separate groups and disable/enable searches. The format is the same as it was with the old version of the app. Example file: https://github.com/5k-mirrors/poe-sniper/blob/v1.9.0/example-import-input.yml
+    `,
+    date: "2020-01-05T20:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.8.1",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.8.1",
     description: `Fixes:
