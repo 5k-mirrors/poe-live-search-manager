@@ -17,6 +17,15 @@ export const devLog = message => {
   }
 };
 
+export const devErrorLog = message => {
+  const isDev = process.env.NODE_ENV === "development";
+
+  if (isDev) {
+    // eslint-disable-next-line no-console
+    console.error(message);
+  }
+};
+
 export const envIs = env => process.env.NODE_ENV === env;
 
 export const cloneDeep = obj => {

@@ -51,6 +51,7 @@
     "electron-unhandled": "^3.0.0",
     "electron-updater": "^4.0.14",
     "firebase": "^6.2.4",
+    "js-yaml": "^3.13.1",
     "material-table": "^1.36.1",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
