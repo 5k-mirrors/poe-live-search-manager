@@ -121,7 +121,7 @@ const connect = id =>
       });
     })
     .catch(err => {
-      javaScriptUtils.devErrorLog(`Error while connecting to ${id}`);
+      javaScriptUtils.devErrorLog(`Error while connecting to ${id}:`);
       javaScriptUtils.devErrorLog(err);
     });
 
