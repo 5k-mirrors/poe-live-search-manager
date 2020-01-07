@@ -13,7 +13,7 @@ export const devLog = message => {
 
   if (isDev) {
     // eslint-disable-next-line no-console
-    console.log(message);
+    console.log(`${new Date().toLocaleString()} | ${message}`);
   }
 };
 
@@ -22,7 +22,7 @@ export const devErrorLog = message => {
 
   if (isDev) {
     // eslint-disable-next-line no-console
-    console.error(message);
+    console.error(`${new Date().toLocaleString()} | ${message}`);
   }
 };
 
