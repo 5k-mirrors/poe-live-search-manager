@@ -46,13 +46,15 @@ const connect = id =>
       if (ws.socket && !stateIs(ws.socket, socketStates.CLOSED))
         return release();
 
-      const webSocketUri = getWebSocketUri(ws.searchUrl);
-
-      javaScriptUtils.devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
-
       const limiter = webSocketLimiter.getInstance();
 
       return limiter.schedule(() => {
+        const webSocketUri = getWebSocketUri(ws.searchUrl);
+
+        javaScriptUtils.devLog(
+          `Connect initiated - ${webSocketUri} / ${ws.id}`
+        );
+
         ws.socket = new WebSocket(webSocketUri, {
           headers: {
             Cookie: getCookieHeader(),
