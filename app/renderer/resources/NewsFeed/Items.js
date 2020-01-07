@@ -3,6 +3,15 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.9.1",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.9.1",
+    description: `Fixes:
+- More strict request throttling.
+    `,
+    date: "2020-01-07T13:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.9.0",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.9.0",
     description: `New features:
