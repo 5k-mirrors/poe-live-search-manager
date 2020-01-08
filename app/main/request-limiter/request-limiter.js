@@ -7,14 +7,13 @@ import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
 class RequestLimiter {
+  static defaultValues = {
+    requestLimit: 6,
+    interval: 4,
+  };
+
   constructor() {
-    this.defaultValues = {
-      requestLimit: 6,
-      interval: 4,
-    };
-
     this.bottleneckInstance = new Bottleneck();
-
     this.isActive = false;
   }
 
@@ -37,13 +36,14 @@ class RequestLimiter {
         );
 
         javaScriptUtils.devLog(
-          `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} seconds.`
+          `Requests are limitied to ${this.constructor.defaultValues.requestLimit} requests / ${this.constructor.defaultValues.interval} seconds.`
         );
 
         this.bottleneckInstance.updateSettings({
-          reservoir: this.defaultValues.requestLimit,
-          reservoirRefreshAmount: this.defaultValues.requestLimit,
-          reservoirRefreshInterval: this.defaultValues.interval * 1000,
+          reservoir: this.constructor.defaultValues.requestLimit,
+          reservoirRefreshAmount: this.constructor.defaultValues.requestLimit,
+          reservoirRefreshInterval:
+            this.constructor.defaultValues.interval * 1000,
         });
       });
   }
