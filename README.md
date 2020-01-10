@@ -71,6 +71,10 @@ Supported trade sites:
 - Windows allows you to [change or turn off notification sounds](https://www.google.com/search?q=windows+notification+sound)
 - Windows allows you to [change notification length](https://www.google.com/search?q=windows+notification+length). This is _not_ supported currently. Changing it from the default 5 seconds will cause the clipboard to be out of sync with the notifications.
 
+#### Installation
+
+- Installer hangs during re-installation: in special cases (e.g. manually touching files) the installation can be left in an inconsistent state and therefore broken. Follow steps [here](https://github.com/5k-mirrors/poe-sniper/issues/53#issuecomment-537375953).
+
 ## Caveats
 
 - For the notifications to show while in-game PoE needs to run in windowed or windowed fullscreen mode
