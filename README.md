@@ -34,6 +34,8 @@ For Issues and PRs older than 2019.11.16 refer to: https://gitlab.com/c-hive/poe
 
 ## [Testing](doc/testing.md)
 
+## [Auto-update](doc/auto-update.md)
+
 ## Known issues
 
 - [Portable version - Windows notifications do not appear](https://github.com/electron-userland/electron-builder/issues/4054)
