@@ -1,8 +1,8 @@
 # Poe::Sniper
 
-#### Desktop tool for Path of Exile to make instant offers for listed items without leaving the game.
+#### Desktop tool for Path of Exile for managing live item searches and making instant offers without leaving the game.
 
-It is an alternative to keeping several browser tabs open but it consumes far less resources and you don’t need to switch between the game and the browser tabs all the time. You can use custom search criteria and message the seller instantly in-game.
+It is an alternative to keeping several trade site tabs open in the browser and having to leave the game to check new items. It consumes far less resources and let's you message the seller instantly in-game.
 
 Supported trade sites:
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
@@ -60,9 +60,9 @@ Supported trade sites:
 
 - Make sure Path of Exile runs in Windowed mode
 - See if the "Test notification" on the Settings screen works. If it does, it's most likely an issue with Windows notification settings.
-- Turn off "Focus assist" or add PoE Sniper to priority apps
+- Turn off "Focus assist" or add the app to priority apps
 - Turn on "Get notifications from apps and other senders" in Notification settings
-- Turn on notifications for PoE Sniper in Notification settings
+- Turn on notifications for the app in Notification settings
 - Enable notification sound in Sound settings
 - Search for further notification settings according to your Windows version
 
