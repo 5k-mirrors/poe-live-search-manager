@@ -13,7 +13,7 @@ export const refresh = id =>
     .then(nextSubscriptionDetails => {
       subscription.update(nextSubscriptionDetails);
 
-      sendRenderer(windows.POE_SNIPER, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+      sendRenderer(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
         data: { ...subscription.data },
       });
 
@@ -22,7 +22,7 @@ export const refresh = id =>
     .catch(err => {
       devLog(`Subscription refresh error: ${err}`);
 
-      sendRenderer(windows.POE_SNIPER, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+      sendRenderer(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
         isErr: true,
       });
     });

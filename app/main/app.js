@@ -24,7 +24,7 @@ app.setAppUserModelId("com.5k-mirrors.poe-sniper");
 autoUpdater.setFeedURL({
   provider: "github",
   owner: "5k-mirrors",
-  repo: "poe-sniper",
+  repo: "poe-live-search-manager",
 });
 
 const setupDevelopmentWorkflow = async () => {
@@ -74,7 +74,7 @@ app.on("ready", async () => {
   }
 
   win.webContents.on("did-finish-load", async () => {
-    win.setTitle(windows.POE_SNIPER);
+    win.setTitle(windows.MAIN);
 
     await initRateLimiter();
   });
