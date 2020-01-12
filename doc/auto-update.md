@@ -51,3 +51,7 @@ git push --tags
 Restart the app
 
 - soon there should be a notification about the update (needs to be downloaded in the background first)
+
+Make sure:
+
+- user data is still there
