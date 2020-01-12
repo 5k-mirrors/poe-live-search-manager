@@ -5,6 +5,7 @@ import Box from "@material-ui/core/Box";
 import yaml from "js-yaml";
 import fs from "fs";
 import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
@@ -270,13 +271,16 @@ export default class Searches extends Component {
         <Snackbar
           open={importErrorOpen}
           autoHideDuration={4000}
-          message="Invalid YAML format"
           anchorOrigin={{
             vertical: "bottom",
             horizontal: "left",
           }}
           onClose={this.handleImportErrorClose}
-        />
+        >
+          <Alert severity="error" onClose={this.handleImportErrorClose}>
+            Invalid YAML format
+          </Alert>
+        </Snackbar>
         <MaterialTable
           title="Active connections"
           columns={tableColumns.searchesScreen}
