@@ -14,6 +14,7 @@
     "package": "cross-env NODE_ENV=production npm run build && electron-builder",
     "package:all": "cross-env NODE_ENV=production npm run build && electron-builder --mwl",
     "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish onTag",
+    "package:win:local": "cross-env NODE_ENV=production npm run build && electron-builder build --win -c.compression=store --x64",
     "package:mac": "cross-env NODE_ENV=production npm run build && electron-builder build --mac",
     "package:linux": "cross-env NODE_ENV=production npm run build && electron-builder build --linux",
     "unix:package:win": "cross-env REVISION=\"$(git describe --always --tags --dirty)\" yarn package:win",
