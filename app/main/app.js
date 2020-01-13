@@ -23,6 +23,8 @@ let win;
 // => Windows 8/8.1 and 10 notifications.
 app.setAppUserModelId("com.5k-mirrors.poe-sniper");
 
+// Rebranding the app results in that users lose their settings, including searches, results, session ID etc.
+// The app explicitly uses the PoE Sniper's folder if exists so that the settings are kept regardless of the app's name.
 if (envIs("production")) {
   const previous = `${app.getPath("appData")}${path.sep}PoE Sniper`;
 
