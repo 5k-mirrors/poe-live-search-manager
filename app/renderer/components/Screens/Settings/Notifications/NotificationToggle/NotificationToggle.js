@@ -3,11 +3,13 @@ import { ipcRenderer } from "electron";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import ToggleButton from "../../../../UI/ToggleButton/ToggleButton";
-import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
+import GlobalStore from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 
 const notificationToggle = () => {
+  const globalStore = new GlobalStore();
+
   function handleChange(scheduleResults) {
     globalStore.set(storeKeys.SCHEDULE_RESULTS, scheduleResults);
 

@@ -25,12 +25,11 @@ app.setAppUserModelId("com.5k-mirrors.poe-sniper");
 
 // Rebranding the app results in that users lose their settings, including searches, results, session ID etc.
 // The app explicitly uses the PoE Sniper's folder if exists so that the settings are kept regardless of the app's name.
-if (envIs("producttion")) {
-  const previous = `${app.getPath("appData")}${path.sep}PoE Sniper`;
+const previous = `${app.getPath("appData")}${path.sep}PoE Sniper`;
 
-  if (fs.existsSync(previous)) {
-    app.setPath("userData", previous);
-  }
+if (fs.existsSync(previous)) {
+  app.setPath("userData", previous);
+  app.setPath("logs", previous);
 }
 
 autoUpdater.setFeedURL({

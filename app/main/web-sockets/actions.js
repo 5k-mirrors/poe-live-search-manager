@@ -6,7 +6,7 @@ import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import { globalStore } from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
 import socketStates from "../../resources/SocketStates/SocketStates";
@@ -104,6 +104,8 @@ const connect = id =>
             `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
           );
 
+          const globalStore = new GlobalStore();
+
           updateState(ws.id, ws.socket);
 
           const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
@@ -152,6 +154,8 @@ export const disconnectAll = () =>
   store.all().forEach(connectionDetails => disconnect(connectionDetails.id));
 
 export const updateConnections = () => {
+  const globalStore = new GlobalStore();
+
   const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 
