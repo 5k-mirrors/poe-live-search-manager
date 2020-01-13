@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import GlobalStore from "../../GlobalStore/GlobalStore";
+import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { getApp as getFirebaseApp } from "../utils/Firebase/Firebase";
 import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
@@ -11,7 +11,7 @@ const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
 
 export const AuthProvider = ({ children }) => {
-  const globalStore = new GlobalStore();
+  const globalStore = new SingletonGlobalStore();
 
   const [state, dispatch] = useReducer(asyncFetchReducer, {
     data: null,

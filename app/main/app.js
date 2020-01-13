@@ -29,7 +29,6 @@ const previous = `${app.getPath("appData")}${path.sep}PoE Sniper`;
 
 if (fs.existsSync(previous)) {
   app.setPath("userData", previous);
-  app.setPath("logs", previous);
 }
 
 autoUpdater.setFeedURL({

@@ -1,7 +1,7 @@
-import GlobalStore from "../../GlobalStore/GlobalStore";
+import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
 
 export const clear = storeKey => {
-  const globalStore = new GlobalStore();
+  const globalStore = new SingletonGlobalStore();
 
   if (globalStore.has(storeKey)) {
     globalStore.delete(storeKey);
@@ -9,7 +9,7 @@ export const clear = storeKey => {
 };
 
 export const isEnabled = (storeKey, defaultValue = true) => {
-  const globalStore = new GlobalStore();
+  const globalStore = new SingletonGlobalStore();
 
   const value = globalStore.get(storeKey, defaultValue);
 

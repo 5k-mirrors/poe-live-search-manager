@@ -2,11 +2,11 @@ import React from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import ToggleButton from "../../../../UI/ToggleButton/ToggleButton";
-import GlobalStore from "../../../../../../GlobalStore/GlobalStore";
+import SingletonGlobalStore from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 
 const clipboard = () => {
-  const globalStore = new GlobalStore();
+  const globalStore = new SingletonGlobalStore();
 
   return (
     <Box mt={2} mb={2}>
