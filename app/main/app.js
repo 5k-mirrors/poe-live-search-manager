@@ -11,7 +11,7 @@ import {
   initRateLimiter,
 } from "./initialize-project/initialize-project";
 import { windows } from "../resources/Windows/Windows";
-import { envIs, devErrorLog } from "../utils/JavaScriptUtils/JavaScriptUtils";
+import { envIs } from "../utils/JavaScriptUtils/JavaScriptUtils";
 
 require("electron-unhandled")({
   showDialog: envIs("development"),
@@ -27,11 +27,7 @@ if (envIs("production")) {
   const previous = `${app.getPath("appData")}${path.sep}PoE Sniper`;
 
   if (fs.existsSync(previous)) {
-    try {
-      app.setPath("appData", previous);
-    } catch (err) {
-      devErrorLog(`Setting appData error: ${err}`);
-    }
+    app.setPath("appData", previous);
   }
 }
 
