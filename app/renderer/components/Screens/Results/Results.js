@@ -5,12 +5,14 @@ import Box from "@material-ui/core/Box";
 import MaterialTable from "material-table";
 import { Link } from "react-router-dom";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
-import { globalStore } from "../../../../GlobalStore/GlobalStore";
+import SingletonGlobalStore from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { deleteAllResults as deleteAllResultsMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 
 export default () => {
+  const globalStore = new SingletonGlobalStore();
+
   const [results, setResults] = useState(
     globalStore.get(storeKeys.RESULTS, [])
   );
