@@ -28,11 +28,7 @@ const updateResults = args => {
 
   globalStore.set(storeKeys.RESULTS, updatedResults);
 
-  electronUtils.send(
-    windows.POE_SNIPER,
-    ipcEvents.RESULTS_UPDATE,
-    updatedResults
-  );
+  electronUtils.send(windows.MAIN, ipcEvents.RESULTS_UPDATE, updatedResults);
 };
 
 const scheduleResult = args => {

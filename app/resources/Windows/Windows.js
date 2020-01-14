@@ -1,3 +1,3 @@
 export const windows = {
-  POE_SNIPER: "PoE Sniper",
+  MAIN: "PoE Live Search Manager",
 };

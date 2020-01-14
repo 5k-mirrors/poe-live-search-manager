@@ -16,7 +16,7 @@ import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import webSocketLimiter from "./limiter";
 
 const updateState = (id, socket) => {
-  electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
+  electronUtils.send(windows.MAIN, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
     isConnected: socket && stateIs(socket, socketStates.OPEN),
   });
