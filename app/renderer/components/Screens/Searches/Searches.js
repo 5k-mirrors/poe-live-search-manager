@@ -277,7 +277,11 @@ export default class Searches extends Component {
           }}
           onClose={this.handleImportErrorClose}
         >
-          <Alert severity="error" onClose={this.handleImportErrorClose}>
+          <Alert
+            severity="error"
+            variant="filled"
+            onClose={this.handleImportErrorClose}
+          >
             Invalid YAML format
           </Alert>
         </Snackbar>
