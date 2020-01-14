@@ -1,7 +1,7 @@
 {
-  "name": "poe-sniper",
-  "productName": "PoE Sniper",
-  "version": "1.9.1",
+  "name": "poe-live-search-manager",
+  "productName": "PoE Live Search Manager",
+  "version": "1.10.0",
   "description": "Desktop tool for Path of Exile to make instants offers for listed items without leaving the game",
   "main": "./app/main.prod.js",
   "scripts": {
@@ -23,23 +23,21 @@
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@gitlab.com:c-hive/poe-sniper-electron.git"
-  },
   "keywords": [
-    "electron",
-    "react",
     "path of exile",
     "poe",
-    "ggg"
+    "search",
+    "trade",
+    "live",
+    "electron",
+    "react"
   ],
   "author": "C-Hive",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/5k-mirrors/poe-sniper/issues"
+    "url": "https://github.com/5k-mirrors/poe-live-search-manager/issues"
   },
-  "homepage": "https://github.com/5k-mirrors/poe-sniper",
+  "homepage": "https://github.com/5k-mirrors/poe-live-search-manager",
   "engines": {
     "node": ">=11.7"
   },
@@ -105,7 +103,7 @@
     "webpack-obfuscator": "^0.18.3"
   },
   "build": {
-    "productName": "PoE Sniper",
+    "productName": "PoE Live Search Manager",
     "appId": "com.5k-mirrors.poe-sniper",
     "files": [
       "app/index.html",
@@ -120,10 +118,10 @@
       ]
     },
     "nsis": {
-      "artifactName": "poe-sniper-${env.REVISION}-setup.${ext}"
+      "artifactName": "poe-live-search-manager-${env.REVISION}-setup.${ext}"
     },
     "portable": {
-      "artifactName": "poe-sniper-${env.REVISION}-dev-standalone.${ext}"
+      "artifactName": "poe-live-search-manager-${env.REVISION}-dev-standalone.${ext}"
     },
     "directories": {
       "output": "release"
@@ -132,7 +130,7 @@
       {
         "provider": "github",
         "owner": "5k-mirrors",
-        "repo": "poe-sniper"
+        "repo": "poe-live-search-manager"
       }
     ]
   },

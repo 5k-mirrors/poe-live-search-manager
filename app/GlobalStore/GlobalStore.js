@@ -1,3 +1,11 @@
 import Store from "electron-store";
 
-export const globalStore = new Store();
+export default class SingletonGlobalStore {
+  constructor() {
+    if (!SingletonGlobalStore.instance) {
+      SingletonGlobalStore.instance = new Store();
+    }
+
+    return SingletonGlobalStore.instance;
+  }
+}

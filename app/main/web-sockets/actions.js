@@ -6,7 +6,7 @@ import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import { globalStore } from "../../GlobalStore/GlobalStore";
+import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
 import socketStates from "../../resources/SocketStates/SocketStates";
@@ -16,7 +16,7 @@ import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import webSocketLimiter from "./limiter";
 
 const updateState = (id, socket) => {
-  electronUtils.send(windows.POE_SNIPER, ipcEvents.SOCKET_STATE_UPDATE, {
+  electronUtils.send(windows.MAIN, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
     isConnected: socket && stateIs(socket, socketStates.OPEN),
   });
@@ -104,6 +104,8 @@ const connect = id =>
             `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
           );
 
+          const globalStore = new SingletonGlobalStore();
+
           updateState(ws.id, ws.socket);
 
           const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
@@ -152,6 +154,8 @@ export const disconnectAll = () =>
   store.all().forEach(connectionDetails => disconnect(connectionDetails.id));
 
 export const updateConnections = () => {
+  const globalStore = new SingletonGlobalStore();
+
   const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 

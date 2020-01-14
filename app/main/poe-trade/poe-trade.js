@@ -22,7 +22,7 @@ const startReservoirIncreaseListener = () => {
         requestLimiter.isActive = false;
 
         electronUtils.send(
-          windows.POE_SNIPER,
+          windows.MAIN,
           ipcEvents.RATE_LIMIT_STATUS_CHANGE,
           requestLimiter.isActive
         );
@@ -50,7 +50,7 @@ export const fetchItemDetails = id => {
               requestLimiter.isActive = true;
 
               electronUtils.send(
-                windows.POE_SNIPER,
+                windows.MAIN,
                 ipcEvents.RATE_LIMIT_STATUS_CHANGE,
                 requestLimiter.isActive
               );

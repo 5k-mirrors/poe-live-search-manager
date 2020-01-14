@@ -3,6 +3,18 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.10.0",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.10.0",
+    description: `New year, new name!
+
+The tool is now called "PoE Live Search Manager". As we continue to improve and add new features we feel this name is better in line with our goals to make trading better and easier.
+
+Good luck in 2020 exile!
+    `,
+    date: "2020-01-11T02:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.9.1",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.9.1",
     description: `Fixes:
