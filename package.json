@@ -41,6 +41,9 @@
   "engines": {
     "node": ">=11.7"
   },
+  "//dependencies": {
+    "material-table": "Built on top of MUI tables, supports editing, search, sorting, actions. https://material-ui.com/components/tables/#material-table"
+  },
   "dependencies": {
     "@material-ui/core": "^4.8.3",
     "@material-ui/icons": "^4.5.1",
