@@ -4,10 +4,12 @@ import Typography from "@material-ui/core/Typography";
 import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
 import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
-import { globalStore } from "../../../../../../GlobalStore/GlobalStore";
+import SingletonGlobalStore from "../../../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 
 export default () => {
+  const globalStore = new SingletonGlobalStore();
+
   const [limit, setLimit] = useState(
     globalStore.get(storeKeys.RESULTS_LIMIT, 100)
   );
