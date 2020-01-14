@@ -1,4 +1,4 @@
-# Poe::Sniper
+# PoE Live Search Manager
 
 #### Desktop tool for Path of Exile for managing live item searches and making instant offers without leaving the game.
 
