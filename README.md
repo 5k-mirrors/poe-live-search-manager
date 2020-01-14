@@ -73,7 +73,7 @@ Supported trade sites:
 
 #### Installation
 
-- Installer hangs during re-installation: in special cases (e.g. manually touching files) the installation can be left in an inconsistent state and therefore broken. Follow steps [here](https://github.com/5k-mirrors/poe-sniper/issues/53#issuecomment-537375953).
+- Installer hangs during re-installation: in special cases (e.g. manually touching files) the installation can be left in an inconsistent state and therefore broken. Follow steps [here](/../../issues/53#issuecomment-537375953).
 
 ## Caveats
 
