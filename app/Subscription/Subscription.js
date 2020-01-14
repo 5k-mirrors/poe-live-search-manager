@@ -27,6 +27,14 @@ class Subscription {
   active = () => {
     return isDefined(this.data.plan);
   };
+
+  clear() {
+    this.data = {
+      ...this.data,
+      type: "",
+      plan: null,
+    };
+  }
 }
 
 class SingletonSubscription {

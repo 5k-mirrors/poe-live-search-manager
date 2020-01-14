@@ -12,6 +12,7 @@ import subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
 import requestLimiter from "../request-limiter/request-limiter";
 import stateIs from "../utils/state-is/state-is";
+import { windows } from "../../resources/Windows/Windows";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -67,6 +68,12 @@ const setupAuthenticationIpcListeners = () => {
     webSocketActions.disconnectAll();
 
     storeUtils.clear(storeKeys.POE_SESSION_ID);
+
+    subscription.clear();
+
+    electronUtils.send(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+      data: subscription.data,
+    });
   });
 };
 
