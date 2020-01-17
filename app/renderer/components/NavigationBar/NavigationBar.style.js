@@ -8,5 +8,6 @@ export const useNavigationBarStyles = makeStyles({
     alignItems: "center",
     padding: 5,
     marginBottom: 15,
+    marginTop: 10,
   },
 });
