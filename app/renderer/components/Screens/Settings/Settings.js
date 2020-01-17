@@ -8,7 +8,7 @@ import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import SingletonGlobalStore from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 
-const SetingsPageSection = ({ title, children }) => (
+const SettingsPageSection = ({ title, children }) => (
   <Box mt={2} mb={2}>
     <Typography variant="subtitle1">{title}</Typography>
     {children}
@@ -31,32 +31,32 @@ export default () => {
   return (
     <Box>
       <Typography variant="h6">Notifications</Typography>
-      <SetingsPageSection title="Test notification">
+      <SettingsPageSection title="Test notification">
         <Button
           text="Send"
           clickEvent={() => ipcRenderer.send(ipcEvents.TEST_NOTIFICATION)}
         />
-      </SetingsPageSection>
-      <SetingsPageSection title="Copy whisper messages to the clipboard">
+      </SettingsPageSection>
+      <SettingsPageSection title="Copy whisper messages to the clipboard">
         <ToggleButton
           defaultState={globalStore.get(storeKeys.COPY_WHISPER, true)}
           changed={copyWhisper =>
             globalStore.set(storeKeys.COPY_WHISPER, copyWhisper)
           }
         />
-      </SetingsPageSection>
-      <SetingsPageSection title="Allow notifications">
+      </SettingsPageSection>
+      <SettingsPageSection title="Allow notifications">
         <ToggleButton
           defaultState={globalStore.get(storeKeys.SCHEDULE_RESULTS, true)}
           changed={scheduleResults =>
             handleAllowNotificationsChange(scheduleResults)
           }
         />
-      </SetingsPageSection>
+      </SettingsPageSection>
       <Typography variant="h6">Display</Typography>
-      <SetingsPageSection title="Remember this many results">
+      <SettingsPageSection title="Remember this many results">
         <ResultsListLimit />
-      </SetingsPageSection>
+      </SettingsPageSection>
     </Box>
   );
 };
