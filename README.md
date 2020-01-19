@@ -42,7 +42,7 @@ Supported trade sites:
 
 ## Troubleshooting
 
-*If you encounter an issue, [report it](/../../issues/new). Restarting the app can help resolve it.*
+*If you encounter an issue, [report it](/../../issues/new/choose). Restarting the app can help resolve it.*
 
 #### Searches not connecting?
 
