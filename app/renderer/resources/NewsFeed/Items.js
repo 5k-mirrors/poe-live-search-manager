@@ -3,6 +3,16 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.10.2",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.10.2",
+    description: `Fixes:
+- Report issue button leads to new issue templates.
+- Minor improvements.
+        `,
+    date: "2020-01-19T04:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.10.0",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.10.0",
     description: `New year, new name!
@@ -27,7 +37,7 @@ Good luck in 2020 exile!
     title: "v1.9.0",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.9.0",
     description: `New features:
-- Manage and import searches from YAML files. The import supports comments which you can also use to separate groups and disable/enable searches. The format is the same as it was with the old version of the app. Example file: https://github.com/5k-mirrors/poe-sniper/blob/v1.9.0/example-import-input.yml
+- Manage and import searches from YAML files. You can find the new Import from file button on the Searches screen. You can manage searches in a file, then Delete all and Import from file to apply changes. The import supports comments which you can also use to separate groups and disable/enable searches. The format is the same as it was with the old version of the app. Example file: https://github.com/5k-mirrors/poe-sniper/blob/v1.9.0/example-import-input.yml
     `,
     date: "2020-01-05T20:00:00Z",
   },
