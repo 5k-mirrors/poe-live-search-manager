@@ -26,9 +26,9 @@ yarn install
 yarn dev
 ```
 
-- Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs`
-- Data location on win10: `%APPDATA%/PoE Sniper`
-- electron-store data location on win10: `%APPDATA%/PoE Sniper/config.json`
+- Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs/<PoE Sniper | PoE Live Search Manager>`
+- Data location on win10: `%APPDATA%/<PoE Sniper | PoE Live Search Manager>`
+- electron-store data location on win10: `%APPDATA%/<PoE Sniper | PoE Live Search Manager>/config.json`
 
 For Issues and PRs older than 2019.11.16 refer to: https://gitlab.com/c-hive/poe-sniper-electron and https://github.com/c-hive/poe-sniper/issues/108#issuecomment-554977101
 
