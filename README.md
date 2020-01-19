@@ -32,6 +32,8 @@ yarn dev
 
 For Issues and PRs older than 2019.11.16 refer to: https://gitlab.com/c-hive/poe-sniper-electron and https://github.com/c-hive/poe-sniper/issues/108#issuecomment-554977101
 
+Project is based on the [minelectreactist](https://github.com/gomorizsolt/minelectreactist) template which is baed on [electron-react-boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate).
+
 ## [Testing](doc/testing.md)
 
 ## [Auto-update](doc/auto-update.md)
