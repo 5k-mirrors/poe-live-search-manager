@@ -9,4 +9,4 @@ export const sessionIdWiki =
   "https://github.com/Stickymaddness/Procurement/wiki/SessionID";
 
 export const reportIssue =
-  "https://github.com/5k-mirrors/poe-sniper/issues/new";
+  "https://github.com/5k-mirrors/poe-live-search-manager/issues/new/choose";
