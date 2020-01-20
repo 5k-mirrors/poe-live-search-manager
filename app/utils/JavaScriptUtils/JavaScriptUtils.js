@@ -8,25 +8,21 @@ export const safeGet = (object, properties) =>
 export const isDefined = value =>
   typeof value !== "undefined" && value !== null;
 
-export const devLog = message => {
-  const isDev = process.env.NODE_ENV === "development";
+export const envIs = env => process.env.NODE_ENV === env;
 
-  if (isDev) {
+export const devLog = message => {
+  if (envIs("development")) {
     // eslint-disable-next-line no-console
     console.log(`${new Date().toLocaleString()} | ${message}`);
   }
 };
 
 export const devErrorLog = message => {
-  const isDev = process.env.NODE_ENV === "development";
-
-  if (isDev) {
+  if (envIs("development")) {
     // eslint-disable-next-line no-console
     console.error(`${new Date().toLocaleString()} | ${message}`);
   }
 };
-
-export const envIs = env => process.env.NODE_ENV === env;
 
 export const cloneDeep = obj => {
   try {
