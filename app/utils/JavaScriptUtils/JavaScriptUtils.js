@@ -10,17 +10,17 @@ export const isDefined = value =>
 
 export const envIs = env => process.env.NODE_ENV === env;
 
-export const devLog = message => {
+export const devLog = (...args) => {
   if (envIs("development")) {
     // eslint-disable-next-line no-console
-    console.log(`${new Date().toLocaleString()} | `, message);
+    console.log(`${new Date().toLocaleString()} | `, ...args);
   }
 };
 
-export const devErrorLog = message => {
+export const devErrorLog = (...args) => {
   if (envIs("development")) {
     // eslint-disable-next-line no-console
-    console.error(`${new Date().toLocaleString()} | `, message);
+    console.error(`${new Date().toLocaleString()} | `, ...args);
   }
 };
 
