@@ -1,6 +1,6 @@
 # Auto-update
 
-The app is automatically updated from https://github.com/5k-mirrors/poe-sniper/releases via [electron-builder](https://github.com/electron-userland/electron-builder)'s auto-update feature.
+The app is automatically updated from https://github.com/5k-mirrors/poe-sniper/releases via [electron-builder](https://github.com/electron-userland/electron-builder)'s auto-update feature. [Automatic publishing of release drafts](https://www.electron.build/configuration/publish) is done via GH user [c-hive-bot](https://github.com/c-hive-bot)'s personal access token.
 
 Known issues:
 - https://github.com/electron-userland/electron-builder/issues/4233 (`publish` config must be set)
