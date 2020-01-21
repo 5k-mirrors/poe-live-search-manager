@@ -13,14 +13,14 @@ export const envIs = env => process.env.NODE_ENV === env;
 export const devLog = message => {
   if (envIs("development")) {
     // eslint-disable-next-line no-console
-    console.log(`${new Date().toLocaleString()} | ${message}`);
+    console.log(`${new Date().toLocaleString()} | `, message);
   }
 };
 
 export const devErrorLog = message => {
   if (envIs("development")) {
     // eslint-disable-next-line no-console
-    console.error(`${new Date().toLocaleString()} | ${message}`);
+    console.error(`${new Date().toLocaleString()} | `, message);
   }
 };
 
