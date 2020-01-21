@@ -9,7 +9,7 @@ Supported trade sites:
 
 [According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](/../../releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
 
-*You are viewing the README of version [v1.10.2](/../../releases/tag/v1.10.2). GitHub is only used to host releases and issues. You can find the old app and other releases [here](/../../releases).*
+*You are viewing the README of version [v1.10.3](/../../releases/tag/v1.10.3). GitHub is only used to host releases and issues. You can find the old app and other releases [here](/../../releases).*
 
 ## Usage
 
