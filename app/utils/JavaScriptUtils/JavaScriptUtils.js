@@ -28,7 +28,7 @@ export const cloneDeep = obj => {
   try {
     return JSON.parse(JSON.stringify(obj));
   } catch (err) {
-    devLog(`Object deep clone error: ${err}`);
+    devLog("Object deep clone error: ", err);
 
     return {};
   }
