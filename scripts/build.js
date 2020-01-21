@@ -15,6 +15,9 @@ function isTaggedCommit() {
   // process.argv[2] represents `github.ref` coming from the CI, e.g. refs/tags/v1.8.0.
   if (!process.argv[2]) return false;
 
+  // eslint-disable-next-line no-console
+  console.log("Build args:", process.argv);
+
   const gitRef = process.argv[2];
   const gitTag = gitRef.split("/")[2];
 
@@ -22,6 +25,8 @@ function isTaggedCommit() {
 }
 
 if (isTaggedCommit()) {
+  // eslint-disable-next-line no-console
+  console.log("Tagged commit:", env.REVISION);
   // We must adapt to electron-builder's static behavior when publishing releases because it heavily depends on env vars.
   // Setting the `REVISION` to `CI_BUILD_TAG` is mandatory to let electron-builder recognize it's indeed a tagged commit.
   // https://github.com/electron-userland/electron-builder/issues/4469
