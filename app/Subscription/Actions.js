@@ -3,7 +3,7 @@ import * as webSocketActions from "../main/web-sockets/actions";
 import { send as sendRenderer } from "../main/utils/electron-utils/electron-utils";
 import { ipcEvents } from "../resources/IPCEvents/IPCEvents";
 import { windows } from "../resources/Windows/Windows";
-import { devLog } from "../utils/JavaScriptUtils/JavaScriptUtils";
+import { devErrorLog } from "../utils/JavaScriptUtils/JavaScriptUtils";
 
 let refreshInterval;
 
@@ -20,7 +20,7 @@ export const refresh = id =>
       webSocketActions.updateConnections();
     })
     .catch(err => {
-      devLog(`Subscription refresh error: ${err}`);
+      devErrorLog("Subscription refresh error: ", err);
 
       sendRenderer(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
         isErr: true,
