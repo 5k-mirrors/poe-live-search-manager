@@ -10,7 +10,10 @@ import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as regExes from "../../../../resources/RegExes/RegExes";
-import * as javaScriptUtils from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
+import {
+  devErrorLog,
+  isDefined,
+} from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 import InvalidInputError from "../../../../errors/invalid-input-error";
 
@@ -106,7 +109,7 @@ export default class Searches extends Component {
       webSocket => webSocket.id === id
     );
 
-    if (javaScriptUtils.isDefined(webSocketStore[webSocketIndex])) {
+    if (isDefined(webSocketStore[webSocketIndex])) {
       webSocketStore[webSocketIndex] = {
         ...webSocketStore[webSocketIndex],
         ...data,
@@ -223,7 +226,7 @@ export default class Searches extends Component {
                 });
               }
             } catch (e) {
-              javaScriptUtils.devErrorLog(e);
+              devErrorLog(e);
               this.setState({
                 importErrorOpen: true,
               });
