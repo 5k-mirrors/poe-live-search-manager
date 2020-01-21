@@ -3,6 +3,15 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.10.3",
+    link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.10.3",
+    description: `Fixes:
+- #78: Reconnect buttons aren't temporarily disabled after reconnections
+        `,
+    date: "2020-01-21T10:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.10.2",
     link: "https://github.com/5k-mirrors/poe-sniper/releases/tag/v1.10.2",
     description: `Fixes:
