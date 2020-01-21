@@ -2,7 +2,12 @@ import WebSocket from "ws";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
 import processItems from "../process-items/process-items";
-import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import {
+  devLog,
+  devErrorLog,
+  safeGet,
+  isDefined,
+} from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
@@ -51,9 +56,7 @@ const connect = id =>
       return limiter.schedule(() => {
         const webSocketUri = getWebSocketUri(ws.searchUrl);
 
-        javaScriptUtils.devLog(
-          `Connect initiated - ${webSocketUri} / ${ws.id}`
-        );
+        devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
 
         ws.socket = new WebSocket(webSocketUri, {
           headers: {
@@ -66,7 +69,7 @@ const connect = id =>
         });
 
         ws.socket.on("open", () => {
-          javaScriptUtils.devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
+          devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
 
           heartbeat(ws.socket);
 
@@ -76,23 +79,21 @@ const connect = id =>
         ws.socket.on("message", response => {
           const parsedResponse = JSON.parse(response);
 
-          const itemIds = javaScriptUtils.safeGet(parsedResponse, ["new"]);
+          const itemIds = safeGet(parsedResponse, ["new"]);
 
-          if (javaScriptUtils.isDefined(itemIds)) {
+          if (isDefined(itemIds)) {
             processItems(itemIds, ws);
           }
         });
 
         ws.socket.on("ping", () => {
-          javaScriptUtils.devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
+          devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
 
           heartbeat(ws.socket);
         });
 
         ws.socket.on("error", error => {
-          javaScriptUtils.devLog(
-            `SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`
-          );
+          devErrorLog(`SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`);
 
           updateState(ws.id, ws.socket);
 
@@ -100,9 +101,7 @@ const connect = id =>
         });
 
         ws.socket.on("close", (code, reason) => {
-          javaScriptUtils.devLog(
-            `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
-          );
+          devLog(`SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`);
 
           const globalStore = new SingletonGlobalStore();
 
@@ -112,9 +111,7 @@ const connect = id =>
 
           if (isLoggedIn && subscription.active()) {
             setTimeout(() => {
-              javaScriptUtils.devLog(
-                `Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`
-              );
+              devLog(`Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`);
 
               connect(ws.id);
             }, 500);
@@ -125,8 +122,7 @@ const connect = id =>
       });
     })
     .catch(err => {
-      javaScriptUtils.devErrorLog(`Error while connecting to ${id}:`);
-      javaScriptUtils.devErrorLog(err);
+      devErrorLog(`Error while connecting to ${id}: `, err);
     });
 
 export const disconnect = id => {
@@ -134,7 +130,7 @@ export const disconnect = id => {
 
   if (!ws) return;
 
-  javaScriptUtils.devLog(`Disconnect initiated - ${id}`);
+  devLog(`Disconnect initiated - ${id}`);
 
   if (
     ws.socket &&

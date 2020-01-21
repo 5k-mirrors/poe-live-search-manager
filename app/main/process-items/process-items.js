@@ -8,6 +8,7 @@ import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
+import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const updateResults = args => {
   const globalStore = new SingletonGlobalStore();
@@ -68,16 +69,14 @@ const processItems = (itemIds, ws) => {
             whisperMessage,
             price,
           }).catch(err => {
-            // eslint-disable-next-line no-console
-            console.error(err);
+            devErrorLog(err);
           });
         } else {
           electronUtils.copy(whisperMessage);
         }
       })
       .catch(err => {
-        // eslint-disable-next-line no-console
-        console.error(err);
+        devErrorLog(err);
       })
   );
 };

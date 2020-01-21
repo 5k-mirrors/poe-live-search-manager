@@ -3,7 +3,10 @@ import fetch from "node-fetch";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import MissingXRateLimitAccountHeaderError from "../../errors/missing-x-rate-limit-account-header-error";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
-import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import {
+  devLog,
+  devErrorLog,
+} from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
 class RequestLimiter {
@@ -20,7 +23,7 @@ class RequestLimiter {
   initialize() {
     return this.initialFetch()
       .then(({ requestLimit, interval }) => {
-        javaScriptUtils.devLog(
+        devLog(
           `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
         );
 
@@ -31,11 +34,9 @@ class RequestLimiter {
         });
       })
       .catch(err => {
-        javaScriptUtils.devLog(
-          `RATE LIMIT INIT ERROR - ${JSON.stringify(err)}`
-        );
+        devErrorLog("Rate limit init error: ", err);
 
-        javaScriptUtils.devLog(
+        devLog(
           `Requests are limitied to ${this.constructor.defaultValues.requestLimit} requests / ${this.constructor.defaultValues.interval} seconds.`
         );
 
