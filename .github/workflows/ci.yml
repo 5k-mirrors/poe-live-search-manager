@@ -89,7 +89,7 @@ jobs:
     - name: Build
       run: yarn win:package:win ${{ github.ref }}
       env:
-        GH_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
         FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
         FIREBASE_API_URL: ${{ secrets.FIREBASE_API_URL }}
     - name: Copy deliverables
