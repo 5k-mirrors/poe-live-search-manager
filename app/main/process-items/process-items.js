@@ -3,7 +3,7 @@ import limiterGroup from "../limiter-group/limiter-group";
 import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as poeTrade from "../poe-trade/poe-trade";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
@@ -11,7 +11,7 @@ import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const updateResults = args => {
-  const globalStore = new SingletonGlobalStore();
+  const globalStore = GlobalStore.getInstance();
 
   const currentResults = globalStore.get(storeKeys.RESULTS, []);
 

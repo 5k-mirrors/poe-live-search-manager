@@ -1,4 +1,4 @@
-import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 
 class Store {
@@ -47,7 +47,7 @@ class Store {
   }
 
   load() {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     /* The store must be emptied beforehand, otherwise FE hot-reload causes dudplicated items. */
     this.clear();

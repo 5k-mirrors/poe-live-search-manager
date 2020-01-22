@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import socketStates from "../../resources/SocketStates/SocketStates";
@@ -29,7 +29,7 @@ const setupStoreIpcListeners = () => {
 
 const setupWebSocketIpcListeners = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     store.add(connectionDetails);
 
@@ -39,7 +39,7 @@ const setupWebSocketIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     webSocketActions.disconnect(connectionDetails.id);
 
