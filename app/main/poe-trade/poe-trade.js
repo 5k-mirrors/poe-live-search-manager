@@ -3,7 +3,7 @@ import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
-import httpRequestLimiter from "../http-request-limiter/http-request-limiter";
+import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { windows } from "../../resources/Windows/Windows";
@@ -11,33 +11,31 @@ import mutex from "../mutex/mutex";
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
-    const limiter = httpRequestLimiter.getInstance();
+    return HttpRequestLimiter.bottleneck
+      .currentReservoir()
+      .then(currentReservoir => {
+        if (
+          currentReservoir > 0 &&
+          HttpRequestLimiter.requestsExhausted &&
+          !mutex.isLocked()
+        ) {
+          HttpRequestLimiter.requestsExhausted = false;
 
-    return limiter.currentReservoir().then(currentReservoir => {
-      if (
-        currentReservoir > 0 &&
-        httpRequestLimiter.isActive === true &&
-        !mutex.isLocked()
-      ) {
-        httpRequestLimiter.isActive = false;
+          electronUtils.send(
+            windows.MAIN,
+            ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+            HttpRequestLimiter.requestsExhausted
+          );
 
-        electronUtils.send(
-          windows.MAIN,
-          ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-          httpRequestLimiter.isActive
-        );
-
-        clearInterval(intervalId);
-      }
-    });
+          clearInterval(intervalId);
+        }
+      });
   }, 1000);
 };
 
 export const fetchItemDetails = id => {
   return mutex.acquire().then(release => {
-    const limiter = httpRequestLimiter.getInstance();
-
-    return limiter.schedule(() => {
+    return HttpRequestLimiter.bottleneck.schedule(() => {
       release();
 
       const itemUrl = `${baseUrls.poeFetchAPI + id}`;
@@ -45,33 +43,36 @@ export const fetchItemDetails = id => {
       return fetch(itemUrl)
         .then(data => data.json())
         .then(parsedData =>
-          limiter.currentReservoir().then(currentReservoir => {
-            if (
-              currentReservoir === 0 &&
-              httpRequestLimiter.isActive === false
-            ) {
-              httpRequestLimiter.isActive = true;
+          HttpRequestLimiter.bottleneck
+            .currentReservoir()
+            .then(currentReservoir => {
+              // So if I got it right, this happens when the user exceeds the set rate-limit, i.e. when there's no reservoir left and rate-limiting isn't active.
+              if (
+                currentReservoir === 0 &&
+                !HttpRequestLimiter.requestsExhausted
+              ) {
+                HttpRequestLimiter.requestsExhausted = true;
 
-              electronUtils.send(
-                windows.MAIN,
-                ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-                httpRequestLimiter.isActive
-              );
+                electronUtils.send(
+                  windows.MAIN,
+                  ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+                  HttpRequestLimiter.requestsExhausted
+                );
 
-              startReservoirIncreaseListener();
-            }
+                startReservoirIncreaseListener();
+              }
 
-            const itemDetails = javaScriptUtils.safeGet(parsedData, [
-              "result",
-              0,
-            ]);
+              const itemDetails = javaScriptUtils.safeGet(parsedData, [
+                "result",
+                0,
+              ]);
 
-            if (javaScriptUtils.isDefined(itemDetails)) {
-              return itemDetails;
-            }
+              if (javaScriptUtils.isDefined(itemDetails)) {
+                return itemDetails;
+              }
 
-            throw new ItemFetchError(`Item details not found for ${itemUrl}`);
-          })
+              throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+            })
         );
     });
   });

@@ -9,25 +9,24 @@ import {
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
-class RequestLimiter {
+export default class HttpRequestLimiter {
   static defaultValues = {
     requestLimit: 6,
     interval: 4,
   };
 
-  constructor() {
-    this.bottleneckInstance = new Bottleneck();
-    this.isActive = false;
-  }
+  static bottleneck = new Bottleneck();
 
-  initialize() {
+  static requestsExhausted = false;
+
+  static initialize() {
     return this.initialFetch()
       .then(({ requestLimit, interval }) => {
         devLog(
           `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
         );
 
-        return this.bottleneckInstance.updateSettings({
+        return this.bottleneck.updateSettings({
           reservoir: requestLimit,
           reservoirRefreshAmount: requestLimit,
           reservoirRefreshInterval: interval * 1000,
@@ -37,19 +36,18 @@ class RequestLimiter {
         devErrorLog("Rate limit init error: ", err);
 
         devLog(
-          `Requests are limitied to ${this.constructor.defaultValues.requestLimit} requests / ${this.constructor.defaultValues.interval} seconds.`
+          `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} seconds.`
         );
 
-        this.bottleneckInstance.updateSettings({
-          reservoir: this.constructor.defaultValues.requestLimit,
-          reservoirRefreshAmount: this.constructor.defaultValues.requestLimit,
-          reservoirRefreshInterval:
-            this.constructor.defaultValues.interval * 1000,
+        this.bottleneck.updateSettings({
+          reservoir: this.defaultValues.requestLimit,
+          reservoirRefreshAmount: this.defaultValues.requestLimit,
+          reservoirRefreshInterval: this.defaultValues.interval * 1000,
         });
       });
   }
 
-  initialFetch = () => {
+  static initialFetch() {
     return fetch(`${baseUrls.poeFetchAPI}1`, {
       headers: {
         Cookie: getCookieHeader(),
@@ -68,21 +66,5 @@ class RequestLimiter {
 
       throw new MissingXRateLimitAccountHeaderError();
     });
-  };
-
-  getInstance() {
-    return this.bottleneckInstance;
   }
 }
-
-class SingletonRequestLimiter {
-  constructor() {
-    if (!SingletonRequestLimiter.instance) {
-      SingletonRequestLimiter.instance = new RequestLimiter();
-    }
-
-    return SingletonRequestLimiter.instance;
-  }
-}
-
-export default new SingletonRequestLimiter();

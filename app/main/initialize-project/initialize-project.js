@@ -10,7 +10,7 @@ import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 import subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
-import httpRequestLimiter from "../http-request-limiter/http-request-limiter";
+import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
 
@@ -113,9 +113,7 @@ export const initListeners = () => {
 };
 
 export const initRateLimiter = () =>
-  httpRequestLimiter.initialize().then(() => {
-    const limiter = httpRequestLimiter.getInstance();
-
+  HttpRequestLimiter.initialize().then(() => {
     // The reservoir's value must be decremented by one because the initialization contains a fetch which already counts towards the rate limit.
-    return limiter.incrementReservoir(-1);
+    return HttpRequestLimiter.bottleneck.incrementReservoir(-1);
   });
