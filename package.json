@@ -116,15 +116,11 @@
     ],
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        "nsis"
       ]
     },
     "nsis": {
       "artifactName": "poe-live-search-manager-${env.REVISION}-setup.${ext}"
-    },
-    "portable": {
-      "artifactName": "poe-live-search-manager-${env.REVISION}-dev-standalone.${ext}"
     },
     "directories": {
       "output": "release"
