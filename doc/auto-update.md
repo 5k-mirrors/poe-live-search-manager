@@ -1,6 +1,6 @@
 # Auto-update
 
-The app is automatically updated from https://github.com/5k-mirrors/poe-sniper/releases via [electron-builder](https://github.com/electron-userland/electron-builder)'s auto-update feature. [Automatic publishing of release drafts](https://www.electron.build/configuration/publish) is done via GH user [c-hive-bot](https://github.com/c-hive-bot)'s personal access token.
+The app is automatically updated from https://github.com/5k-mirrors/poe-live-search-manager/releases via [electron-builder](https://github.com/electron-userland/electron-builder)'s auto-update feature. [Automatic publishing of release drafts](https://www.electron.build/configuration/publish) is done via GH user [c-hive-bot](https://github.com/c-hive-bot)'s personal access token.
 
 Known issues:
 - https://github.com/electron-userland/electron-builder/issues/4233 (`publish` config must be set)
@@ -9,13 +9,13 @@ Known issues:
 ## Testing
 
 Setup 2 repos:
-- public one for hosting releases (e.g. fork of https://github.com/5k-mirrors/poe-sniper)
+- public one for hosting releases (e.g. fork of https://github.com/5k-mirrors/poe-live-search-manager)
 - private one for hosting the code (e.g. checkout of this repo with the remote removed to avoid mistakes: `git remote remove origin`)
 
 Setup steps:
 - OS
   - remove the previous version of the app, if any
-  - test install and uninstall one more time, clear registry if needed: https://github.com/5k-mirrors/poe-sniper/issues/53#issuecomment-537375953
+  - test install and uninstall one more time, clear registry if needed: https://github.com/5k-mirrors/poe-live-search-manager/issues/53#issuecomment-537375953
 - Code repo:
   - set `autoUpdater.setFeedURL()` to the public repo
   - add env vars from `.env.example` temporarily to scripts/`build.js`

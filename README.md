@@ -8,13 +8,13 @@ It is an alternative to keeping several browser tabs open but it consumes far le
 Supported trade sites:
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
 
-[According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](https://github.com/5k-mirrors/poe-sniper/releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
+[According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
 
 Stack: Electron + React based on [minelectreactist](https://github.com/gomorizsolt/minelectreactist) which is based on [electron-react-boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate).
 
 ## Services
 
-- [GitHub](https://github.com/5k-mirrors/poe-sniper) is used as a landing page and for tracking external issues
+- [GitHub](https://github.com/5k-mirrors/poe-live-search-manager) is used as a landing page and for tracking external issues
 - [Test firebase instace](https://console.firebase.google.com/u/0/project/poe-sniper/overview)
 - [Production firebase instace](https://console.firebase.google.com/u/0/project/poe-sniper-gateway/overview)
 
