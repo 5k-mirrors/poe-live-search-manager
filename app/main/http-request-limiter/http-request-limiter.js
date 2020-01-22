@@ -67,4 +67,16 @@ export default class HttpRequestLimiter {
       throw new MissingXRateLimitAccountHeaderError();
     });
   }
+
+  static incrementReservoir(incrementBy) {
+    return this.bottleneck.incrementReservoir(incrementBy);
+  }
+
+  static currentReservoir() {
+    return this.bottleneck.currentReservoir();
+  }
+
+  static schedule(cb) {
+    return this.bottleneck.schedule(() => cb());
+  }
 }

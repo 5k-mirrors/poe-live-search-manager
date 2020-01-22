@@ -115,5 +115,5 @@ export const initListeners = () => {
 export const initRateLimiter = () =>
   HttpRequestLimiter.initialize().then(() => {
     // The reservoir's value must be decremented by one because the initialization contains a fetch which already counts towards the rate limit.
-    return HttpRequestLimiter.bottleneck.incrementReservoir(-1);
+    return HttpRequestLimiter.incrementReservoir(-1);
   });

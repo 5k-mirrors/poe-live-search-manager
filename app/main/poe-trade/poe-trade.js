@@ -11,31 +11,33 @@ import mutex from "../mutex/mutex";
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
-    return HttpRequestLimiter.bottleneck
-      .currentReservoir()
-      .then(currentReservoir => {
-        if (
-          currentReservoir > 0 &&
-          HttpRequestLimiter.requestsExhausted &&
-          !mutex.isLocked()
-        ) {
-          HttpRequestLimiter.requestsExhausted = false;
+    return HttpRequestLimiter.currentReservoir().then(currentReservoir => {
+      if (
+        currentReservoir > 0 &&
+        HttpRequestLimiter.requestsExhausted &&
+        !mutex.isLocked()
+      ) {
+        HttpRequestLimiter.requestsExhausted = false;
 
-          electronUtils.send(
-            windows.MAIN,
-            ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-            HttpRequestLimiter.requestsExhausted
-          );
+        electronUtils.send(
+          windows.MAIN,
+          ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+          HttpRequestLimiter.requestsExhausted
+        );
 
-          clearInterval(intervalId);
-        }
-      });
+        clearInterval(intervalId);
+      }
+    });
   }, 1000);
 };
 
 export const fetchItemDetails = id => {
+  // Lock is required, otherwise if currentReservoir() is invocated parallelly it doesn't decrement the value.
+  // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-555496803
   return mutex.acquire().then(release => {
-    return HttpRequestLimiter.bottleneck.schedule(() => {
+    return HttpRequestLimiter.schedule(() => {
+      // The lock is released as early as possible so that it doesn't occupy the app for far too long.
+      // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-556532356
       release();
 
       const itemUrl = `${baseUrls.poeFetchAPI + id}`;
@@ -43,36 +45,33 @@ export const fetchItemDetails = id => {
       return fetch(itemUrl)
         .then(data => data.json())
         .then(parsedData =>
-          HttpRequestLimiter.bottleneck
-            .currentReservoir()
-            .then(currentReservoir => {
-              // So if I got it right, this happens when the user exceeds the set rate-limit, i.e. when there's no reservoir left and rate-limiting isn't active.
-              if (
-                currentReservoir === 0 &&
-                !HttpRequestLimiter.requestsExhausted
-              ) {
-                HttpRequestLimiter.requestsExhausted = true;
+          HttpRequestLimiter.currentReservoir().then(currentReservoir => {
+            if (
+              currentReservoir === 0 &&
+              !HttpRequestLimiter.requestsExhausted
+            ) {
+              HttpRequestLimiter.requestsExhausted = true;
 
-                electronUtils.send(
-                  windows.MAIN,
-                  ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-                  HttpRequestLimiter.requestsExhausted
-                );
+              electronUtils.send(
+                windows.MAIN,
+                ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+                HttpRequestLimiter.requestsExhausted
+              );
 
-                startReservoirIncreaseListener();
-              }
+              startReservoirIncreaseListener();
+            }
 
-              const itemDetails = javaScriptUtils.safeGet(parsedData, [
-                "result",
-                0,
-              ]);
+            const itemDetails = javaScriptUtils.safeGet(parsedData, [
+              "result",
+              0,
+            ]);
 
-              if (javaScriptUtils.isDefined(itemDetails)) {
-                return itemDetails;
-              }
+            if (javaScriptUtils.isDefined(itemDetails)) {
+              return itemDetails;
+            }
 
-              throw new ItemFetchError(`Item details not found for ${itemUrl}`);
-            })
+            throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+          })
         );
     });
   });
