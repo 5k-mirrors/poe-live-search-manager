@@ -1,4 +1,5 @@
 import WebSocket from "ws";
+import Bottleneck from "bottleneck";
 import store from "./store";
 import Subscription from "../../Subscription/Subscription";
 import processItems from "../process-items/process-items";
@@ -18,7 +19,17 @@ import socketStates from "../../resources/SocketStates/SocketStates";
 import mutex from "../mutex/mutex";
 import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
-import webSocketLimiter from "./limiter";
+
+class WsRequestLimiter {
+  static bottleneck = new Bottleneck({
+    maxConcurrent: 1,
+    minTime: 1000,
+  });
+
+  static schedule(cb) {
+    return this.bottleneck.schedule(() => cb());
+  }
+}
 
 const updateState = (id, socket) => {
   electronUtils.send(windows.MAIN, ipcEvents.SOCKET_STATE_UPDATE, {
@@ -51,9 +62,7 @@ const connect = id =>
       if (ws.socket && !stateIs(ws.socket, socketStates.CLOSED))
         return release();
 
-      const limiter = webSocketLimiter.getInstance();
-
-      return limiter.schedule(() => {
+      return WsRequestLimiter.schedule(() => {
         const webSocketUri = getWebSocketUri(ws.searchUrl);
 
         devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
