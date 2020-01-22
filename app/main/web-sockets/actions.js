@@ -1,4 +1,5 @@
 import WebSocket from "ws";
+import { Mutex } from "async-mutex";
 import store from "./store";
 import subscription from "../../Subscription/Subscription";
 import processItems from "../process-items/process-items";
@@ -15,10 +16,17 @@ import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
 import socketStates from "../../resources/SocketStates/SocketStates";
-import mutex from "../mutex/mutex";
 import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import webSocketLimiter from "./limiter";
+
+class SocketConnectionSynchonizer {
+  static mutex = new Mutex();
+
+  static acquire(cb) {
+    return this.mutex.acquire(cb);
+  }
+}
 
 const updateState = (id, socket) => {
   electronUtils.send(windows.MAIN, ipcEvents.SOCKET_STATE_UPDATE, {
@@ -41,8 +49,7 @@ const heartbeat = socket => {
 };
 
 const connect = id =>
-  mutex
-    .acquire()
+  SocketConnectionSynchonizer.acquire()
     .then(release => {
       const ws = store.find(id);
 

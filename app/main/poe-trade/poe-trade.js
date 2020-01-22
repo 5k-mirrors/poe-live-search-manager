@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import { Mutex } from "async-mutex";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
@@ -7,7 +8,18 @@ import requestLimiter from "../request-limiter/request-limiter";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { windows } from "../../resources/Windows/Windows";
-import mutex from "../mutex/mutex";
+
+class ItemFetchSynchronizer {
+  static mutex = new Mutex();
+
+  static acquire(cb) {
+    return this.mutex.acquire(cb);
+  }
+
+  static isLocked() {
+    return this.mutex.isLocked();
+  }
+}
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
@@ -17,7 +29,7 @@ const startReservoirIncreaseListener = () => {
       if (
         currentReservoir > 0 &&
         requestLimiter.isActive === true &&
-        !mutex.isLocked()
+        !ItemFetchSynchronizer.isLocked()
       ) {
         requestLimiter.isActive = false;
 
@@ -34,7 +46,7 @@ const startReservoirIncreaseListener = () => {
 };
 
 export const fetchItemDetails = id => {
-  return mutex.acquire().then(release => {
+  return ItemFetchSynchronizer.acquire().then(release => {
     const limiter = requestLimiter.getInstance();
 
     return limiter.schedule(() => {
