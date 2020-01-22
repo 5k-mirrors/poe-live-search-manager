@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import socketStates from "../../resources/SocketStates/SocketStates";
@@ -8,7 +8,7 @@ import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
-import subscription from "../../Subscription/Subscription";
+import Subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
 import requestLimiter from "../request-limiter/request-limiter";
 import stateIs from "../utils/state-is/state-is";
@@ -29,7 +29,7 @@ const setupStoreIpcListeners = () => {
 
 const setupWebSocketIpcListeners = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     store.add(connectionDetails);
 
@@ -39,7 +39,7 @@ const setupWebSocketIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     webSocketActions.disconnect(connectionDetails.id);
 
@@ -69,10 +69,10 @@ const setupAuthenticationIpcListeners = () => {
 
     storeUtils.clear(storeKeys.POE_SESSION_ID);
 
-    subscription.clear();
+    Subscription.clear();
 
     electronUtils.send(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-      data: subscription.data,
+      data: Subscription.data,
     });
   });
 };
@@ -87,7 +87,7 @@ const setupGeneralIpcListeners = () => {
 
   ipcMain.on(ipcEvents.GET_SUBSCRIPTION_DETAILS, event => {
     event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-      data: { ...subscription.data },
+      data: { ...Subscription.data },
     });
   });
 
