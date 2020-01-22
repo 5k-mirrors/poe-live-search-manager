@@ -19,7 +19,6 @@ Setup steps:
 - Code repo:
   - set `autoUpdater.setFeedURL()` to the public repo
   - add env vars from `.env.example` temporarily to scripts/`build.js`
-  - [optional] remove `portable` build target from `package.json/build/win/target` to speed up builds
   - [optional] update `scripts/build.js` to use `yarn package:win:local` to speed up build
   - [optional] empty `release/` if exists
   - build and install the app locally
