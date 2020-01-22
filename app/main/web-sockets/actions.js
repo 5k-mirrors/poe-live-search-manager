@@ -31,7 +31,7 @@ class WsRequestLimiter {
   }
 }
 
-class SocketConnectSynchonizer {
+class ConcurrentConnectionMutex {
   static mutex = new Mutex();
 
   static acquire(cb) {
@@ -60,7 +60,7 @@ const heartbeat = socket => {
 };
 
 const connect = id =>
-  SocketConnectSynchonizer.acquire()
+  ConcurrentConnectionMutex.acquire()
     .then(release => {
       const ws = store.find(id);
 

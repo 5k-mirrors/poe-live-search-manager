@@ -9,7 +9,7 @@ import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { windows } from "../../resources/Windows/Windows";
 
-class ItemFetchSynchronizer {
+class ConcurrentLimiterScheduleMutex {
   static mutex = new Mutex();
 
   static acquire(cb) {
@@ -29,7 +29,7 @@ const startReservoirIncreaseListener = () => {
       if (
         currentReservoir > 0 &&
         requestLimiter.isActive === true &&
-        !ItemFetchSynchronizer.isLocked()
+        !ConcurrentLimiterScheduleMutex.isLocked()
       ) {
         requestLimiter.isActive = false;
 
@@ -46,7 +46,7 @@ const startReservoirIncreaseListener = () => {
 };
 
 export const fetchItemDetails = id => {
-  return ItemFetchSynchronizer.acquire().then(release => {
+  return ConcurrentLimiterScheduleMutex.acquire().then(release => {
     const limiter = requestLimiter.getInstance();
 
     return limiter.schedule(() => {
