@@ -20,7 +20,7 @@ import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import webSocketLimiter from "./limiter";
 
-class SocketConnectionSynchonizer {
+class SocketConnectSynchonizer {
   static mutex = new Mutex();
 
   static acquire(cb) {
@@ -49,7 +49,7 @@ const heartbeat = socket => {
 };
 
 const connect = id =>
-  SocketConnectionSynchonizer.acquire()
+  SocketConnectSynchonizer.acquire()
     .then(release => {
       const ws = store.find(id);
 
