@@ -3,7 +3,7 @@ import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
-import requestLimiter from "../request-limiter/request-limiter";
+import httpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { windows } from "../../resources/Windows/Windows";
@@ -11,20 +11,20 @@ import mutex from "../mutex/mutex";
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
-    const limiter = requestLimiter.getInstance();
+    const limiter = httpRequestLimiter.getInstance();
 
     return limiter.currentReservoir().then(currentReservoir => {
       if (
         currentReservoir > 0 &&
-        requestLimiter.isActive === true &&
+        httpRequestLimiter.isActive === true &&
         !mutex.isLocked()
       ) {
-        requestLimiter.isActive = false;
+        httpRequestLimiter.isActive = false;
 
         electronUtils.send(
           windows.MAIN,
           ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-          requestLimiter.isActive
+          httpRequestLimiter.isActive
         );
 
         clearInterval(intervalId);
@@ -35,7 +35,7 @@ const startReservoirIncreaseListener = () => {
 
 export const fetchItemDetails = id => {
   return mutex.acquire().then(release => {
-    const limiter = requestLimiter.getInstance();
+    const limiter = httpRequestLimiter.getInstance();
 
     return limiter.schedule(() => {
       release();
@@ -46,13 +46,16 @@ export const fetchItemDetails = id => {
         .then(data => data.json())
         .then(parsedData =>
           limiter.currentReservoir().then(currentReservoir => {
-            if (currentReservoir === 0 && requestLimiter.isActive === false) {
-              requestLimiter.isActive = true;
+            if (
+              currentReservoir === 0 &&
+              httpRequestLimiter.isActive === false
+            ) {
+              httpRequestLimiter.isActive = true;
 
               electronUtils.send(
                 windows.MAIN,
                 ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-                requestLimiter.isActive
+                httpRequestLimiter.isActive
               );
 
               startReservoirIncreaseListener();
