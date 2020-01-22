@@ -9,7 +9,7 @@ import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
 import Subscription from "../../Subscription/Subscription";
-import notificationLimiter from "../notification-limiter/notification-limiter";
+import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import requestLimiter from "../request-limiter/request-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
@@ -96,7 +96,7 @@ const setupGeneralIpcListeners = () => {
   );
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
-    notificationLimiter.drop();
+    NotificationsLimiter.drop();
   });
 };
 
