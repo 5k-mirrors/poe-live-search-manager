@@ -1,6 +1,6 @@
 import Bottleneck from "bottleneck";
 
-class LimiterGroup {
+class NotificationLimiter {
   constructor() {
     // The limit is set to 7500ms to align with Windows notifications(5 seconds by default, but the notification's effect lasts for ~2500 ms).
     // https://www.pcworld.com/article/3054228/how-to-make-windows-10-notifications-last-a-little-or-a-lot-longer.html
@@ -23,14 +23,14 @@ class LimiterGroup {
   }
 }
 
-class SingletonLimiterGroup {
+class SingletonNotificationLimiter {
   constructor() {
-    if (!SingletonLimiterGroup.instance) {
-      SingletonLimiterGroup.instance = new LimiterGroup();
+    if (!SingletonNotificationLimiter.instance) {
+      SingletonNotificationLimiter.instance = new NotificationLimiter();
     }
 
-    return SingletonLimiterGroup.instance;
+    return SingletonNotificationLimiter.instance;
   }
 }
 
-export default new SingletonLimiterGroup();
+export default new SingletonNotificationLimiter();
