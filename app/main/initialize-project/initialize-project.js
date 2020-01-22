@@ -8,7 +8,7 @@ import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
 import store from "../web-sockets/store";
-import subscription from "../../Subscription/Subscription";
+import Subscription from "../../Subscription/Subscription";
 import limiterGroup from "../limiter-group/limiter-group";
 import requestLimiter from "../request-limiter/request-limiter";
 import stateIs from "../utils/state-is/state-is";
@@ -69,10 +69,10 @@ const setupAuthenticationIpcListeners = () => {
 
     storeUtils.clear(storeKeys.POE_SESSION_ID);
 
-    subscription.clear();
+    Subscription.clear();
 
     electronUtils.send(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-      data: subscription.data,
+      data: Subscription.data,
     });
   });
 };
@@ -87,7 +87,7 @@ const setupGeneralIpcListeners = () => {
 
   ipcMain.on(ipcEvents.GET_SUBSCRIPTION_DETAILS, event => {
     event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-      data: { ...subscription.data },
+      data: { ...Subscription.data },
     });
   });
 
