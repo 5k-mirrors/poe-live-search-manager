@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 import store from "./store";
-import subscription from "../../Subscription/Subscription";
+import Subscription from "../../Subscription/Subscription";
 import processItems from "../process-items/process-items";
 import {
   devLog,
@@ -109,7 +109,7 @@ const connect = id =>
 
           const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
-          if (isLoggedIn && subscription.active()) {
+          if (isLoggedIn && Subscription.active()) {
             setTimeout(() => {
               devLog(`Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`);
 
@@ -156,7 +156,7 @@ export const updateConnections = () => {
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 
   const conditionsAreFulfilled =
-    isLoggedIn && poeSessionId && subscription.active();
+    isLoggedIn && poeSessionId && Subscription.active();
 
   if (conditionsAreFulfilled) {
     return connectAll();

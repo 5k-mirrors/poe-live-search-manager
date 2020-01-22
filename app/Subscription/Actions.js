@@ -1,4 +1,4 @@
-import subscription from "./Subscription";
+import Subscription from "./Subscription";
 import * as webSocketActions from "../main/web-sockets/actions";
 import { send as sendRenderer } from "../main/utils/electron-utils/electron-utils";
 import { ipcEvents } from "../resources/IPCEvents/IPCEvents";
@@ -8,13 +8,12 @@ import { devErrorLog } from "../utils/JavaScriptUtils/JavaScriptUtils";
 let refreshInterval;
 
 export const refresh = id =>
-  subscription
-    .query(id)
+  Subscription.query(id)
     .then(nextSubscriptionDetails => {
-      subscription.update(nextSubscriptionDetails);
+      Subscription.update(nextSubscriptionDetails);
 
       sendRenderer(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-        data: { ...subscription.data },
+        data: { ...Subscription.data },
       });
 
       webSocketActions.updateConnections();
