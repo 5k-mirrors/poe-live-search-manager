@@ -1,7 +1,6 @@
 import Bottleneck from "bottleneck";
 
-// Even though Bottleneck is capable of shutting down a limiter and dropping scheduled jobs, it can't be restarted to receive jobs once it's been stopped.
-// Group is used instead. This way the limiters are isolated, can be created and dropped one-by-one if the user decides to turn on/off notifications.
+// Bottleneck's group feature is used because it's not capable of restarting a particular limiter after it's stopped.
 export default class NotificationsLimiter {
   static bottleneck = new Bottleneck.Group({
     maxConcurrent: 1,
