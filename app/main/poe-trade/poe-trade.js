@@ -12,8 +12,8 @@ import { windows } from "../../resources/Windows/Windows";
 class ConcurrentLimiterScheduleMutex {
   static mutex = new Mutex();
 
-  static acquire(cb) {
-    return this.mutex.acquire(cb);
+  static acquire() {
+    return this.mutex.acquire();
   }
 
   static isLocked() {

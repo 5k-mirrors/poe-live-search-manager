@@ -34,8 +34,8 @@ class WsRequestLimiter {
 class ConcurrentConnectionMutex {
   static mutex = new Mutex();
 
-  static acquire(cb) {
-    return this.mutex.acquire(cb);
+  static acquire() {
+    return this.mutex.acquire();
   }
 }
 
