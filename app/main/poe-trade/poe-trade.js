@@ -32,7 +32,7 @@ const startReservoirIncreaseListener = () => {
 };
 
 export const fetchItemDetails = id => {
-  // Lock is required, otherwise if currentReservoir() is invocated parallelly it doesn't decrement the value.
+  // Lock is required, otherwise, if `schedue()` is invocated parallelly it doesn't decrement the value.
   // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-555496803
   return mutex.acquire().then(release => {
     return HttpRequestLimiter.schedule(() => {
