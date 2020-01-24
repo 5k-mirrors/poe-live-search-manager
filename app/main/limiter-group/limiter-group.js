@@ -18,7 +18,10 @@ class LimiterGroup {
   drop() {
     return this.instance
       .key()
-      .stop()
+      .stop({
+        dropErrorMessage:
+          "This limiter has been stopped - this is intended, you can ignore this error.",
+      })
       .then(() => this.instance.deleteKey());
   }
 }
