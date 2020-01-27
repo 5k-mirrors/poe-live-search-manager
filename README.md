@@ -9,7 +9,7 @@ Supported trade sites:
 
 [According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](/../../releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
 
-*You are viewing the README of version [v1.10.3](/../../releases/tag/v1.10.3). GitHub is only used to host releases and issues. You can find the old app and other releases [here](/../../releases).*
+*You are viewing the README of version [v1.10.3](/../../releases/tag/v1.10.3). You can find other releases [here](/../../releases).*
 
 ## Usage
 
@@ -77,3 +77,17 @@ Supported trade sites:
 
 - For the notifications to show while in-game PoE needs to run in windowed or windowed fullscreen mode
 - When enabled, your clipboard will be altered with every new whisper message
+
+## FAQ
+
+#### Where's the source code?
+
+At this point, the project is closed sourced. GitHub is used to host releases and issues. We may consider open sourcing it partially or fully in the future. If open source is your thing, feel free to check out [our other open source tools](https://github.com/5k-mirrors).
+
+#### Why do you ask for Session ID?
+
+The live search function of pathofexile.com requires a session ID.
+
+#### Do I have to enter _my_ Session ID?
+
+No and please don't. Any Session ID will do. You can register a new, empty account and use its Session ID.
