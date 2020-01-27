@@ -4,7 +4,7 @@ import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
-import requestLimiter from "../request-limiter/request-limiter";
+import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { windows } from "../../resources/Windows/Windows";
@@ -23,22 +23,18 @@ class ConcurrentLimiterScheduleMutex {
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
-    const limiter = requestLimiter.getInstance();
-
-    return limiter.currentReservoir().then(currentReservoir => {
+    return HttpRequestLimiter.currentReservoir().then(currentReservoir => {
       if (
         currentReservoir > 0 &&
-        requestLimiter.isActive === true &&
-        // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-556532356
-        // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-557077031
+        HttpRequestLimiter.requestsExhausted &&
         !ConcurrentLimiterScheduleMutex.isLocked()
       ) {
-        requestLimiter.isActive = false;
+        HttpRequestLimiter.requestsExhausted = false;
 
         electronUtils.send(
           windows.MAIN,
           ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-          requestLimiter.isActive
+          HttpRequestLimiter.requestsExhausted
         );
 
         clearInterval(intervalId);
@@ -50,10 +46,8 @@ const startReservoirIncreaseListener = () => {
 export const fetchItemDetails = id => {
   // Lock is required, otherwise, if `schedue()` is invocated parallelly it doesn't decrement the value.
   // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-555496803
-  return ConcurrentLimiterScheduleMutex.acquire().then(release => {
-    const limiter = requestLimiter.getInstance();
-
-    return limiter.schedule(() => {
+  return ConcurrentLimiterScheduleMutex.acquire().then(release =>
+    HttpRequestLimiter.schedule(() => {
       // The lock is released as early as possible so that it doesn't occupy the app for far too long.
       // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-556532356
       release();
@@ -63,14 +57,17 @@ export const fetchItemDetails = id => {
       return fetch(itemUrl)
         .then(data => data.json())
         .then(parsedData =>
-          limiter.currentReservoir().then(currentReservoir => {
-            if (currentReservoir === 0 && requestLimiter.isActive === false) {
-              requestLimiter.isActive = true;
+          HttpRequestLimiter.currentReservoir().then(currentReservoir => {
+            if (
+              currentReservoir === 0 &&
+              !HttpRequestLimiter.requestsExhausted
+            ) {
+              HttpRequestLimiter.requestsExhausted = true;
 
               electronUtils.send(
                 windows.MAIN,
                 ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-                requestLimiter.isActive
+                HttpRequestLimiter.requestsExhausted
               );
 
               startReservoirIncreaseListener();
@@ -88,8 +85,8 @@ export const fetchItemDetails = id => {
             throw new ItemFetchError(`Item details not found for ${itemUrl}`);
           })
         );
-    });
-  });
+    })
+  );
 };
 
 export const getWhisperMessage = itemDetails => {
