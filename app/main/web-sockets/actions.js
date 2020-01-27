@@ -1,6 +1,7 @@
 import WebSocket from "ws";
+import Bottleneck from "bottleneck";
 import store from "./store";
-import subscription from "../../Subscription/Subscription";
+import Subscription from "../../Subscription/Subscription";
 import processItems from "../process-items/process-items";
 import {
   devLog,
@@ -11,14 +12,24 @@ import {
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
 import socketStates from "../../resources/SocketStates/SocketStates";
 import mutex from "../mutex/mutex";
 import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
-import webSocketLimiter from "./limiter";
+
+class WsRequestLimiter {
+  static bottleneck = new Bottleneck({
+    maxConcurrent: 1,
+    minTime: 1000,
+  });
+
+  static schedule(cb) {
+    return this.bottleneck.schedule(() => cb());
+  }
+}
 
 const updateState = (id, socket) => {
   electronUtils.send(windows.MAIN, ipcEvents.SOCKET_STATE_UPDATE, {
@@ -51,9 +62,7 @@ const connect = id =>
       if (ws.socket && !stateIs(ws.socket, socketStates.CLOSED))
         return release();
 
-      const limiter = webSocketLimiter.getInstance();
-
-      return limiter.schedule(() => {
+      return WsRequestLimiter.schedule(() => {
         const webSocketUri = getWebSocketUri(ws.searchUrl);
 
         devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
@@ -103,13 +112,13 @@ const connect = id =>
         ws.socket.on("close", (code, reason) => {
           devLog(`SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`);
 
-          const globalStore = new SingletonGlobalStore();
+          const globalStore = GlobalStore.getInstance();
 
           updateState(ws.id, ws.socket);
 
           const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
-          if (isLoggedIn && subscription.active()) {
+          if (isLoggedIn && Subscription.active()) {
             setTimeout(() => {
               devLog(`Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`);
 
@@ -150,13 +159,12 @@ export const disconnectAll = () =>
   store.all().forEach(connectionDetails => disconnect(connectionDetails.id));
 
 export const updateConnections = () => {
-  const globalStore = new SingletonGlobalStore();
-
+  const globalStore = GlobalStore.getInstance();
   const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 
   const conditionsAreFulfilled =
-    isLoggedIn && poeSessionId && subscription.active();
+    isLoggedIn && poeSessionId && Subscription.active();
 
   if (conditionsAreFulfilled) {
     return connectAll();

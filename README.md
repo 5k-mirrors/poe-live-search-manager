@@ -42,7 +42,6 @@ yarn dev
 
 ## Known issues
 
-- [Portable version - Windows notifications do not appear](https://github.com/electron-userland/electron-builder/issues/4054)
 - [NSIS installer keeps hanging around when the app is not uninstalled properly](https://github.com/electron-userland/electron-builder/issues/4057#issuecomment-537684523)
 
 ## Caveats
