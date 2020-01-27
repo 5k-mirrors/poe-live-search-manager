@@ -31,13 +31,9 @@ const startReservoirIncreaseListener = () => {
   }, 1000);
 };
 
-export const fetchItemDetails = id => {
-  // Lock is required, otherwise, if `schedue()` is invocated parallelly it doesn't decrement the value.
-  // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-555496803
-  return mutex.acquire().then(release => {
+export const fetchItemDetails = id =>
+  mutex.acquire().then(release => {
     return HttpRequestLimiter.schedule(() => {
-      // The lock is released as early as possible so that it doesn't occupy the app for far too long.
-      // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-556532356
       release();
 
       const itemUrl = `${baseUrls.poeFetchAPI + id}`;
@@ -75,7 +71,6 @@ export const fetchItemDetails = id => {
         );
     });
   });
-};
 
 export const getWhisperMessage = itemDetails => {
   const whisperMessage = javaScriptUtils.safeGet(itemDetails, [
