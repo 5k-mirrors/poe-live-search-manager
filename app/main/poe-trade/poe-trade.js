@@ -25,12 +25,12 @@ const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
     const limiter = requestLimiter.getInstance();
 
-    // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-556532356
-    // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-557077031
     return limiter.currentReservoir().then(currentReservoir => {
       if (
         currentReservoir > 0 &&
         requestLimiter.isActive === true &&
+        // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-556532356
+        // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-557077031
         !ConcurrentLimiterScheduleMutex.isLocked()
       ) {
         requestLimiter.isActive = false;
