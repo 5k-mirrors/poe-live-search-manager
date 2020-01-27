@@ -3,7 +3,7 @@ import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
-import requestLimiter from "../request-limiter/request-limiter";
+import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { windows } from "../../resources/Windows/Windows";
@@ -11,20 +11,18 @@ import mutex from "../mutex/mutex";
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
-    const limiter = requestLimiter.getInstance();
-
-    return limiter.currentReservoir().then(currentReservoir => {
+    return HttpRequestLimiter.currentReservoir().then(currentReservoir => {
       if (
         currentReservoir > 0 &&
-        requestLimiter.isActive === true &&
+        HttpRequestLimiter.requestsExhausted &&
         !mutex.isLocked()
       ) {
-        requestLimiter.isActive = false;
+        HttpRequestLimiter.requestsExhausted = false;
 
         electronUtils.send(
           windows.MAIN,
           ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-          requestLimiter.isActive
+          HttpRequestLimiter.requestsExhausted
         );
 
         clearInterval(intervalId);
@@ -33,11 +31,9 @@ const startReservoirIncreaseListener = () => {
   }, 1000);
 };
 
-export const fetchItemDetails = id => {
-  return mutex.acquire().then(release => {
-    const limiter = requestLimiter.getInstance();
-
-    return limiter.schedule(() => {
+export const fetchItemDetails = id =>
+  mutex.acquire().then(release => {
+    return HttpRequestLimiter.schedule(() => {
       release();
 
       const itemUrl = `${baseUrls.poeFetchAPI + id}`;
@@ -45,14 +41,17 @@ export const fetchItemDetails = id => {
       return fetch(itemUrl)
         .then(data => data.json())
         .then(parsedData =>
-          limiter.currentReservoir().then(currentReservoir => {
-            if (currentReservoir === 0 && requestLimiter.isActive === false) {
-              requestLimiter.isActive = true;
+          HttpRequestLimiter.currentReservoir().then(currentReservoir => {
+            if (
+              currentReservoir === 0 &&
+              !HttpRequestLimiter.requestsExhausted
+            ) {
+              HttpRequestLimiter.requestsExhausted = true;
 
               electronUtils.send(
                 windows.MAIN,
                 ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-                requestLimiter.isActive
+                HttpRequestLimiter.requestsExhausted
               );
 
               startReservoirIncreaseListener();
@@ -72,7 +71,6 @@ export const fetchItemDetails = id => {
         );
     });
   });
-};
 
 export const getWhisperMessage = itemDetails => {
   const whisperMessage = javaScriptUtils.safeGet(itemDetails, [
