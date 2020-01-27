@@ -56,8 +56,10 @@ Supported trade sites:
 
 #### Notifications not showing up?
 
+*The app uses standard Windows notifications. If they don't show up the solution almost certainly has to do with your system settings.*
+
 - Make sure Path of Exile runs in Windowed mode
-- See if the "Test notification" on the Settings screen works. If it does, it's most likely an issue with Windows notification settings.
+- See if the "Test notification" on the Settings screen works
 - Turn off "Focus assist" or add the app to priority apps
 - Turn on "Get notifications from apps and other senders" in Notification settings
 - Turn on notifications for the app in Notification settings
