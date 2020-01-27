@@ -1,5 +1,5 @@
 import moment from "moment";
-import limiterGroup from "../limiter-group/limiter-group";
+import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as poeTrade from "../poe-trade/poe-trade";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
@@ -33,7 +33,7 @@ const updateResults = args => {
 };
 
 const scheduleResult = args => {
-  const limiter = limiterGroup.get();
+  const limiter = NotificationsLimiter.get();
 
   return limiter.schedule({ id: args.id }, () => {
     electronUtils.copy(args.whisperMessage);
