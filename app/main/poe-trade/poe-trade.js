@@ -48,10 +48,14 @@ const startReservoirIncreaseListener = () => {
 };
 
 export const fetchItemDetails = id => {
+  // Lock is required, otherwise, if `schedue()` is invocated parallelly it doesn't decrement the value.
+  // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-555496803
   return ConcurrentLimiterScheduleMutex.acquire().then(release => {
     const limiter = requestLimiter.getInstance();
 
     return limiter.schedule(() => {
+      // The lock is released as early as possible so that it doesn't occupy the app for far too long.
+      // https://github.com/c-hive/poe-sniper/pull/205#issuecomment-556532356
       release();
 
       const itemUrl = `${baseUrls.poeFetchAPI + id}`;
