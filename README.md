@@ -2,7 +2,7 @@
 
 #### Desktop tool for Path of Exile for managing live item searches and making instant offers without leaving the game.
 
-It is an alternative to keeping several trade site tabs open in the browser and having to leave the game to check new items. It consumes far less resources and let's you message the seller instantly in-game.
+It is an alternative to keeping several trade site tabs open in the browser and having to leave the game to check new items. It consumes far less resources and lets you message the seller instantly in-game.
 
 Supported trade sites:
 - [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
