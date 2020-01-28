@@ -22,6 +22,7 @@ class ConcurrentLimiterScheduleMutex {
 }
 
 const startReservoirIncreaseListener = () => {
+  console.log("Interval is set ...");
   const intervalId = setInterval(() => {
     return HttpRequestLimiter.currentReservoir().then(currentReservoir => {
       if (
@@ -37,10 +38,52 @@ const startReservoirIncreaseListener = () => {
           HttpRequestLimiter.requestsExhausted
         );
 
+        console.log("Cleaned up interval ...");
+
         clearInterval(intervalId);
       }
     });
   }, 1000);
+};
+
+/* const ensureReservoir = () => {
+  if (!HttpRequestLimiter.requestsExhausted) {
+    return HttpRequestLimiter.currentReservoir().then(remainingRequests => {
+      if (remainingRequests === 0) {
+        HttpRequestLimiter.requestsExhausted = true;
+
+        electronUtils.send(
+          windows.MAIN,
+          ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+          HttpRequestLimiter.requestsExhausted
+        );
+
+        startReservoirIncreaseListener();
+      }
+    });
+  }
+}; */
+
+const ensureRequests = () => {
+  if (!HttpRequestLimiter.requestsExhausted) {
+    return HttpRequestLimiter.currentReservoir().then(remainingRequests => {
+      if (remainingRequests === 0) {
+        HttpRequestLimiter.requestsExhausted = true;
+
+        // Send the changes in status to renderer ...
+        electronUtils.send(
+          windows.MAIN,
+          ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+          HttpRequestLimiter.requestsExhausted
+        );
+
+        // Start the "observer" ...
+        startReservoirIncreaseListener();
+      }
+    });
+  }
+
+  return Promise.resolve();
 };
 
 export const fetchItemDetails = id => {
@@ -57,22 +100,7 @@ export const fetchItemDetails = id => {
       return fetch(itemUrl)
         .then(data => data.json())
         .then(parsedData =>
-          HttpRequestLimiter.currentReservoir().then(currentReservoir => {
-            if (
-              currentReservoir === 0 &&
-              !HttpRequestLimiter.requestsExhausted
-            ) {
-              HttpRequestLimiter.requestsExhausted = true;
-
-              electronUtils.send(
-                windows.MAIN,
-                ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-                HttpRequestLimiter.requestsExhausted
-              );
-
-              startReservoirIncreaseListener();
-            }
-
+          ensureRequests().then(() => {
             const itemDetails = javaScriptUtils.safeGet(parsedData, [
               "result",
               0,
@@ -88,6 +116,41 @@ export const fetchItemDetails = id => {
     })
   );
 };
+
+/* export const fetchItemDetails = id =>
+  HttpRequestLimiter.schedule(() => {
+    const itemUrl = `${baseUrls.poeFetchAPI + id}`;
+
+    return fetch(itemUrl)
+      .then(data => data.json())
+      .then(parsedData =>
+        HttpRequestLimiter.currentReservoir().then(currentReservoir => {
+          console.log(currentReservoir);
+          if (currentReservoir === 0 && !HttpRequestLimiter.requestsExhausted) {
+            HttpRequestLimiter.requestsExhausted = true;
+
+            electronUtils.send(
+              windows.MAIN,
+              ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+              HttpRequestLimiter.requestsExhausted
+            );
+
+            startReservoirIncreaseListener();
+          }
+
+          const itemDetails = javaScriptUtils.safeGet(parsedData, [
+            "result",
+            0,
+          ]);
+
+          if (javaScriptUtils.isDefined(itemDetails)) {
+            return itemDetails;
+          }
+
+          throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+        })
+      );
+  }); */
 
 export const getWhisperMessage = itemDetails => {
   const whisperMessage = javaScriptUtils.safeGet(itemDetails, [
