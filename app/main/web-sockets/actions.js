@@ -61,6 +61,7 @@ const connect = id =>
         ws.socket = new WebSocket(webSocketUri, {
           headers: {
             Cookie: getCookieHeader(),
+            Origin: "https://www.pathofexile.com",
           },
         });
 
