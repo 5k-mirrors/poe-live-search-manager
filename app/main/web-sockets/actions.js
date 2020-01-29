@@ -18,6 +18,7 @@ import socketStates from "../../resources/SocketStates/SocketStates";
 import mutex from "../mutex/mutex";
 import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
+import { socketOrigin } from "../../resources/BaseUrls/BaseUrls";
 import webSocketLimiter from "./limiter";
 
 const updateState = (id, socket) => {
@@ -61,7 +62,7 @@ const connect = id =>
         ws.socket = new WebSocket(webSocketUri, {
           headers: {
             Cookie: getCookieHeader(),
-            Origin: "https://www.pathofexile.com",
+            Origin: socketOrigin,
           },
         });
 
