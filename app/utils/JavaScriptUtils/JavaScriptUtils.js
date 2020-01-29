@@ -33,3 +33,7 @@ export const cloneDeep = obj => {
     return {};
   }
 };
+
+export const randomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min) + min);
+};
