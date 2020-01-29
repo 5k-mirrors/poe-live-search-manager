@@ -7,7 +7,7 @@ export default [
     description: `The live search functionality requires a Session ID. In general, it's not safe to give out your Session ID as it can be used to impersonate your account. In our case, you can provide any Session ID (e.g. one from a new, empty account). The app only stores your Session ID locally and only uses it to access the live search function.
 
 Stay safe exiles!`,
-    date: "2020-01-29T23:00:00Z",
+    date: "2020-01-29T23:30:00Z",
   },
   {
     type: types.RELEASE_NOTE,
