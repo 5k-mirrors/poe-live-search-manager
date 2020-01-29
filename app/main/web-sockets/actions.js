@@ -7,7 +7,6 @@ import {
   devErrorLog,
   safeGet,
   isDefined,
-  randomInt,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
@@ -56,78 +55,73 @@ const connect = id =>
       const limiter = webSocketLimiter.getInstance();
 
       return limiter.schedule(() => {
-        // Slow connection by a random value
-        setTimeout(() => {
-          const webSocketUri = getWebSocketUri(ws.searchUrl);
+        const webSocketUri = getWebSocketUri(ws.searchUrl);
 
-          devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
+        devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
 
-          ws.socket = new WebSocket(webSocketUri, {
-            headers: {
-              Cookie: getCookieHeader(),
-              Origin: socketOrigin,
-            },
-          });
-
-          store.update(ws.id, {
-            ...ws,
-          });
-
-          ws.socket.on("open", () => {
-            devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
-
-            heartbeat(ws.socket);
-
-            updateState(ws.id, ws.socket);
-          });
-
-          ws.socket.on("message", response => {
-            const parsedResponse = JSON.parse(response);
-
-            const itemIds = safeGet(parsedResponse, ["new"]);
-
-            if (isDefined(itemIds)) {
-              processItems(itemIds, ws);
-            }
-          });
-
-          ws.socket.on("ping", () => {
-            devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
-
-            heartbeat(ws.socket);
-          });
-
-          ws.socket.on("error", error => {
-            devErrorLog(`SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`);
-
-            updateState(ws.id, ws.socket);
-
-            ws.socket.close();
-          });
-
-          ws.socket.on("close", (code, reason) => {
-            devLog(
-              `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`
-            );
-
-            const globalStore = new SingletonGlobalStore();
-
-            updateState(ws.id, ws.socket);
-
-            const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-            if (isLoggedIn && subscription.active()) {
-              setTimeout(() => {
-                devLog(`Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`);
-
-                connect(ws.id);
-              }, randomInt(2000, 3000));
-            }
-          });
-
-          return release();
+        ws.socket = new WebSocket(webSocketUri, {
+          headers: {
+            Cookie: getCookieHeader(),
+            Origin: socketOrigin,
+          },
         });
-      }, randomInt(1000, 1500));
+
+        store.update(ws.id, {
+          ...ws,
+        });
+
+        ws.socket.on("open", () => {
+          devLog(`SOCKET OPEN - ${ws.searchUrl} / ${ws.id}`);
+
+          heartbeat(ws.socket);
+
+          updateState(ws.id, ws.socket);
+        });
+
+        ws.socket.on("message", response => {
+          const parsedResponse = JSON.parse(response);
+
+          const itemIds = safeGet(parsedResponse, ["new"]);
+
+          if (isDefined(itemIds)) {
+            processItems(itemIds, ws);
+          }
+        });
+
+        ws.socket.on("ping", () => {
+          devLog(`SOCKET PING - ${ws.searchUrl} / ${ws.id}`);
+
+          heartbeat(ws.socket);
+        });
+
+        ws.socket.on("error", error => {
+          devErrorLog(`SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`);
+
+          updateState(ws.id, ws.socket);
+
+          ws.socket.close();
+        });
+
+        ws.socket.on("close", (code, reason) => {
+          devLog(`SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`);
+
+          const globalStore = new SingletonGlobalStore();
+
+          updateState(ws.id, ws.socket);
+
+          const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+
+          if (isLoggedIn && subscription.active()) {
+            setTimeout(() => {
+              devLog(`Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`);
+
+              connect(ws.id);
+            }, 500);
+          }
+        });
+
+        return release();
+      });
     })
     .catch(err => {
       devErrorLog(`Error while connecting to ${id}: `, err);
