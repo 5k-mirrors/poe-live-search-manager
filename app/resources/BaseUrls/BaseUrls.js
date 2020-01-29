@@ -10,3 +10,5 @@ export const sessionIdWiki =
 
 export const reportIssue =
   "https://github.com/5k-mirrors/poe-live-search-manager/issues/new/choose";
+
+export const socketOrigin = "https://www.pathofexile.com";
