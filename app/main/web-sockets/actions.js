@@ -7,6 +7,7 @@ import {
   devErrorLog,
   safeGet,
   isDefined,
+  randomInt,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
@@ -116,7 +117,7 @@ const connect = id =>
               devLog(`Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`);
 
               connect(ws.id);
-            }, 500);
+            }, randomInt(2000, 3000));
           }
         });
 
