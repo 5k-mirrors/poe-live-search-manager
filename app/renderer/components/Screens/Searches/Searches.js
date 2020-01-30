@@ -21,7 +21,7 @@ export default class Searches extends Component {
 
     this.state = {
       importErrorOpen: false,
-      exceededSearchCapacityErrorOpen: false,
+      maxSearchCountExceededErrorOpen: false,
       webSocketStore: [],
       allReconnectsAreDisabled: false,
     };
@@ -99,9 +99,9 @@ export default class Searches extends Component {
     });
   };
 
-  handleExceededSearchCapacityErrorClose = () => {
+  handleMaxSearchCountExceededErrorClose = () => {
     this.setState({
-      exceededSearchCapacityErrorOpen: false,
+      maxSearchCountExceededErrorOpen: false,
     });
   };
 
@@ -186,10 +186,9 @@ export default class Searches extends Component {
         webSocketStore: [...webSocketStore],
       } = this.state;
 
-      // The store's capacity is hard-coded to at maximum 20 searches due to Cloudfare's limitations.
-      if (webSocketStore.length === 20) {
+      if (this.maxSearchCountReached()) {
         this.setState({
-          exceededSearchCapacityErrorOpen: true,
+          maxSearchCountExceededErrorOpen: true,
         });
 
         return reject(new Error("Maximum search count exceeded"));
@@ -221,6 +220,14 @@ export default class Searches extends Component {
     } = this.state;
 
     return webSocketStore.length === 0;
+  }
+
+  maxSearchCountReached() {
+    const {
+      webSocketStore: [...webSocketStore],
+    } = this.state;
+
+    return webSocketStore.length === 20;
   }
 
   import() {
@@ -285,7 +292,7 @@ export default class Searches extends Component {
       webSocketStore: [...webSocketStore],
       allReconnectsAreDisabled,
       importErrorOpen,
-      exceededSearchCapacityErrorOpen,
+      maxSearchCountExceededErrorOpen,
     } = this.state;
 
     return (
@@ -308,20 +315,20 @@ export default class Searches extends Component {
           </Alert>
         </Snackbar>
         <Snackbar
-          open={exceededSearchCapacityErrorOpen}
+          open={maxSearchCountExceededErrorOpen}
           autoHideDuration={4000}
           anchorOrigin={{
             vertical: "bottom",
             horizontal: "left",
           }}
-          onClose={this.handleExceededSearchCapacityErrorClose}
+          onClose={this.handleMaxSearchCountExceededErrorClose}
         >
           <Alert
             severity="error"
             variant="filled"
-            onClose={this.handleExceededSearchCapacityErrorClose}
+            onClose={this.handleMaxSearchCountExceededErrorClose}
           >
-            Maximum search count(20) has reached
+            Cannot exceed maximum search count(20)
           </Alert>
         </Snackbar>
         <MaterialTable
@@ -341,10 +348,13 @@ export default class Searches extends Component {
           }}
           data={webSocketStore}
           editable={{
-            onRowAdd: wsConnectionData =>
-              this.addNewConnection(wsConnectionData).catch(err =>
-                devErrorLog(err)
-              ),
+            // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/material-table/issues/465#issuecomment-482955841
+            onRowAdd: this.maxSearchCountReached()
+              ? undefined
+              : wsConnectionData =>
+                  this.addNewConnection(wsConnectionData).catch(err =>
+                    devErrorLog(err)
+                  ),
             onRowDelete: wsConnectionData =>
               this.deleteConnection(wsConnectionData).catch(err =>
                 devErrorLog(err)
@@ -379,6 +389,13 @@ export default class Searches extends Component {
               isFreeAction: true,
               onClick: () => this.deleteAll(),
               disabled: this.isWebSocketStoreEmpty(),
+            },
+            {
+              icon: "add_box",
+              tooltip: "Search count cannot go over 20",
+              isFreeAction: true,
+              disabled: true,
+              hidden: !this.maxSearchCountReached(),
             },
           ]}
           options={{
