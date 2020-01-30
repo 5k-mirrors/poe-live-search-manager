@@ -17,7 +17,7 @@ Featured in:
 
 ## Usage
 
-The live search functionality requires a [Session ID](https://github.com/Stickymaddness/Procurement/wiki/SessionID). In general, it's not safe to give out your Session ID as it can be used to impersonate your account. In our case, you can provide any Session ID (e.g. one from a new, empty account). The app only stores your Session ID locally and only uses it to access the live search function.
+The live search functionality requires a [Session ID](https://github.com/Stickymaddness/Procurement/wiki/SessionID). In general, it's not safe to give out your Session ID because it can be used to impersonate your account. In our case, you can provide any Session ID (e.g. one from a new, empty account). The app only stores your Session ID locally and only uses it for live searches.
 
 ![demo](demo.gif)
 
