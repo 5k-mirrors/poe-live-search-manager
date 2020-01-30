@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { remote, ipcRenderer } from "electron";
 import MaterialTable from "material-table";
-import Box from "@material-ui/core/Box";
+import { Box, Typography, Snackbar } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import yaml from "js-yaml";
 import fs from "fs";
-import Snackbar from "@material-ui/core/Snackbar";
-import Alert from "@material-ui/lab/Alert";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
@@ -188,7 +187,7 @@ export default class Searches extends Component {
       } = this.state;
 
       // The store's capacity is hard-coded to at maximum 20 searches due to Cloudfare's limitations.
-      if (webSocketStore.length >= 20) {
+      if (webSocketStore.length === 20) {
         this.setState({
           exceededSearchCapacityErrorOpen: true,
         });
@@ -330,9 +329,13 @@ export default class Searches extends Component {
           columns={tableColumns.searchesScreen}
           components={{
             Pagination: () => (
-              <Box component="td" padding={2} fontSize="13px">
-                {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
-                Search count: <b>{webSocketStore.length}</b>
+              <Box component="td" padding={2}>
+                <Typography
+                  color={webSocketStore.length === 20 ? "error" : "initial"}
+                  variant="subtitle2"
+                >
+                  {`Search count: ${webSocketStore.length}`}
+                </Typography>
               </Box>
             ),
           }}
