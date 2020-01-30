@@ -130,18 +130,26 @@ const connect = id =>
 export const disconnect = id => {
   const ws = store.find(id);
 
-  if (!ws) return;
-
-  devLog(`Disconnect initiated - ${id}`);
+  if (!ws) {
+    devLog(`No disconnect initiated (no such object in store) - ${id}`);
+    return;
+  }
 
   if (
     ws.socket &&
     (stateIs(ws.socket, socketStates.OPEN) ||
       stateIs(ws.socket, socketStates.CONNECTING))
   ) {
+    devLog(`Disconnect initiated - ${id}`);
     ws.socket.close();
 
     updateState(ws.id, ws.socket);
+  } else if (!ws.socket) {
+    devLog(`No disconnect initiated (no socket) - ${id}`);
+  } else {
+    devLog(
+      `No disconnect initiated (socket in wrong state) - ${ws.socket.readyState}`
+    );
   }
 };
 
