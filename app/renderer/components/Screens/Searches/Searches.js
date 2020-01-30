@@ -322,7 +322,7 @@ export default class Searches extends Component {
             variant="filled"
             onClose={this.handleExceededSearchCapacityErrorClose}
           >
-            Maximum search capacity is limited to 20.
+            Maximum search count(20) has reached
           </Alert>
         </Snackbar>
         <MaterialTable
