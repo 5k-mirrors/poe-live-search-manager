@@ -15,7 +15,6 @@ import {
   isDefined,
 } from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
-import InvalidInputError from "../../../../errors/invalid-input-error";
 
 export default class Searches extends Component {
   constructor(props) {
@@ -23,6 +22,7 @@ export default class Searches extends Component {
 
     this.state = {
       importErrorOpen: false,
+      exceededSearchCapacityErrorOpen: false,
       webSocketStore: [],
       allReconnectsAreDisabled: false,
     };
@@ -100,6 +100,12 @@ export default class Searches extends Component {
     });
   };
 
+  handleExceededSearchCapacityErrorClose = () => {
+    this.setState({
+      exceededSearchCapacityErrorOpen: false,
+    });
+  };
+
   update(id, data) {
     const {
       webSocketStore: [...webSocketStore],
@@ -172,12 +178,23 @@ export default class Searches extends Component {
       if (
         !regExes.searchUrlLeagueAndIdMatcher.test(connectionDetails.searchUrl)
       ) {
-        return reject(new InvalidInputError());
+        return reject(
+          new Error(`Invalid search url: ${connectionDetails.searchUrl}`)
+        );
       }
 
       const {
         webSocketStore: [...webSocketStore],
       } = this.state;
+
+      // The store's capacity is hard-coded to at maximum 20 searches due to Cloudfare's limitations.
+      if (webSocketStore.length >= 20) {
+        this.setState({
+          exceededSearchCapacityErrorOpen: true,
+        });
+
+        return reject(new Error("Maximum search count exceeded"));
+      }
 
       const connectionDetailsWithUniqueId = {
         id: uniqueIdGenerator(),
@@ -223,6 +240,8 @@ export default class Searches extends Component {
                 this.addNewConnection({
                   searchUrl: url,
                   name,
+                }).catch(addNewConnectionErr => {
+                  devErrorLog(addNewConnectionErr);
                 });
               }
             } catch (e) {
@@ -267,6 +286,7 @@ export default class Searches extends Component {
       webSocketStore: [...webSocketStore],
       allReconnectsAreDisabled,
       importErrorOpen,
+      exceededSearchCapacityErrorOpen,
     } = this.state;
 
     return (
@@ -288,6 +308,23 @@ export default class Searches extends Component {
             Invalid YAML format
           </Alert>
         </Snackbar>
+        <Snackbar
+          open={exceededSearchCapacityErrorOpen}
+          autoHideDuration={4000}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          onClose={this.handleExceededSearchCapacityErrorClose}
+        >
+          <Alert
+            severity="error"
+            variant="filled"
+            onClose={this.handleExceededSearchCapacityErrorClose}
+          >
+            Maximum search capacity is limited to 20.
+          </Alert>
+        </Snackbar>
         <MaterialTable
           title="Active connections"
           columns={tableColumns.searchesScreen}
@@ -302,9 +339,13 @@ export default class Searches extends Component {
           data={webSocketStore}
           editable={{
             onRowAdd: wsConnectionData =>
-              this.addNewConnection(wsConnectionData),
+              this.addNewConnection(wsConnectionData).catch(err =>
+                devErrorLog(err)
+              ),
             onRowDelete: wsConnectionData =>
-              this.deleteConnection(wsConnectionData),
+              this.deleteConnection(wsConnectionData).catch(err =>
+                devErrorLog(err)
+              ),
           }}
           actions={[
             webSocket => ({
