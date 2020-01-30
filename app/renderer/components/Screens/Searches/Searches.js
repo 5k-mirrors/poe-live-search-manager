@@ -396,7 +396,7 @@ export default class Searches extends Component {
               isFreeAction: true,
               disabled: true,
               hidden: !this.maxSearchCountReached(),
-              // An anonymus function needs to be provided to avoid invalid prop errors on the console.
+              // An anonymus function needs to be provided to avoid invalid prop errors in the console.
               onClick: () => {},
             },
           ]}
