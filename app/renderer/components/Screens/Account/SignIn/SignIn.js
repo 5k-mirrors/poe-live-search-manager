@@ -11,7 +11,7 @@ const firebaseAuth = getFirebaseApp().auth();
 const signIn = () => (
   <Box textAlign="center">
     <Typography variant="h5">
-      Register or Sign in to <b>poe-sniper</b>
+      Register or Sign in to <b>PoE Live Search Manager</b>
     </Typography>
     <Box fontSize={12} fontStyle="italic" mb={3} mt={0.5}>
       This is <b>not</b> your pathofexile.com account
