@@ -380,7 +380,9 @@ export default class Searches extends Component {
             },
             {
               icon: "create_new_folder",
-              tooltip: "Import from file",
+              tooltip: this.maxSearchCountReached()
+                ? `Number of searches are limited to ${this.searchCountLimit} by GGG`
+                : "Import from file",
               isFreeAction: true,
               disabled: this.maxSearchCountReached(),
               onClick: () => this.import(),
