@@ -17,6 +17,16 @@ Stay safe exiles!`,
   },
   {
     type: types.RELEASE_NOTE,
+    title: "v1.10.5",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.10.5",
+    description: `Fixes:
+- Minor improvements
+        `,
+    date: "2020-01-30T20:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.10.4",
     link:
       "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.10.4",

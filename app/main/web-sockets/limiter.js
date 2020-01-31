@@ -1,10 +1,11 @@
 import Bottleneck from "bottleneck";
+import { randomInt } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 class WebSocketLimiter {
   constructor() {
     this.instance = new Bottleneck({
       maxConcurrent: 1,
-      minTime: 1000,
+      minTime: randomInt(1200, 1500),
     });
   }
 
