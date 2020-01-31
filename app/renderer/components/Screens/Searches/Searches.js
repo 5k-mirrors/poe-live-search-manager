@@ -391,6 +391,7 @@ export default class Searches extends Component {
               disabled: this.isWebSocketStoreEmpty(),
             },
             {
+              // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/material-table/issues/465#issuecomment-482955841
               icon: "add_box",
               tooltip: "Search count cannot go over 20",
               isFreeAction: true,
