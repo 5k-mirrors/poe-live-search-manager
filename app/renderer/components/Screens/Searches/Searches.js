@@ -382,6 +382,7 @@ export default class Searches extends Component {
               icon: "create_new_folder",
               tooltip: "Import from file",
               isFreeAction: true,
+              disabled: this.maxSearchCountReached(),
               onClick: () => this.import(),
             },
             {
