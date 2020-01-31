@@ -28,6 +28,7 @@ export default class Searches extends Component {
 
     this.reconnectTimeoutIds = [];
     this.disableDurationInMilliseconds = 2000;
+    this.searchCountLimit = 20;
   }
 
   componentDidMount() {
@@ -227,7 +228,7 @@ export default class Searches extends Component {
       webSocketStore: [...webSocketStore],
     } = this.state;
 
-    return webSocketStore.length === 20;
+    return webSocketStore.length === this.searchCountLimit;
   }
 
   import() {
@@ -328,7 +329,7 @@ export default class Searches extends Component {
             variant="filled"
             onClose={this.handleMaxSearchCountExceededErrorClose}
           >
-            Cannot exceed maximum search count(20)
+            {`Number of searches are limited to ${this.searchCountLimit} by GGG.`}
           </Alert>
         </Snackbar>
         <MaterialTable
@@ -338,7 +339,7 @@ export default class Searches extends Component {
             Pagination: () => (
               <Box component="td" padding={2}>
                 <Typography
-                  color={webSocketStore.length === 20 ? "error" : "initial"}
+                  color={this.maxSearchCountReached() ? "error" : "initial"}
                   variant="subtitle2"
                 >
                   {`Search count: ${webSocketStore.length}`}
@@ -393,7 +394,7 @@ export default class Searches extends Component {
             {
               // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/material-table/issues/465#issuecomment-482955841
               icon: "add_box",
-              tooltip: "Search count cannot go over 20",
+              tooltip: `Number of searches are limited to ${this.searchCountLimit} by GGG`,
               isFreeAction: true,
               disabled: true,
               hidden: !this.maxSearchCountReached(),
