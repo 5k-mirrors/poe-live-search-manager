@@ -11,7 +11,7 @@ export default ({ ...restProps }) => {
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 
   function conditionsAreFulfilled() {
-    return authData && poeSessionId && state.data.plan;
+    return authData && poeSessionId && state.data && state.data.plan;
   }
 
   if (conditionsAreFulfilled()) {
