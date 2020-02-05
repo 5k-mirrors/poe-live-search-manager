@@ -13,6 +13,7 @@ import limiterGroup from "../limiter-group/limiter-group";
 import requestLimiter from "../request-limiter/request-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
+import User from "../user/user";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -58,8 +59,13 @@ const setupWebSocketIpcListeners = () => {
 };
 
 const setupAuthenticationIpcListeners = () => {
-  ipcMain.on(ipcEvents.USER_LOGIN, (event, id) => {
-    subscriptionActions.startRefreshInterval(id);
+  ipcMain.on(ipcEvents.USER_LOGIN, (_, userId, idToken) => {
+    User.update({
+      id: userId,
+      jwt: idToken,
+    });
+
+    subscriptionActions.startRefreshInterval();
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
@@ -67,12 +73,18 @@ const setupAuthenticationIpcListeners = () => {
 
     webSocketActions.disconnectAll();
 
+    User.clear();
     storeUtils.clear(storeKeys.POE_SESSION_ID);
-
     subscription.clear();
 
     electronUtils.send(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
       data: subscription.data,
+    });
+  });
+
+  ipcMain.on(ipcEvents.ID_TOKEN_CHANGED, (_, idToken) => {
+    User.update({
+      jwt: idToken,
     });
   });
 };
@@ -91,8 +103,8 @@ const setupGeneralIpcListeners = () => {
     });
   });
 
-  ipcMain.on(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, (event, userId) =>
-    subscriptionActions.refresh(userId)
+  ipcMain.on(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, () =>
+    subscriptionActions.refresh()
   );
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {

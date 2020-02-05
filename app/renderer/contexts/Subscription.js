@@ -15,8 +15,8 @@ export const SubscriptionProvider = ({ children }) => {
     requestDataViaIpc(ipcEvents.GET_SUBSCRIPTION_DETAILS);
   }, [requestDataViaIpc]);
 
-  const fetchSubscriptionDetails = userID => {
-    requestDataViaIpc(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, userID);
+  const fetchSubscriptionDetails = () => {
+    requestDataViaIpc(ipcEvents.FETCH_SUBSCRIPTION_DETAILS);
   };
 
   return (
