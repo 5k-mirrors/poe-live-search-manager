@@ -1,8 +1,6 @@
 import React, { createContext, useReducer, useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { getApp as getFirebaseApp } from "../utils/Firebase/Firebase";
 import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
@@ -25,7 +23,6 @@ export const AuthProvider = ({ children }) => {
 
       return firebaseApp.auth().onAuthStateChanged(user => {
         const userAuthenticated = !!user;
-        const globalStore = new SingletonGlobalStore();
 
         dispatch({
           type: asyncFetchActions.RECEIVE_RESPONSE,
@@ -34,8 +31,6 @@ export const AuthProvider = ({ children }) => {
             isLoggedIn: userAuthenticated,
           },
         });
-
-        globalStore.set(storeKeys.IS_LOGGED_IN, userAuthenticated);
 
         if (userAuthenticated) {
           user.getIdToken().then(token => {
