@@ -1,6 +1,9 @@
-// => `fetch` is not defined in the main process.
-import fetch from "node-fetch";
-import { isDefined } from "../utils/JavaScriptUtils/JavaScriptUtils";
+import User from "../main/user/user";
+import authenticatedFetch from "../main/utils/authenticated-fetch/authenticated-fetch";
+import {
+  isDefined,
+  safeJsonResponse,
+} from "../utils/JavaScriptUtils/JavaScriptUtils";
 
 class Subscription {
   constructor() {
@@ -10,10 +13,12 @@ class Subscription {
     };
   }
 
-  query = id => {
-    const userApiUrl = `${process.env.FIREBASE_API_URL}/user/${id}`;
+  query = () => {
+    const userApiUrl = `${process.env.FIREBASE_API_URL}/user/${User.data.id}`;
 
-    return fetch(userApiUrl).then(subscriptionData => subscriptionData.json());
+    return authenticatedFetch(userApiUrl).then(response =>
+      safeJsonResponse(response)
+    );
   };
 
   update = updatedData => {

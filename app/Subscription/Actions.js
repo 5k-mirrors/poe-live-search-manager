@@ -7,9 +7,9 @@ import { devErrorLog } from "../utils/JavaScriptUtils/JavaScriptUtils";
 
 let refreshInterval;
 
-export const refresh = id =>
+export const refresh = () =>
   subscription
-    .query(id)
+    .query()
     .then(nextSubscriptionDetails => {
       subscription.update(nextSubscriptionDetails);
 
@@ -27,13 +27,13 @@ export const refresh = id =>
       });
     });
 
-export const startRefreshInterval = id => {
-  refresh(id);
+export const startRefreshInterval = () => {
+  refresh();
 
   const oneHourInMilliseconds = 3600000;
 
   refreshInterval = setInterval(() => {
-    refresh(id);
+    refresh();
   }, oneHourInMilliseconds);
 };
 
