@@ -38,12 +38,12 @@ export const AuthProvider = ({ children }) => {
         globalStore.set(storeKeys.IS_LOGGED_IN, userAuthenticated);
 
         if (userAuthenticated) {
-          return user.getIdToken().then(token => {
+          user.getIdToken().then(token => {
             ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
           });
+        } else {
+          ipcRenderer.send(ipcEvents.USER_LOGOUT);
         }
-
-        return ipcRenderer.send(ipcEvents.USER_LOGOUT);
       });
     };
 
@@ -57,9 +57,7 @@ export const AuthProvider = ({ children }) => {
       const firebaseApp = getFirebaseApp();
 
       return firebaseApp.auth().onIdTokenChanged(user => {
-        const loggedIn = !!user;
-
-        if (loggedIn) {
+        if (user) {
           user.getIdToken().then(token => {
             ipcRenderer.send(ipcEvents.ID_TOKEN_CHANGED, token);
           });
