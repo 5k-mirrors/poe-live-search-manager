@@ -5,7 +5,7 @@
   "description": "Desktop tool for Path of Exile to make instants offers for listed items without leaving the game",
   "main": "./app/main.prod.js",
   "scripts": {
-    "build": "yarn build:main && yarn build:renderer",
+    "build": "npm run build:main && npm run build:renderer",
     "build:main": "webpack --mode production --config ./configs/webpack.main.config.js",
     "build:renderer": "webpack --mode production --config ./configs/webpack.renderer.prod.config.js",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./configs/webpack.renderer.dev.config.js",
@@ -50,7 +50,6 @@
     "@material-ui/lab": "^4.0.0-alpha.39",
     "async-mutex": "^0.1.3",
     "bottleneck": "^2.19.2",
-    "electron-builder": "^22.3.2",
     "electron-store": "^4.0.0",
     "electron-unhandled": "^3.0.0",
     "electron-updater": "^4.0.14",
@@ -65,7 +64,6 @@
     "react-markdown": "^4.2.2",
     "react-router-dom": "^5.0.1",
     "remark-breaks": "^1.0.3",
-    "webpack-obfuscator": "^0.18.8",
     "ws": "^7.1.0"
   },
   "devDependencies": {
@@ -82,6 +80,7 @@
     "css-loader": "^3.0.0",
     "dotenv": "^8.2.0",
     "electron": "^5.0.6",
+    "electron-builder": "^20.44.4",
     "electron-debug": "^3.0.1",
     "electron-devtools-installer": "^2.2.4",
     "enzyme": "^3.10.0",
@@ -103,7 +102,8 @@
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.1",
+    "webpack-obfuscator": "^0.18.8"
   },
   "build": {
     "productName": "PoE Live Search Manager",
