@@ -5,18 +5,18 @@
   "description": "Desktop tool for Path of Exile to make instants offers for listed items without leaving the game",
   "main": "./app/main.prod.js",
   "scripts": {
-    "build": "npm run build:main && npm run build:renderer",
+    "build": "yarn build:main && yarn build:renderer",
     "build:main": "webpack --mode production --config ./configs/webpack.main.config.js",
     "build:renderer": "webpack --mode production --config ./configs/webpack.renderer.prod.config.js",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./configs/webpack.renderer.dev.config.js",
     "dev:main": "cross-env NODE_ENV=development electron --require @babel/register --require @babel/polyfill ./app/main/app.js",
     "lint": "eslint app",
-    "package": "cross-env NODE_ENV=production npm run build && electron-builder",
-    "package:all": "cross-env NODE_ENV=production npm run build && electron-builder --mwl",
-    "package:win": "cross-env NODE_ENV=production npm run build && electron-builder build --win --x64 --publish onTag",
-    "package:win:local": "cross-env NODE_ENV=production npm run build && electron-builder build --win -c.compression=store --x64",
-    "package:mac": "cross-env NODE_ENV=production npm run build && electron-builder build --mac",
-    "package:linux": "cross-env NODE_ENV=production npm run build && electron-builder build --linux",
+    "package": "cross-env NODE_ENV=production yarn build && electron-builder",
+    "package:all": "cross-env NODE_ENV=production yarn build && electron-builder --mwl",
+    "package:win": "cross-env NODE_ENV=production yarn build && electron-builder build --win --x64 --publish onTag",
+    "package:win:local": "cross-env NODE_ENV=production yarn build && electron-builder build --win -c.compression=store --x64",
+    "package:mac": "cross-env NODE_ENV=production yarn build && electron-builder build --mac",
+    "package:linux": "cross-env NODE_ENV=production yarn build && electron-builder build --linux",
     "unix:package:win": "cross-env REVISION=\"$(git describe --always --tags --dirty)\" yarn package:win",
     "win:package:win": "node scripts/build.js",
     "prettify": "prettier --write app/**/*.js",
@@ -104,6 +104,12 @@
     "webpack-dev-server": "^3.7.2",
     "webpack-merge": "^4.2.1",
     "webpack-obfuscator": "^0.18.3"
+  },
+  "//resolutions": {
+    "javascript-obfuscator": "The version is explicitly set because of incompatibility issues with higher versions of node, see https://github.com/javascript-obfuscator/javascript-obfuscator/issues/452."
+  },
+  "resolutions": {
+    "javascript-obfuscator": "^0.18.8"
   },
   "build": {
     "productName": "PoE Live Search Manager",
