@@ -106,7 +106,9 @@ export const AuthProvider = ({ children }) => {
             },
           });
 
-          clearInterval(intervalId.current);
+          if (intervalId.current) {
+            clearInterval(intervalId.current);
+          }
         }
       });
     };
@@ -115,7 +117,10 @@ export const AuthProvider = ({ children }) => {
 
     return () => {
       unregisterAuthStateChangedObserver();
-      clearInterval(intervalId.current);
+
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
+      }
     };
   }, [showNotification]);
 
