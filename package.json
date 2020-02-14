@@ -103,7 +103,7 @@
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2",
     "webpack-merge": "^4.2.1",
-    "webpack-obfuscator": "^0.18.3"
+    "webpack-obfuscator": "^0.24.6"
   },
   "//resolutions": {
     "javascript-obfuscator": "The version is explicitly set because of incompatibility issues with higher versions of node, see https://github.com/javascript-obfuscator/javascript-obfuscator/issues/452."
