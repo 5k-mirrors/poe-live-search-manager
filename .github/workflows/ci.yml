@@ -2,6 +2,9 @@ name: CI
 
 on: [push]
 
+env:
+  node_version: "12.5"
+
 jobs:
   lint:
     runs-on: ${{ matrix.os }}
@@ -11,10 +14,10 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
     - uses: actions/checkout@v1
-    - name: Use Node.js 12
+    - name: Use Node.js ${{ env.node_version }}
       uses: actions/setup-node@v1
       with:
-        node-version: 12.x
+        node-version: ${{ env.node_version }}
     - name: Cache JS dependencies
       uses: actions/cache@v1
       with:
@@ -35,10 +38,10 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
     - uses: actions/checkout@v1
-    - name: Use Node.js 12
+    - name: Use Node.js ${{ env.node_version }}
       uses: actions/setup-node@v1
       with:
-        node-version: 12.x
+        node-version: ${{ env.node_version }}
     - name: Cache JS dependencies
       uses: actions/cache@v1
       with:
@@ -59,10 +62,10 @@ jobs:
     - name: Show current ref
       run: echo ${{ github.ref }}
     - uses: actions/checkout@v1
-    - name: Use Node.js 12
+    - name: Use Node.js ${{ env.node_version }}
       uses: actions/setup-node@v1
       with:
-        node-version: 12.x
+        node-version: ${{ env.node_version }}
     - name: Cache JS dependencies
       uses: actions/cache@v1
       with:
