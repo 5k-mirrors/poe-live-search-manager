@@ -103,7 +103,13 @@
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2",
     "webpack-merge": "^4.2.1",
-    "webpack-obfuscator": "^0.18.8"
+    "webpack-obfuscator": "^0.18.3"
+  },
+  "//resolutions": {
+    "javascript-obfuscator": "It's pinned to a particular version because of incompatibility issues with higher versions of node, see https://github.com/javascript-obfuscator/javascript-obfuscator/issues/452."
+  },
+  "resolutions": {
+    "javascript-obfuscator": "^0.18.8"
   },
   "build": {
     "productName": "PoE Live Search Manager",
