@@ -22,8 +22,8 @@ export const AuthProvider = ({ children }) => {
     isLoggedIn: false,
   });
   const { showNotification, renderNotification } = useNotify();
-  const intervalId = useRef();
-  const userPresenceUpdateDelay = 3600000;
+  const userPresenseUpdaterIntervalId = useRef();
+  const userPresenceUpdaterDelay = 3600000;
 
   useEffect(() => {
     const registerAuthStateChangedObserver = () => {
@@ -52,12 +52,12 @@ export const AuthProvider = ({ children }) => {
                   .database()
                   .ref(`/users/${user.uid}`);
 
-                intervalId.current = setInterval(() => {
+                userPresenseUpdaterIntervalId.current = setInterval(() => {
                   userRef.set({
                     is_online: true,
                     last_seen: firebase.database.ServerValue.TIMESTAMP,
                   });
-                }, userPresenceUpdateDelay);
+                }, userPresenceUpdaterDelay);
 
                 return userRef
                   .onDisconnect()
@@ -106,8 +106,8 @@ export const AuthProvider = ({ children }) => {
             },
           });
 
-          if (intervalId.current) {
-            clearInterval(intervalId.current);
+          if (userPresenseUpdaterIntervalId.current) {
+            clearInterval(userPresenseUpdaterIntervalId.current);
           }
         }
       });
@@ -118,8 +118,8 @@ export const AuthProvider = ({ children }) => {
     return () => {
       unregisterAuthStateChangedObserver();
 
-      if (intervalId.current) {
-        clearInterval(intervalId.current);
+      if (userPresenseUpdaterIntervalId.current) {
+        clearInterval(userPresenseUpdaterIntervalId.current);
       }
     };
   }, [showNotification]);
