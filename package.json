@@ -99,7 +99,7 @@
     "pre-commit": "^1.2.2",
     "prettier": "^1.18.2",
     "style-loader": "^0.23.1",
-    "webpack": "^4.29.6",
+    "webpack": "^4.41.6",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2",
     "webpack-merge": "^4.2.1",
