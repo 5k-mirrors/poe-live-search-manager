@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect } from "react";
+import React, { createContext, useReducer, useEffect, useRef } from "react";
 import firebase from "firebase";
 import { ipcRenderer } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
@@ -21,8 +21,9 @@ export const AuthProvider = ({ children }) => {
     isLoading: false,
     isLoggedIn: false,
   });
-
   const { showNotification, renderNotification } = useNotify();
+  const intervalId = useRef();
+  const userPresenceUpdateDelay = 3600000;
 
   useEffect(() => {
     const registerAuthStateChangedObserver = () => {
@@ -50,6 +51,13 @@ export const AuthProvider = ({ children }) => {
                 const userRef = firebaseApp
                   .database()
                   .ref(`/users/${user.uid}`);
+
+                intervalId.current = setInterval(() => {
+                  userRef.set({
+                    is_online: true,
+                    last_seen: firebase.database.ServerValue.TIMESTAMP,
+                  });
+                }, userPresenceUpdateDelay);
 
                 return userRef
                   .onDisconnect()
@@ -103,7 +111,10 @@ export const AuthProvider = ({ children }) => {
 
     const unregisterAuthStateChangedObserver = registerAuthStateChangedObserver();
 
-    return () => unregisterAuthStateChangedObserver();
+    return () => {
+      unregisterAuthStateChangedObserver();
+      clearInterval(intervalId.current);
+    };
   }, [showNotification]);
 
   useEffect(() => {
