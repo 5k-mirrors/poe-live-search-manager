@@ -105,6 +105,12 @@
     "webpack-merge": "^4.2.1",
     "webpack-obfuscator": "^0.24.6"
   },
+  "//resolutions": {
+    "javascript-obfuscator": "The version is explicitly set because of incompatibility issues with higher versions of node, see https://github.com/javascript-obfuscator/javascript-obfuscator/issues/452."
+  },
+  "resolutions": {
+    "javascript-obfuscator": "^0.18.8"
+  },
   "build": {
     "productName": "PoE Live Search Manager",
     "appId": "com.5k-mirrors.poe-sniper",
