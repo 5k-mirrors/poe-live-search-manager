@@ -105,6 +105,8 @@ export const AuthProvider = ({ children }) => {
               isLoggedIn: false,
             },
           });
+
+          clearInterval(intervalId.current);
         }
       });
     };
