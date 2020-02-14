@@ -53,8 +53,7 @@ export const AuthProvider = ({ children }) => {
                   .ref(`/users/${user.uid}`);
 
                 userPresenceUpdaterIntervalId.current = setInterval(() => {
-                  userRef.set({
-                    is_online: true,
+                  userRef.update({
                     last_seen: firebase.database.ServerValue.TIMESTAMP,
                   });
                 }, userPresenceUpdaterDelay);
