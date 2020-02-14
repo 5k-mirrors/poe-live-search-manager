@@ -106,7 +106,7 @@
     "webpack-obfuscator": "^0.18.3"
   },
   "//resolutions": {
-    "javascript-obfuscator": "It's pinned to a particular version because of incompatibility issues with higher versions of node, see https://github.com/javascript-obfuscator/javascript-obfuscator/issues/452."
+    "javascript-obfuscator": "The version is explicitly set because of incompatibility issues with higher versions of node, see https://github.com/javascript-obfuscator/javascript-obfuscator/issues/452."
   },
   "resolutions": {
     "javascript-obfuscator": "^0.18.8"
