@@ -107,6 +107,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
         FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
         FIREBASE_API_URL: ${{ secrets.FIREBASE_API_URL }}
+        FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
     - name: Copy deliverables
       run: |
         mkdir deliverables
