@@ -97,6 +97,8 @@ export const AuthProvider = ({ children }) => {
               isLoggedIn: false,
             },
           });
+
+          ipcRenderer.send(ipcEvents.USER_LOGOUT);
         }
       });
     };
