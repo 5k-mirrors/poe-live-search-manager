@@ -36,16 +36,16 @@ export const AuthProvider = ({ children }) => {
 
         if (userAuthenticated) {
           ensureUserSession(user.uid)
-            .then(() => {
-              dispatch({
-                type: asyncFetchActions.RECEIVE_RESPONSE,
-                payload: {
-                  data: user,
-                  isLoggedIn: true,
-                },
-              });
+            .then(() =>
+              user.getIdToken().then(token => {
+                dispatch({
+                  type: asyncFetchActions.RECEIVE_RESPONSE,
+                  payload: {
+                    data: user,
+                    isLoggedIn: true,
+                  },
+                });
 
-              return user.getIdToken().then(token => {
                 ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
 
                 const userRef = firebaseApp
@@ -70,8 +70,8 @@ export const AuthProvider = ({ children }) => {
                       last_seen: firebase.database.ServerValue.TIMESTAMP,
                     })
                   );
-              });
-            })
+              })
+            )
             .catch(err => {
               devErrorLog(err);
 
