@@ -40,6 +40,20 @@ yarn dev
 
 ## [Auto-update](doc/auto-update.md)
 
+## Secrets
+
+#### FIREBASE_API_KEY
+
+Firebase project Web API Key.
+
+#### FIREBASE_API_URL
+
+The base endpoint to which the requests are forwarded.
+
+#### FIREBASE_DATABASE_URL
+
+The Realtime Database URL to initialize Firebase SDK at client-side.
+
 ## Known issues
 
 - [NSIS installer keeps hanging around when the app is not uninstalled properly](https://github.com/electron-userland/electron-builder/issues/4057#issuecomment-537684523)
