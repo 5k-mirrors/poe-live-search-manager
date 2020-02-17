@@ -8,8 +8,7 @@ export default [
       "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.0",
     description: `Fixes:
 - Improvements under the hood
-- Renamed poe-sniper to PoE Live Search Manager on account screen
-- Searches are limited up to a maximum of 20`,
+- Searches are limited up to a maximum of 20 as per the limit on pathofexile.com/trade`,
     date: "2020-02-17:00:00Z",
   },
   {
