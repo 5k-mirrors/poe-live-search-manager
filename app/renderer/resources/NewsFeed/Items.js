@@ -9,7 +9,7 @@ export default [
     description: `Fixes:
 - Improvements under the hood
 - Renamed poe-sniper to PoE Live Search Manager on account screen
-- Searches are limited up to maximum 20`,
+- Searches are limited up to a maximum of 20`,
     date: "2020-02-17:00:00Z",
   },
   {
