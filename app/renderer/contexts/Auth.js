@@ -105,6 +105,8 @@ export const AuthProvider = ({ children }) => {
             },
           });
 
+          ipcRenderer.send(ipcEvents.USER_LOGOUT);
+
           if (userPresenceUpdaterIntervalId.current) {
             clearInterval(userPresenceUpdaterIntervalId.current);
           }
