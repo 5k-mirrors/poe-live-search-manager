@@ -2,6 +2,17 @@ import types from "./Types";
 
 export default [
   {
+    type: types.RELEASE_NOTE,
+    title: "v1.11.0",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.0",
+    description: `Fixes:
+- Improvements under the hood
+- Renamed poe-sniper to PoE Live Search Manager on account screen
+- Searches are limited up to 20`,
+    date: "2020-02-17:00:00Z",
+  },
+  {
     type: types.ANNOUNCEMENT,
     title: "IMPORTANT ANNOUNCEMENT ABOUT SESSION ID",
     description: `The live search functionality requires a Session ID. In general, it's not safe to give out your Session ID because it can be used to impersonate your account. In our case, you can provide any Session ID (e.g. one from a new, empty account). The app only stores your Session ID locally and only uses it for live searches.
