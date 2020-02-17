@@ -52,7 +52,7 @@ The base endpoint to which the requests are forwarded.
 
 #### FIREBASE_DATABASE_URL
 
-The Realtime Database URL to initialize Firebase SDK at client-side.
+The Realtime Database URL. It [must be specified](https://firebase.google.com/docs/database/web/start#initialize_the_javascript_sdk) when initializing Firebase SDK to be used at client-side.
 
 ## Known issues
 
