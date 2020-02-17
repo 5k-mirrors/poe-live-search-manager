@@ -60,6 +60,10 @@ const setupWebSocketIpcListeners = () => {
 
 const setupAuthenticationIpcListeners = () => {
   ipcMain.on(ipcEvents.USER_LOGIN, (_, userId, idToken) => {
+    const globalStore = new SingletonGlobalStore();
+
+    globalStore.set(storeKeys.IS_LOGGED_IN, true);
+
     User.update({
       id: userId,
       jwt: idToken,
@@ -69,10 +73,13 @@ const setupAuthenticationIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
+    const globalStore = new SingletonGlobalStore();
+
     subscriptionActions.stopRefreshInterval();
 
     webSocketActions.disconnectAll();
 
+    globalStore.set(storeKeys.IS_LOGGED_IN, false);
     User.clear();
     storeUtils.clear(storeKeys.POE_SESSION_ID);
     subscription.clear();
