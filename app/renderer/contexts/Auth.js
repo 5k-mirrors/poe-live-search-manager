@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   });
   const { showNotification, renderNotification } = useNotify();
   const userPresenceUpdaterIntervalId = useRef();
-  const userPresenceUpdaterDelay = 3600000;
+  const userPresenceUpdaterDelay = 60 * 60 * 1000;
 
   useEffect(() => {
     const registerAuthStateChangedObserver = () => {
@@ -121,7 +121,7 @@ export const AuthProvider = ({ children }) => {
         clearInterval(userPresenceUpdaterIntervalId.current);
       }
     };
-  }, [showNotification]);
+  }, [showNotification, userPresenceUpdaterDelay]);
 
   useEffect(() => {
     const registerIdTokenChangedObserver = () => {
