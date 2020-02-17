@@ -6,6 +6,7 @@ import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { getApp as getFirebaseApp } from "../utils/Firebase/Firebase";
 import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
+import { useFirebaseAuthObserver } from "../utils/CustomHooks/CustomHooks";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
@@ -16,49 +17,37 @@ export const AuthProvider = ({ children }) => {
     isLoading: false,
     isLoggedIn: false,
   });
+  const { user, authenticated } = useFirebaseAuthObserver();
 
   useEffect(() => {
-    const registerAuthStateChangedObserver = () => {
-      dispatch({ type: asyncFetchActions.SEND_REQUEST });
+    const globalStore = new SingletonGlobalStore();
 
-      const firebaseApp = getFirebaseApp();
+    globalStore.set(storeKeys.IS_LOGGED_IN, authenticated);
 
-      return firebaseApp.auth().onAuthStateChanged(user => {
-        const userAuthenticated = !!user;
-        const globalStore = new SingletonGlobalStore();
+    dispatch({
+      type: asyncFetchActions.RECEIVE_RESPONSE,
+      payload: {
+        data: user,
+        isLoggedIn: authenticated,
+      },
+    });
 
-        dispatch({
-          type: asyncFetchActions.RECEIVE_RESPONSE,
-          payload: {
-            data: user,
-            isLoggedIn: userAuthenticated,
-          },
-        });
-
-        globalStore.set(storeKeys.IS_LOGGED_IN, userAuthenticated);
-
-        if (userAuthenticated) {
-          user.getIdToken().then(token => {
-            ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
-          });
-        } else {
-          ipcRenderer.send(ipcEvents.USER_LOGOUT);
-        }
+    if (authenticated) {
+      user.getIdToken().then(token => {
+        ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
       });
-    };
-
-    const unregisterAuthStateChangedObserver = registerAuthStateChangedObserver();
-
-    return () => unregisterAuthStateChangedObserver();
-  }, []);
+    } else {
+      ipcRenderer.send(ipcEvents.USER_LOGOUT);
+    }
+  }, [authenticated, user]);
 
   useEffect(() => {
     const registerIdTokenChangedObserver = () => {
       const firebaseApp = getFirebaseApp();
 
-      return firebaseApp.auth().onIdTokenChanged(user => {
-        if (user) {
-          user.getIdToken().then(token => {
+      return firebaseApp.auth().onIdTokenChanged(changedUser => {
+        if (changedUser) {
+          changedUser.getIdToken().then(token => {
             ipcRenderer.send(ipcEvents.ID_TOKEN_CHANGED, token);
           });
         }

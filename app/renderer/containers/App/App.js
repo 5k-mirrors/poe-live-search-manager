@@ -3,6 +3,7 @@ import Container from "@material-ui/core/Container";
 import { AuthProvider, SubscriptionProvider } from "../../contexts";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Screens from "../../components/Screens/Screens";
+import PrivacyPolicyDialog from "../../components/PrivacyPolicyDialog/PrivacyPolicyDialog";
 
 const CombinedProviders = ({ children }) => (
   <AuthProvider>
@@ -13,6 +14,7 @@ const CombinedProviders = ({ children }) => (
 const app = () => (
   <Container>
     <NavigationBar />
+    <PrivacyPolicyDialog />
     <CombinedProviders>
       <Screens />
     </CombinedProviders>

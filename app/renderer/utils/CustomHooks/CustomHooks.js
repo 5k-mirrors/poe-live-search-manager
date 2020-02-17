@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import { ipcRenderer } from "electron";
 import { asyncFetchActions, asyncFetchReducer } from "../../reducers/reducers";
+import { getApp as getFirebaseApp } from "../Firebase/Firebase";
 
 export const useListenToDataUpdatesViaIpc = (receiver, listener) => {
   useEffect(() => {
@@ -69,4 +70,24 @@ export const useDisplay = () => {
   };
 
   return [elementIsVisible, displayElement, hideElementAfterMsElapsed];
+};
+
+export const useFirebaseAuthObserver = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const registerAuthStateChangedObserver = () => {
+      const firebaseApp = getFirebaseApp();
+
+      return firebaseApp.auth().onAuthStateChanged(changedUser => {
+        setUser(changedUser);
+      });
+    };
+
+    const unregisterAuthStateChangedObserver = registerAuthStateChangedObserver();
+
+    return () => unregisterAuthStateChangedObserver();
+  }, []);
+
+  return { user, authenticated: !!user };
 };
