@@ -11,6 +11,7 @@ import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 import { useNotify } from "../utils/CustomHooks/CustomHooks";
 import SessionAlreadyExists from "../../errors/session-already-exists";
 import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import { version } from "../../../package.json";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
@@ -24,6 +25,80 @@ export const AuthProvider = ({ children }) => {
   const { showNotification, renderNotification } = useNotify();
   const userPresenceUpdaterIntervalId = useRef();
   const userPresenceUpdaterDelay = 60 * 60 * 1000;
+  const lastActiveVersionUpdaterTimeoutId = useRef();
+  const lastActiveVersionUpdaterDelay = 10 * 10 * 100;
+
+  useEffect(() => {
+    const updateLastActiveVersion = () => {
+      const firebaseApp = getFirebaseApp();
+
+      return setTimeout(
+        () =>
+          firebaseApp
+            .firestore()
+            .collection("users")
+            .doc(state.data.uid)
+            .update({
+              last_active_version: `v${version}`,
+            })
+            .catch(err => {
+              devErrorLog(err);
+            }),
+        lastActiveVersionUpdaterDelay
+      );
+    };
+
+    if (state.isLoggedIn) {
+      lastActiveVersionUpdaterTimeoutId.current = updateLastActiveVersion();
+    } else {
+      clearTimeout(lastActiveVersionUpdaterTimeoutId.current);
+    }
+
+    return () => clearTimeout(lastActiveVersionUpdaterTimeoutId.current);
+    // The rule is disabled because it enforces including `state.data.uid` in the dependency array. It'd make the app crash because this field is initially undefined.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.isLoggedIn]);
+
+  useEffect(() => {
+    if (state.isLoggedIn) {
+      const firebaseApp = getFirebaseApp();
+      const userRef = firebaseApp.database().ref(`/users/${state.data.uid}`);
+
+      userPresenceUpdaterIntervalId.current = setInterval(() => {
+        userRef.update({
+          last_seen: firebase.database.ServerValue.TIMESTAMP,
+        });
+      }, userPresenceUpdaterDelay);
+    } else {
+      clearInterval(userPresenceUpdaterIntervalId.current);
+    }
+
+    return () => clearInterval(userPresenceUpdaterIntervalId.current);
+    // The rule is disabled because it enforces including `state.data.uid` in the dependency array. It'd make the app crash because this field is initially set to null.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.isLoggedIn]);
+
+  useEffect(() => {
+    if (state.isLoggedIn) {
+      const firebaseApp = getFirebaseApp();
+      const userRef = firebaseApp.database().ref(`/users/${state.data.uid}`);
+
+      userRef
+        .onDisconnect()
+        .set({
+          is_online: false,
+          last_seen: firebase.database.ServerValue.TIMESTAMP,
+        })
+        .then(() =>
+          userRef.set({
+            is_online: true,
+            last_seen: firebase.database.ServerValue.TIMESTAMP,
+          })
+        );
+    }
+    // The rule is disabled because it enforces including `state.data.uid` in the dependency array. It'd make the app crash because this field is initially set to null.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.isLoggedIn]);
 
   useEffect(() => {
     const registerAuthStateChangedObserver = () => {
@@ -47,29 +122,6 @@ export const AuthProvider = ({ children }) => {
                 });
 
                 ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
-
-                const userRef = firebaseApp
-                  .database()
-                  .ref(`/users/${user.uid}`);
-
-                userPresenceUpdaterIntervalId.current = setInterval(() => {
-                  userRef.update({
-                    last_seen: firebase.database.ServerValue.TIMESTAMP,
-                  });
-                }, userPresenceUpdaterDelay);
-
-                return userRef
-                  .onDisconnect()
-                  .set({
-                    is_online: false,
-                    last_seen: firebase.database.ServerValue.TIMESTAMP,
-                  })
-                  .then(() =>
-                    userRef.set({
-                      is_online: true,
-                      last_seen: firebase.database.ServerValue.TIMESTAMP,
-                    })
-                  );
               })
             )
             .catch(err => {
@@ -106,24 +158,14 @@ export const AuthProvider = ({ children }) => {
           });
 
           ipcRenderer.send(ipcEvents.USER_LOGOUT);
-
-          if (userPresenceUpdaterIntervalId.current) {
-            clearInterval(userPresenceUpdaterIntervalId.current);
-          }
         }
       });
     };
 
     const unregisterAuthStateChangedObserver = registerAuthStateChangedObserver();
 
-    return () => {
-      unregisterAuthStateChangedObserver();
-
-      if (userPresenceUpdaterIntervalId.current) {
-        clearInterval(userPresenceUpdaterIntervalId.current);
-      }
-    };
-  }, [showNotification, userPresenceUpdaterDelay]);
+    return () => unregisterAuthStateChangedObserver();
+  }, [showNotification]);
 
   useEffect(() => {
     const registerIdTokenChangedObserver = () => {
