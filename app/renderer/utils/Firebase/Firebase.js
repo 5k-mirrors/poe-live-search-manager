@@ -1,6 +1,5 @@
 import firebase from "firebase";
 import SessionAlreadyExists from "../../../errors/session-already-exists";
-import RecordNotExists from "../../../errors/record-not-exists";
 
 export const getApp = () => {
   // https://stackoverflow.com/a/41005100/9599137
@@ -48,7 +47,7 @@ export const ensureRecordExists = userId => {
     .get()
     .then(doc => {
       if (!doc.exists) {
-        throw new RecordNotExists(`${userId} not exists`);
+        throw new Error(`${userId} not exists`);
       }
 
       return Promise.resolve();

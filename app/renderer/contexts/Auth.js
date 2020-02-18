@@ -11,7 +11,6 @@ import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 import { useNotify } from "../utils/CustomHooks/CustomHooks";
 import SessionAlreadyExists from "../../errors/session-already-exists";
-import RecordNotExists from "../../errors/record-not-exists";
 import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { version } from "../../../package.json";
 
@@ -156,11 +155,9 @@ const useUpdateLastActiveVersion = (authenticated, userId) => {
         .catch(err => {
           devErrorLog(err);
 
-          if (err instanceof RecordNotExists) {
-            timeoutId.current = setTimeout(() => {
-              update();
-            }, delay);
-          }
+          timeoutId.current = setTimeout(() => {
+            update();
+          }, delay);
         });
     };
 
