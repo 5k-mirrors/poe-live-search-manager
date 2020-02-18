@@ -18,98 +18,7 @@ import { version } from "../../../package.json";
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
 
-export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(asyncFetchReducer, {
-    data: null,
-    isLoading: false,
-    isLoggedIn: false,
-  });
-  const { showNotification, renderNotification } = useNotify();
-  const userPresenceUpdaterIntervalId = useRef();
-  const userPresenceUpdaterDelay = 60 * 60 * 1000;
-  const lastActiveVersionUpdaterTimeoutId = useRef();
-  const lastActiveVersionUpdaterDelay = 5 * 1000;
-
-  useEffect(() => {
-    const updateLastActiveVersion = () => {
-      const firebaseApp = getFirebaseApp();
-
-      return ensureRecordExists(state.data.uid)
-        .then(() =>
-          firebaseApp
-            .firestore()
-            .collection("users")
-            .doc(state.data.uid)
-            .update({
-              last_active_version: `v${version}`,
-            })
-            .catch(err => {
-              devErrorLog(err);
-            })
-        )
-        .catch(err => {
-          devErrorLog(err);
-
-          if (err instanceof RecordNotExists) {
-            lastActiveVersionUpdaterTimeoutId.current = setTimeout(() => {
-              updateLastActiveVersion();
-            }, lastActiveVersionUpdaterDelay);
-          }
-        });
-    };
-
-    if (state.isLoggedIn) {
-      updateLastActiveVersion();
-    } else {
-      clearTimeout(lastActiveVersionUpdaterTimeoutId.current);
-    }
-
-    return () => clearTimeout(lastActiveVersionUpdaterTimeoutId.current);
-    // The rule is disabled because it enforces including `state.data.uid` in the dependency array. It'd make the app crash because this field is initially undefined.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.isLoggedIn]);
-
-  useEffect(() => {
-    if (state.isLoggedIn) {
-      const firebaseApp = getFirebaseApp();
-      const userRef = firebaseApp.database().ref(`/users/${state.data.uid}`);
-
-      userPresenceUpdaterIntervalId.current = setInterval(() => {
-        userRef.update({
-          last_seen: firebase.database.ServerValue.TIMESTAMP,
-        });
-      }, userPresenceUpdaterDelay);
-    } else {
-      clearInterval(userPresenceUpdaterIntervalId.current);
-    }
-
-    return () => clearInterval(userPresenceUpdaterIntervalId.current);
-    // The rule is disabled because it enforces including `state.data.uid` in the dependency array. It'd make the app crash because this field is initially set to null.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.isLoggedIn]);
-
-  useEffect(() => {
-    if (state.isLoggedIn) {
-      const firebaseApp = getFirebaseApp();
-      const userRef = firebaseApp.database().ref(`/users/${state.data.uid}`);
-
-      userRef
-        .onDisconnect()
-        .set({
-          is_online: false,
-          last_seen: firebase.database.ServerValue.TIMESTAMP,
-        })
-        .then(() =>
-          userRef.set({
-            is_online: true,
-            last_seen: firebase.database.ServerValue.TIMESTAMP,
-          })
-        );
-    }
-    // The rule is disabled because it enforces including `state.data.uid` in the dependency array. It'd make the app crash because this field is initially set to null.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.isLoggedIn]);
-
+const useEnsureUserSession = (dispatch, showNotification) => {
   useEffect(() => {
     const registerAuthStateChangedObserver = () => {
       dispatch({ type: asyncFetchActions.SEND_REQUEST });
@@ -117,9 +26,9 @@ export const AuthProvider = ({ children }) => {
       const firebaseApp = getFirebaseApp();
 
       return firebaseApp.auth().onAuthStateChanged(user => {
-        const userAuthenticated = !!user;
+        const authenticated = !!user;
 
-        if (userAuthenticated) {
+        if (authenticated) {
           ensureUserSession(user.uid)
             .then(() =>
               user.getIdToken().then(token => {
@@ -130,6 +39,23 @@ export const AuthProvider = ({ children }) => {
                     isLoggedIn: true,
                   },
                 });
+
+                const userRef = firebaseApp
+                  .database()
+                  .ref(`/users/${user.uid}`);
+
+                userRef
+                  .onDisconnect()
+                  .set({
+                    is_online: false,
+                    last_seen: firebase.database.ServerValue.TIMESTAMP,
+                  })
+                  .then(() =>
+                    userRef.set({
+                      is_online: true,
+                      last_seen: firebase.database.ServerValue.TIMESTAMP,
+                    })
+                  );
 
                 ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
               })
@@ -175,8 +101,10 @@ export const AuthProvider = ({ children }) => {
     const unregisterAuthStateChangedObserver = registerAuthStateChangedObserver();
 
     return () => unregisterAuthStateChangedObserver();
-  }, [showNotification]);
+  }, [dispatch, showNotification]);
+};
 
+const useIdTokenChangedObserver = () => {
   useEffect(() => {
     const registerIdTokenChangedObserver = () => {
       const firebaseApp = getFirebaseApp();
@@ -194,6 +122,83 @@ export const AuthProvider = ({ children }) => {
 
     return () => unregisterIdTokenChangedObserver();
   }, []);
+};
+
+const useUpdateLastActiveVersion = (authenticated, userId) => {
+  const timeoutId = useRef();
+  const delay = 5 * 1000;
+
+  useEffect(() => {
+    const update = () => {
+      const firebaseApp = getFirebaseApp();
+
+      return ensureRecordExists(userId)
+        .then(() =>
+          firebaseApp
+            .firestore()
+            .collection("users")
+            .doc(userId)
+            .update({
+              last_active_version: `v${version}`,
+            })
+            .catch(err => {
+              devErrorLog(err);
+            })
+        )
+        .catch(err => {
+          devErrorLog(err);
+
+          if (err instanceof RecordNotExists) {
+            timeoutId.current = setTimeout(() => {
+              update();
+            }, delay);
+          }
+        });
+    };
+
+    if (authenticated) {
+      update();
+    } else {
+      clearTimeout(timeoutId.current);
+    }
+
+    return () => clearTimeout(timeoutId.current);
+  }, [authenticated, delay, userId]);
+};
+
+const useUpdatePresence = (authenticated, userId) => {
+  const intervalId = useRef();
+  const delay = 60 * 60 * 1000;
+
+  useEffect(() => {
+    if (authenticated) {
+      const firebaseApp = getFirebaseApp();
+      const userRef = firebaseApp.database().ref(`/users/${userId}`);
+
+      intervalId.current = setInterval(() => {
+        userRef.update({
+          last_seen: firebase.database.ServerValue.TIMESTAMP,
+        });
+      }, delay);
+    } else {
+      clearInterval(intervalId.current);
+    }
+
+    return () => clearInterval(intervalId.current);
+  }, [authenticated, delay, userId]);
+};
+
+export const AuthProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(asyncFetchReducer, {
+    data: null,
+    isLoading: false,
+    isLoggedIn: false,
+  });
+  const { showNotification, renderNotification } = useNotify();
+  useUpdateLastActiveVersion(state.isLoggedIn, state.data && state.data.uid);
+  useUpdatePresence(state.isLoggedIn, state.data && state.data.uid);
+  useEnsureUserSession(dispatch, showNotification);
+  useIdTokenChangedObserver();
 
   const signOut = () => {
     const firebaseApp = getFirebaseApp();

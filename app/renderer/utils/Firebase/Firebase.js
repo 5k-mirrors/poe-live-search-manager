@@ -45,6 +45,7 @@ export const ensureRecordExists = userId => {
     .firestore()
     .collection("users")
     .doc(userId)
+    .get()
     .then(doc => {
       if (!doc.exists) {
         throw new RecordNotExists(`${userId} not exists`);
