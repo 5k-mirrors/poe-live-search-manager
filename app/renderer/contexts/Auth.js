@@ -18,9 +18,15 @@ import { version } from "../../../package.json";
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
 
-const useEnsureUserSession = (dispatch, showNotification) => {
+const useAuthStateChangedObserver = showNotification => {
+  const [state, dispatch] = useReducer(asyncFetchReducer, {
+    data: null,
+    isLoading: false,
+    isLoggedIn: false,
+  });
+
   useEffect(() => {
-    const registerAuthStateChangedObserver = () => {
+    const registerObserver = () => {
       dispatch({ type: asyncFetchActions.SEND_REQUEST });
 
       const firebaseApp = getFirebaseApp();
@@ -98,10 +104,12 @@ const useEnsureUserSession = (dispatch, showNotification) => {
       });
     };
 
-    const unregisterAuthStateChangedObserver = registerAuthStateChangedObserver();
+    const unregisterObserver = registerObserver();
 
-    return () => unregisterAuthStateChangedObserver();
-  }, [dispatch, showNotification]);
+    return () => unregisterObserver();
+  }, [showNotification]);
+
+  return { state, dispatch };
 };
 
 const useIdTokenChangedObserver = () => {
@@ -189,15 +197,10 @@ const useUpdatePresence = (authenticated, userId) => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(asyncFetchReducer, {
-    data: null,
-    isLoading: false,
-    isLoggedIn: false,
-  });
   const { showNotification, renderNotification } = useNotify();
+  const { state, dispatch } = useAuthStateChangedObserver(showNotification);
   useUpdateLastActiveVersion(state.isLoggedIn, state.data && state.data.uid);
   useUpdatePresence(state.isLoggedIn, state.data && state.data.uid);
-  useEnsureUserSession(dispatch, showNotification);
   useIdTokenChangedObserver();
 
   const signOut = () => {
