@@ -157,7 +157,7 @@ const useUpdateLastActiveVersion = (authenticated, userId) => {
           devErrorLog(err);
 
           if (err instanceof RecordNotExists) {
-            timeoutId.current = retryIn(() => update, delay);
+            timeoutId.current = retryIn(() => update(), delay);
           }
         });
     };
