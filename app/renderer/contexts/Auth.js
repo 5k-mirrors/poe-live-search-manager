@@ -148,9 +148,6 @@ const useUpdateLastActiveVersion = (authenticated, userId) => {
             .update({
               last_active_version: `v${version}`,
             })
-            .catch(err => {
-              devErrorLog(err);
-            })
         )
         .catch(err => {
           devErrorLog(err);
