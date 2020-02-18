@@ -114,7 +114,7 @@ const useAuthStateChangedObserver = showNotification => {
 
 const useIdTokenChangedObserver = () => {
   useEffect(() => {
-    const registerIdTokenChangedObserver = () => {
+    const registerObserver = () => {
       const firebaseApp = getFirebaseApp();
 
       return firebaseApp.auth().onIdTokenChanged(user => {
@@ -126,9 +126,9 @@ const useIdTokenChangedObserver = () => {
       });
     };
 
-    const unregisterIdTokenChangedObserver = registerIdTokenChangedObserver();
+    const unregisterObserver = registerObserver();
 
-    return () => unregisterIdTokenChangedObserver();
+    return () => unregisterObserver();
   }, []);
 };
 
