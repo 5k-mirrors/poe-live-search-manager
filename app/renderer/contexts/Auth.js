@@ -5,11 +5,13 @@ import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import {
   getApp as getFirebaseApp,
   ensureUserSession,
+  ensureRecordExists,
 } from "../utils/Firebase/Firebase";
 import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 import { useNotify } from "../utils/CustomHooks/CustomHooks";
 import SessionAlreadyExists from "../../errors/session-already-exists";
+import RecordNotExists from "../../errors/record-not-exists";
 import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { version } from "../../../package.json";
 
@@ -26,14 +28,14 @@ export const AuthProvider = ({ children }) => {
   const userPresenceUpdaterIntervalId = useRef();
   const userPresenceUpdaterDelay = 60 * 60 * 1000;
   const lastActiveVersionUpdaterTimeoutId = useRef();
-  const lastActiveVersionUpdaterDelay = 10 * 10 * 100;
+  const lastActiveVersionUpdaterDelay = 5 * 1000;
 
   useEffect(() => {
     const updateLastActiveVersion = () => {
       const firebaseApp = getFirebaseApp();
 
-      return setTimeout(
-        () =>
+      return ensureRecordExists(state.data.uid)
+        .then(() =>
           firebaseApp
             .firestore()
             .collection("users")
@@ -43,13 +45,21 @@ export const AuthProvider = ({ children }) => {
             })
             .catch(err => {
               devErrorLog(err);
-            }),
-        lastActiveVersionUpdaterDelay
-      );
+            })
+        )
+        .catch(err => {
+          devErrorLog(err);
+
+          if (err instanceof RecordNotExists) {
+            lastActiveVersionUpdaterTimeoutId.current = setTimeout(() => {
+              updateLastActiveVersion();
+            }, lastActiveVersionUpdaterDelay);
+          }
+        });
     };
 
     if (state.isLoggedIn) {
-      lastActiveVersionUpdaterTimeoutId.current = updateLastActiveVersion();
+      updateLastActiveVersion();
     } else {
       clearTimeout(lastActiveVersionUpdaterTimeoutId.current);
     }
