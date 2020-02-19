@@ -5,36 +5,39 @@ import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import {
   getApp as getFirebaseApp,
   ensureUserSession,
+  ensureRecordExists,
 } from "../utils/Firebase/Firebase";
 import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 import { useNotify } from "../utils/CustomHooks/CustomHooks";
 import SessionAlreadyExists from "../../errors/session-already-exists";
-import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import RecordNotExists from "../../errors/record-not-exists";
+import {
+  devErrorLog,
+  retryIn,
+} from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import { version } from "../../../package.json";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
 
-export const AuthProvider = ({ children }) => {
+const useAuthStateChangedObserver = showNotification => {
   const [state, dispatch] = useReducer(asyncFetchReducer, {
     data: null,
     isLoading: false,
     isLoggedIn: false,
   });
-  const { showNotification, renderNotification } = useNotify();
-  const userPresenceUpdaterIntervalId = useRef();
-  const userPresenceUpdaterDelay = 60 * 60 * 1000;
 
   useEffect(() => {
-    const registerAuthStateChangedObserver = () => {
+    const registerObserver = () => {
       dispatch({ type: asyncFetchActions.SEND_REQUEST });
 
       const firebaseApp = getFirebaseApp();
 
       return firebaseApp.auth().onAuthStateChanged(user => {
-        const userAuthenticated = !!user;
+        const authenticated = !!user;
 
-        if (userAuthenticated) {
+        if (authenticated) {
           ensureUserSession(user.uid)
             .then(() =>
               user.getIdToken().then(token => {
@@ -52,13 +55,7 @@ export const AuthProvider = ({ children }) => {
                   .database()
                   .ref(`/users/${user.uid}`);
 
-                userPresenceUpdaterIntervalId.current = setInterval(() => {
-                  userRef.update({
-                    last_seen: firebase.database.ServerValue.TIMESTAMP,
-                  });
-                }, userPresenceUpdaterDelay);
-
-                return userRef
+                userRef
                   .onDisconnect()
                   .set({
                     is_online: false,
@@ -106,27 +103,21 @@ export const AuthProvider = ({ children }) => {
           });
 
           ipcRenderer.send(ipcEvents.USER_LOGOUT);
-
-          if (userPresenceUpdaterIntervalId.current) {
-            clearInterval(userPresenceUpdaterIntervalId.current);
-          }
         }
       });
     };
 
-    const unregisterAuthStateChangedObserver = registerAuthStateChangedObserver();
+    const unregisterObserver = registerObserver();
 
-    return () => {
-      unregisterAuthStateChangedObserver();
+    return () => unregisterObserver();
+  }, [showNotification]);
 
-      if (userPresenceUpdaterIntervalId.current) {
-        clearInterval(userPresenceUpdaterIntervalId.current);
-      }
-    };
-  }, [showNotification, userPresenceUpdaterDelay]);
+  return { state, dispatch };
+};
 
+const useIdTokenChangedObserver = () => {
   useEffect(() => {
-    const registerIdTokenChangedObserver = () => {
+    const registerObserver = () => {
       const firebaseApp = getFirebaseApp();
 
       return firebaseApp.auth().onIdTokenChanged(user => {
@@ -138,10 +129,77 @@ export const AuthProvider = ({ children }) => {
       });
     };
 
-    const unregisterIdTokenChangedObserver = registerIdTokenChangedObserver();
+    const unregisterObserver = registerObserver();
 
-    return () => unregisterIdTokenChangedObserver();
+    return () => unregisterObserver();
   }, []);
+};
+
+const useUpdateLastActiveVersion = (authenticated, userId) => {
+  const timeoutId = useRef();
+  const delay = 5 * 1000;
+
+  useEffect(() => {
+    const update = () => {
+      const firebaseApp = getFirebaseApp();
+
+      return ensureRecordExists(userId)
+        .then(() =>
+          firebaseApp
+            .firestore()
+            .collection("users")
+            .doc(userId)
+            .update({
+              last_active_version: `v${version}`,
+            })
+        )
+        .catch(err => {
+          devErrorLog(err);
+
+          if (err instanceof RecordNotExists) {
+            timeoutId.current = retryIn(() => update(), delay);
+          }
+        });
+    };
+
+    if (authenticated) {
+      update();
+    } else {
+      clearTimeout(timeoutId.current);
+    }
+
+    return () => clearTimeout(timeoutId.current);
+  }, [authenticated, delay, userId]);
+};
+
+const useUpdatePresence = (authenticated, userId) => {
+  const intervalId = useRef();
+  const delay = 60 * 60 * 1000;
+
+  useEffect(() => {
+    if (authenticated) {
+      const firebaseApp = getFirebaseApp();
+      const userRef = firebaseApp.database().ref(`/users/${userId}`);
+
+      intervalId.current = setInterval(() => {
+        userRef.update({
+          last_seen: firebase.database.ServerValue.TIMESTAMP,
+        });
+      }, delay);
+    } else {
+      clearInterval(intervalId.current);
+    }
+
+    return () => clearInterval(intervalId.current);
+  }, [authenticated, delay, userId]);
+};
+
+export const AuthProvider = ({ children }) => {
+  const { showNotification, renderNotification } = useNotify();
+  const { state, dispatch } = useAuthStateChangedObserver(showNotification);
+  useUpdateLastActiveVersion(state.isLoggedIn, state.data && state.data.uid);
+  useUpdatePresence(state.isLoggedIn, state.data && state.data.uid);
+  useIdTokenChangedObserver();
 
   const signOut = () => {
     const firebaseApp = getFirebaseApp();
