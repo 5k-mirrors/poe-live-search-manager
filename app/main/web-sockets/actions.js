@@ -1,4 +1,5 @@
 import WebSocket from "ws";
+import { Mutex } from "async-mutex";
 import Bottleneck from "bottleneck";
 import store from "./store";
 import Subscription from "../../Subscription/Subscription";
@@ -18,7 +19,6 @@ import GlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
 import socketStates from "../../resources/SocketStates/SocketStates";
-import mutex from "../mutex/mutex";
 import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import { socketOrigin } from "../../resources/BaseUrls/BaseUrls";
@@ -31,6 +31,14 @@ class WsRequestLimiter {
 
   static schedule(cb) {
     return this.bottleneck.schedule(() => cb());
+  }
+}
+
+class ConcurrentConnectionMutex {
+  static mutex = new Mutex();
+
+  static acquire() {
+    return this.mutex.acquire();
   }
 }
 
@@ -55,8 +63,9 @@ const heartbeat = socket => {
 };
 
 const connect = id =>
-  mutex
-    .acquire()
+  // Socket connections are locked to remove race conditions and avoid duplicated connections.
+  // https://gitlab.com/c-hive/poe-sniper-electron/issues/91
+  ConcurrentConnectionMutex.acquire()
     .then(release => {
       const ws = store.find(id);
 

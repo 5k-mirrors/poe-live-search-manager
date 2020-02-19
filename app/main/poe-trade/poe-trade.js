@@ -7,16 +7,11 @@ import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { windows } from "../../resources/Windows/Windows";
-import mutex from "../mutex/mutex";
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
     return HttpRequestLimiter.currentReservoir().then(currentReservoir => {
-      if (
-        currentReservoir > 0 &&
-        HttpRequestLimiter.requestsExhausted &&
-        !mutex.isLocked()
-      ) {
+      if (currentReservoir > 0 && HttpRequestLimiter.requestsExhausted) {
         HttpRequestLimiter.requestsExhausted = false;
 
         electronUtils.send(
@@ -32,44 +27,37 @@ const startReservoirIncreaseListener = () => {
 };
 
 export const fetchItemDetails = id =>
-  mutex.acquire().then(release => {
-    return HttpRequestLimiter.schedule(() => {
-      release();
+  HttpRequestLimiter.schedule(() => {
+    const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
-      const itemUrl = `${baseUrls.poeFetchAPI + id}`;
+    return fetch(itemUrl)
+      .then(data => data.json())
+      .then(parsedData =>
+        HttpRequestLimiter.currentReservoir().then(currentReservoir => {
+          if (currentReservoir === 0 && !HttpRequestLimiter.requestsExhausted) {
+            HttpRequestLimiter.requestsExhausted = true;
 
-      return fetch(itemUrl)
-        .then(data => data.json())
-        .then(parsedData =>
-          HttpRequestLimiter.currentReservoir().then(currentReservoir => {
-            if (
-              currentReservoir === 0 &&
-              !HttpRequestLimiter.requestsExhausted
-            ) {
-              HttpRequestLimiter.requestsExhausted = true;
+            electronUtils.send(
+              windows.MAIN,
+              ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+              HttpRequestLimiter.requestsExhausted
+            );
 
-              electronUtils.send(
-                windows.MAIN,
-                ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-                HttpRequestLimiter.requestsExhausted
-              );
+            startReservoirIncreaseListener();
+          }
 
-              startReservoirIncreaseListener();
-            }
+          const itemDetails = javaScriptUtils.safeGet(parsedData, [
+            "result",
+            0,
+          ]);
 
-            const itemDetails = javaScriptUtils.safeGet(parsedData, [
-              "result",
-              0,
-            ]);
+          if (javaScriptUtils.isDefined(itemDetails)) {
+            return itemDetails;
+          }
 
-            if (javaScriptUtils.isDefined(itemDetails)) {
-              return itemDetails;
-            }
-
-            throw new ItemFetchError(`Item details not found for ${itemUrl}`);
-          })
-        );
-    });
+          throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+        })
+      );
   });
 
 export const getWhisperMessage = itemDetails => {
