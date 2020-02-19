@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import socketStates from "../../resources/SocketStates/SocketStates";
@@ -30,7 +30,7 @@ const setupStoreIpcListeners = () => {
 
 const setupWebSocketIpcListeners = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     store.add(connectionDetails);
 
@@ -40,7 +40,7 @@ const setupWebSocketIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     webSocketActions.disconnect(connectionDetails.id);
 
@@ -60,7 +60,7 @@ const setupWebSocketIpcListeners = () => {
 
 const setupAuthenticationIpcListeners = () => {
   ipcMain.on(ipcEvents.USER_LOGIN, (_, userId, idToken) => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     globalStore.set(storeKeys.IS_LOGGED_IN, true);
 
@@ -73,7 +73,7 @@ const setupAuthenticationIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     subscriptionActions.stopRefreshInterval();
 
