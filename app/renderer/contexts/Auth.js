@@ -49,6 +49,8 @@ const useAuthStateChangedObserver = showNotification => {
                   },
                 });
 
+                ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
+
                 const userRef = firebaseApp
                   .database()
                   .ref(`/users/${user.uid}`);
@@ -65,8 +67,6 @@ const useAuthStateChangedObserver = showNotification => {
                       last_seen: firebase.database.ServerValue.TIMESTAMP,
                     })
                   );
-
-                ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
               })
             )
             .catch(err => {
