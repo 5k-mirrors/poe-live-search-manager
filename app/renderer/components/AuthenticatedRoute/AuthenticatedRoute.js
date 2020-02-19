@@ -1,17 +1,17 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import GlobalStore from "../../../GlobalStore/GlobalStore";
+import SingletonGlobalStore from "../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 import { useAuthContext, useSubscriptionContext } from "../../contexts";
 
 export default ({ ...restProps }) => {
-  const globalStore = GlobalStore.getInstance();
-  const authData = useAuthContext();
+  const globalStore = new SingletonGlobalStore();
+  const { state: auth } = useAuthContext();
   const [state] = useSubscriptionContext();
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 
   function conditionsAreFulfilled() {
-    return authData && poeSessionId && state.data.plan;
+    return auth && poeSessionId && state.data && state.data.plan;
   }
 
   if (conditionsAreFulfilled()) {

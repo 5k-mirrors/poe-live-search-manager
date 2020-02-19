@@ -37,7 +37,7 @@ export default ({ ...itemDetails }) => (
         {itemDetails.title}
       </Link>
     ) : (
-      itemDetails.title
+      <h3>{itemDetails.title}</h3>
     )}
     <Typography variant="body2" component="p">
       {moment(itemDetails.date).format("DD.MM.YYYY")}

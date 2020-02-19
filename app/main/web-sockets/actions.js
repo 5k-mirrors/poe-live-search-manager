@@ -8,6 +8,7 @@ import {
   devErrorLog,
   safeGet,
   isDefined,
+  randomInt,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
@@ -19,11 +20,12 @@ import socketStates from "../../resources/SocketStates/SocketStates";
 import mutex from "../mutex/mutex";
 import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
+import { socketOrigin } from "../../resources/BaseUrls/BaseUrls";
 
 class WsRequestLimiter {
   static bottleneck = new Bottleneck({
     maxConcurrent: 1,
-    minTime: 1000,
+    minTime: randomInt(1200, 1500),
   });
 
   static schedule(cb) {
@@ -70,6 +72,7 @@ const connect = id =>
         ws.socket = new WebSocket(webSocketUri, {
           headers: {
             Cookie: getCookieHeader(),
+            Origin: socketOrigin,
           },
         });
 
@@ -123,7 +126,7 @@ const connect = id =>
               devLog(`Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`);
 
               connect(ws.id);
-            }, 500);
+            }, randomInt(2000, 3000));
           }
         });
 
@@ -137,18 +140,26 @@ const connect = id =>
 export const disconnect = id => {
   const ws = store.find(id);
 
-  if (!ws) return;
-
-  devLog(`Disconnect initiated - ${id}`);
+  if (!ws) {
+    devLog(`No disconnect initiated (no such object in store) - ${id}`);
+    return;
+  }
 
   if (
     ws.socket &&
     (stateIs(ws.socket, socketStates.OPEN) ||
       stateIs(ws.socket, socketStates.CONNECTING))
   ) {
+    devLog(`Disconnect initiated - ${id}`);
     ws.socket.close();
 
     updateState(ws.id, ws.socket);
+  } else if (!ws.socket) {
+    devLog(`No disconnect initiated (no socket) - ${id}`);
+  } else {
+    devLog(
+      `No disconnect initiated (socket in wrong state) - ${ws.socket.readyState}`
+    );
   }
 };
 

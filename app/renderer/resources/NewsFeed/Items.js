@@ -3,6 +3,50 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.11.0",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.0",
+    description: `Fixes:
+- Improvements under the hood
+- Searches are limited up to a maximum of 20 as per the limit on pathofexile.com/trade`,
+    date: "2020-02-17:00:00Z",
+  },
+  {
+    type: types.ANNOUNCEMENT,
+    title: "IMPORTANT ANNOUNCEMENT ABOUT SESSION ID",
+    description: `The live search functionality requires a Session ID. In general, it's not safe to give out your Session ID because it can be used to impersonate your account. In our case, you can provide any Session ID (e.g. one from a new, empty account). The app only stores your Session ID locally and only uses it for live searches.
+
+Stay safe exiles!`,
+    date: "2020-01-29T23:30:00Z",
+  },
+  {
+    type: types.ANNOUNCEMENT,
+    title: "IMPORTANT ANNOUNCEMENT ABOUT CONNECTION LIMITS",
+    description: `The limit of active live searches is now 20 per account. This is the limitation of pathofexile.com/trade, also applies in the browser. Don't add more.`,
+    date: "2020-01-29T23:10:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
+    title: "v1.10.5",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.10.5",
+    description: `Fixes:
+- Minor improvements
+        `,
+    date: "2020-01-30T20:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
+    title: "v1.10.4",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.10.4",
+    description: `Fixes:
+- #86: Cannot connect
+        `,
+    date: "2020-01-29T23:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.10.3",
     link:
       "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.10.3",

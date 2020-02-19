@@ -38,6 +38,8 @@ module.exports = {
           new webpack.EnvironmentPlugin([
             "FIREBASE_API_KEY",
             "FIREBASE_API_URL",
+            "FIREBASE_DATABASE_URL",
+            "FIREBASE_PROJECT_ID",
           ]),
         ]
       : []
