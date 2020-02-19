@@ -5,7 +5,7 @@ import Loader from "../../UI/Loader/Loader";
 import { useAuthContext } from "../../../contexts/Auth";
 
 export default () => {
-  const auth = useAuthContext();
+  const { state: auth } = useAuthContext();
 
   if (auth.isLoading) {
     return <Loader />;

@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { remote, ipcRenderer } from "electron";
 import MaterialTable from "material-table";
-import Box from "@material-ui/core/Box";
+import { Box, Typography, Snackbar } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import yaml from "js-yaml";
 import fs from "fs";
-import Snackbar from "@material-ui/core/Snackbar";
-import Alert from "@material-ui/lab/Alert";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
@@ -15,7 +14,6 @@ import {
   isDefined,
 } from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
-import InvalidInputError from "../../../../errors/invalid-input-error";
 
 export default class Searches extends Component {
   constructor(props) {
@@ -23,12 +21,14 @@ export default class Searches extends Component {
 
     this.state = {
       importErrorOpen: false,
+      maxSearchCountExceededErrorOpen: false,
       webSocketStore: [],
       allReconnectsAreDisabled: false,
     };
 
     this.reconnectTimeoutIds = [];
     this.disableDurationInMilliseconds = 2000;
+    this.searchCountLimit = 20;
   }
 
   componentDidMount() {
@@ -97,6 +97,12 @@ export default class Searches extends Component {
   handleImportErrorClose = () => {
     this.setState({
       importErrorOpen: false,
+    });
+  };
+
+  handleMaxSearchCountExceededErrorClose = () => {
+    this.setState({
+      maxSearchCountExceededErrorOpen: false,
     });
   };
 
@@ -172,12 +178,22 @@ export default class Searches extends Component {
       if (
         !regExes.searchUrlLeagueAndIdMatcher.test(connectionDetails.searchUrl)
       ) {
-        return reject(new InvalidInputError());
+        return reject(
+          new Error(`Invalid search url: ${connectionDetails.searchUrl}`)
+        );
       }
 
       const {
         webSocketStore: [...webSocketStore],
       } = this.state;
+
+      if (this.maxSearchCountReached()) {
+        this.setState({
+          maxSearchCountExceededErrorOpen: true,
+        });
+
+        return reject(new Error("Maximum search count exceeded"));
+      }
 
       const connectionDetailsWithUniqueId = {
         id: uniqueIdGenerator(),
@@ -207,6 +223,14 @@ export default class Searches extends Component {
     return webSocketStore.length === 0;
   }
 
+  maxSearchCountReached() {
+    const {
+      webSocketStore: [...webSocketStore],
+    } = this.state;
+
+    return webSocketStore.length === this.searchCountLimit;
+  }
+
   import() {
     remote.dialog.showOpenDialog(
       {
@@ -223,6 +247,8 @@ export default class Searches extends Component {
                 this.addNewConnection({
                   searchUrl: url,
                   name,
+                }).catch(addNewConnectionErr => {
+                  devErrorLog(addNewConnectionErr);
                 });
               }
             } catch (e) {
@@ -267,6 +293,7 @@ export default class Searches extends Component {
       webSocketStore: [...webSocketStore],
       allReconnectsAreDisabled,
       importErrorOpen,
+      maxSearchCountExceededErrorOpen,
     } = this.state;
 
     return (
@@ -288,23 +315,51 @@ export default class Searches extends Component {
             Invalid YAML format
           </Alert>
         </Snackbar>
+        <Snackbar
+          open={maxSearchCountExceededErrorOpen}
+          autoHideDuration={4000}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          onClose={this.handleMaxSearchCountExceededErrorClose}
+        >
+          <Alert
+            severity="error"
+            variant="filled"
+            onClose={this.handleMaxSearchCountExceededErrorClose}
+          >
+            {`Number of searches are limited to ${this.searchCountLimit} by GGG.`}
+          </Alert>
+        </Snackbar>
         <MaterialTable
           title="Active connections"
           columns={tableColumns.searchesScreen}
           components={{
             Pagination: () => (
-              <Box component="td" padding={2} fontSize="13px">
-                {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
-                Search count: <b>{webSocketStore.length}</b>
+              <Box component="td" padding={2}>
+                <Typography
+                  color={this.maxSearchCountReached() ? "error" : "initial"}
+                  variant="subtitle2"
+                >
+                  {`Search count: ${webSocketStore.length}`}
+                </Typography>
               </Box>
             ),
           }}
           data={webSocketStore}
           editable={{
-            onRowAdd: wsConnectionData =>
-              this.addNewConnection(wsConnectionData),
+            // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/material-table/issues/465#issuecomment-482955841
+            onRowAdd: this.maxSearchCountReached()
+              ? undefined
+              : wsConnectionData =>
+                  this.addNewConnection(wsConnectionData).catch(err =>
+                    devErrorLog(err)
+                  ),
             onRowDelete: wsConnectionData =>
-              this.deleteConnection(wsConnectionData),
+              this.deleteConnection(wsConnectionData).catch(err =>
+                devErrorLog(err)
+              ),
           }}
           actions={[
             webSocket => ({
@@ -325,8 +380,11 @@ export default class Searches extends Component {
             },
             {
               icon: "create_new_folder",
-              tooltip: "Import from file",
+              tooltip: this.maxSearchCountReached()
+                ? `Number of searches are limited to ${this.searchCountLimit} by GGG`
+                : "Import from file",
               isFreeAction: true,
+              disabled: this.maxSearchCountReached(),
               onClick: () => this.import(),
             },
             {
@@ -335,6 +393,16 @@ export default class Searches extends Component {
               isFreeAction: true,
               onClick: () => this.deleteAll(),
               disabled: this.isWebSocketStoreEmpty(),
+            },
+            {
+              // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/material-table/issues/465#issuecomment-482955841
+              icon: "add_box",
+              tooltip: `Number of searches are limited to ${this.searchCountLimit} by GGG`,
+              isFreeAction: true,
+              disabled: true,
+              hidden: !this.maxSearchCountReached(),
+              // An anonymus function needs to be provided to avoid invalid prop errors in the console.
+              onClick: () => {},
             },
           ]}
           options={{

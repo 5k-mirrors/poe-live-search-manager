@@ -13,6 +13,7 @@ import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
+import User from "../user/user";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -58,21 +59,39 @@ const setupWebSocketIpcListeners = () => {
 };
 
 const setupAuthenticationIpcListeners = () => {
-  ipcMain.on(ipcEvents.USER_LOGIN, (event, id) => {
-    subscriptionActions.startRefreshInterval(id);
+  ipcMain.on(ipcEvents.USER_LOGIN, (_, userId, idToken) => {
+    const globalStore = GlobalStore.getInstance();
+
+    globalStore.set(storeKeys.IS_LOGGED_IN, true);
+
+    User.update({
+      id: userId,
+      jwt: idToken,
+    });
+
+    subscriptionActions.startRefreshInterval();
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
+    const globalStore = GlobalStore.getInstance();
+
     subscriptionActions.stopRefreshInterval();
 
     webSocketActions.disconnectAll();
 
+    globalStore.set(storeKeys.IS_LOGGED_IN, false);
+    User.clear();
     storeUtils.clear(storeKeys.POE_SESSION_ID);
-
     Subscription.clear();
 
     electronUtils.send(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
       data: Subscription.data,
+    });
+  });
+
+  ipcMain.on(ipcEvents.ID_TOKEN_CHANGED, (_, idToken) => {
+    User.update({
+      jwt: idToken,
     });
   });
 };
@@ -91,8 +110,8 @@ const setupGeneralIpcListeners = () => {
     });
   });
 
-  ipcMain.on(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, (event, userId) =>
-    subscriptionActions.refresh(userId)
+  ipcMain.on(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, () =>
+    subscriptionActions.refresh()
   );
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {

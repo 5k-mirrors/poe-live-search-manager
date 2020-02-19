@@ -1,3 +1,3 @@
-import ReleaseNote from "./ReleaseNote";
+import Announcement from "./Announcement";
 
-export { ReleaseNote };
+export { Announcement };
