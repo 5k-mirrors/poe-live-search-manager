@@ -20,7 +20,10 @@ export default class NotificationsLimiter {
   // https://github.com/SGrondin/bottleneck#stop
   static drop() {
     return this.get()
-      .stop()
+      .stop({
+        dropErrorMessage:
+          "This limiter has been stopped - this is intended, you can ignore this error.",
+      })
       .then(() => this.bottleneck.deleteKey());
   }
 }
