@@ -201,7 +201,7 @@ export const AuthProvider = ({ children }) => {
   useUpdatePresence(state.isLoggedIn, state.data && state.data.uid);
   useIdTokenChangedObserver();
 
-  // Queued updates set to the user's reference are not cancelled because this could also cancel other updates in the system.
+  // `onDisconnect` will fail here after `signOut`. `onDisconnect().cancel()` could be used to avoid that but it had other side effects (https://github.com/c-hive/poe-sniper/issues/359).
   const signOut = () => {
     const firebaseApp = getFirebaseApp();
 
