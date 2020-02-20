@@ -49,6 +49,12 @@ The live search functionality requires a [Session ID](https://github.com/Stickym
 
 *If you encounter an issue, [report it](/../../issues/new/choose). Restarting the app can help resolve it.*
 
+#### Errors
+
+> You're already logged in elsewhere. Log out or try again later.
+
+In rare cases you may see this error due to connection issues ([related bug report](https://github.com/5k-mirrors/poe-live-search-manager/issues/95)). The issue will resolve by itself in a few minutes.
+
 #### Searches not connecting?
 
 - Make sure `pathofexile.com/trade` live search service works: open search in browser, click `Activate Live Search`, make sure new items are showing up.
