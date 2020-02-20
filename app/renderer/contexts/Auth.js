@@ -55,7 +55,7 @@ const useAuthStateChangedObserver = showNotification => {
                   .database()
                   .ref(`/users/${user.uid}`);
 
-                userRef
+                return userRef
                   .onDisconnect()
                   .set({
                     is_online: false,
@@ -212,12 +212,12 @@ export const AuthProvider = ({ children }) => {
         is_online: false,
         last_seen: firebase.database.ServerValue.TIMESTAMP,
       })
-      .then(() => {
+      .then(() =>
         userRef
           .onDisconnect()
           // Cancelling the event which was set after the user has signed in avoids updating the database in unauthenticated status.
-          .cancel();
-      })
+          .cancel()
+      )
       .then(() => firebaseApp.auth().signOut())
       .then(() => {
         dispatch({
