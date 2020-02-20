@@ -3,6 +3,15 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.11.1",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.1",
+    description: `Fixes:
+- https://github.com/5k-mirrors/poe-live-search-manager/issues/95 Cannot sign in`,
+    date: "2020-02-20T14:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.11.0",
     link:
       "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.0",
