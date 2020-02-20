@@ -201,6 +201,7 @@ export const AuthProvider = ({ children }) => {
   useUpdatePresence(state.isLoggedIn, state.data && state.data.uid);
   useIdTokenChangedObserver();
 
+  // Queued updates set to the user's reference are not cancelled because this could also cancel other updates in the system.
   const signOut = () => {
     const firebaseApp = getFirebaseApp();
 
@@ -212,12 +213,6 @@ export const AuthProvider = ({ children }) => {
         is_online: false,
         last_seen: firebase.database.ServerValue.TIMESTAMP,
       })
-      .then(() =>
-        userRef
-          .onDisconnect()
-          // Cancelling the event which was set after the user has signed in avoids updating the database in unauthenticated status.
-          .cancel()
-      )
       .then(() => firebaseApp.auth().signOut())
       .then(() => {
         dispatch({
