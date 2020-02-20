@@ -53,7 +53,7 @@ The live search functionality requires a [Session ID](https://github.com/Stickym
 
 > You're already logged in elsewhere. Log out or try again later.
 
-In rare cases you may see this error due to connection issues ([related bug report](https://github.com/5k-mirrors/poe-live-search-manager/issues/95)). The issue will resolve by itself in a few minutes.
+In rare cases you may see this error due to connection issues ([related bug report](/../../issues/95)). The issue will resolve by itself in a few minutes.
 
 #### Searches not connecting?
 
