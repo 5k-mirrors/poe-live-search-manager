@@ -7,7 +7,7 @@ export default [
     link:
       "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.1",
     description: `Fixes:
-- https://github.com/5k-mirrors/poe-live-search-manager/issues/95 Cannot sign in`,
+- #95 Can't login: "You're already logged in elsewhere. Log out or try again later."`,
     date: "2020-02-20T14:00:00Z",
   },
   {
