@@ -23,7 +23,6 @@ export const ensureUserSession = userId => {
   return userRef.once("value").then(snapshot => {
     if (!snapshot.exists()) {
       return userRef.set({
-        is_online: true,
         last_seen: firebase.database.ServerValue.TIMESTAMP,
       });
     }
