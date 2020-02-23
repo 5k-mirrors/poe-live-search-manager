@@ -1,6 +1,6 @@
 import firebase from "firebase";
-import SessionAlreadyExists from "../../../errors/session-already-exists";
 import RecordNotExists from "../../../errors/record-not-exists";
+import { devLog } from "../../../utils/JavaScriptUtils/JavaScriptUtils";
 
 export const getApp = () => {
   // https://stackoverflow.com/a/41005100/9599137
@@ -30,7 +30,8 @@ export const ensureUserSession = userId => {
     const user = snapshot.val();
 
     if (user.is_online) {
-      throw new SessionAlreadyExists(`${userId} already has an active session`);
+      devLog(`User session checking temporarily disabled.`);
+      // throw new SessionAlreadyExists(`${userId} already has an active session`);
     }
 
     return Promise.resolve();
