@@ -52,3 +52,8 @@ export const safeJsonResponse = response =>
 export const randomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min) + min);
 };
+
+export const retryIn = (cb, delay) =>
+  setTimeout(() => {
+    cb();
+  }, delay);

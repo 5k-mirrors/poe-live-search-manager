@@ -1,21 +1,27 @@
 import React from "react";
 import Container from "@material-ui/core/Container";
-import { AuthProvider, SubscriptionProvider } from "../../contexts";
+import {
+  AuthProvider,
+  SubscriptionProvider,
+  PrivacyPolicyProvider,
+} from "../../contexts";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Screens from "../../components/Screens/Screens";
-import PrivacyPolicyDialog from "../../components/PrivacyPolicyDialog/PrivacyPolicyDialog";
+import PrivacyPolicyAcceptanceDialog from "../../components/PrivacyPolicyAcceptanceDialog/PrivacyPolicyAcceptanceDialog";
 
 const CombinedProviders = ({ children }) => (
-  <AuthProvider>
-    <SubscriptionProvider>{children}</SubscriptionProvider>
-  </AuthProvider>
+  <PrivacyPolicyProvider>
+    <AuthProvider>
+      <SubscriptionProvider>{children}</SubscriptionProvider>
+    </AuthProvider>
+  </PrivacyPolicyProvider>
 );
 
 const app = () => (
   <Container>
     <NavigationBar />
-    <PrivacyPolicyDialog />
     <CombinedProviders>
+      <PrivacyPolicyAcceptanceDialog />
       <Screens />
     </CombinedProviders>
   </Container>

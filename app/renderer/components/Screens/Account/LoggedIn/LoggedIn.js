@@ -4,11 +4,10 @@ import Typography from "@material-ui/core/Typography";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/SimpleHtmlElements/Button/Button";
-import { getApp as getFirebaseApp } from "../../../../utils/Firebase/Firebase";
-import { useAuthContext } from "../../../../contexts/Auth";
+import { useAuthContext } from "../../../../contexts";
 
 export default () => {
-  const auth = useAuthContext();
+  const { state: auth, signOut } = useAuthContext();
 
   return (
     <div>
@@ -21,14 +20,7 @@ export default () => {
         <Typography variant="h6" gutterBottom>
           {`Logged in as ${auth.data.displayName || auth.data.email}`}
         </Typography>
-        <Button
-          clickEvent={() =>
-            getFirebaseApp()
-              .auth()
-              .signOut()
-          }
-          text="Sign out"
-        />
+        <Button clickEvent={signOut} text="Sign out" />
       </Box>
       <SessionIdEditor />
       <SubscriptionDetails />

@@ -2,6 +2,7 @@ export default class User {
   static data = {
     id: null,
     jwt: null,
+    acceptedPrivacyPolicy: null,
   };
 
   static update(nextData) {

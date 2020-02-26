@@ -1,7 +1,14 @@
-import { useState, useEffect, useRef, useReducer, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useReducer,
+  useCallback,
+} from "react";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 import { ipcRenderer } from "electron";
 import { asyncFetchActions, asyncFetchReducer } from "../../reducers/reducers";
-import { getApp as getFirebaseApp } from "../Firebase/Firebase";
 
 export const useListenToDataUpdatesViaIpc = (receiver, listener) => {
   useEffect(() => {
@@ -72,7 +79,7 @@ export const useDisplay = () => {
   return [elementIsVisible, displayElement, hideElementAfterMsElapsed];
 };
 
-export const useFirebaseAuthObserver = () => {
+/* export const useFirebaseAuthObserver = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -90,4 +97,55 @@ export const useFirebaseAuthObserver = () => {
   }, []);
 
   return { user, authenticated: !!user };
+}; */
+
+export const useNotify = () => {
+  const [options, setOptions] = useState({
+    open: false,
+    text: "Something went wrong.",
+    severity: "error",
+  });
+
+  const showNotification = useCallback(
+    (text = options.text, severity = options.severity) => {
+      setOptions(prevOptions => ({
+        ...prevOptions,
+        text,
+        severity,
+        open: true,
+      }));
+    },
+    [options.severity, options.text]
+  );
+
+  function renderNotification() {
+    return (
+      <Snackbar
+        open={options.open}
+        autoHideDuration={4000}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        onClose={() =>
+          setOptions(prevOptions => ({ ...prevOptions, open: false }))
+        }
+      >
+        <Alert
+          severity={options.severity}
+          variant="filled"
+          onClose={() =>
+            setOptions(prevOptions => ({ ...prevOptions, open: false }))
+          }
+        >
+          {options.text}
+        </Alert>
+      </Snackbar>
+    );
+  }
+
+  return {
+    showNotification,
+    renderNotification,
+  };
 };

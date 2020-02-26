@@ -8,6 +8,7 @@ import {
   safeGet,
   isDefined,
   randomInt,
+  retryIn,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
@@ -113,11 +114,13 @@ const connect = id =>
           const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
           if (isLoggedIn && subscription.active()) {
-            setTimeout(() => {
-              devLog(`Auto-reconnect initiated - ${ws.searchUrl} / ${ws.id}`);
-
-              connect(ws.id);
-            }, randomInt(2000, 3000));
+            const delay = randomInt(2000, 3000);
+            devLog(
+              `Auto-reconnect to be initiated in ${delay / 1000} seconds - ${
+                ws.searchUrl
+              } / ${ws.id}`
+            );
+            retryIn(() => connect(ws.id), delay);
           }
         });
 

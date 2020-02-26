@@ -60,21 +60,31 @@ const setupWebSocketIpcListeners = () => {
 
 const setupAuthenticationIpcListeners = () => {
   ipcMain.on(ipcEvents.USER_LOGIN, (_, userId, idToken) => {
+    const globalStore = new SingletonGlobalStore();
+
+    globalStore.set(storeKeys.IS_LOGGED_IN, true);
+
     User.update({
       id: userId,
       jwt: idToken,
     });
 
     subscriptionActions.startRefreshInterval();
+
+    // Send a PATCH request to the server to update the user's accepted privacy policy.
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
+    const globalStore = new SingletonGlobalStore();
+
     subscriptionActions.stopRefreshInterval();
 
     webSocketActions.disconnectAll();
 
+    globalStore.set(storeKeys.IS_LOGGED_IN, false);
     User.clear();
     storeUtils.clear(storeKeys.POE_SESSION_ID);
+    storeUtils.clear(storeKeys.ACCEPTED_PRIVACY_POLICY);
     subscription.clear();
 
     electronUtils.send(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
@@ -109,6 +119,10 @@ const setupGeneralIpcListeners = () => {
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
     limiterGroup.drop();
+  });
+
+  ipcMain.on(ipcEvents.ACCEPTED_PRIVACY_POLICY_UPDATED, () => {
+    // Send a PATCH request to the server.
   });
 };
 
