@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -8,9 +8,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { openExternalUrl } from "../../utils/ElectronUtils/ElectronUtils";
-import { usePrivacyPolicy } from "../../contexts";
-import { privacyPolicyActions } from "../../reducers/reducers";
-import privacyPolicy from "../../../resources/PrivacyPolicy/PrivacyPolicy";
+import { useAuthContext } from "../../contexts";
 
 const CheckboxLabel = () => (
   <span>
@@ -22,10 +20,28 @@ const CheckboxLabel = () => (
 );
 
 export default () => {
-  const { policy, dispatch } = usePrivacyPolicy();
+  const [options, setOptions] = useState({
+    showDialog: false,
+    accepted: false,
+  });
+  const { state } = useAuthContext();
+
+  useEffect(() => {
+    if (!state.isLoggedIn) {
+      setOptions(prevOptions => ({
+        ...prevOptions,
+        showDialog: true,
+      }));
+    } else {
+      setOptions(prevOptions => ({
+        ...prevOptions,
+        showDialog: false,
+      }));
+    }
+  }, [state.isLoggedIn]);
 
   return (
-    <Dialog open={policy.showDialog}>
+    <Dialog open={options.showDialog}>
       <DialogTitle>Privacy Policy</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -33,11 +49,14 @@ export default () => {
             control={
               // eslint-disable-next-line react/jsx-wrap-multilines
               <Checkbox
-                checked={policy.accepted}
+                checked={options.accepted}
                 onChange={() =>
-                  dispatch({ type: privacyPolicyActions.ACCEPTANCE_CHANGE })
+                  setOptions(prevOptions => ({
+                    ...prevOptions,
+                    accepted: !prevOptions.accepted,
+                  }))
                 }
-                value={policy.accepted}
+                value={options.accepted}
               />
             }
             label={<CheckboxLabel />}
@@ -45,15 +64,12 @@ export default () => {
         </DialogContentText>
         <DialogActions>
           <Button
-            onClick={() =>
-              dispatch({
-                type: privacyPolicyActions.ACCEPTANCE_CONFIRMATION,
-                payload: privacyPolicy,
-              })
-            }
             color="primary"
             variant="contained"
-            disabled={!policy.accepted}
+            disabled={!options.accepted}
+            onClick={() =>
+              setOptions(prevOptions => ({ ...prevOptions, showDialog: false }))
+            }
           >
             Agree
           </Button>

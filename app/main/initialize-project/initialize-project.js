@@ -14,6 +14,7 @@ import requestLimiter from "../request-limiter/request-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
 import User from "../user/user";
+import privacyPolicy from "../../resources/PrivacyPolicy/PrivacyPolicy";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -63,6 +64,9 @@ const setupAuthenticationIpcListeners = () => {
     const globalStore = new SingletonGlobalStore();
 
     globalStore.set(storeKeys.IS_LOGGED_IN, true);
+    globalStore.set(storeKeys.ACCEPTED_PRIVACY_POLICY, privacyPolicy);
+    // @TODO Also send a request ...
+    // fetch(method: PATCH ...);
 
     User.update({
       id: userId,
@@ -70,8 +74,6 @@ const setupAuthenticationIpcListeners = () => {
     });
 
     subscriptionActions.startRefreshInterval();
-
-    // Send a PATCH request to the server to update the user's accepted privacy policy.
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
@@ -119,10 +121,6 @@ const setupGeneralIpcListeners = () => {
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
     limiterGroup.drop();
-  });
-
-  ipcMain.on(ipcEvents.ACCEPTED_PRIVACY_POLICY_UPDATED, () => {
-    // Send a PATCH request to the server.
   });
 };
 

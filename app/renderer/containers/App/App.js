@@ -1,20 +1,14 @@
 import React from "react";
 import Container from "@material-ui/core/Container";
-import {
-  AuthProvider,
-  SubscriptionProvider,
-  PrivacyPolicyProvider,
-} from "../../contexts";
+import { AuthProvider, SubscriptionProvider } from "../../contexts";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Screens from "../../components/Screens/Screens";
 import PrivacyPolicyAcceptanceDialog from "../../components/PrivacyPolicyAcceptanceDialog/PrivacyPolicyAcceptanceDialog";
 
 const CombinedProviders = ({ children }) => (
-  <PrivacyPolicyProvider>
-    <AuthProvider>
-      <SubscriptionProvider>{children}</SubscriptionProvider>
-    </AuthProvider>
-  </PrivacyPolicyProvider>
+  <AuthProvider>
+    <SubscriptionProvider>{children}</SubscriptionProvider>
+  </AuthProvider>
 );
 
 const app = () => (
