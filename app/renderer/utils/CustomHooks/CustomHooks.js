@@ -79,26 +79,6 @@ export const useDisplay = () => {
   return [elementIsVisible, displayElement, hideElementAfterMsElapsed];
 };
 
-/* export const useFirebaseAuthObserver = () => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const registerAuthStateChangedObserver = () => {
-      const firebaseApp = getFirebaseApp();
-
-      return firebaseApp.auth().onAuthStateChanged(changedUser => {
-        setUser(changedUser);
-      });
-    };
-
-    const unregisterAuthStateChangedObserver = registerAuthStateChangedObserver();
-
-    return () => unregisterAuthStateChangedObserver();
-  }, []);
-
-  return { user, authenticated: !!user };
-}; */
-
 export const useNotify = () => {
   const [options, setOptions] = useState({
     open: false,

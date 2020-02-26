@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
 import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
 import Button from "../../../UI/SimpleHtmlElements/Button/Button";
-import { useAuthContext } from "../../../../contexts";
+import { useAuthContext } from "../../../../contexts/Auth";
 
 export default () => {
   const { state: auth, signOut } = useAuthContext();
