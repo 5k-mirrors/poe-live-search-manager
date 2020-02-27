@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { ipcRenderer } from "electron";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
@@ -9,6 +10,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { openExternalUrl } from "../utils/ElectronUtils/ElectronUtils";
 import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
@@ -93,8 +95,8 @@ export const PrivacyPolicyProvider = ({ children }) => {
   }, []);
 
   const handlePrivacyPolicyConfirmation = () => {
-    const globalStore = new SingletonGlobalStore();
-    globalStore.set(storeKeys.ACCEPTED_PRIVACY_POLICY, privacyPolicy);
+    ipcRenderer.send(ipcEvents.ACCEPTED_PRIVACY_POLICY_UPDATED, privacyPolicy);
+
     history.push("/account");
 
     setState(prevState => ({
