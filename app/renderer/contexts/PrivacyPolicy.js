@@ -58,10 +58,10 @@ export const PrivacyPolicyProvider = ({ children }) => {
       return true;
     }
 
-    const acceptedPrivacyPolicyVersion = acceptedPrivacyPolicy.version.split(
+    const acceptedPrivacyPolicyVersion = +acceptedPrivacyPolicy.version.split(
       "."
     )[0];
-    const latestPrivacyPolicyVersion = privacyPolicy.version.split(".")[0];
+    const latestPrivacyPolicyVersion = +privacyPolicy.version.split(".")[0];
 
     return latestPrivacyPolicyVersion > acceptedPrivacyPolicyVersion;
   };
@@ -115,13 +115,13 @@ export const PrivacyPolicyProvider = ({ children }) => {
   };
 
   const showPrivacyPolicyAcceptanceDialog = () => {
+    isLoggedInRef.current = false;
+
     setState(prevState => ({
       ...prevState,
       ...initialState,
       showDialog: true,
     }));
-
-    isLoggedInRef.current = false;
   };
 
   const renderDialog = () => (
