@@ -55,10 +55,12 @@ export const PrivacyPolicyProvider = ({ children }) => {
       return true;
     }
 
-    const version1 = acceptedPrivacyPolicy.version.split(".")[0];
-    const version2 = privacyPolicy.version.split(".")[0];
+    const acceptedPrivacyPolicyVersion = acceptedPrivacyPolicy.version.split(
+      "."
+    )[0];
+    const latestPrivacyPolicyVersion = privacyPolicy.version.split(".")[0];
 
-    return version2 > version1;
+    return latestPrivacyPolicyVersion > acceptedPrivacyPolicyVersion;
   };
 
   useEffect(() => {
