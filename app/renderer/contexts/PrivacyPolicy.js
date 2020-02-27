@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useRef } from "react";
 import { ipcRenderer } from "electron";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
@@ -43,6 +43,7 @@ export const initialState = {
 
 export const PrivacyPolicyProvider = ({ children }) => {
   const [state, setState] = useState(initialState);
+  const isLoggedInRef = useRef();
   const history = useHistory();
 
   const acceptedPrivacyPolicyChanged = () => {
@@ -68,9 +69,9 @@ export const PrivacyPolicyProvider = ({ children }) => {
   useEffect(() => {
     const globalStore = new SingletonGlobalStore();
 
-    const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+    isLoggedInRef.current = globalStore.get(storeKeys.IS_LOGGED_IN, false);
 
-    if (!isLoggedIn) {
+    if (!isLoggedInRef.current) {
       setState(prevState => ({
         ...prevState,
         ...initialState,
@@ -78,7 +79,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
       }));
     }
 
-    if (isLoggedIn && acceptedPrivacyPolicyChanged()) {
+    if (isLoggedInRef.current && acceptedPrivacyPolicyChanged()) {
       setState(prevState => ({
         ...prevState,
         changed: true,
@@ -86,7 +87,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
       }));
     }
 
-    if (isLoggedIn && !acceptedPrivacyPolicyChanged()) {
+    if (isLoggedInRef.current && !acceptedPrivacyPolicyChanged()) {
       setState(prevState => ({
         ...prevState,
         confirmed: true,
@@ -119,6 +120,8 @@ export const PrivacyPolicyProvider = ({ children }) => {
       ...initialState,
       showDialog: true,
     }));
+
+    isLoggedInRef.current = false;
   };
 
   const renderDialog = () => (
@@ -152,12 +155,20 @@ export const PrivacyPolicyProvider = ({ children }) => {
     </Dialog>
   );
 
+  if (isLoggedInRef.current && !state.confirmed) {
+    return (
+      <PrivacyPolicyContext.Provider>
+        {renderDialog()}
+      </PrivacyPolicyContext.Provider>
+    );
+  }
+
   return (
     <PrivacyPolicyContext.Provider
       value={{ showPrivacyPolicyAcceptanceDialog }}
     >
       {children}
-      {!state.confirmed && renderDialog()}
+      {renderDialog()}
     </PrivacyPolicyContext.Provider>
   );
 };
