@@ -13,8 +13,9 @@ import limiterGroup from "../limiter-group/limiter-group";
 import requestLimiter from "../request-limiter/request-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
-import User from "../user/user";
-import privacyPolicy from "../../resources/PrivacyPolicy/PrivacyPolicy";
+import user from "../user/user";
+import authenticatedFetch from "../utils/authenticated-fetch/authenticated-fetch";
+import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -64,16 +65,26 @@ const setupAuthenticationIpcListeners = () => {
     const globalStore = new SingletonGlobalStore();
 
     globalStore.set(storeKeys.IS_LOGGED_IN, true);
-    globalStore.set(storeKeys.ACCEPTED_PRIVACY_POLICY, privacyPolicy);
-    // @TODO Also send a request ...
-    // fetch(method: PATCH ...);
 
-    User.update({
+    user.update({
       id: userId,
       jwt: idToken,
     });
 
     subscriptionActions.startRefreshInterval();
+
+    authenticatedFetch(
+      `${process.env.FIREBASE_API_URL}/user/${user.data.id}/privacy-policy`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          ...user.data.policy,
+        }),
+      },
+      { "Content-Type": "application/json" }
+    ).catch(err => {
+      devErrorLog(err);
+    });
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
@@ -84,7 +95,7 @@ const setupAuthenticationIpcListeners = () => {
     webSocketActions.disconnectAll();
 
     globalStore.set(storeKeys.IS_LOGGED_IN, false);
-    User.clear();
+    user.clear();
     storeUtils.clear(storeKeys.POE_SESSION_ID);
     storeUtils.clear(storeKeys.ACCEPTED_PRIVACY_POLICY);
     subscription.clear();
@@ -95,7 +106,7 @@ const setupAuthenticationIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.ID_TOKEN_CHANGED, (_, idToken) => {
-    User.update({
+    user.update({
       jwt: idToken,
     });
   });
@@ -121,6 +132,16 @@ const setupGeneralIpcListeners = () => {
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
     limiterGroup.drop();
+  });
+
+  ipcMain.on(ipcEvents.ACCEPTED_PRIVACY_POLICY_UPDATED, (_, updatedPolicy) => {
+    const globalStore = new SingletonGlobalStore();
+
+    globalStore.set(storeKeys.ACCEPTED_PRIVACY_POLICY, updatedPolicy);
+
+    user.update({
+      policy: updatedPolicy,
+    });
   });
 };
 

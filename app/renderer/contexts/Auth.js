@@ -7,7 +7,7 @@ import {
   ensureUserSession,
   ensureRecordExists,
 } from "../utils/Firebase/Firebase";
-import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
+import { asyncFetchActions, asyncFetchReducer } from "../reducers/reducers";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 import { useNotify } from "../utils/CustomHooks/CustomHooks";
 import SessionAlreadyExists from "../../errors/session-already-exists";
@@ -17,6 +17,7 @@ import {
   retryIn,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { version } from "../../../package.json";
+import { usePrivacyPolicyContext } from "./PrivacyPolicy";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
@@ -50,7 +51,6 @@ const useAuthStateChangedObserver = showNotification => {
                 });
 
                 ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
-
                 const userRef = firebaseApp
                   .database()
                   .ref(`/users/${user.uid}`);
@@ -195,6 +195,7 @@ const useUpdatePresence = (authenticated, userId) => {
 };
 
 export const AuthProvider = ({ children }) => {
+  const { showPrivacyPolicyAcceptanceDialog } = usePrivacyPolicyContext();
   const { showNotification, renderNotification } = useNotify();
   const { state, dispatch } = useAuthStateChangedObserver(showNotification);
   useUpdateLastActiveVersion(state.isLoggedIn, state.data && state.data.uid);
@@ -224,6 +225,8 @@ export const AuthProvider = ({ children }) => {
         });
 
         ipcRenderer.send(ipcEvents.USER_LOGOUT);
+
+        showPrivacyPolicyAcceptanceDialog();
       })
       .catch(err => {
         devErrorLog(err);

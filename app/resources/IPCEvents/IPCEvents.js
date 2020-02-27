@@ -16,4 +16,5 @@ export const ipcEvents = {
   DROP_SCHEDULED_RESULTS: "dropScheduledResults",
   RATE_LIMIT_STATUS_CHANGE: "rateLimitStatusChange",
   ID_TOKEN_CHANGED: "idTokenChanged",
+  ACCEPTED_PRIVACY_POLICY_UPDATED: "acceptedPrivacyPolicyUpdated",
 };
