@@ -120,9 +120,9 @@ const useIdTokenChangedObserver = () => {
     const registerObserver = () => {
       const firebaseApp = getFirebaseApp();
 
-      return firebaseApp.auth().onIdTokenChanged(changedUser => {
-        if (changedUser) {
-          changedUser.getIdToken().then(token => {
+      return firebaseApp.auth().onIdTokenChanged(user => {
+        if (user) {
+          user.getIdToken().then(token => {
             ipcRenderer.send(ipcEvents.ID_TOKEN_CHANGED, token);
           });
         }
