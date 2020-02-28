@@ -17,7 +17,6 @@ import {
   retryIn,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import { version } from "../../../package.json";
-import { usePrivacyPolicyContext } from "./PrivacyPolicy";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
@@ -195,7 +194,6 @@ const useUpdatePresence = (authenticated, userId) => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const { showPrivacyPolicyAcceptanceDialog } = usePrivacyPolicyContext();
   const { showNotification, renderNotification } = useNotify();
   const { state, dispatch } = useAuthStateChangedObserver(showNotification);
   useUpdateLastActiveVersion(state.isLoggedIn, state.data && state.data.uid);
@@ -225,8 +223,6 @@ export const AuthProvider = ({ children }) => {
         });
 
         ipcRenderer.send(ipcEvents.USER_LOGOUT);
-
-        showPrivacyPolicyAcceptanceDialog();
       })
       .catch(err => {
         devErrorLog(err);

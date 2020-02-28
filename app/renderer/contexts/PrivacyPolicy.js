@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useRef } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
@@ -42,11 +42,15 @@ export const initialState = {
 };
 
 export const PrivacyPolicyProvider = ({ children }) => {
-  const [state, setState] = useState(initialState);
-  const isLoggedInRef = useRef();
+  const [policy, setPolicy] = useState(initialState);
+  const [loggedIn, setLoggedIn] = useState(() => {
+    const globalStore = new SingletonGlobalStore();
+
+    return globalStore.get(storeKeys.IS_LOGGED_IN, false);
+  });
   const history = useHistory();
 
-  const acceptedPrivacyPolicyChanged = () => {
+  const acceptedPrivacyPolicyChanged = React.useCallback(() => {
     const globalStore = new SingletonGlobalStore();
 
     const acceptedPrivacyPolicy = globalStore.get(
@@ -64,43 +68,47 @@ export const PrivacyPolicyProvider = ({ children }) => {
     const latestPrivacyPolicyVersion = +privacyPolicy.version.split(".")[0];
 
     return latestPrivacyPolicyVersion > acceptedPrivacyPolicyVersion;
-  };
+  }, []);
 
   useEffect(() => {
     const globalStore = new SingletonGlobalStore();
 
-    isLoggedInRef.current = globalStore.get(storeKeys.IS_LOGGED_IN, false);
+    const unsubscribe = globalStore.onDidChange(
+      storeKeys.IS_LOGGED_IN,
+      isLoggedIn => {
+        setLoggedIn(isLoggedIn);
+      }
+    );
 
-    if (!isLoggedInRef.current) {
-      setState(prevState => ({
-        ...prevState,
+    if (!loggedIn) {
+      setPolicy(() => ({
         ...initialState,
         showDialog: true,
       }));
     }
 
-    if (isLoggedInRef.current && acceptedPrivacyPolicyChanged()) {
-      setState(prevState => ({
-        ...prevState,
+    if (loggedIn && acceptedPrivacyPolicyChanged()) {
+      setPolicy(() => ({
+        ...initialState,
         changed: true,
         showDialog: true,
       }));
-    }
-
-    if (isLoggedInRef.current && !acceptedPrivacyPolicyChanged()) {
-      setState(prevState => ({
+    } else {
+      setPolicy(prevState => ({
         ...prevState,
         confirmed: true,
       }));
     }
-  }, []);
+
+    return () => unsubscribe();
+  }, [acceptedPrivacyPolicyChanged, loggedIn]);
 
   const handlePrivacyPolicyConfirmation = () => {
     ipcRenderer.send(ipcEvents.ACCEPTED_PRIVACY_POLICY_UPDATED, privacyPolicy);
 
     history.push("/account");
 
-    setState(prevState => ({
+    setPolicy(prevState => ({
       ...prevState,
       confirmed: true,
       showDialog: false,
@@ -108,24 +116,14 @@ export const PrivacyPolicyProvider = ({ children }) => {
   };
 
   const handleCheckboxChange = () => {
-    setState(prevState => ({
+    setPolicy(prevState => ({
       ...prevState,
       checked: !prevState.checked,
     }));
   };
 
-  const showPrivacyPolicyAcceptanceDialog = () => {
-    isLoggedInRef.current = false;
-
-    setState(prevState => ({
-      ...prevState,
-      ...initialState,
-      showDialog: true,
-    }));
-  };
-
   const renderDialog = () => (
-    <Dialog open={state.showDialog}>
+    <Dialog open={policy.showDialog}>
       <DialogTitle>Privacy Policy</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -133,19 +131,20 @@ export const PrivacyPolicyProvider = ({ children }) => {
             control={
               // eslint-disable-next-line react/jsx-wrap-multilines
               <Checkbox
-                checked={state.checked}
+                checked={policy.checked}
                 onChange={handleCheckboxChange}
-                value={state.checked}
+                value={policy.checked}
+                color="primary"
               />
             }
-            label={<CheckboxLabel changed={state.changed} />}
+            label={<CheckboxLabel changed={policy.changed} />}
           />
         </DialogContentText>
         <DialogActions>
           <Button
             color="primary"
             variant="contained"
-            disabled={!state.checked}
+            disabled={!policy.checked}
             onClick={handlePrivacyPolicyConfirmation}
           >
             Agree
@@ -155,18 +154,8 @@ export const PrivacyPolicyProvider = ({ children }) => {
     </Dialog>
   );
 
-  if (isLoggedInRef.current && !state.confirmed) {
-    return (
-      <PrivacyPolicyContext.Provider>
-        {renderDialog()}
-      </PrivacyPolicyContext.Provider>
-    );
-  }
-
   return (
-    <PrivacyPolicyContext.Provider
-      value={{ showPrivacyPolicyAcceptanceDialog }}
-    >
+    <PrivacyPolicyContext.Provider>
       {children}
       {renderDialog()}
     </PrivacyPolicyContext.Provider>
