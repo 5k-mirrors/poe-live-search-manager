@@ -50,6 +50,7 @@ const useAuthStateChangedObserver = showNotification => {
                 });
 
                 ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
+
                 const userRef = firebaseApp
                   .database()
                   .ref(`/users/${user.uid}`);
