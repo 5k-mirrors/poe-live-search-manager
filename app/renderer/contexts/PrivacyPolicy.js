@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 import { ipcRenderer } from "electron";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
@@ -50,7 +50,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
   });
   const history = useHistory();
 
-  const acceptedPrivacyPolicyChanged = React.useCallback(() => {
+  const acceptedPrivacyPolicyChanged = useCallback(() => {
     const globalStore = new SingletonGlobalStore();
 
     const acceptedPrivacyPolicy = globalStore.get(
