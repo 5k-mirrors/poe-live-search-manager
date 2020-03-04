@@ -1,56 +1,47 @@
 import GlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 
-class Store {
-  constructor() {
-    this.storage = [];
-  }
+export default class Store {
+  static sockets = [];
 
-  add(connectionDetails) {
-    this.storage.push({
+  static add(connectionDetails) {
+    this.sockets.push({
       ...connectionDetails,
     });
   }
 
-  update(id, updatedData) {
-    const wsElementIndex = this.storage.findIndex(ws => ws.id === id);
+  static update(id, data) {
+    const index = this.sockets.findIndex(socket => socket.id === id);
 
-    this.storage[wsElementIndex] = {
-      ...this.storage[wsElementIndex],
-      ...updatedData,
+    this.sockets[index] = {
+      ...this.sockets[index],
+      ...data,
     };
   }
 
-  find(id) {
-    return this.storage.find(ws => ws.id === id);
+  static find(id) {
+    return this.sockets.find(socket => socket.id === id);
   }
 
-  all() {
-    return [...this.storage];
+  static remove(id) {
+    const index = this.sockets.findIndex(socket => socket.id === id);
+
+    this.sockets.splice(index, 1);
   }
 
-  remove(id) {
-    const wsElementIndex = this.storage.findIndex(ws => ws.id === id);
-
-    this.storage.splice(wsElementIndex, 1);
-  }
-
-  sanitized() {
-    return this.all().map(
+  static sanitized() {
+    return this.sockets.map(
       ({ socket, ...remainingSocketDetails }) => remainingSocketDetails
     );
   }
 
-  clear() {
+  static clear() {
     // https://stackoverflow.com/a/1232046/9599137
-    this.storage.splice(0, this.storage.length);
+    this.sockets.splice(0, this.sockets.length);
   }
 
-  load() {
+  static load() {
     const globalStore = GlobalStore.getInstance();
-
-    /* The store must be emptied beforehand, otherwise FE hot-reload causes dudplicated items. */
-    this.clear();
 
     const localSearches = globalStore.get(storeKeys.WS_CONNECTIONS, []);
 
@@ -59,17 +50,3 @@ class Store {
     });
   }
 }
-
-class SingletonStore {
-  constructor() {
-    if (!SingletonStore.instance) {
-      SingletonStore.instance = new Store();
-    }
-
-    return SingletonStore.instance;
-  }
-}
-
-const singletonStore = new SingletonStore();
-
-export default singletonStore;
