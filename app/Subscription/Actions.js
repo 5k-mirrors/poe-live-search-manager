@@ -33,8 +33,9 @@ export const refresh = () =>
 export const startRefreshInterval = () => {
   refresh();
 
+  const minutes = 60 * 1000;
   // The delay is randomly set because the authenticated ID tokens are hourly refreshed as well and requests with expired tokens cannot be fulfilled.
-  const delay = randomInt(39 * 100 * 1000, 70 * 60 * 1000);
+  const delay = randomInt(65 * minutes, 70 * minutes);
 
   refreshInterval = setInterval(() => {
     refresh();
