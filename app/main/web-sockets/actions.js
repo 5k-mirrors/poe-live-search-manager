@@ -1,7 +1,7 @@
 import WebSocket from "ws";
 import { Mutex } from "async-mutex";
 import Bottleneck from "bottleneck";
-import store from "./store";
+import Store from "./store";
 import Subscription from "../../Subscription/Subscription";
 import processItems from "../process-items/process-items";
 import {
@@ -67,7 +67,7 @@ const connect = id =>
   // https://gitlab.com/c-hive/poe-sniper-electron/issues/91
   ConcurrentConnectionMutex.acquire()
     .then(release => {
-      const ws = store.find(id);
+      const ws = Store.find(id);
 
       if (!ws) return release();
 
@@ -86,7 +86,7 @@ const connect = id =>
           },
         });
 
-        store.update(ws.id, {
+        Store.update(ws.id, {
           ...ws,
         });
 
@@ -150,7 +150,7 @@ const connect = id =>
     });
 
 export const disconnect = id => {
-  const ws = store.find(id);
+  const ws = Store.find(id);
 
   if (!ws) {
     devLog(`No disconnect initiated (no such object in store) - ${id}`);
@@ -176,10 +176,10 @@ export const disconnect = id => {
 };
 
 const connectAll = () =>
-  store.all().forEach(connectionDetails => connect(connectionDetails.id));
+  Store.sockets.forEach(connectionDetails => connect(connectionDetails.id));
 
 export const disconnectAll = () =>
-  store.all().forEach(connectionDetails => disconnect(connectionDetails.id));
+  Store.sockets.forEach(connectionDetails => disconnect(connectionDetails.id));
 
 export const updateConnections = () => {
   const globalStore = GlobalStore.getInstance();

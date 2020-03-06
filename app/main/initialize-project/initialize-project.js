@@ -7,7 +7,7 @@ import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
-import store from "../web-sockets/store";
+import Store from "../web-sockets/store";
 import Subscription from "../../Subscription/Subscription";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import NotificationsLimiter from "../notification-limiter/notification-limiter";
@@ -17,12 +17,12 @@ import User from "../user/user";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
-    const storeWithStates = store
-      .all()
-      .map(({ socket, ...remainingSocketDetails }) => ({
+    const storeWithStates = Store.sockets.map(
+      ({ socket, ...remainingSocketDetails }) => ({
         ...remainingSocketDetails,
         isConnected: socket && stateIs(socket, socketStates.OPEN),
-      }));
+      })
+    );
 
     event.sender.send(ipcEvents.SEND_SOCKETS, storeWithStates);
   });
@@ -32,9 +32,9 @@ const setupWebSocketIpcListeners = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
     const globalStore = GlobalStore.getInstance();
 
-    store.add(connectionDetails);
+    Store.add(connectionDetails);
 
-    globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
+    globalStore.set(storeKeys.WS_CONNECTIONS, Store.sanitized());
 
     webSocketActions.updateConnections();
   });
@@ -44,9 +44,9 @@ const setupWebSocketIpcListeners = () => {
 
     webSocketActions.disconnect(connectionDetails.id);
 
-    store.remove(connectionDetails.id);
+    Store.remove(connectionDetails.id);
 
-    globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
+    globalStore.set(storeKeys.WS_CONNECTIONS, Store.sanitized());
   });
 
   ipcMain.on(ipcEvents.RECONNECT_SOCKET, (event, connectionDetails) => {
@@ -120,7 +120,7 @@ const setupGeneralIpcListeners = () => {
 };
 
 export const initListeners = () => {
-  store.load();
+  Store.load();
 
   setupStoreIpcListeners();
 
