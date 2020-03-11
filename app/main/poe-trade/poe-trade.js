@@ -3,28 +3,21 @@ import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
-import requestLimiter from "../request-limiter/request-limiter";
+import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { windows } from "../../resources/Windows/Windows";
-import mutex from "../mutex/mutex";
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
-    const limiter = requestLimiter.getInstance();
-
-    return limiter.currentReservoir().then(currentReservoir => {
-      if (
-        currentReservoir > 0 &&
-        requestLimiter.isActive === true &&
-        !mutex.isLocked()
-      ) {
-        requestLimiter.isActive = false;
+    return HttpRequestLimiter.currentReservoir().then(currentReservoir => {
+      if (currentReservoir > 0 && HttpRequestLimiter.requestsExhausted) {
+        HttpRequestLimiter.requestsExhausted = false;
 
         electronUtils.send(
           windows.MAIN,
           ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-          requestLimiter.isActive
+          HttpRequestLimiter.requestsExhausted
         );
 
         clearInterval(intervalId);
@@ -33,46 +26,39 @@ const startReservoirIncreaseListener = () => {
   }, 1000);
 };
 
-export const fetchItemDetails = id => {
-  return mutex.acquire().then(release => {
-    const limiter = requestLimiter.getInstance();
+export const fetchItemDetails = id =>
+  HttpRequestLimiter.schedule(() => {
+    const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
-    return limiter.schedule(() => {
-      release();
+    return fetch(itemUrl)
+      .then(data => data.json())
+      .then(parsedData =>
+        HttpRequestLimiter.currentReservoir().then(currentReservoir => {
+          if (currentReservoir === 0 && !HttpRequestLimiter.requestsExhausted) {
+            HttpRequestLimiter.requestsExhausted = true;
 
-      const itemUrl = `${baseUrls.poeFetchAPI + id}`;
+            electronUtils.send(
+              windows.MAIN,
+              ipcEvents.RATE_LIMIT_STATUS_CHANGE,
+              HttpRequestLimiter.requestsExhausted
+            );
 
-      return fetch(itemUrl)
-        .then(data => data.json())
-        .then(parsedData =>
-          limiter.currentReservoir().then(currentReservoir => {
-            if (currentReservoir === 0 && requestLimiter.isActive === false) {
-              requestLimiter.isActive = true;
+            startReservoirIncreaseListener();
+          }
 
-              electronUtils.send(
-                windows.MAIN,
-                ipcEvents.RATE_LIMIT_STATUS_CHANGE,
-                requestLimiter.isActive
-              );
+          const itemDetails = javaScriptUtils.safeGet(parsedData, [
+            "result",
+            0,
+          ]);
 
-              startReservoirIncreaseListener();
-            }
+          if (javaScriptUtils.isDefined(itemDetails)) {
+            return itemDetails;
+          }
 
-            const itemDetails = javaScriptUtils.safeGet(parsedData, [
-              "result",
-              0,
-            ]);
-
-            if (javaScriptUtils.isDefined(itemDetails)) {
-              return itemDetails;
-            }
-
-            throw new ItemFetchError(`Item details not found for ${itemUrl}`);
-          })
-        );
-    });
+          throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+        })
+      );
   });
-};
 
 export const getWhisperMessage = itemDetails => {
   const whisperMessage = javaScriptUtils.safeGet(itemDetails, [

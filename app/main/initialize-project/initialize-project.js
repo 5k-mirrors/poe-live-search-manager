@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import socketStates from "../../resources/SocketStates/SocketStates";
@@ -7,22 +7,22 @@ import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../../Subscription/Actions";
-import store from "../web-sockets/store";
-import subscription from "../../Subscription/Subscription";
-import limiterGroup from "../limiter-group/limiter-group";
-import requestLimiter from "../request-limiter/request-limiter";
+import Store from "../web-sockets/store";
+import Subscription from "../../Subscription/Subscription";
+import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
+import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
 import User from "../user/user";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
-    const storeWithStates = store
-      .all()
-      .map(({ socket, ...remainingSocketDetails }) => ({
+    const storeWithStates = Store.sockets.map(
+      ({ socket, ...remainingSocketDetails }) => ({
         ...remainingSocketDetails,
         isConnected: socket && stateIs(socket, socketStates.OPEN),
-      }));
+      })
+    );
 
     event.sender.send(ipcEvents.SEND_SOCKETS, storeWithStates);
   });
@@ -30,23 +30,23 @@ const setupStoreIpcListeners = () => {
 
 const setupWebSocketIpcListeners = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
-    store.add(connectionDetails);
+    Store.add(connectionDetails);
 
-    globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
+    globalStore.set(storeKeys.WS_CONNECTIONS, Store.sanitized());
 
     webSocketActions.updateConnections();
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     webSocketActions.disconnect(connectionDetails.id);
 
-    store.remove(connectionDetails.id);
+    Store.remove(connectionDetails.id);
 
-    globalStore.set(storeKeys.WS_CONNECTIONS, store.sanitized());
+    globalStore.set(storeKeys.WS_CONNECTIONS, Store.sanitized());
   });
 
   ipcMain.on(ipcEvents.RECONNECT_SOCKET, (event, connectionDetails) => {
@@ -60,7 +60,7 @@ const setupWebSocketIpcListeners = () => {
 
 const setupAuthenticationIpcListeners = () => {
   ipcMain.on(ipcEvents.USER_LOGIN, (_, userId, idToken) => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     globalStore.set(storeKeys.IS_LOGGED_IN, true);
 
@@ -73,7 +73,7 @@ const setupAuthenticationIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     subscriptionActions.stopRefreshInterval();
 
@@ -82,10 +82,10 @@ const setupAuthenticationIpcListeners = () => {
     globalStore.set(storeKeys.IS_LOGGED_IN, false);
     User.clear();
     storeUtils.clear(storeKeys.POE_SESSION_ID);
-    subscription.clear();
+    Subscription.clear();
 
     electronUtils.send(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-      data: subscription.data,
+      data: Subscription.data,
     });
   });
 
@@ -106,7 +106,7 @@ const setupGeneralIpcListeners = () => {
 
   ipcMain.on(ipcEvents.GET_SUBSCRIPTION_DETAILS, event => {
     event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-      data: { ...subscription.data },
+      data: { ...Subscription.data },
     });
   });
 
@@ -115,12 +115,12 @@ const setupGeneralIpcListeners = () => {
   );
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
-    limiterGroup.drop();
+    NotificationsLimiter.drop();
   });
 };
 
 export const initListeners = () => {
-  store.load();
+  Store.load();
 
   setupStoreIpcListeners();
 
@@ -132,9 +132,7 @@ export const initListeners = () => {
 };
 
 export const initRateLimiter = () =>
-  requestLimiter.initialize().then(() => {
-    const limiter = requestLimiter.getInstance();
-
+  HttpRequestLimiter.initialize().then(() => {
     // The reservoir's value must be decremented by one because the initialization contains a fetch which already counts towards the rate limit.
-    return limiter.incrementReservoir(-1);
+    return HttpRequestLimiter.incrementReservoir(-1);
   });

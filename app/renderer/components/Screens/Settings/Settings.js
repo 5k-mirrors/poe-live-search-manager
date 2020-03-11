@@ -5,7 +5,7 @@ import Button from "../../UI/SimpleHtmlElements/Button/Button";
 import ToggleButton from "../../UI/ToggleButton/ToggleButton";
 import ResultsListLimit from "./Display/ResultsListLimit";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
-import SingletonGlobalStore from "../../../../GlobalStore/GlobalStore";
+import GlobalStore from "../../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 
 const SettingsPageSection = ({ title, children }) => (
@@ -16,7 +16,7 @@ const SettingsPageSection = ({ title, children }) => (
 );
 
 export default () => {
-  const globalStore = new SingletonGlobalStore();
+  const globalStore = GlobalStore.getInstance();
 
   function handleAllowNotificationsChange(scheduleResults) {
     globalStore.set(storeKeys.SCHEDULE_RESULTS, scheduleResults);

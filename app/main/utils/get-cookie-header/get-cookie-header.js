@@ -1,8 +1,8 @@
-import SingletonGlobalStore from "../../../GlobalStore/GlobalStore";
+import GlobalStore from "../../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 
 export default () => {
-  const globalStore = new SingletonGlobalStore();
+  const globalStore = GlobalStore.getInstance();
 
   const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
 
