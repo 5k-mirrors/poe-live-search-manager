@@ -3,6 +3,24 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.11.2",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.2",
+    description: `Fixes:
+- #95 Can't login: "You're already logged in elsewhere. Log out or try again later."`,
+    date: "2020-02-23T21:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
+    title: "v1.11.1",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.1",
+    description: `Fixes:
+- #95 Can't login: "You're already logged in elsewhere. Log out or try again later."`,
+    date: "2020-02-20T14:00:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.11.0",
     link:
       "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.0",

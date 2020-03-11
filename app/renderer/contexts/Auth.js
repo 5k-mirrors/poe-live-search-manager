@@ -55,7 +55,7 @@ const useAuthStateChangedObserver = showNotification => {
                   .database()
                   .ref(`/users/${user.uid}`);
 
-                userRef
+                return userRef
                   .onDisconnect()
                   .set({
                     is_online: false,
@@ -201,41 +201,35 @@ export const AuthProvider = ({ children }) => {
   useUpdatePresence(state.isLoggedIn, state.data && state.data.uid);
   useIdTokenChangedObserver();
 
+  // `onDisconnect` will fail here after `signOut`. `onDisconnect().cancel()` could be used to avoid that but it had other side effects (https://github.com/c-hive/poe-sniper/issues/359).
   const signOut = () => {
     const firebaseApp = getFirebaseApp();
 
     const userRef = firebaseApp.database().ref(`/users/${state.data.uid}`);
 
-    return (
-      userRef
-        .onDisconnect()
-        // Cancelling the event which was set after the user has signed in avoids updating the database in unauthenticated status.
-        .cancel()
-        .then(() =>
-          // The `set()` operation must be performed before the user is signed out because writing attempts are rejected in case of unauthanticated users.
-          userRef.set({
-            is_online: false,
-            last_seen: firebase.database.ServerValue.TIMESTAMP,
-          })
-        )
-        .then(() => firebaseApp.auth().signOut())
-        .then(() => {
-          dispatch({
-            type: asyncFetchActions.RECEIVE_RESPONSE,
-            payload: {
-              data: null,
-              isLoggedIn: false,
-            },
-          });
+    // The `set()` operation must be performed before the user is signed out because writing attempts are rejected in case of unauthanticated users.
+    return userRef
+      .set({
+        is_online: false,
+        last_seen: firebase.database.ServerValue.TIMESTAMP,
+      })
+      .then(() => firebaseApp.auth().signOut())
+      .then(() => {
+        dispatch({
+          type: asyncFetchActions.RECEIVE_RESPONSE,
+          payload: {
+            data: null,
+            isLoggedIn: false,
+          },
+        });
 
-          ipcRenderer.send(ipcEvents.USER_LOGOUT);
-        })
-        .catch(err => {
-          devErrorLog(err);
+        ipcRenderer.send(ipcEvents.USER_LOGOUT);
+      })
+      .catch(err => {
+        devErrorLog(err);
 
-          showNotification("Something went wrong during signout.", "error");
-        })
-    );
+        showNotification("Something went wrong during signout.", "error");
+      });
   };
 
   const exportedState = {
