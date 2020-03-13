@@ -12,7 +12,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { openExternalUrl } from "../utils/ElectronUtils/ElectronUtils";
-import SingletonGlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 import privacyPolicy from "../../resources/PrivacyPolicy/PrivacyPolicy";
@@ -44,14 +44,14 @@ export const initialState = {
 export const PrivacyPolicyProvider = ({ children }) => {
   const [policy, setPolicy] = useState(initialState);
   const [loggedIn, setLoggedIn] = useState(() => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     return globalStore.get(storeKeys.IS_LOGGED_IN, false);
   });
   const history = useHistory();
 
   const acceptedPrivacyPolicyChanged = useCallback(() => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     const acceptedPrivacyPolicy = globalStore.get(
       storeKeys.ACCEPTED_PRIVACY_POLICY,
@@ -71,7 +71,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const globalStore = new SingletonGlobalStore();
+    const globalStore = GlobalStore.getInstance();
 
     const unsubscribe = globalStore.onDidChange(
       storeKeys.IS_LOGGED_IN,

@@ -1,20 +1,22 @@
-import subscription from "./Subscription";
+import Subscription from "./Subscription";
 import * as webSocketActions from "../main/web-sockets/actions";
 import { send as sendRenderer } from "../main/utils/electron-utils/electron-utils";
 import { ipcEvents } from "../resources/IPCEvents/IPCEvents";
 import { windows } from "../resources/Windows/Windows";
-import { devErrorLog } from "../utils/JavaScriptUtils/JavaScriptUtils";
+import {
+  devErrorLog,
+  randomInt,
+} from "../utils/JavaScriptUtils/JavaScriptUtils";
 
 let refreshInterval;
 
 export const refresh = () =>
-  subscription
-    .query()
+  Subscription.query()
     .then(nextSubscriptionDetails => {
-      subscription.update(nextSubscriptionDetails);
+      Subscription.update(nextSubscriptionDetails);
 
       sendRenderer(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-        data: { ...subscription.data },
+        data: { ...Subscription.data },
       });
 
       webSocketActions.updateConnections();
@@ -30,11 +32,13 @@ export const refresh = () =>
 export const startRefreshInterval = () => {
   refresh();
 
-  const oneHourInMilliseconds = 3600000;
+  const minutes = 60 * 1000;
+  // The delay is randomly set because the authenticated ID tokens are hourly refreshed as well and requests with expired tokens cannot be fulfilled.
+  const delay = randomInt(65 * minutes, 70 * minutes);
 
   refreshInterval = setInterval(() => {
     refresh();
-  }, oneHourInMilliseconds);
+  }, delay);
 };
 
 export const stopRefreshInterval = () => {
