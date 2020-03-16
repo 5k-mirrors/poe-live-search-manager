@@ -35,6 +35,7 @@ const CheckboxLabel = () => (
 const PrivacyPolicyContext = createContext(null);
 PrivacyPolicyContext.displayName = "PrivacyPolicyContext";
 
+// @TODO Remove `confirmed` flag.
 export const initialState = {
   showDialog: false,
   confirmed: false,
@@ -71,7 +72,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
   useEffect(() => {
     const globalStore = GlobalStore.getInstance();
 
-    const unsubscribe = globalStore.onDidChange(
+    const ubsubscribeIsLoggedInChangeListener = globalStore.onDidChange(
       storeKeys.IS_LOGGED_IN,
       isLoggedIn => {
         setLoggedIn(isLoggedIn);
@@ -90,20 +91,31 @@ export const PrivacyPolicyProvider = ({ children }) => {
       }));
     }
 
-    return () => unsubscribe();
+    return () => ubsubscribeIsLoggedInChangeListener();
   }, [loggedIn, privacyPolicyChanged]);
 
-  const handlePrivacyPolicyConfirmation = () => {
-    ipcRenderer.send(ipcEvents.ACCEPTED_PRIVACY_POLICY_UPDATED, privacyPolicy);
+  // The dialog is only hidden if the user accepts the privacy policy and changes are written to the offline storage.
+  useEffect(() => {
+    const globalStore = GlobalStore.getInstance();
 
-    history.push("/account");
+    const unsubsribePrivacyPolicyChangeListener = globalStore.onDidChange(
+      storeKeys.ACCEPTED_PRIVACY_POLICY,
+      data => {
+        // The data must be defined to proceed the user to the account screen because the observer is also triggered when the user signs out.
+        if (data && data.version && data.link) {
+          setPolicy(prevState => ({
+            ...prevState,
+            confirmed: true,
+            showDialog: false,
+          }));
 
-    setPolicy(prevState => ({
-      ...prevState,
-      confirmed: true,
-      showDialog: false,
-    }));
-  };
+          history.push("/account");
+        }
+      }
+    );
+
+    return () => unsubsribePrivacyPolicyChangeListener();
+  }, [history]);
 
   const handleCheckboxChange = () => {
     setPolicy(prevState => ({
@@ -135,7 +147,12 @@ export const PrivacyPolicyProvider = ({ children }) => {
             color="primary"
             variant="contained"
             disabled={!policy.checked}
-            onClick={handlePrivacyPolicyConfirmation}
+            onClick={() =>
+              ipcRenderer.send(
+                ipcEvents.ACCEPTED_PRIVACY_POLICY_UPDATED,
+                privacyPolicy
+              )
+            }
           >
             Agree
           </Button>

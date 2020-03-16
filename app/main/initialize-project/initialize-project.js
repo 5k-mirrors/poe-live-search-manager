@@ -13,7 +13,7 @@ import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
-import user from "../user/user";
+import User from "../user/user";
 import authenticatedFetch from "../utils/authenticated-fetch/authenticated-fetch";
 import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
@@ -66,19 +66,22 @@ const setupAuthenticationIpcListeners = () => {
 
     globalStore.set(storeKeys.IS_LOGGED_IN, true);
 
-    user.update({
+    User.update({
       id: userId,
       jwt: idToken,
     });
 
     subscriptionActions.startRefreshInterval();
+    const acceptedPrivacyPolicy = globalStore.get(
+      storeKeys.ACCEPTED_PRIVACY_POLICY
+    );
 
     authenticatedFetch(
-      `${process.env.FIREBASE_API_URL}/user/${user.data.id}/privacy-policy`,
+      `${process.env.FIREBASE_API_URL}/user/${User.data.id}/privacy-policy`,
       {
         method: "PATCH",
         body: JSON.stringify({
-          ...user.data.policy,
+          ...acceptedPrivacyPolicy,
         }),
       },
       { "Content-Type": "application/json" }
@@ -95,7 +98,7 @@ const setupAuthenticationIpcListeners = () => {
     webSocketActions.disconnectAll();
 
     globalStore.set(storeKeys.IS_LOGGED_IN, false);
-    user.clear();
+    User.clear();
     storeUtils.clear(storeKeys.POE_SESSION_ID);
     storeUtils.clear(storeKeys.ACCEPTED_PRIVACY_POLICY);
     Subscription.clear();
@@ -106,7 +109,7 @@ const setupAuthenticationIpcListeners = () => {
   });
 
   ipcMain.on(ipcEvents.ID_TOKEN_CHANGED, (_, idToken) => {
-    user.update({
+    User.update({
       jwt: idToken,
     });
   });
@@ -138,10 +141,6 @@ const setupGeneralIpcListeners = () => {
     const globalStore = GlobalStore.getInstance();
 
     globalStore.set(storeKeys.ACCEPTED_PRIVACY_POLICY, updatedPolicy);
-
-    user.update({
-      policy: updatedPolicy,
-    });
   });
 };
 
