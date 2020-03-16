@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useCallback } from "react";
 import { ipcRenderer } from "electron";
+import compareVersions from "compare-versions";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
@@ -49,7 +50,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
   });
   const history = useHistory();
 
-  const acceptedPrivacyPolicyChanged = useCallback(() => {
+  const privacyPolicyChanged = useCallback(() => {
     const globalStore = GlobalStore.getInstance();
 
     const acceptedPrivacyPolicy = globalStore.get(
@@ -61,12 +62,10 @@ export const PrivacyPolicyProvider = ({ children }) => {
       return true;
     }
 
-    const acceptedPrivacyPolicyVersion = +acceptedPrivacyPolicy.version.split(
-      "."
-    )[0];
-    const latestPrivacyPolicyVersion = +privacyPolicy.version.split(".")[0];
-
-    return latestPrivacyPolicyVersion > acceptedPrivacyPolicyVersion;
+    return (
+      compareVersions(privacyPolicy.version, acceptedPrivacyPolicy.version) ===
+      1
+    );
   }, []);
 
   useEffect(() => {
@@ -79,7 +78,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
       }
     );
 
-    if (!loggedIn || acceptedPrivacyPolicyChanged()) {
+    if (!loggedIn || privacyPolicyChanged()) {
       setPolicy(() => ({
         ...initialState,
         showDialog: true,
@@ -92,7 +91,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
     }
 
     return () => unsubscribe();
-  }, [acceptedPrivacyPolicyChanged, loggedIn]);
+  }, [loggedIn, privacyPolicyChanged]);
 
   const handlePrivacyPolicyConfirmation = () => {
     ipcRenderer.send(ipcEvents.ACCEPTED_PRIVACY_POLICY_UPDATED, privacyPolicy);
