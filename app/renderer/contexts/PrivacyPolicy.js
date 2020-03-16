@@ -83,9 +83,9 @@ export const PrivacyPolicyProvider = ({ children }) => {
         showDialog: true,
       }));
     } else {
-      setPolicy(prevState => ({
-        ...prevState,
-        showDialog: false,
+      // This branch runs when the user is signed in and the version of its accepted privacy policy is equal to the one stored offline.
+      setPolicy(() => ({
+        ...initialState,
       }));
     }
 
