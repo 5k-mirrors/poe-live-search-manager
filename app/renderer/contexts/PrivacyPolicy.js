@@ -17,9 +17,9 @@ import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 import privacyPolicy from "../../resources/PrivacyPolicy/PrivacyPolicy";
 
-const CheckboxLabel = ({ changed }) => (
+const CheckboxLabel = () => (
   <span>
-    {changed ? "We have updated our " : "I have read and I accept the "}
+    I have read and I accept the
     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
     <Link
       component="button"
@@ -38,7 +38,6 @@ export const initialState = {
   showDialog: false,
   confirmed: false,
   checked: false,
-  changed: false,
 };
 
 export const PrivacyPolicyProvider = ({ children }) => {
@@ -80,22 +79,14 @@ export const PrivacyPolicyProvider = ({ children }) => {
       }
     );
 
-    if (!loggedIn) {
+    if (!loggedIn || acceptedPrivacyPolicyChanged()) {
       setPolicy(() => ({
         ...initialState,
-        showDialog: true,
-      }));
-    }
-
-    if (loggedIn && acceptedPrivacyPolicyChanged()) {
-      setPolicy(() => ({
-        ...initialState,
-        changed: true,
         showDialog: true,
       }));
     } else {
-      setPolicy(prevState => ({
-        ...prevState,
+      setPolicy(() => ({
+        ...initialState,
         confirmed: true,
       }));
     }
@@ -137,7 +128,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
                 color="primary"
               />
             }
-            label={<CheckboxLabel changed={policy.changed} />}
+            label={<CheckboxLabel />}
           />
         </DialogContentText>
         <DialogActions>
