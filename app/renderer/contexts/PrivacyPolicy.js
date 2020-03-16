@@ -85,7 +85,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
     } else {
       setPolicy(prevState => ({
         ...prevState,
-        showDialog: true,
+        showDialog: false,
       }));
     }
 
