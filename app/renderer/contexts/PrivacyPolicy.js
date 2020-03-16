@@ -35,10 +35,8 @@ const CheckboxLabel = () => (
 const PrivacyPolicyContext = createContext(null);
 PrivacyPolicyContext.displayName = "PrivacyPolicyContext";
 
-// @TODO Remove `confirmed` flag.
 export const initialState = {
   showDialog: false,
-  confirmed: false,
   checked: false,
 };
 
@@ -80,14 +78,14 @@ export const PrivacyPolicyProvider = ({ children }) => {
     );
 
     if (!loggedIn || privacyPolicyChanged()) {
-      setPolicy(() => ({
-        ...initialState,
+      setPolicy(prevState => ({
+        ...prevState,
         showDialog: true,
       }));
     } else {
-      setPolicy(() => ({
-        ...initialState,
-        confirmed: true,
+      setPolicy(prevState => ({
+        ...prevState,
+        showDialog: true,
       }));
     }
 
@@ -101,11 +99,10 @@ export const PrivacyPolicyProvider = ({ children }) => {
     const unsubsribePrivacyPolicyChangeListener = globalStore.onDidChange(
       storeKeys.ACCEPTED_PRIVACY_POLICY,
       data => {
-        // The data must be defined to proceed the user to the account screen because the observer is also triggered when the user signs out.
+        // The data must be defined to proceed the user to the account screen because the listener is also triggered with undefined data when the user signs out.
         if (data && data.version && data.link) {
           setPolicy(prevState => ({
             ...prevState,
-            confirmed: true,
             showDialog: false,
           }));
 
