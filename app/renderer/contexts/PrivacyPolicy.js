@@ -20,7 +20,7 @@ import privacyPolicy from "../../resources/PrivacyPolicy/PrivacyPolicy";
 
 const CheckboxLabel = () => (
   <span>
-    I have read and I accept the
+    {`I have read and I accept the `}
     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
     <Link
       component="button"
