@@ -121,21 +121,22 @@ export const PrivacyPolicyProvider = ({ children }) => {
     }));
   };
 
+  const DialogCheckbox = () => (
+    <Checkbox
+      checked={policy.checked}
+      onChange={handleCheckboxChange}
+      value={policy.checked}
+      color="primary"
+    />
+  );
+
   const renderDialog = () => (
     <Dialog open={policy.showDialog}>
       <DialogTitle>Privacy Policy</DialogTitle>
       <DialogContent>
         <DialogContentText>
           <FormControlLabel
-            control={
-              // eslint-disable-next-line react/jsx-wrap-multilines
-              <Checkbox
-                checked={policy.checked}
-                onChange={handleCheckboxChange}
-                value={policy.checked}
-                color="primary"
-              />
-            }
+            control={<DialogCheckbox />}
             label={<CheckboxLabel />}
           />
         </DialogContentText>
