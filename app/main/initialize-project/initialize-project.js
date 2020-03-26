@@ -61,34 +61,39 @@ const setupWebSocketIpcListeners = () => {
 };
 
 const setupAuthenticationIpcListeners = () => {
-  ipcMain.on(ipcEvents.USER_LOGIN, (_, userId, idToken) => {
-    const globalStore = GlobalStore.getInstance();
+  ipcMain.on(
+    ipcEvents.USER_LOGIN,
+    (_, userId, idToken, privacyPolicyLink, privacyPolicyVersion) => {
+      const globalStore = GlobalStore.getInstance();
 
-    globalStore.set(storeKeys.IS_LOGGED_IN, true);
+      globalStore.set(storeKeys.IS_LOGGED_IN, true);
+      globalStore.set(storeKeys.ACCEPTED_PRIVACY_POLICY, {
+        link: privacyPolicyLink,
+        version: privacyPolicyVersion,
+      });
 
-    User.update({
-      id: userId,
-      jwt: idToken,
-    });
+      User.update({
+        id: userId,
+        jwt: idToken,
+      });
 
-    subscriptionActions.startRefreshInterval();
-    const acceptedPrivacyPolicy = globalStore.get(
-      storeKeys.ACCEPTED_PRIVACY_POLICY
-    );
+      subscriptionActions.startRefreshInterval();
 
-    authenticatedFetch(
-      `${process.env.FIREBASE_API_URL}/user/${User.data.id}/privacy-policy`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          ...acceptedPrivacyPolicy,
-        }),
-      },
-      { "Content-Type": "application/json" }
-    ).catch(err => {
-      devErrorLog(err);
-    });
-  });
+      authenticatedFetch(
+        `${process.env.FIREBASE_API_URL}/user/${User.data.id}/privacy-policy`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            link: privacyPolicyLink,
+            version: privacyPolicyVersion,
+          }),
+        },
+        { "Content-Type": "application/json" }
+      ).catch(err => {
+        devErrorLog(err);
+      });
+    }
+  );
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
     const globalStore = GlobalStore.getInstance();
@@ -135,12 +140,6 @@ const setupGeneralIpcListeners = () => {
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
     NotificationsLimiter.drop();
-  });
-
-  ipcMain.on(ipcEvents.ACCEPTED_PRIVACY_POLICY_UPDATED, (_, updatedPolicy) => {
-    const globalStore = GlobalStore.getInstance();
-
-    globalStore.set(storeKeys.ACCEPTED_PRIVACY_POLICY, updatedPolicy);
   });
 };
 

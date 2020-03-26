@@ -7,7 +7,11 @@ import {
   ensureUserSession,
   ensureRecordExists,
 } from "../utils/Firebase/Firebase";
-import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
+import {
+  asyncFetchReducer,
+  asyncFetchActions,
+  privacyPolicyActions,
+} from "../reducers/reducers";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 import { useNotify } from "../utils/CustomHooks/CustomHooks";
 import SessionAlreadyExists from "../../errors/session-already-exists";
@@ -16,12 +20,17 @@ import {
   devErrorLog,
   retryIn,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import { usePrivacyPolicyContext } from "./PrivacyPolicy";
 import { version } from "../../../package.json";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
 
 const useAuthStateChangedObserver = showNotification => {
+  const {
+    state: privacyPolicyState,
+    dispatch: privacyPolicyDispatch,
+  } = usePrivacyPolicyContext();
   const [state, dispatch] = useReducer(asyncFetchReducer, {
     data: null,
     isLoading: false,
@@ -49,7 +58,17 @@ const useAuthStateChangedObserver = showNotification => {
                   },
                 });
 
-                ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
+                privacyPolicyDispatch({
+                  type: privacyPolicyActions.USER_LOGIN,
+                });
+
+                ipcRenderer.send(
+                  ipcEvents.USER_LOGIN,
+                  user.uid,
+                  token,
+                  privacyPolicyState.link,
+                  privacyPolicyActions.version
+                );
 
                 const userRef = firebaseApp
                   .database()
@@ -107,15 +126,30 @@ const useAuthStateChangedObserver = showNotification => {
       });
     };
 
-    const unregisterObserver = registerObserver();
+    let unregisterObserver;
 
-    return () => unregisterObserver();
-  }, [showNotification]);
+    if (privacyPolicyState.accepted) {
+      unregisterObserver = registerObserver();
+    }
+
+    return () => {
+      if (unregisterObserver) {
+        unregisterObserver();
+      }
+    };
+  }, [
+    privacyPolicyDispatch,
+    privacyPolicyState.accepted,
+    privacyPolicyState.link,
+    showNotification,
+  ]);
 
   return { state, dispatch };
 };
 
 const useIdTokenChangedObserver = () => {
+  const { state: privacyPolicyState } = usePrivacyPolicyContext();
+
   useEffect(() => {
     const registerObserver = () => {
       const firebaseApp = getFirebaseApp();
@@ -129,10 +163,18 @@ const useIdTokenChangedObserver = () => {
       });
     };
 
-    const unregisterObserver = registerObserver();
+    let unregisterObserver;
 
-    return () => unregisterObserver();
-  }, []);
+    if (privacyPolicyState.accepted) {
+      unregisterObserver = registerObserver();
+    }
+
+    return () => {
+      if (unregisterObserver) {
+        unregisterObserver();
+      }
+    };
+  }, [privacyPolicyState.accepted]);
 };
 
 const useUpdateLastActiveVersion = (authenticated, userId) => {
@@ -197,6 +239,7 @@ const useUpdatePresence = (authenticated, userId) => {
 export const AuthProvider = ({ children }) => {
   const { showNotification, renderNotification } = useNotify();
   const { state, dispatch } = useAuthStateChangedObserver(showNotification);
+  const { dispatch: privacyPolicyDispatch } = usePrivacyPolicyContext();
   useUpdateLastActiveVersion(state.isLoggedIn, state.data && state.data.uid);
   useUpdatePresence(state.isLoggedIn, state.data && state.data.uid);
   useIdTokenChangedObserver();
@@ -222,6 +265,8 @@ export const AuthProvider = ({ children }) => {
             isLoggedIn: false,
           },
         });
+
+        privacyPolicyDispatch({ type: privacyPolicyActions.SHOW_DIALOG });
 
         ipcRenderer.send(ipcEvents.USER_LOGOUT);
       })

@@ -5,9 +5,7 @@ export default class GlobalStore {
 
   static getInstance() {
     if (!this.instance) {
-      this.instance = new ElectronStore({
-        watch: true,
-      });
+      this.instance = new ElectronStore();
     }
 
     return this.instance;

@@ -1,5 +1,9 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
-import { ipcRenderer } from "electron";
+import React, {
+  createContext,
+  useReducer,
+  useEffect,
+  useCallback,
+} from "react";
 import compareVersions from "compare-versions";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
@@ -11,11 +15,14 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { openExternalUrl } from "../utils/ElectronUtils/ElectronUtils";
-import GlobalStore from "../../GlobalStore/GlobalStore";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
+import {
+  privacyPolicyActions,
+  privacyPolicyReducer,
+  privacyPolicyInitialState,
+  initPrivacyPolicyState,
+} from "../reducers/reducers";
 import privacyPolicy from "../../resources/PrivacyPolicy/PrivacyPolicy";
 
 const CheckboxLabel = () => (
@@ -35,103 +42,56 @@ const CheckboxLabel = () => (
 const PrivacyPolicyContext = createContext(null);
 PrivacyPolicyContext.displayName = "PrivacyPolicyContext";
 
-export const initialState = {
-  showDialog: false,
-  checked: false,
-};
-
 export const PrivacyPolicyProvider = ({ children }) => {
-  const [policy, setPolicy] = useState(initialState);
-  const [loggedIn, setLoggedIn] = useState(() => {
-    const globalStore = GlobalStore.getInstance();
-
-    return globalStore.get(storeKeys.IS_LOGGED_IN, false);
-  });
+  const [state, dispatch] = useReducer(
+    privacyPolicyReducer,
+    privacyPolicyInitialState,
+    initPrivacyPolicyState
+  );
   const history = useHistory();
 
-  const privacyPolicyChanged = useCallback(() => {
-    const globalStore = GlobalStore.getInstance();
-
-    const acceptedPrivacyPolicy = globalStore.get(
-      storeKeys.ACCEPTED_PRIVACY_POLICY,
-      null
-    );
-
-    if (!acceptedPrivacyPolicy || !acceptedPrivacyPolicy.version) {
+  const policyChanged = useCallback(() => {
+    if (!state.link || !state.version) {
       return true;
     }
 
-    return (
-      compareVersions(privacyPolicy.version, acceptedPrivacyPolicy.version) ===
-      1
-    );
-  }, []);
+    return compareVersions(privacyPolicy.version, state.version, ">");
+  }, [state.link, state.version]);
 
   useEffect(() => {
-    const globalStore = GlobalStore.getInstance();
-
-    const ubsubscribeIsLoggedInChangeListener = globalStore.onDidChange(
-      storeKeys.IS_LOGGED_IN,
-      isLoggedIn => {
-        setLoggedIn(isLoggedIn);
-      }
-    );
-
-    if (!loggedIn || privacyPolicyChanged()) {
-      setPolicy(prevState => ({
-        ...prevState,
-        showDialog: true,
-      }));
-    } else {
-      // This branch runs when the user is signed in and the version of its accepted privacy policy is equal to the one stored offline.
-      setPolicy(() => ({
-        ...initialState,
-      }));
+    if ((!state.loggedIn && !state.accepted) || policyChanged()) {
+      dispatch({ type: privacyPolicyActions.SHOW_DIALOG });
     }
+  }, [policyChanged, state.accepted, state.loggedIn]);
 
-    return () => ubsubscribeIsLoggedInChangeListener();
-  }, [loggedIn, privacyPolicyChanged]);
-
-  // The dialog is only hidden if the user accepts the privacy policy and changes are written to the offline storage.
   useEffect(() => {
-    const globalStore = GlobalStore.getInstance();
+    if (state.accepted) {
+      history.push("/account");
+    }
+  }, [history, state.accepted]);
 
-    const unsubsribePrivacyPolicyChangeListener = globalStore.onDidChange(
-      storeKeys.ACCEPTED_PRIVACY_POLICY,
-      data => {
-        // The data must be defined to proceed the user to the account screen because the listener is also triggered with undefined data when the user signs out.
-        if (data && data.version && data.link) {
-          setPolicy(prevState => ({
-            ...prevState,
-            showDialog: false,
-          }));
-
-          history.push("/account");
-        }
-      }
-    );
-
-    return () => unsubsribePrivacyPolicyChangeListener();
-  }, [history]);
+  const handleAcceptance = () => {
+    dispatch({
+      type: privacyPolicyActions.HANDLE_ACCEPTANCE,
+      payload: privacyPolicy,
+    });
+  };
 
   const handleCheckboxChange = () => {
-    setPolicy(prevState => ({
-      ...prevState,
-      checked: !prevState.checked,
-    }));
+    dispatch({ type: privacyPolicyActions.HANDLE_CHECKBOX_CHANGE });
   };
 
   const DialogCheckbox = () => (
     <Checkbox
-      checked={policy.checked}
+      checked={state.checked}
       onChange={handleCheckboxChange}
-      value={policy.checked}
+      value={state.checked}
       color="primary"
     />
   );
 
   const renderDialog = () => (
-    <Dialog open={policy.showDialog}>
+    <Dialog open={state.showDialog}>
       <DialogTitle>Privacy Policy</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -144,13 +104,8 @@ export const PrivacyPolicyProvider = ({ children }) => {
           <Button
             color="primary"
             variant="contained"
-            disabled={!policy.checked}
-            onClick={() =>
-              ipcRenderer.send(
-                ipcEvents.ACCEPTED_PRIVACY_POLICY_UPDATED,
-                privacyPolicy
-              )
-            }
+            disabled={!state.checked}
+            onClick={handleAcceptance}
           >
             Agree
           </Button>
@@ -160,7 +115,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
   );
 
   return (
-    <PrivacyPolicyContext.Provider>
+    <PrivacyPolicyContext.Provider value={{ state, dispatch }}>
       {children}
       {renderDialog()}
     </PrivacyPolicyContext.Provider>
