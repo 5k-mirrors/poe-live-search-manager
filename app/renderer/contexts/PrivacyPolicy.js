@@ -61,6 +61,9 @@ export const PrivacyPolicyProvider = ({ children }) => {
   useEffect(() => {
     if ((!state.loggedIn && !state.accepted) || policyChanged()) {
       dispatch({ type: privacyPolicyActions.SHOW_DIALOG });
+    } else {
+      // This branch runs when the user is signed in and the version of its accepted privacy policy is equal to the one stored offline.
+      dispatch({ type: privacyPolicyActions.HANDLE_ACCEPTANCE });
     }
   }, [policyChanged, state.accepted, state.loggedIn]);
 

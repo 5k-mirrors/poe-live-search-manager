@@ -67,7 +67,7 @@ const useAuthStateChangedObserver = showNotification => {
                   user.uid,
                   token,
                   privacyPolicyState.link,
-                  privacyPolicyActions.version
+                  privacyPolicyState.version
                 );
 
                 const userRef = firebaseApp
@@ -141,6 +141,7 @@ const useAuthStateChangedObserver = showNotification => {
     privacyPolicyDispatch,
     privacyPolicyState.accepted,
     privacyPolicyState.link,
+    privacyPolicyState.version,
     showNotification,
   ]);
 

@@ -53,7 +53,6 @@ export const initPrivacyPolicyState = state => {
 
   return {
     ...state,
-    accepted: !!(offlinePolicy.link && offlinePolicy.version),
     loggedIn,
     ...offlinePolicy,
   };
@@ -68,12 +67,20 @@ export const privacyPolicyReducer = (state, action) => {
       };
     }
     case privacyPolicyActions.HANDLE_ACCEPTANCE: {
-      return {
+      const defaultState = {
         ...state,
         showDialog: false,
         accepted: true,
-        ...action.payload,
       };
+
+      if (action.payload) {
+        return {
+          ...defaultState,
+          ...action.payload,
+        };
+      }
+
+      return defaultState;
     }
     case privacyPolicyActions.HANDLE_CHECKBOX_CHANGE: {
       return {
