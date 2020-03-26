@@ -1,4 +1,5 @@
 import { ipcMain } from "electron";
+import retry from "async-retry";
 import GlobalStore from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
@@ -15,7 +16,10 @@ import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
 import User from "../user/user";
 import authenticatedFetch from "../utils/authenticated-fetch/authenticated-fetch";
-import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import {
+  devLog,
+  devErrorLog,
+} from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -63,7 +67,7 @@ const setupWebSocketIpcListeners = () => {
 const setupAuthenticationIpcListeners = () => {
   ipcMain.on(
     ipcEvents.USER_LOGIN,
-    (_, userId, idToken, privacyPolicyLink, privacyPolicyVersion) => {
+    async (_, userId, idToken, privacyPolicyLink, privacyPolicyVersion) => {
       const globalStore = GlobalStore.getInstance();
 
       globalStore.set(storeKeys.IS_LOGGED_IN, true);
@@ -79,19 +83,38 @@ const setupAuthenticationIpcListeners = () => {
 
       subscriptionActions.startRefreshInterval();
 
-      authenticatedFetch(
-        `${process.env.FIREBASE_API_URL}/user/${User.data.id}/privacy-policy`,
-        {
-          method: "PATCH",
-          body: JSON.stringify({
-            link: privacyPolicyLink,
-            version: privacyPolicyVersion,
-          }),
-        },
-        { "Content-Type": "application/json" }
-      ).catch(err => {
-        devErrorLog(err);
-      });
+      try {
+        await retry(
+          async () => {
+            const res = await authenticatedFetch(
+              `${process.env.FIREBASE_API_URL}/user/${User.data.id}/privacy-policy`,
+              {
+                method: "PATCH",
+                body: JSON.stringify({
+                  link: privacyPolicyLink,
+                  version: privacyPolicyVersion,
+                }),
+              },
+              { "Content-Type": "application/json" }
+            );
+
+            if (!res.ok) {
+              throw new Error();
+            }
+          },
+          {
+            retries: 3,
+            factor: 1,
+            minTimeout: 5 * 60 * 1000,
+            randomize: false,
+            onRetry: (err, attempt) => {
+              devLog("Retrying to update privacy policy, attempt:", attempt);
+            },
+          }
+        );
+      } catch (err) {
+        devErrorLog("Error while updating privacy policy.");
+      }
     }
   );
 
