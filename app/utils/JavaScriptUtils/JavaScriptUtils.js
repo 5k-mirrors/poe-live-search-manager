@@ -49,6 +49,14 @@ export const safeJsonResponse = response =>
     }
   });
 
+export const handleResponse = response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status} - `, response.statusText);
+  }
+
+  return response;
+};
+
 export const randomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min) + min);
 };

@@ -1,5 +1,4 @@
 import { ipcMain } from "electron";
-import retry from "async-retry";
 import GlobalStore from "../../GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
@@ -17,9 +16,10 @@ import { windows } from "../../resources/Windows/Windows";
 import User from "../user/user";
 import authenticatedFetch from "../utils/authenticated-fetch/authenticated-fetch";
 import {
-  devLog,
   devErrorLog,
+  handleResponse,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import retry from "../../utils/Retry/Retry";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -84,36 +84,23 @@ const setupAuthenticationIpcListeners = () => {
       subscriptionActions.startRefreshInterval();
 
       try {
-        await retry(
-          async () => {
-            const res = await authenticatedFetch(
-              `${process.env.FIREBASE_API_URL}/user/${User.data.id}/privacy-policy`,
-              {
-                method: "PATCH",
-                body: JSON.stringify({
-                  link: privacyPolicyLink,
-                  version: privacyPolicyVersion,
-                }),
-              },
-              { "Content-Type": "application/json" }
-            );
-
-            if (!res.ok) {
-              throw new Error();
-            }
-          },
-          {
-            retries: 3,
-            factor: 1,
-            minTimeout: 5 * 60 * 1000,
-            randomize: false,
-            onRetry: (err, attempt) => {
-              devLog("Retrying to update privacy policy, attempt:", attempt);
+        await retry(async () => {
+          const res = await authenticatedFetch(
+            `${process.env.FIREBASE_API_URL}/user/${User.data.id}/privacy-policy`,
+            {
+              method: "PATCH",
+              body: JSON.stringify({
+                link: privacyPolicyLink,
+                version: privacyPolicyVersion,
+              }),
             },
-          }
-        );
+            { "Content-Type": "application/json" }
+          );
+
+          return handleResponse(res);
+        });
       } catch (err) {
-        devErrorLog("Error while updating privacy policy.");
+        devErrorLog("Error while updating privacy policy.", err);
       }
     }
   );
