@@ -67,7 +67,7 @@ const setupWebSocketIpcListeners = () => {
 const setupAuthenticationIpcListeners = () => {
   ipcMain.on(
     ipcEvents.USER_LOGIN,
-    async (_, userId, idToken, privacyPolicyLink, privacyPolicyVersion) => {
+    async (event, userId, idToken, privacyPolicyLink, privacyPolicyVersion) => {
       const globalStore = GlobalStore.getInstance();
 
       globalStore.set(storeKeys.IS_LOGGED_IN, true);
@@ -101,6 +101,8 @@ const setupAuthenticationIpcListeners = () => {
         });
       } catch (err) {
         devErrorLog("Error while updating privacy policy.", err);
+
+        event.sender.send(ipcEvents.PRIVACY_POLICY_UPDATE_FAIL);
       }
     }
   );

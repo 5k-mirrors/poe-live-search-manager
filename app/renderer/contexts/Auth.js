@@ -1,4 +1,10 @@
-import React, { createContext, useReducer, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useReducer,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import firebase from "firebase";
 import { ipcRenderer } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
@@ -246,10 +252,10 @@ export const AuthProvider = ({ children }) => {
   useIdTokenChangedObserver();
 
   // `onDisconnect` will fail here after `signOut`. `onDisconnect().cancel()` could be used to avoid that but it had other side effects (https://github.com/c-hive/poe-sniper/issues/359).
-  const signOut = () => {
+  const signOut = useCallback(() => {
     const firebaseApp = getFirebaseApp();
 
-    const userRef = firebaseApp.database().ref(`/users/${state.data.uid}`);
+    const userRef = firebaseApp.database().ref(`/users/${state?.data?.uid}`);
 
     // The `set()` operation must be performed before the user is signed out because writing attempts are rejected in case of unauthanticated users.
     return userRef
@@ -276,7 +282,29 @@ export const AuthProvider = ({ children }) => {
 
         showNotification("Something went wrong during signout.", "error");
       });
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, privacyPolicyDispatch, showNotification, state?.data?.uid]);
+
+  useEffect(() => {
+    const privacyPolcyUpdateFailListener = () =>
+      signOut().then(() => {
+        showNotification(
+          "Something went wrong while updating privacy policy.",
+          "error"
+        );
+      });
+
+    ipcRenderer.on(
+      ipcEvents.PRIVACY_POLICY_UPDATE_FAIL,
+      privacyPolcyUpdateFailListener
+    );
+
+    return () =>
+      ipcRenderer.removeListener(
+        ipcEvents.PRIVACY_POLICY_UPDATE_FAIL,
+        privacyPolcyUpdateFailListener
+      );
+  }, [showNotification, signOut]);
 
   const exportedState = {
     state,
