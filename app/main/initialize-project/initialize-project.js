@@ -15,10 +15,7 @@ import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
 import User from "../user/user";
 import authenticatedFetch from "../utils/authenticated-fetch/authenticated-fetch";
-import {
-  devErrorLog,
-  handleResponse,
-} from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import retry from "../../utils/Retry/Retry";
 
 const setupStoreIpcListeners = () => {
@@ -97,7 +94,9 @@ const setupAuthenticationIpcListeners = () => {
             { "Content-Type": "application/json" }
           );
 
-          return handleResponse(res);
+          if (!res.ok) {
+            throw new Error(`HTTP error: ${res.status} - ${res.statusText}`);
+          }
         });
       } catch (err) {
         devErrorLog("Error while updating privacy policy.", err);
