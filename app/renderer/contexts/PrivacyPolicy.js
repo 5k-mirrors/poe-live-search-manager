@@ -62,7 +62,7 @@ export const PrivacyPolicyProvider = ({ children }) => {
     if ((!state.loggedIn && !state.accepted) || policyChanged()) {
       dispatch({ type: privacyPolicyActions.SHOW_DIALOG });
     } else {
-      dispatch({ type: privacyPolicyActions.HANDLE_ACCEPTANCE });
+      dispatch({ type: privacyPolicyActions.ACCEPT });
     }
   }, [policyChanged, state.accepted, state.loggedIn]);
 
@@ -74,13 +74,13 @@ export const PrivacyPolicyProvider = ({ children }) => {
 
   const handleAcceptance = () => {
     dispatch({
-      type: privacyPolicyActions.HANDLE_ACCEPTANCE,
+      type: privacyPolicyActions.ACCEPT,
       payload: privacyPolicy,
     });
   };
 
   const handleCheckboxChange = () => {
-    dispatch({ type: privacyPolicyActions.HANDLE_CHECKBOX_CHANGE });
+    dispatch({ type: privacyPolicyActions.CHANGE_CHECKBOX });
   };
 
   const DialogCheckbox = () => (

@@ -29,8 +29,8 @@ export const asyncFetchReducer = (state, action) => {
 export const privacyPolicyActions = {
   USER_LOGIN: "userLogin",
   SHOW_DIALOG: "showDialog",
-  HANDLE_ACCEPTANCE: "handleAcceptance",
-  HANDLE_CHECKBOX_CHANGE: "handleCheckboxChange",
+  ACCEPT: "accept",
+  CHANGE_CHECKBOX: "changeCheckbox",
 };
 
 export const privacyPolicyInitialState = {
@@ -66,7 +66,7 @@ export const privacyPolicyReducer = (state, action) => {
         showDialog: true,
       };
     }
-    case privacyPolicyActions.HANDLE_ACCEPTANCE: {
+    case privacyPolicyActions.ACCEPT: {
       const defaultState = {
         ...state,
         showDialog: false,
@@ -82,7 +82,7 @@ export const privacyPolicyReducer = (state, action) => {
 
       return defaultState;
     }
-    case privacyPolicyActions.HANDLE_CHECKBOX_CHANGE: {
+    case privacyPolicyActions.CHANGE_CHECKBOX: {
       return {
         ...state,
         checked: !state.checked,
