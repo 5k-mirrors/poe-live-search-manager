@@ -283,7 +283,7 @@ export const AuthProvider = ({ children }) => {
       .catch(err => {
         devErrorLog(err);
 
-        showNotification("Something went wrong during signout.", "error");
+        showNotification();
       });
   }, [dispatch, privacyPolicyDispatch, showNotification, uid]);
 
