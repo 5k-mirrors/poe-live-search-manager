@@ -251,7 +251,7 @@ export const AuthProvider = ({ children }) => {
   useUpdatePresence(state.isLoggedIn, state.data && state.data.uid);
   useIdTokenChangedObserver();
 
-  // Complex expressions are advised being exluced from the dependency array and extracted to a separate variable.
+  // Complex expressions are advised being excluded from the dependency array and extracted to a separate variable.
   const uid = state.data && state.data.uid;
 
   // `onDisconnect` will fail here after `signOut`. `onDisconnect().cancel()` could be used to avoid that but it had other side effects (https://github.com/c-hive/poe-sniper/issues/359).
@@ -288,20 +288,20 @@ export const AuthProvider = ({ children }) => {
   }, [dispatch, privacyPolicyDispatch, showNotification, uid]);
 
   useEffect(() => {
-    const privacyPolcyUpdateFailListener = () =>
+    const privacyPolicyUpdateFailListener = () =>
       signOut().then(() => {
         showNotification();
       });
 
     ipcRenderer.on(
       ipcEvents.PRIVACY_POLICY_UPDATE_FAIL,
-      privacyPolcyUpdateFailListener
+      privacyPolicyUpdateFailListener
     );
 
     return () =>
       ipcRenderer.removeListener(
         ipcEvents.PRIVACY_POLICY_UPDATE_FAIL,
-        privacyPolcyUpdateFailListener
+        privacyPolicyUpdateFailListener
       );
   }, [showNotification, signOut]);
 
