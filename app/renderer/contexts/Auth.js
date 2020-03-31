@@ -251,11 +251,14 @@ export const AuthProvider = ({ children }) => {
   useUpdatePresence(state.isLoggedIn, state.data && state.data.uid);
   useIdTokenChangedObserver();
 
+  // Complex expressions are advised being exluced from the dependency array and extracted to a separate variable.
+  const uid = state.data && state.data.uid;
+
   // `onDisconnect` will fail here after `signOut`. `onDisconnect().cancel()` could be used to avoid that but it had other side effects (https://github.com/c-hive/poe-sniper/issues/359).
   const signOut = useCallback(() => {
     const firebaseApp = getFirebaseApp();
 
-    const userRef = firebaseApp.database().ref(`/users/${state?.data?.uid}`);
+    const userRef = firebaseApp.database().ref(`/users/${uid}`);
 
     // The `set()` operation must be performed before the user is signed out because writing attempts are rejected in case of unauthanticated users.
     return userRef
@@ -282,16 +285,12 @@ export const AuthProvider = ({ children }) => {
 
         showNotification("Something went wrong during signout.", "error");
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, privacyPolicyDispatch, showNotification, state?.data?.uid]);
+  }, [dispatch, privacyPolicyDispatch, showNotification, uid]);
 
   useEffect(() => {
     const privacyPolcyUpdateFailListener = () =>
       signOut().then(() => {
-        showNotification(
-          "Something went wrong while updating privacy policy.",
-          "error"
-        );
+        showNotification();
       });
 
     ipcRenderer.on(
