@@ -14,6 +14,9 @@ import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { windows } from "../../resources/Windows/Windows";
 import User from "../user/user";
+import authenticatedFetch from "../utils/authenticated-fetch/authenticated-fetch";
+import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import retry from "../../utils/Retry/Retry";
 
 const setupStoreIpcListeners = () => {
   ipcMain.on(ipcEvents.GET_SOCKETS, event => {
@@ -59,18 +62,49 @@ const setupWebSocketIpcListeners = () => {
 };
 
 const setupAuthenticationIpcListeners = () => {
-  ipcMain.on(ipcEvents.USER_LOGIN, (_, userId, idToken) => {
-    const globalStore = GlobalStore.getInstance();
+  ipcMain.on(
+    ipcEvents.USER_LOGIN,
+    async (event, userId, idToken, privacyPolicyLink, privacyPolicyVersion) => {
+      const globalStore = GlobalStore.getInstance();
 
-    globalStore.set(storeKeys.IS_LOGGED_IN, true);
+      globalStore.set(storeKeys.IS_LOGGED_IN, true);
+      globalStore.set(storeKeys.ACCEPTED_PRIVACY_POLICY, {
+        link: privacyPolicyLink,
+        version: privacyPolicyVersion,
+      });
 
-    User.update({
-      id: userId,
-      jwt: idToken,
-    });
+      User.update({
+        id: userId,
+        jwt: idToken,
+      });
 
-    subscriptionActions.startRefreshInterval();
-  });
+      subscriptionActions.startRefreshInterval();
+
+      try {
+        await retry(async () => {
+          const res = await authenticatedFetch(
+            `${process.env.FIREBASE_API_URL}/user/${User.data.id}/privacy-policy`,
+            {
+              method: "PATCH",
+              body: JSON.stringify({
+                link: privacyPolicyLink,
+                version: privacyPolicyVersion,
+              }),
+            },
+            { "Content-Type": "application/json" }
+          );
+
+          if (!res.ok) {
+            throw new Error(`HTTP error: ${res.status} - ${res.statusText}`);
+          }
+        });
+      } catch (err) {
+        devErrorLog("Error while updating privacy policy.", err);
+
+        event.sender.send(ipcEvents.PRIVACY_POLICY_UPDATE_FAIL);
+      }
+    }
+  );
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {
     const globalStore = GlobalStore.getInstance();
@@ -82,6 +116,7 @@ const setupAuthenticationIpcListeners = () => {
     globalStore.set(storeKeys.IS_LOGGED_IN, false);
     User.clear();
     storeUtils.clear(storeKeys.POE_SESSION_ID);
+    storeUtils.clear(storeKeys.ACCEPTED_PRIVACY_POLICY);
     Subscription.clear();
 
     electronUtils.send(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {

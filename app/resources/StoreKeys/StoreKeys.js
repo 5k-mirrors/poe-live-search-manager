@@ -6,4 +6,5 @@ export const storeKeys = {
   COPY_WHISPER: "copyWhisper",
   RESULTS_LIMIT: "resultsLimit",
   SCHEDULE_RESULTS: "scheduleResults",
+  ACCEPTED_PRIVACY_POLICY: "acceptedPrivacyPolicy",
 };
