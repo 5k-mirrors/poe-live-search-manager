@@ -30,7 +30,7 @@ export default class HttpRequestLimiter {
           reservoir: requestLimit,
           reservoirRefreshAmount: requestLimit,
           reservoirRefreshInterval: interval * 1000,
-          minTime: 1000,
+          minTime: interval / requestLimit,
           maxConcurrent: 1,
         });
       })
