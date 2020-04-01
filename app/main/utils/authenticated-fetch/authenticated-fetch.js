@@ -1,11 +1,9 @@
 import fetch from "node-fetch";
 import User from "../../user/user";
 
-export default (url, options, headers) =>
+export default url =>
   fetch(url, {
-    ...options,
     headers: {
       Authorization: `Bearer ${User.data.jwt}`,
-      ...headers,
     },
   });
