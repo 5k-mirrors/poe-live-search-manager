@@ -30,6 +30,8 @@ export default class HttpRequestLimiter {
           reservoir: requestLimit,
           reservoirRefreshAmount: requestLimit,
           reservoirRefreshInterval: interval * 1000,
+          minTime: 1000,
+          maxConcurrent: 1,
         });
       })
       .catch(err => {
@@ -43,6 +45,9 @@ export default class HttpRequestLimiter {
           reservoir: this.defaultValues.requestLimit,
           reservoirRefreshAmount: this.defaultValues.requestLimit,
           reservoirRefreshInterval: this.defaultValues.interval * 1000,
+          minTime:
+            this.defaultValues.interval / this.defaultValues.requestLimit,
+          maxConcurrent: 1,
         });
       });
   }

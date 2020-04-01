@@ -12,47 +12,82 @@ describe("poeTrade", () => {
     const id =
       "693bce8055b1f8282cd2412fded4c7d8d14d467d021154909d721d62f3fdfcad";
 
-    describe("when the item details are not defined", () => {
-      const parsedData = {
-        result: [null],
+    describe("when the response's status is not `ok`", () => {
+      const response = {
+        ok: false,
+        status: 429,
+        statusText: "Too Many Requests",
       };
 
       const data = {
-        json: () => Promise.resolve(parsedData),
+        ...response,
+        text: () => Promise.resolve(response.statusText),
       };
 
       beforeEach(() => {
         fetch.mockResolvedValueOnce(data);
       });
 
-      it("throws `ItemFetchError`", () => {
-        const itemUrl = `${baseUrls.poeFetchAPI + id}`;
-
-        const expectedErrorMessage = `Item details not found for ${itemUrl}`;
-
-        return expect(poeTrade.fetchItemDetails(id)).rejects.toEqual(
-          new ItemFetchError(expectedErrorMessage)
+      it("rejects with the response's code and status text", () => {
+        expect(poeTrade.fetchItemDetails(id)).rejects.toEqual(
+          new Error(`HTTP error: ${response.status} - ${response.statusText}`)
         );
       });
     });
 
-    describe("when the item details are defined", () => {
-      const parsedData = {
-        result: ["itemDetails"],
+    describe("when the response status is `ok`", () => {
+      const response = {
+        ok: true,
+        status: 200,
+        statusText: "OK",
       };
 
-      const data = {
-        json: () => Promise.resolve(parsedData),
-      };
+      describe("when the item details are missing", () => {
+        const data = {
+          ...response,
+          text: () =>
+            Promise.resolve(
+              JSON.stringify({
+                result: [null],
+              })
+            ),
+        };
 
-      beforeEach(() => {
-        fetch.mockResolvedValueOnce(data);
+        beforeEach(() => {
+          fetch.mockResolvedValueOnce(data);
+        });
+
+        it("rejects with `ItemFetchError`", () => {
+          const itemUrl = `${baseUrls.poeFetchAPI + id}`;
+
+          const expectedErrorMessage = `Item details not found for ${itemUrl}`;
+
+          return expect(poeTrade.fetchItemDetails(id)).rejects.toEqual(
+            new ItemFetchError(expectedErrorMessage)
+          );
+        });
       });
 
-      it("returns the details", () => {
-        return expect(poeTrade.fetchItemDetails(id)).resolves.toEqual(
-          "itemDetails"
-        );
+      describe("when the item details are not missing", () => {
+        const data = {
+          ...response,
+          text: () =>
+            Promise.resolve(
+              JSON.stringify({
+                result: ["itemDetails"],
+              })
+            ),
+        };
+
+        beforeEach(() => {
+          fetch.mockResolvedValueOnce(data);
+        });
+
+        it("resolves with the details", () => {
+          return expect(poeTrade.fetchItemDetails(id)).resolves.toEqual(
+            "itemDetails"
+          );
+        });
       });
     });
   });
