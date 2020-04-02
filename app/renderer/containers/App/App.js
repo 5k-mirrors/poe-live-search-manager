@@ -1,23 +1,13 @@
 import React from "react";
 import Container from "@material-ui/core/Container";
-import {
-  AuthProvider,
-  SubscriptionProvider,
-  PrivacyPolicyProvider,
-} from "../../contexts";
+import { AuthProvider, SubscriptionProvider } from "../../contexts";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Screens from "../../components/Screens/Screens";
 
-const combineProviders = (...providers) => ({ children }) =>
-  providers.reduce(
-    (prev, CurrentProvider) => <CurrentProvider>{prev}</CurrentProvider>,
-    children
-  );
-
-const CombinedProviders = combineProviders(
-  SubscriptionProvider,
-  AuthProvider,
-  PrivacyPolicyProvider
+const CombinedProviders = ({ children }) => (
+  <AuthProvider>
+    <SubscriptionProvider>{children}</SubscriptionProvider>
+  </AuthProvider>
 );
 
 const app = () => (

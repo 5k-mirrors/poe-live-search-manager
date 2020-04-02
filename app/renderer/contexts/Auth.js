@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useReducer,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import React, { createContext, useReducer, useEffect, useRef } from "react";
 import firebase from "firebase";
 import { ipcRenderer } from "electron";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
@@ -13,11 +7,7 @@ import {
   ensureUserSession,
   ensureRecordExists,
 } from "../utils/Firebase/Firebase";
-import {
-  asyncFetchReducer,
-  asyncFetchActions,
-  privacyPolicyActions,
-} from "../reducers/reducers";
+import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 import { useNotify } from "../utils/CustomHooks/CustomHooks";
 import SessionAlreadyExists from "../../errors/session-already-exists";
@@ -26,17 +16,12 @@ import {
   devErrorLog,
   retryIn,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
-import { usePrivacyPolicyContext } from "./PrivacyPolicy";
 import { version } from "../../../package.json";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
 
 const useAuthStateChangedObserver = showNotification => {
-  const {
-    state: privacyPolicyState,
-    dispatch: privacyPolicyDispatch,
-  } = usePrivacyPolicyContext();
   const [state, dispatch] = useReducer(asyncFetchReducer, {
     data: null,
     isLoading: false,
@@ -64,17 +49,7 @@ const useAuthStateChangedObserver = showNotification => {
                   },
                 });
 
-                privacyPolicyDispatch({
-                  type: privacyPolicyActions.USER_LOGIN,
-                });
-
-                ipcRenderer.send(
-                  ipcEvents.USER_LOGIN,
-                  user.uid,
-                  token,
-                  privacyPolicyState.link,
-                  privacyPolicyState.version
-                );
+                ipcRenderer.send(ipcEvents.USER_LOGIN, user.uid, token);
 
                 const userRef = firebaseApp
                   .database()
@@ -132,31 +107,15 @@ const useAuthStateChangedObserver = showNotification => {
       });
     };
 
-    let unregisterObserver;
+    const unregisterObserver = registerObserver();
 
-    if (privacyPolicyState.accepted) {
-      unregisterObserver = registerObserver();
-    }
-
-    return () => {
-      if (unregisterObserver) {
-        unregisterObserver();
-      }
-    };
-  }, [
-    privacyPolicyDispatch,
-    privacyPolicyState.accepted,
-    privacyPolicyState.link,
-    privacyPolicyState.version,
-    showNotification,
-  ]);
+    return () => unregisterObserver();
+  }, [showNotification]);
 
   return { state, dispatch };
 };
 
 const useIdTokenChangedObserver = () => {
-  const { state: privacyPolicyState } = usePrivacyPolicyContext();
-
   useEffect(() => {
     const registerObserver = () => {
       const firebaseApp = getFirebaseApp();
@@ -170,18 +129,10 @@ const useIdTokenChangedObserver = () => {
       });
     };
 
-    let unregisterObserver;
+    const unregisterObserver = registerObserver();
 
-    if (privacyPolicyState.accepted) {
-      unregisterObserver = registerObserver();
-    }
-
-    return () => {
-      if (unregisterObserver) {
-        unregisterObserver();
-      }
-    };
-  }, [privacyPolicyState.accepted]);
+    return () => unregisterObserver();
+  }, []);
 };
 
 const useUpdateLastActiveVersion = (authenticated, userId) => {
@@ -246,19 +197,15 @@ const useUpdatePresence = (authenticated, userId) => {
 export const AuthProvider = ({ children }) => {
   const { showNotification, renderNotification } = useNotify();
   const { state, dispatch } = useAuthStateChangedObserver(showNotification);
-  const { dispatch: privacyPolicyDispatch } = usePrivacyPolicyContext();
   useUpdateLastActiveVersion(state.isLoggedIn, state.data && state.data.uid);
   useUpdatePresence(state.isLoggedIn, state.data && state.data.uid);
   useIdTokenChangedObserver();
 
-  // Complex expressions are advised being excluded from the dependency array and extracted to a separate variable.
-  const uid = state.data && state.data.uid;
-
   // `onDisconnect` will fail here after `signOut`. `onDisconnect().cancel()` could be used to avoid that but it had other side effects (https://github.com/c-hive/poe-sniper/issues/359).
-  const signOut = useCallback(() => {
+  const signOut = () => {
     const firebaseApp = getFirebaseApp();
 
-    const userRef = firebaseApp.database().ref(`/users/${uid}`);
+    const userRef = firebaseApp.database().ref(`/users/${state.data.uid}`);
 
     // The `set()` operation must be performed before the user is signed out because writing attempts are rejected in case of unauthanticated users.
     return userRef
@@ -276,34 +223,14 @@ export const AuthProvider = ({ children }) => {
           },
         });
 
-        privacyPolicyDispatch({ type: privacyPolicyActions.SHOW_DIALOG });
-
         ipcRenderer.send(ipcEvents.USER_LOGOUT);
       })
       .catch(err => {
         devErrorLog(err);
 
-        showNotification();
+        showNotification("Something went wrong during signout.", "error");
       });
-  }, [dispatch, privacyPolicyDispatch, showNotification, uid]);
-
-  useEffect(() => {
-    const privacyPolicyUpdateFailListener = () =>
-      signOut().then(() => {
-        showNotification();
-      });
-
-    ipcRenderer.on(
-      ipcEvents.PRIVACY_POLICY_UPDATE_FAIL,
-      privacyPolicyUpdateFailListener
-    );
-
-    return () =>
-      ipcRenderer.removeListener(
-        ipcEvents.PRIVACY_POLICY_UPDATE_FAIL,
-        privacyPolicyUpdateFailListener
-      );
-  }, [showNotification, signOut]);
+  };
 
   const exportedState = {
     state,
