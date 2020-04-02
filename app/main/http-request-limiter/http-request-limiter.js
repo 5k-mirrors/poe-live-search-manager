@@ -30,7 +30,8 @@ export default class HttpRequestLimiter {
           reservoir: requestLimit,
           reservoirRefreshAmount: requestLimit,
           reservoirRefreshInterval: interval * 1000,
-          minTime: interval / requestLimit,
+          // GGG prohibits sending requests concurrently and incessantly without elapsing a reasonable amount of tme.
+          minTime: Math.max(1000, interval / requestLimit),
           maxConcurrent: 1,
         });
       })
@@ -45,8 +46,11 @@ export default class HttpRequestLimiter {
           reservoir: this.defaultValues.requestLimit,
           reservoirRefreshAmount: this.defaultValues.requestLimit,
           reservoirRefreshInterval: this.defaultValues.interval * 1000,
-          minTime:
-            this.defaultValues.interval / this.defaultValues.requestLimit,
+          // GGG prohibits sending requests concurrently and incessantly without elapsing a reasonable amount of tme.
+          minTime: Math.max(
+            1000,
+            this.defaultValues.interval / this.defaultValues.requestLimit
+          ),
           maxConcurrent: 1,
         });
       });
