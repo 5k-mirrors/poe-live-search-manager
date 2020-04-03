@@ -10,12 +10,12 @@ import {
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
 export default class HttpRequestLimiter {
-  static configs = {
+  static config = {
     defaultReservoirValues: {
       requestLimit: 6,
       interval: 4,
     },
-    fallbackMinTime: 1000,
+    minRequestIntervalMs: 1000,
   };
 
   static bottleneck = new Bottleneck();
@@ -35,7 +35,7 @@ export default class HttpRequestLimiter {
           reservoirRefreshInterval: interval * 1000,
           // GGG prohibits bursting requests (even though this is not specified by the rate-limiting headers).
           minTime: Math.max(
-            this.configs.fallbackMinTime,
+            this.config.minRequestIntervalMs,
             interval / requestLimit
           ),
           maxConcurrent: 1,
@@ -45,20 +45,20 @@ export default class HttpRequestLimiter {
         devErrorLog("Rate limit init error: ", err);
 
         devLog(
-          `Requests are limitied to ${this.configs.defaultReservoirValues.requestLimit} requests / ${this.configs.defaultReservoirValues.interval} seconds.`
+          `Requests are limitied to ${this.config.defaultReservoirValues.requestLimit} requests / ${this.config.defaultReservoirValues.interval} seconds.`
         );
 
         this.bottleneck.updateSettings({
-          reservoir: this.configs.defaultReservoirValues.requestLimit,
-          reservoirRefreshAmount: this.configs.defaultReservoirValues
+          reservoir: this.config.defaultReservoirValues.requestLimit,
+          reservoirRefreshAmount: this.config.defaultReservoirValues
             .requestLimit,
           reservoirRefreshInterval:
-            this.configs.defaultReservoirValues.interval * 1000,
+            this.config.defaultReservoirValues.interval * 1000,
           // GGG prohibits bursting requests (even though this is not specified by the rate-limiting headers).
           minTime: Math.max(
-            this.configs.fallbackMinTime,
-            this.configs.defaultReservoirValues.interval /
-              this.configs.defaultReservoirValues.requestLimit
+            this.config.minRequestIntervalMs,
+            this.config.defaultReservoirValues.interval /
+              this.config.defaultReservoirValues.requestLimit
           ),
           maxConcurrent: 1,
         });
