@@ -3,6 +3,15 @@ import types from "./Types";
 export default [
   {
     type: types.RELEASE_NOTE,
+    title: "v1.11.4",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.4",
+    description: `Fixes:
+- #111 Searches not connecting (GGG changed rate limits)`,
+    date: "2020-04-03T21:30:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.11.3",
     link:
       "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.11.3",
