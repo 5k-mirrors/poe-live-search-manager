@@ -1,6 +1,10 @@
 import fetch from "node-fetch";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
-import * as javaScriptUtils from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import {
+  safeGet,
+  safeJsonResponse,
+  isDefined,
+} from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
@@ -31,7 +35,7 @@ export const fetchItemDetails = id =>
     const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
     return fetch(itemUrl)
-      .then(data => data.json())
+      .then(data => safeJsonResponse(data))
       .then(parsedData =>
         HttpRequestLimiter.currentReservoir().then(currentReservoir => {
           if (currentReservoir === 0 && !HttpRequestLimiter.requestsExhausted) {
@@ -46,12 +50,9 @@ export const fetchItemDetails = id =>
             startReservoirIncreaseListener();
           }
 
-          const itemDetails = javaScriptUtils.safeGet(parsedData, [
-            "result",
-            0,
-          ]);
+          const itemDetails = safeGet(parsedData, ["result", 0]);
 
-          if (javaScriptUtils.isDefined(itemDetails)) {
+          if (isDefined(itemDetails)) {
             return itemDetails;
           }
 
@@ -61,12 +62,9 @@ export const fetchItemDetails = id =>
   });
 
 export const getWhisperMessage = itemDetails => {
-  const whisperMessage = javaScriptUtils.safeGet(itemDetails, [
-    "listing",
-    "whisper",
-  ]);
+  const whisperMessage = safeGet(itemDetails, ["listing", "whisper"]);
 
-  if (!javaScriptUtils.isDefined(whisperMessage)) {
+  if (!isDefined(whisperMessage)) {
     return "";
   }
 
@@ -80,7 +78,7 @@ export const getPrice = whisperMessage => {
   const matchDetails = whisperMessage.match(regexp);
 
   // => `match` returns `null` if there's no corresponding item in the string.
-  if (!javaScriptUtils.isDefined(matchDetails)) {
+  if (!isDefined(matchDetails)) {
     return "";
   }
 

@@ -10,9 +10,12 @@ import {
 import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
 
 export default class HttpRequestLimiter {
-  static defaultValues = {
-    requestLimit: 6,
-    interval: 4,
+  static config = {
+    defaultReservoirValues: {
+      requestLimit: 6,
+      interval: 4,
+    },
+    minRequestIntervalMs: 1000,
   };
 
   static bottleneck = new Bottleneck();
@@ -30,19 +33,34 @@ export default class HttpRequestLimiter {
           reservoir: requestLimit,
           reservoirRefreshAmount: requestLimit,
           reservoirRefreshInterval: interval * 1000,
+          // GGG prohibits bursting requests (even though this is not specified by the rate-limiting headers).
+          minTime: Math.max(
+            this.config.minRequestIntervalMs,
+            interval / requestLimit
+          ),
+          maxConcurrent: 1,
         });
       })
       .catch(err => {
         devErrorLog("Rate limit init error: ", err);
 
         devLog(
-          `Requests are limitied to ${this.defaultValues.requestLimit} requests / ${this.defaultValues.interval} seconds.`
+          `Requests are limitied to ${this.config.defaultReservoirValues.requestLimit} requests / ${this.config.defaultReservoirValues.interval} seconds.`
         );
 
         this.bottleneck.updateSettings({
-          reservoir: this.defaultValues.requestLimit,
-          reservoirRefreshAmount: this.defaultValues.requestLimit,
-          reservoirRefreshInterval: this.defaultValues.interval * 1000,
+          reservoir: this.config.defaultReservoirValues.requestLimit,
+          reservoirRefreshAmount: this.config.defaultReservoirValues
+            .requestLimit,
+          reservoirRefreshInterval:
+            this.config.defaultReservoirValues.interval * 1000,
+          // GGG prohibits bursting requests (even though this is not specified by the rate-limiting headers).
+          minTime: Math.max(
+            this.config.minRequestIntervalMs,
+            this.config.defaultReservoirValues.interval /
+              this.config.defaultReservoirValues.requestLimit
+          ),
+          maxConcurrent: 1,
         });
       });
   }
