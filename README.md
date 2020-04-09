@@ -9,7 +9,7 @@ Supported trade sites:
 - if you run a search engine that we could use, [reach out to us](mailto:git.thisismydesign@gmail.com)
 
 Featured in:
-- [POE: Easy Money Making - AUTO WHISPER - 5 Exalts PER HOUR - 60 Item Multi-live search](https://youtu.be/dBqJ8-N5Ygs?t=1903) by Tripolar Bear
+- [POE: Easy Money Making - AUTO WHISPER - 5 Exalts PER HOUR - Multi-live search - Auto Whisper](https://youtu.be/dBqJ8-N5Ygs?t=1903) by Tripolar Bear
 
 [According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](/../../releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
 
