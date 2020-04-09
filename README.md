@@ -64,6 +64,7 @@ In rare cases you may see this error due to connection issues ([related bug repo
 - Make sure rate limit indicator is green while connecting.
 - Search links can become invalid. If a few searches are not connecting make sure they are valid via checking them in the browser.
 - You can have an IP which is blacklisted by Cloudflare ([1](https://www.reddit.com/r/pathofexile/comments/aw2p9j/trying_to_visit_pathofexilecom_and_i_get_this/), [2](https://www.reddit.com/r/pathofexile/comments/awscxe/anyone_issues_with_poe_website_captcha/)). You'll know this by getting a captcha when visiting `pathofexile.com`. Getting a new IP will resolve the issue.
+- Log out and log in again. This can reset your session ID.
 
 #### Notifications not showing up?
 
