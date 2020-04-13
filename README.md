@@ -41,6 +41,7 @@ The live search functionality requires a [Session ID](https://github.com/Stickym
 - Windows sometimes warns you about installing unsigned apps. If prompted, click `More info` and `Run anyway`.
 - The app will install and start.
 - A destop shortcut is created and updates are installed on app start.
+- [Windows 10] [Disable Focus Assistant](https://www.howtogeek.com/fyi/windows-10s-next-update-will-hide-notifications-while-you-watch-videos/)
 - Enjoy!
 
 ![install](install.gif)
