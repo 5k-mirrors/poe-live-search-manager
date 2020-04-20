@@ -2,6 +2,6 @@
 /* eslint-disable prettier/prettier, no-useless-escape */
 
 export const searchUrlLeagueAndIdMatcher = new RegExp(
-  // https://regex101.com/r/RNsEkt/2
-  "^(?:https?:\/\/)?(?:www\.)?pathofexile\.com\/trade\/search\/((?:[a-zA-Z]|%[A-Z0-9]{2})+?)\/([a-zA-Z0-9]+?)(?:\/|\/live|\/live\/)?$"
+  // https://regex101.com/r/RNsEkt/3
+  "^(?:https?:\/\/)?(?:www\.)?(?:\\w{2}\.)?(?:pathofexile\.com|poe\.game\.daum\.net)\/trade\/search\/((?:[a-zA-Z]|%[A-Z0-9]{2})+?)\/([a-zA-Z0-9]+?)(?:\/|\/live|\/live\/)?$"
 );
