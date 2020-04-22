@@ -10,7 +10,16 @@ export default [
 All contributions go toward improving the tool. If you have a specific feature request, or any questions, feel free to reach out at [git.thisismydesign@gmail.com](mailto:git.thisismydesign@gmail.com).
 
 This is similar to Patreon but GitHub doesn't take a cut, rather initially they will even [match your contribution](https://help.github.com/en/github/supporting-the-open-source-community-with-github-sponsors/about-github-sponsors#about-the-github-sponsors-matching-fund).`,
-    date: "2020-04-22T13:30:00Z",
+    date: "2020-04-22T22:30:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
+    title: "v1.12.0",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.12.0",
+    description: `Features:
+- #120 Support all major official trade sites`,
+    date: "2020-04-22T22:30:00Z",
   },
   {
     type: types.RELEASE_NOTE,
