@@ -14,11 +14,19 @@ This is similar to Patreon but GitHub doesn't take a cut, rather initially they 
   },
   {
     type: types.RELEASE_NOTE,
+    title: "v1.12.1",
+    link:
+      "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.12.1",
+    description: `Update release notes of v1.12.0.`,
+    date: "2020-04-23T15:30:00Z",
+  },
+  {
+    type: types.RELEASE_NOTE,
     title: "v1.12.0",
     link:
       "https://github.com/5k-mirrors/poe-live-search-manager/releases/tag/v1.12.0",
     description: `Features:
-- #120 Support all major official trade sites`,
+- #120 Support different countries for pathofexile.com search links, currently: UK, Brazil, Russia, Thailand, Germany, France, Spain, Korea`,
     date: "2020-04-22T22:30:00Z",
   },
   {
