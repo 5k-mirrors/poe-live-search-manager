@@ -38,7 +38,7 @@ The live search functionality requires a [Session ID](https://github.com/Stickym
 ## Installation
 
 - Download and run the latest [release](/../../releases).
-- Windows sometimes warns you about installing unsigned apps. If prompted, click `More info` and `Run anyway`.
+- Windows sometimes warns you about installing unsigned apps. If prompted, click `More info` and `Run anyway`. If the button is missing [Google can help](https://www.google.com/search?&q=windows+SmartScreen+enable+run+anyway+button).
 - The app will install and start.
 - A destop shortcut is created and updates are installed on app start.
 - [Windows 10] [Disable Focus Assistant](https://www.howtogeek.com/fyi/windows-10s-next-update-will-hide-notifications-while-you-watch-videos/)
