@@ -28,6 +28,7 @@ Stack: Electron + React based on [minelectreactist](https://github.com/gomorizso
   - https://wiki.winehq.org/Ubuntu
   - https://askubuntu.com/a/1205535/315938
 - To use WSL: https://www.beekeeperstudio.io/blog/building-electron-windows-ubuntu-wsl2
+- Building portable executable: https://github.com/c-hive/poe-sniper/commit/5e15938f741d54206da0d582766513d88146a4bf
 
 ```bash
 yarn install
