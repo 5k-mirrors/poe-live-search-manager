@@ -151,9 +151,5 @@
       "!app/main.prod.js",
       "!app/renderer.prod.js"
     ]
-  },
-  "pre-commit": [
-    "lint",
-    "test:coverage"
-  ]
+  }
 }
