@@ -17,8 +17,8 @@
     "package:win:local": "cross-env NODE_ENV=production yarn build && electron-builder build --win -c.compression=store --x64",
     "package:mac": "cross-env NODE_ENV=production yarn build && electron-builder build --mac",
     "package:linux": "cross-env NODE_ENV=production yarn build && electron-builder build --linux",
-    "unix:package:win": "cross-env REVISION=\"$(git describe --always --tags --dirty)\" yarn package:win",
-    "win:package:win": "node scripts/build.js",
+    "unix:package:win": "cross-env ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true REVISION=\"$(git describe --always --tags --dirty)\" yarn package:win",
+    "win:package:win": "cross-env ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true node scripts/build.js",
     "prettify": "prettier --write app/**/*.js",
     "test": "jest",
     "test:coverage": "jest --coverage"
