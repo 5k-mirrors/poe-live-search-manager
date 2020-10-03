@@ -3,8 +3,7 @@ name: CI
 on: [push]
 
 env:
-  node: [12, 14]
-  os: [ubuntu-latest, windows-latest]
+  node_version: 12
 
 jobs:
   lint:
@@ -12,8 +11,8 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        os: ${{ env.os }}
-        node: ${{ env.node }}
+        os: [12, 14]
+        node: [ubuntu-latest, windows-latest]
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node }}
@@ -31,8 +30,8 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        os: ${{ env.os }}
-        node: ${{ env.node }}
+        os: [12, 14]
+        node: [ubuntu-latest, windows-latest]
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node }}
