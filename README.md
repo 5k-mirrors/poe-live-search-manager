@@ -24,6 +24,10 @@ Stack: Electron + React based on [minelectreactist](https://github.com/gomorizso
 
 - Set up environment variables, see the hints in the [example](./.env.example) file.
 - Set up notifications (if on Windows): https://electronjs.org/docs/tutorial/notifications#windows
+- To build on linux Wine needs to be installed
+  - https://wiki.winehq.org/Ubuntu
+  - https://askubuntu.com/a/1205535/315938
+- To use WSL: https://www.beekeeperstudio.io/blog/building-electron-windows-ubuntu-wsl2
 
 ```bash
 yarn install

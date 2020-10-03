@@ -9,7 +9,7 @@
     "build:main": "webpack --mode production --config ./configs/webpack.main.config.js",
     "build:renderer": "webpack --mode production --config ./configs/webpack.renderer.prod.config.js",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./configs/webpack.renderer.dev.config.js",
-    "dev:main": "cross-env NODE_ENV=development electron --require @babel/register --require @babel/polyfill ./app/main/app.js",
+    "dev:main": "cross-env NODE_ENV=development electron --no-sandbox --require @babel/register --require @babel/polyfill ./app/main/app.js",
     "lint": "eslint app",
     "package": "cross-env NODE_ENV=production yarn build && electron-builder",
     "package:all": "cross-env NODE_ENV=production yarn build && electron-builder --mwl",
