@@ -37,7 +37,7 @@ yarn dev
 
 #### Installation
 
-- Install location on win10: `C:\Users\streamer-rng\AppData\Local\Programs/<PoE Sniper | PoE Live Search Manager>`
+- Install location on win10: `C:\Users\<username>\AppData\Local\Programs/<PoE Sniper | PoE Live Search Manager>`
 - Data location on win10: `%APPDATA%/<PoE Sniper | PoE Live Search Manager>`
 - `electron-store` data location on win10: `%APPDATA%/<PoE Sniper | PoE Live Search Manager>/config.json`
 
