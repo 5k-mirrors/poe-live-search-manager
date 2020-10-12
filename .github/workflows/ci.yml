@@ -85,7 +85,8 @@ jobs:
         cp release/*.exe deliverables
         cp release/latest.yml deliverables
         cp release/*.exe.blockmap deliverables
-    - uses: actions/upload-artifact@master
+    - uses: actions/upload-artifact@v2
       with:
         name: deliverables
         path: deliverables
+        retention-days: 14
