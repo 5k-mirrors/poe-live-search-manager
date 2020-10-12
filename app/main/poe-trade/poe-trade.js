@@ -73,7 +73,7 @@ export const getWhisperMessage = itemDetails => {
 
 export const getPrice = whisperMessage => {
   const currencies = currencyNames.join("|");
-  const pattern = `\\d+\\.?\\d* (${currencies})+`;
+  const pattern = ` \\d+\\.?\\d* (${currencies}){1} `;
   const regexp = new RegExp(pattern);
   const matchDetails = whisperMessage.match(regexp);
 
@@ -82,7 +82,7 @@ export const getPrice = whisperMessage => {
     return "";
   }
 
-  return `~b/o ${matchDetails[0]}`;
+  return `~b/o ${matchDetails[0].trim()}`;
 };
 
 export const notifyUser = (itemName, price) => {

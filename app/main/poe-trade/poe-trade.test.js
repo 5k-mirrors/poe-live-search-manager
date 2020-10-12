@@ -118,26 +118,6 @@ describe("poeTrade", () => {
 
   describe("getPrice", () => {
     describe("when the message matches with the `RegEx` pattern", () => {
-      it("returns the decimal price with the currency", () => {
-        const whisperMessage =
-          '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 2.0 chaos in Legion (stash tab "6"; position: left 4, top 7)';
-        const expectedString = "~b/o 2.0 chaos";
-
-        const actualString = poeTrade.getPrice(whisperMessage);
-
-        expect(actualString).toEqual(expectedString);
-      });
-
-      it("returns the price even if the message is not english", () => {
-        const whisperMessage =
-          '@TestUser Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
-        const expectedString = "~b/o 40 chaos";
-
-        const actualString = poeTrade.getPrice(whisperMessage);
-
-        expect(actualString).toEqual(expectedString);
-      });
-
       it("returns the price with the right currency", () => {
         currencyNames.forEach(currency => {
           const whisperMessage = `@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 ${currency} in Legion (stash tab "6"; position: left 4, top 7)`;
@@ -146,39 +126,6 @@ describe("poeTrade", () => {
           const actualString = poeTrade.getPrice(whisperMessage);
 
           expect(actualString).toEqual(expectedString);
-        });
-      });
-
-      it("recognizes mirror as currency", () => {
-        const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 1 mirror in Standard (stash tab "SHOP"; position: left 7, top 1)`;
-        const expectedString = "~b/o 1 mirror";
-
-        const actualString = poeTrade.getPrice(whisperMessage);
-
-        expect(actualString).toEqual(expectedString);
-      });
-
-      describe("when the stash tab name also matches the regex", () => {
-        describe("when the tab price is higher", () => {
-          it("recognizes the correct price", () => {
-            const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 1 chaos in Standard (stash tab "~b/o 2 chaos"; position: left 7, top 1)`;
-            const expectedString = "~b/o 1 chaos";
-
-            const actualString = poeTrade.getPrice(whisperMessage);
-
-            expect(actualString).toEqual(expectedString);
-          });
-        });
-
-        describe("when the tab price is lower", () => {
-          it("recognizes the correct price", () => {
-            const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 3 chaos in Standard (stash tab "~b/o 2 chaos"; position: left 7, top 1)`;
-            const expectedString = "~b/o 3 chaos";
-
-            const actualString = poeTrade.getPrice(whisperMessage);
-
-            expect(actualString).toEqual(expectedString);
-          });
         });
       });
     });
@@ -192,6 +139,58 @@ describe("poeTrade", () => {
 
         expect(actualString).toEqual("");
       });
+    });
+
+    it("matches decimal places", () => {
+      const whisperMessage =
+        '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 2.0 chaos in Legion (stash tab "6"; position: left 4, top 7)';
+      const expectedString = "~b/o 2.0 chaos";
+
+      const actualString = poeTrade.getPrice(whisperMessage);
+
+      expect(actualString).toEqual(expectedString);
+    });
+
+    it("matches non-english messages", () => {
+      const whisperMessage =
+        '@TestUser Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
+      const expectedString = "~b/o 40 chaos";
+
+      const actualString = poeTrade.getPrice(whisperMessage);
+
+      expect(actualString).toEqual(expectedString);
+    });
+
+    describe("when the stash tab name also matches the regex", () => {
+      describe("when the tab price is higher", () => {
+        it("recognizes the correct price", () => {
+          const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 1 chaos in Standard (stash tab "~b/o 2 chaos"; position: left 7, top 1)`;
+          const expectedString = "~b/o 1 chaos";
+
+          const actualString = poeTrade.getPrice(whisperMessage);
+
+          expect(actualString).toEqual(expectedString);
+        });
+      });
+
+      describe("when the tab price is lower", () => {
+        it("recognizes the correct price", () => {
+          const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 3 chaos in Standard (stash tab "~b/o 2 chaos"; position: left 7, top 1)`;
+          const expectedString = "~b/o 3 chaos";
+
+          const actualString = poeTrade.getPrice(whisperMessage);
+
+          expect(actualString).toEqual(expectedString);
+        });
+      });
+    });
+
+    it("doesn't match concatenated currency names", () => {
+      const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 1 mirrorchaos in Standard (stash tab "SHOP"; position: left 7, top 1)`;
+
+      const actualString = poeTrade.getPrice(whisperMessage);
+
+      expect(actualString).toEqual("");
     });
   });
 });
