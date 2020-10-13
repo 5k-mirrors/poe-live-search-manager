@@ -27,7 +27,7 @@ import { version } from "../../../package.json";
 class WsRequestLimiter {
   static bottleneck = new Bottleneck({
     maxConcurrent: 1,
-    minTime: randomInt(1200, 1500),
+    minTime: randomInt(2200, 2500),
   });
 
   static schedule(cb) {

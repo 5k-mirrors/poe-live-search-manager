@@ -15,7 +15,7 @@ export default class HttpRequestLimiter {
       requestLimit: 6,
       interval: 4,
     },
-    minRequestIntervalMs: 1000,
+    minRequestIntervalMs: 1500,
   };
 
   static bottleneck = new Bottleneck();
