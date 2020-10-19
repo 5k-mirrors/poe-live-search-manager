@@ -1,27 +1,27 @@
 {
   "result":[
      {
-        "id":"87097267a77070e29b989feeea30a6d3d5d2c035077058ed677147e1b9fdb68c",
+        "id":"b01117f2a0c4a6feafb9878253ef1bb9605f7ba89febf5f95612f7c46fa6b0d9",
         "listing":{
            "method":"psapi",
-           "indexed":"2020-10-18T15:48:10Z",
+           "indexed":"2020-10-19T12:03:08Z",
            "stash":{
-              "name":"\u0422\u043e\u0440\u0433\u043e\u0432\u043e\u0435 \u0431\u0430\u0440\u0430\u0445\u043b\u043e",
-              "x":8,
-              "y":0
+              "name":"DUMP",
+              "x":2,
+              "y":18
            },
-           "whisper":"@Krytilkin \u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435, \u0445\u043e\u0447\u0443 \u043a\u0443\u043f\u0438\u0442\u044c \u0443 \u0432\u0430\u0441 \u0422\u0430\u0431\u0443\u043b\u0430 \u0440\u0430\u0441\u0430 \u041c\u0430\u0442\u0435\u0440\u0447\u0430\u0442\u0430\u044f \u0431\u0435\u0437\u0440\u0443\u043a\u0430\u0432\u043a\u0430 \u0437\u0430 8 chaos \u0432 \u043b\u0438\u0433\u0435 \u041a\u0440\u0430\u0436\u0430 (\u0441\u0435\u043a\u0446\u0438\u044f \"\u0422\u043e\u0440\u0433\u043e\u0432\u043e\u0435 \u0431\u0430\u0440\u0430\u0445\u043b\u043e\"; \u043f\u043e\u0437\u0438\u0446\u0438\u044f: 9 \u0441\u0442\u043e\u043b\u0431\u0435\u0446, 1 \u0440\u044f\u0434)",
+           "whisper":"@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 7 chaos in Heist (stash tab \"DUMP\"; position: left 3, top 19)",
            "account":{
-              "name":"Klipops",
-              "lastCharacterName":"Krytilkin",
+              "name":"SUPERFLUXXX",
+              "lastCharacterName":"TestUser",
               "online":{
                  "league":"Heist"
               },
-              "language":"ru_RU"
+              "language":"en_US"
            },
            "price":{
-              "type":"~b\/o",
-              "amount":8,
+              "type":"~price",
+              "amount":7,
               "currency":"chaos"
            }
         },
@@ -67,7 +67,8 @@
            "typeLine":"Simple Robe",
            "identified":true,
            "ilvl":80,
-           "note":"~b\/o 8 chaos",
+           "note":"~price 7 chaos",
+           "corrupted":true,
            "frameType":3,
            "extended":{
               "mods":{
@@ -87,7 +88,7 @@
               "hashes":{
 
               },
-              "text":"UmFyaXR5OiBVbmlxdWUNClRhYnVsYSBSYXNhDQpTaW1wbGUgUm9iZQ0KLS0tLS0tLS0NClNvY2tldHM6IFctVy1XLVctVy1XIA0KLS0tLS0tLS0NCkl0ZW0gTGV2ZWw6IDgwDQotLS0tLS0tLQ0KTm90ZTogfmIvbyA4IGNoYW9zDQo="
+              "text":"UmFyaXR5OiBVbmlxdWUNClRhYnVsYSBSYXNhDQpTaW1wbGUgUm9iZQ0KLS0tLS0tLS0NClNvY2tldHM6IFctVy1XLVctVy1XIA0KLS0tLS0tLS0NCkl0ZW0gTGV2ZWw6IDgwDQotLS0tLS0tLQ0KQ29ycnVwdGVkDQotLS0tLS0tLQ0KTm90ZTogfnByaWNlIDcgY2hhb3MNCg=="
            }
         }
      }

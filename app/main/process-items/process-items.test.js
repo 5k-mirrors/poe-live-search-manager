@@ -1,17 +1,17 @@
 import processItems from "./process-items";
 import GlobalStore from "../../GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import exampleSocketResponse from "../../../doc/example-socket-response.json";
 
-jest.mock("../poe-trade/poe-trade", () => ({
-  ...jest.requireActual("../poe-trade/poe-trade"),
-  fetchItemDetails: jest.fn(() =>
-    Promise.resolve({
-      listing: {
-        whisper: `@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 chaos in Legion (stash tab "6"; position: left 4, top 7)`,
-      },
-    })
-  ),
-}));
+jest.mock("../poe-trade/poe-trade", () => {
+  // eslint-disable-next-line global-require
+  const data = require("../../../doc/example-socket-response.json");
+
+  return {
+    ...jest.requireActual("../poe-trade/poe-trade"),
+    fetchItemDetails: jest.fn(() => Promise.resolve(data.result[0])),
+  };
+});
 
 describe("processItems", () => {
   const ws = { name: "", searchUrl: "" };
@@ -34,7 +34,7 @@ describe("processItems", () => {
 
     const results = globalStore.get(storeKeys.RESULTS, []);
     expect(results[0].whisperMessage).toEqual(
-      `@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 chaos in Legion (stash tab "6"; position: left 4, top 7)`
+      exampleSocketResponse.result[0].listing.whisper
     );
   });
 
@@ -42,6 +42,6 @@ describe("processItems", () => {
     await processItems(["id1"], ws);
 
     const results = globalStore.get(storeKeys.RESULTS, []);
-    expect(results[0].price).toEqual("~b/o 20 chaos");
+    expect(results[0].price).toEqual("~b/o 7 chaos");
   });
 });
