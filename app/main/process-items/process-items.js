@@ -51,7 +51,7 @@ const processItems = (itemIds, ws) => {
       .then(itemDetails => {
         const id = uniqueIdGenerator();
         const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
-        const price = poeTrade.getPrice(whisperMessage);
+        const price = poeTrade.getPrice(itemDetails);
 
         updateResults({
           id,

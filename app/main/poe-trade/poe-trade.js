@@ -71,7 +71,13 @@ export const getWhisperMessage = itemDetails => {
   return whisperMessage;
 };
 
-export const getPrice = whisperMessage => {
+export const getPrice = itemDetails => {
+  const amount = safeGet(itemDetails, ["listing", "price", "amount"]);
+  const currency = safeGet(itemDetails, ["listing", "price", "currency"]);
+  return `${amount} ${currency}`;
+};
+
+export const getPriceFromWhisper = whisperMessage => {
   const currencies = currencyNames.join("|");
   const pattern = ` \\d+\\.?\\d* (${currencies}){1} `;
   const regexp = new RegExp(pattern);

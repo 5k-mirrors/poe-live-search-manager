@@ -42,6 +42,6 @@ describe("processItems", () => {
     await processItems(["id1"], ws);
 
     const results = globalStore.get(storeKeys.RESULTS, []);
-    expect(results[0].price).toEqual("~b/o 7 chaos");
+    expect(results[0].price).toEqual("7 chaos");
   });
 });

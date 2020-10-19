@@ -4,6 +4,7 @@ import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
+import exampleSocketResponse from "../../../doc/example-socket-response.json";
 
 jest.mock("node-fetch", () => jest.fn());
 
@@ -117,13 +118,27 @@ describe("poeTrade", () => {
   });
 
   describe("getPrice", () => {
+    it("returns formatted price from the data structure", () => {
+      expect(poeTrade.getPrice(exampleSocketResponse.result[0])).toEqual(
+        "7 chaos"
+      );
+    });
+
+    describe("when the object doesn't have a listing property", () => {
+      it("doesn't fail", () => {
+        expect(() => poeTrade.getPrice({})).not.toThrow();
+      });
+    });
+  });
+
+  describe("getPriceFromWhisper", () => {
     describe("when the message matches with the `RegEx` pattern", () => {
       it("returns the price with the right currency", () => {
         currencyNames.forEach(currency => {
           const whisperMessage = `@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 ${currency} in Legion (stash tab "6"; position: left 4, top 7)`;
           const expectedString = `~b/o 20 ${currency}`;
 
-          const actualString = poeTrade.getPrice(whisperMessage);
+          const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
 
           expect(actualString).toEqual(expectedString);
         });
@@ -135,7 +150,7 @@ describe("poeTrade", () => {
         "@TestUser Hi this is not a whisper message but contains numbers 34 and some currency name: chaos, exa.";
 
       it("returns an empty string", () => {
-        const actualString = poeTrade.getPrice(whisperMessage);
+        const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
 
         expect(actualString).toEqual("");
       });
@@ -146,7 +161,7 @@ describe("poeTrade", () => {
         '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 2.0 chaos in Legion (stash tab "6"; position: left 4, top 7)';
       const expectedString = "~b/o 2.0 chaos";
 
-      const actualString = poeTrade.getPrice(whisperMessage);
+      const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
 
       expect(actualString).toEqual(expectedString);
     });
@@ -156,7 +171,7 @@ describe("poeTrade", () => {
         '@TestUser Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
       const expectedString = "~b/o 40 chaos";
 
-      const actualString = poeTrade.getPrice(whisperMessage);
+      const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
 
       expect(actualString).toEqual(expectedString);
     });
@@ -167,7 +182,7 @@ describe("poeTrade", () => {
           const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 1 chaos in Standard (stash tab "~b/o 2 chaos"; position: left 7, top 1)`;
           const expectedString = "~b/o 1 chaos";
 
-          const actualString = poeTrade.getPrice(whisperMessage);
+          const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
 
           expect(actualString).toEqual(expectedString);
         });
@@ -178,7 +193,7 @@ describe("poeTrade", () => {
           const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 3 chaos in Standard (stash tab "~b/o 2 chaos"; position: left 7, top 1)`;
           const expectedString = "~b/o 3 chaos";
 
-          const actualString = poeTrade.getPrice(whisperMessage);
+          const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
 
           expect(actualString).toEqual(expectedString);
         });
@@ -188,7 +203,7 @@ describe("poeTrade", () => {
     it("doesn't match concatenated currency names", () => {
       const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 1 mirrorchaos in Standard (stash tab "SHOP"; position: left 7, top 1)`;
 
-      const actualString = poeTrade.getPrice(whisperMessage);
+      const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
 
       expect(actualString).toEqual("");
     });
