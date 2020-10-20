@@ -55,7 +55,7 @@
     "electron-updater": "^4.0.14",
     "firebase": "^6.2.4",
     "js-yaml": "^3.13.1",
-    "material-table": "1.53.0",
+    "material-table": "1.62.0",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "react": "^16.8.6",
