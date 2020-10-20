@@ -45,9 +45,9 @@
     "material-table": "Built on top of MUI tables, supports editing, search, sorting, actions. https://material-ui.com/components/tables/#material-table"
   },
   "dependencies": {
-    "@material-ui/core": "^4.8.3",
-    "@material-ui/icons": "^4.5.1",
-    "@material-ui/lab": "^4.0.0-alpha.39",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "async-mutex": "^0.1.3",
     "bottleneck": "^2.19.2",
     "electron-store": "^4.0.0",
