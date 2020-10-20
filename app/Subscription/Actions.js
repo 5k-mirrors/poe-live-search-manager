@@ -1,6 +1,6 @@
 import Subscription from "./Subscription";
 import * as webSocketActions from "../main/web-sockets/actions";
-import { send as sendRenderer } from "../main/utils/electron-utils/electron-utils";
+import { send as sendEvent } from "../main/utils/electron-utils/electron-utils";
 import { ipcEvents } from "../resources/IPCEvents/IPCEvents";
 import { windows } from "../resources/Windows/Windows";
 import {
@@ -15,7 +15,7 @@ export const refresh = () =>
     .then(nextSubscriptionDetails => {
       Subscription.update(nextSubscriptionDetails);
 
-      sendRenderer(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+      sendEvent(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
         data: { ...Subscription.data },
       });
 
@@ -24,7 +24,7 @@ export const refresh = () =>
     .catch(err => {
       devErrorLog("Subscription refresh error: ", err);
 
-      sendRenderer(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+      sendEvent(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
         isErr: true,
       });
     });

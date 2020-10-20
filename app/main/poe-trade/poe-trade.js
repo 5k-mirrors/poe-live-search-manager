@@ -4,6 +4,7 @@ import {
   safeGet,
   safeJsonResponse,
   isDefined,
+  devErrorLog,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../errors/item-fetch-error";
@@ -58,7 +59,11 @@ export const fetchItemDetails = id =>
 
           throw new ItemFetchError(`Item details not found for ${itemUrl}`);
         })
-      );
+      )
+      .catch(error => {
+        devErrorLog(error);
+        throw error;
+      });
   });
 
 export const getWhisperMessage = itemDetails => {

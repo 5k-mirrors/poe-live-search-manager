@@ -70,20 +70,25 @@ export default class HttpRequestLimiter {
       headers: {
         Cookie: getCookieHeader(),
       },
-    }).then(response => {
-      if (response.headers.has(headerKeys.XRateLimitAccount)) {
-        const xRateLimitAccountValues = response.headers
-          .get(headerKeys.XRateLimitAccount)
-          .split(":");
+    })
+      .then(response => {
+        if (response.headers.has(headerKeys.XRateLimitAccount)) {
+          const xRateLimitAccountValues = response.headers
+            .get(headerKeys.XRateLimitAccount)
+            .split(":");
 
-        return {
-          requestLimit: Number(xRateLimitAccountValues[0]),
-          interval: Number(xRateLimitAccountValues[1]),
-        };
-      }
+          return {
+            requestLimit: Number(xRateLimitAccountValues[0]),
+            interval: Number(xRateLimitAccountValues[1]),
+          };
+        }
 
-      throw new MissingXRateLimitAccountHeaderError();
-    });
+        throw new MissingXRateLimitAccountHeaderError();
+      })
+      .catch(error => {
+        devErrorLog(error);
+        throw error;
+      });
   }
 
   static incrementReservoir(incrementBy) {
