@@ -16,15 +16,11 @@ import { windows } from "../../resources/Windows/Windows";
 import User from "../user/user";
 
 const setupStoreIpcListeners = () => {
-  ipcMain.on(ipcEvents.GET_SOCKETS, event => {
-    const storeWithStates = Store.sockets.map(
-      ({ socket, ...remainingSocketDetails }) => ({
-        ...remainingSocketDetails,
-        isConnected: socket && stateIs(socket, socketStates.OPEN),
-      })
-    );
-
-    event.sender.send(ipcEvents.SEND_SOCKETS, storeWithStates);
+  ipcMain.handle(ipcEvents.GET_SOCKETS, () => {
+    return Store.sockets.map(({ socket, ...remainingSocketDetails }) => ({
+      ...remainingSocketDetails,
+      isConnected: socket && stateIs(socket, socketStates.OPEN),
+    }));
   });
 };
 

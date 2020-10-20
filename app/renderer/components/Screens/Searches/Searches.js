@@ -32,9 +32,11 @@ export default class Searches extends Component {
   }
 
   componentDidMount() {
-    ipcRenderer.send(ipcEvents.GET_SOCKETS);
-
-    ipcRenderer.on(ipcEvents.SEND_SOCKETS, this.sendSocketsListener);
+    ipcRenderer.invoke(ipcEvents.GET_SOCKETS).then(result => {
+      this.setState({
+        webSocketStore: result,
+      });
+    });
 
     ipcRenderer.on(
       ipcEvents.SOCKET_STATE_UPDATE,
@@ -44,11 +46,6 @@ export default class Searches extends Component {
 
   componentWillUnmount() {
     ipcRenderer.removeListener(
-      ipcEvents.SEND_SOCKETS,
-      this.sendSocketsListener
-    );
-
-    ipcRenderer.removeListener(
       ipcEvents.SOCKET_STATE_UPDATE,
       this.socketStateUpdateListener
     );
@@ -57,12 +54,6 @@ export default class Searches extends Component {
       clearTimeout(timeout);
     });
   }
-
-  sendSocketsListener = (event, currentSockets) => {
-    this.setState({
-      webSocketStore: currentSockets,
-    });
-  };
 
   socketStateUpdateListener = (event, socketDetails) => {
     if (this.stateHasChanged(socketDetails.id, socketDetails.isConnected)) {
