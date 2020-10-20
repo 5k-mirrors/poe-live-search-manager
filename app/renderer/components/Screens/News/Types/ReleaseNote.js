@@ -9,7 +9,7 @@ import Divider from "@material-ui/core/Divider";
 import { openExternalUrl } from "../../../../utils/ElectronUtils/ElectronUtils";
 import { Url } from "../../../../utils/ReactMarkdown/renderers";
 
-export default ({ ...details }) => (
+const ReleaseNote = ({ ...details }) => (
   <div>
     <Link
       component="button"
@@ -32,3 +32,5 @@ export default ({ ...details }) => (
     <Divider />
   </div>
 );
+
+export default ReleaseNote;

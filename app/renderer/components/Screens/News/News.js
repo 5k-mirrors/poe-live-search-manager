@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Paper from "@material-ui/core/Paper";
 import fetch from "node-fetch";
 
-import { Announcement } from "./Types";
+import { Announcement, ReleaseNote } from "./Types";
 import { useNewsStyles } from "./News.style";
 import Announcements from "../../../resources/Announcements/Announcements";
 import {
@@ -32,15 +32,15 @@ export default () => {
             {...announcement}
           />
         );
-      }) +
-        githubReleaseNotes.map(githubReleaseNote => {
-          return (
-            <Announcement
-              key={githubReleaseNote.name + githubReleaseNote.published_at}
-              {...githubReleaseNote}
-            />
-          );
-        })}
+      })}
+      {githubReleaseNotes.map(githubReleaseNote => {
+        return (
+          <ReleaseNote
+            key={githubReleaseNote.name + githubReleaseNote.published_at}
+            {...githubReleaseNote}
+          />
+        );
+      })}
     </Paper>
   );
 };
