@@ -74,6 +74,9 @@ export const getWhisperMessage = itemDetails => {
 export const getPrice = itemDetails => {
   const amount = safeGet(itemDetails, ["listing", "price", "amount"]);
   const currency = safeGet(itemDetails, ["listing", "price", "currency"]);
+
+  if (amount === null || currency === null) return "";
+
   return `${amount} ${currency}`;
 };
 

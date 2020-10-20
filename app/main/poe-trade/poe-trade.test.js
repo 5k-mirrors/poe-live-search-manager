@@ -125,8 +125,8 @@ describe("poeTrade", () => {
     });
 
     describe("when the object doesn't have a listing property", () => {
-      it("doesn't fail", () => {
-        expect(() => poeTrade.getPrice({})).not.toThrow();
+      it("return empty string", () => {
+        expect(poeTrade.getPrice({})).toEqual("");
       });
     });
   });
