@@ -8,26 +8,22 @@ import Divider from "@material-ui/core/Divider";
 import { openExternalUrl } from "../../../../utils/ElectronUtils/ElectronUtils";
 import { Url } from "../../../../utils/ReactMarkdown/renderers";
 
-const Announcement = ({ ...details }) => (
+const ReleaseNote = ({ ...details }) => (
   <div>
-    {details.link ? (
-      <Link
-        to={details.link}
-        component="button"
-        variant="h4"
-        onClick={() => openExternalUrl(details.link)}
-        size="large"
-      >
-        {details.title}
-      </Link>
-    ) : (
-      <h3>{details.title}</h3>
-    )}
+    <Link
+      component="button"
+      to={details.html_url}
+      variant="h4"
+      onClick={() => openExternalUrl(details.html_url)}
+      size="large"
+    >
+      {details.name}
+    </Link>
     <Typography variant="body2" component="p">
-      {moment(details.date).format("DD.MM.YYYY")}
+      {moment(details.published_at).format("DD.MM.YYYY")}
     </Typography>
     <ReactMarkdown
-      source={details.description}
+      source={details.body}
       renderers={{
         link: props => <Url {...props} />,
       }}
@@ -37,4 +33,4 @@ const Announcement = ({ ...details }) => (
   </div>
 );
 
-export default Announcement;
+export default ReleaseNote;

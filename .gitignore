@@ -13,7 +13,7 @@
 /coverage
 
 # Environment variables
-/.env
+/.env*
 
 # Yarn error logs
 /yarn-error.log
