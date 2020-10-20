@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import moment from "moment";
 import Typography from "@material-ui/core/Typography";
@@ -13,6 +12,7 @@ const Announcement = ({ ...details }) => (
   <div>
     {details.link ? (
       <Link
+        to={details.link}
         component="button"
         variant="h4"
         onClick={() => openExternalUrl(details.link)}
