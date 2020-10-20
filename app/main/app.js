@@ -11,7 +11,11 @@ import {
   initRateLimiter,
 } from "./initialize-project/initialize-project";
 import { windows } from "../resources/Windows/Windows";
-import { envIs, devErrorLog } from "../utils/JavaScriptUtils/JavaScriptUtils";
+import {
+  envIs,
+  devErrorLog,
+  devLog,
+} from "../utils/JavaScriptUtils/JavaScriptUtils";
 
 require("electron-unhandled")({
   showDialog: envIs("development"),
@@ -49,14 +53,19 @@ autoUpdater.setFeedURL({
 const setupDevelopmentWorkflow = async () => {
   require("electron-debug")();
 
-  await installExtension(REACT_DEVELOPER_TOOLS);
+  try {
+    await installExtension(REACT_DEVELOPER_TOOLS);
+  } catch (error) {
+    devErrorLog(`Failed to install React dev tools: ${error}`);
+  }
 
   win.webContents.openDevTools();
 };
 
 const createWindow = () => {
+  const width = envIs("development") ? 1524 : 1024;
   win = new BrowserWindow({
-    width: 1024,
+    width,
     height: 768,
     // https://stackoverflow.com/a/55093701/9599137
     webPreferences: {
@@ -64,7 +73,7 @@ const createWindow = () => {
     },
   });
 
-  if (process.platform !== "darwin") {
+  if (process.platform !== "darwin" && !envIs("development")) {
     // https://electronjs.org/docs/api/browser-window#winremovemenu-linux-windows
     win.removeMenu();
   }
@@ -90,6 +99,7 @@ app.on("ready", async () => {
 
   if (envIs("development")) {
     await setupDevelopmentWorkflow();
+    devLog("Development setup done");
   }
 
   win.webContents.on("did-finish-load", async () => {
