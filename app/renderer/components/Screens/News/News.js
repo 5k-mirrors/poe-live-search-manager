@@ -1,39 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@material-ui/core/Paper";
+import fetch from "node-fetch";
+
 import { Announcement } from "./Types";
 import { useNewsStyles } from "./News.style";
-import { newsFeedItems, newsFeedItemTypes } from "../../../resources/NewsFeed";
-import { devErrorLog } from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
+import Announcements from "../../../resources/Announcements/Announcements";
+import {
+  devErrorLog,
+  safeJsonResponse,
+} from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
 
 export default () => {
   const classes = useNewsStyles();
+  const [githubReleaseNotes, setGithubReleaseNotes] = useState([]);
+
+  useEffect(() => {
+    fetch(
+      "https://api.github.com/repos/5k-mirrors/poe-live-search-manager/releases"
+    )
+      .then(data => safeJsonResponse(data))
+      .then(parsedData => setGithubReleaseNotes(parsedData))
+      .catch(error => devErrorLog(error));
+  }, []);
 
   return (
     <Paper className={classes.root}>
-      {newsFeedItems.map(itemDetails => {
-        switch (itemDetails.type) {
-          case newsFeedItemTypes.RELEASE_NOTE:
-            return (
-              <Announcement
-                key={itemDetails.title + itemDetails.date}
-                {...itemDetails}
-              />
-            );
-          case newsFeedItemTypes.ANNOUNCEMENT:
-            return (
-              <Announcement
-                key={itemDetails.title + itemDetails.date}
-                {...itemDetails}
-              />
-            );
-          default:
-            devErrorLog(
-              `${itemDetails.type} type is not supported on news feed.`
-            );
-
-            return null;
-        }
-      })}
+      {Announcements.map(announcement => {
+        return (
+          <Announcement
+            key={announcement.title + announcement.date}
+            {...announcement}
+          />
+        );
+      }) +
+        githubReleaseNotes.map(githubReleaseNote => {
+          return (
+            <Announcement
+              key={githubReleaseNote.name + githubReleaseNote.published_at}
+              {...githubReleaseNote}
+            />
+          );
+        })}
     </Paper>
   );
 };

@@ -11,23 +11,19 @@ import { Url } from "../../../../utils/ReactMarkdown/renderers";
 
 export default ({ ...details }) => (
   <div>
-    {details.link ? (
-      <Link
-        component="button"
-        variant="h4"
-        onClick={() => openExternalUrl(details.link)}
-        size="large"
-      >
-        {details.title}
-      </Link>
-    ) : (
-      <h3>{details.title}</h3>
-    )}
+    <Link
+      component="button"
+      variant="h4"
+      onClick={() => openExternalUrl(details.html_url)}
+      size="large"
+    >
+      {details.name}
+    </Link>
     <Typography variant="body2" component="p">
-      {moment(details.date).format("DD.MM.YYYY")}
+      {moment(details.published_at).format("DD.MM.YYYY")}
     </Typography>
     <ReactMarkdown
-      source={details.description}
+      source={details.body}
       renderers={{
         link: props => <Url {...props} />,
       }}
