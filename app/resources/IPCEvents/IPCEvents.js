@@ -11,7 +11,7 @@ export const ipcEvents = {
   TEST_NOTIFICATION: "testNotification",
   FETCH_SUBSCRIPTION_DETAILS: "fetchSubscriptionDetails",
   GET_SUBSCRIPTION_DETAILS: "getSubscriptionDetails",
-  SEND_SUBSCRIPTION_DETAILS: "sendSubscriptionDetails",
+  UPDATE_SUBSCRIPTION_DETAILS: "sendSubscriptionDetails",
   DROP_SCHEDULED_RESULTS: "dropScheduledResults",
   RATE_LIMIT_STATUS_CHANGE: "rateLimitStatusChange",
   ID_TOKEN_CHANGED: "idTokenChanged",
