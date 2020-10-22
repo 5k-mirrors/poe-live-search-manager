@@ -11,6 +11,7 @@ SubscriptionContext.displayName = "SubscriptionContext";
 // Provides a state of {data, isLoading, isErr}
 // Provides a function to update the state explicitly by providing an Event to invoke
 // Subscribes to updates via `updateEvent` if provided
+// Deep cloning is used on the previous state: https://stackoverflow.com/a/45619333/2771889
 const useDataFromMain = updateEvent => {
   const [state, setState] = useState({
     data: null,
@@ -18,12 +19,11 @@ const useDataFromMain = updateEvent => {
     isErr: false,
   });
 
-  // TODO: Is cloneDeep needed?
   const updateState = useCallback(newState => {
     setState(prevState => {
       return {
         ...cloneDeep(prevState),
-        ...cloneDeep(newState),
+        ...newState,
       };
     });
   }, []);
@@ -47,7 +47,7 @@ const useDataFromMain = updateEvent => {
         };
       });
       ipcRenderer.invoke(requestEvent).then(result => {
-        updateState({ isLoading: false, ...cloneDeep(result) });
+        updateState({ isLoading: false, ...result });
       });
     },
     [updateState]
