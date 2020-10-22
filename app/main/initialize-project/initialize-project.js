@@ -80,7 +80,7 @@ const setupAuthenticationIpcListeners = () => {
     storeUtils.clear(storeKeys.POE_SESSION_ID);
     Subscription.clear();
 
-    electronUtils.send(windows.MAIN, ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
+    electronUtils.send(windows.MAIN, ipcEvents.UPDATE_SUBSCRIPTION_DETAILS, {
       data: Subscription.data,
     });
   });
@@ -100,15 +100,18 @@ const setupGeneralIpcListeners = () => {
     });
   });
 
-  ipcMain.on(ipcEvents.GET_SUBSCRIPTION_DETAILS, event => {
-    event.sender.send(ipcEvents.SEND_SUBSCRIPTION_DETAILS, {
-      data: { ...Subscription.data },
-    });
+  ipcMain.handle(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, () => {
+    return subscriptionActions
+      .refresh()
+      .then(subscriptionData => {
+        return {
+          data: { ...subscriptionData },
+        };
+      })
+      .catch(() => {
+        return { isErr: true };
+      });
   });
-
-  ipcMain.on(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, () =>
-    subscriptionActions.refresh()
-  );
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
     NotificationsLimiter.drop();

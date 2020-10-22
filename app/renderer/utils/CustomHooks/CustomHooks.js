@@ -1,44 +1,6 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useReducer,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
-import { ipcRenderer } from "electron";
-import { asyncFetchActions, asyncFetchReducer } from "../../reducers/reducers";
-
-export const useListenToDataUpdatesViaIpc = (receiver, listener) => {
-  useEffect(() => {
-    ipcRenderer.on(receiver, listener);
-
-    return () => ipcRenderer.removeListener(receiver, listener);
-  }, [listener, receiver]);
-};
-
-export const useRequestDataViaIpc = receiver => {
-  const [state, dispatch] = useReducer(asyncFetchReducer, {
-    data: null,
-    isLoading: false,
-    isErr: false,
-  });
-
-  const listener = useCallback((_, payload) => {
-    dispatch({ type: asyncFetchActions.RECEIVE_RESPONSE, payload });
-  }, []);
-
-  useListenToDataUpdatesViaIpc(receiver, listener);
-
-  const requestDataViaIpc = useCallback((requester, ...args) => {
-    dispatch({ type: asyncFetchActions.SEND_REQUEST });
-
-    ipcRenderer.send(requester, ...args);
-  }, []);
-
-  return [state, requestDataViaIpc];
-};
 
 export const useDisable = seconds => {
   const timeoutId = useRef();

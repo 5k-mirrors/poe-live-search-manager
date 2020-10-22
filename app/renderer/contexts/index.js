@@ -1,5 +1,8 @@
 import { AuthProvider, useAuthContext } from "./Auth";
-import { SubscriptionProvider, useSubscriptionContext } from "./Subscription";
+import {
+  SubscriptionProvider,
+  useSubscriptionContext,
+} from "./Subscription/Subscription";
 
 export {
   AuthProvider,
