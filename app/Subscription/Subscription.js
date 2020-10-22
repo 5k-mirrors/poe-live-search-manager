@@ -18,7 +18,7 @@ export default class Subscription {
     return authenticatedFetch(userApiUrl)
       .then(response => safeJsonResponse(response))
       .catch(error => {
-        devErrorLog(error);
+        devErrorLog("Subscription.query", error);
         throw error;
       });
   }
