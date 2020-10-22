@@ -100,13 +100,6 @@ const setupGeneralIpcListeners = () => {
     });
   });
 
-  // This is called upon the init of Subscription, maybe could use FETCH_SUBSCRIPTION_DETAILS?
-  ipcMain.handle(ipcEvents.GET_SUBSCRIPTION_DETAILS, () => {
-    return {
-      data: { ...Subscription.data },
-    };
-  });
-
   ipcMain.handle(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, () => {
     return subscriptionActions
       .refresh()

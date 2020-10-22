@@ -37,8 +37,8 @@ describe("useSubscriptionContext", () => {
     });
 
     expect(subscription).toEqual({
-      data: null,
-      isLoading: true,
+      data: { plan: null, type: "" },
+      isLoading: false,
       isErr: false,
     });
   });

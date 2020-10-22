@@ -12,9 +12,9 @@ SubscriptionContext.displayName = "SubscriptionContext";
 // Provides a function to update the state explicitly by providing an Event to invoke
 // Subscribes to updates via `updateEvent` if provided
 // Deep cloning is used on the previous state: https://stackoverflow.com/a/45619333/2771889
-const useDataFromMain = updateEvent => {
+const useDataFromMain = (updateEvent, defaultData = null) => {
   const [state, setState] = useState({
-    data: null,
+    data: defaultData,
     isLoading: false,
     isErr: false,
   });
@@ -30,7 +30,9 @@ const useDataFromMain = updateEvent => {
 
   useEffect(() => {
     if (updateEvent) {
-      ipcRenderer.on(updateEvent, updateState);
+      ipcRenderer.on(updateEvent, (event, newState) => {
+        updateState(newState);
+      });
 
       return () => ipcRenderer.removeListener(updateEvent, updateState);
     }
@@ -59,13 +61,11 @@ const useDataFromMain = updateEvent => {
 // Subscription is stored in one central context, accessible from everywhere in renderer
 // Queries are made in main and are kept in sync with renderer
 export const SubscriptionProvider = ({ children }) => {
+  const defaultData = { type: "", plan: null };
   const [state, requestDataViaIpc] = useDataFromMain(
-    ipcEvents.UPDATE_SUBSCRIPTION_DETAILS
+    ipcEvents.UPDATE_SUBSCRIPTION_DETAILS,
+    defaultData
   );
-
-  useEffect(() => {
-    requestDataViaIpc(ipcEvents.GET_SUBSCRIPTION_DETAILS);
-  }, [requestDataViaIpc]);
 
   const fetchSubscriptionDetails = () => {
     requestDataViaIpc(ipcEvents.FETCH_SUBSCRIPTION_DETAILS);
