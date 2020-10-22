@@ -50,25 +50,25 @@ jobs:
     - name: Show current ref
       run: echo ${{ github.ref }}
     - uses: actions/checkout@v1
-    - name: Use Node.js ${{ env.node_version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ env.node_version }}
-    - uses: c-hive/gha-yarn-cache@v1
-    - name: Cache Electron dependencies
-      uses: actions/cache@v1
-      with:
-        path: ~\AppData\Local\electron
-        key: ${{ runner.OS }}-electron-dependencies-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.OS }}-electron-dependencies-
-    - name: Cache electron-builder dependencies
-      uses: actions/cache@v1
-      with:
-        path: ~\AppData\Local\electron-builder
-        key: ${{ runner.OS }}-electron-builder-dependencies-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.OS }}-electron-builder-dependencies-
+    # - name: Use Node.js ${{ env.node_version }}
+    #   uses: actions/setup-node@v1
+    #   with:
+    #     node-version: ${{ env.node_version }}
+    # - uses: c-hive/gha-yarn-cache@v1
+    # - name: Cache Electron dependencies
+    #   uses: actions/cache@v1
+    #   with:
+    #     path: ~\AppData\Local\electron
+    #     key: ${{ runner.OS }}-electron-dependencies-${{ hashFiles('**/yarn.lock') }}
+    #     restore-keys: |
+    #       ${{ runner.OS }}-electron-dependencies-
+    # - name: Cache electron-builder dependencies
+    #   uses: actions/cache@v1
+    #   with:
+    #     path: ~\AppData\Local\electron-builder
+    #     key: ${{ runner.OS }}-electron-builder-dependencies-${{ hashFiles('**/yarn.lock') }}
+    #     restore-keys: |
+    #       ${{ runner.OS }}-electron-builder-dependencies-
     - name: Install JS dependencies
       run: yarn install
     - name: Build
