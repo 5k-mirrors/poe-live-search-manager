@@ -50,16 +50,16 @@ autoUpdater.setFeedURL({
   repo: "poe-live-search-manager",
 });
 
-const setupDevelopmentWorkflow = async () => {
+const setupDevelopmentWorkflow = () => {
   require("electron-debug")();
 
-  try {
-    await installExtension(REACT_DEVELOPER_TOOLS);
-  } catch (error) {
-    devErrorLog(`Failed to install React dev tools: ${error}`);
-  }
-
-  win.webContents.openDevTools();
+  installExtension(REACT_DEVELOPER_TOOLS)
+    .then(() => {
+      win.webContents.openDevTools();
+    })
+    .catch(error => {
+      devErrorLog(`Failed to install React dev tools: ${error}`);
+    });
 };
 
 const createWindow = () => {
@@ -67,9 +67,11 @@ const createWindow = () => {
   win = new BrowserWindow({
     width,
     height: 768,
-    // https://stackoverflow.com/a/55093701/9599137
     webPreferences: {
+      // https://stackoverflow.com/a/55093701/9599137
       nodeIntegration: true,
+      // Require by electron-store on electron v10+
+      enableRemoteModule: true,
     },
   });
 
@@ -89,23 +91,22 @@ const createWindow = () => {
   });
 };
 
-app.on("ready", async () => {
+app.whenReady().then(() => {
   // Subscribing to the listeners happens even before creating the window to be ready to actively respond to initial events coming from renderer.
   initListeners();
 
   createWindow();
-
   autoUpdater.checkForUpdatesAndNotify();
 
   if (envIs("development")) {
-    await setupDevelopmentWorkflow();
+    setupDevelopmentWorkflow();
     devLog("Development setup done");
   }
 
-  win.webContents.on("did-finish-load", async () => {
+  win.webContents.on("did-finish-load", () => {
     win.setTitle(windows.MAIN);
 
-    await initRateLimiter();
+    initRateLimiter();
   });
 });
 
