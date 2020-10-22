@@ -34,7 +34,7 @@ const useDataFromMain = updateEvent => {
 
       return () => ipcRenderer.removeListener(updateEvent, updateState);
     }
-    return null;
+    return () => {};
   }, [updateEvent, updateState]);
 
   const requestDataViaIpc = useCallback(
