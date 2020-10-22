@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 env:
-  node_version: "12.15"
+  node_version: "12.13"
 
 jobs:
   lint:
