@@ -44,20 +44,20 @@ export default () => {
   }
 
   function deleteAll() {
-    const clickedButtonIndex = remote.dialog.showMessageBox({
-      ...deleteAllResultsMessageBoxOptions,
-    });
+    remote.dialog
+      .showMessageBox({
+        ...deleteAllResultsMessageBoxOptions,
+      })
+      .then(response => {
+        const clickedButtonIndex = response.response;
+        const deleteAllResultsConfirmed = clickedButtonIndex === 1;
 
-    // Electron's doc is misleading because showMessageBox() does not return a Promise.
-    // Instead, it returns the clicked button's index based on the button's array.
-    // https://stackoverflow.com/questions/57839415/electron-dialog-showopendialog-not-returning-a-promise
-    const deleteAllResultsConfirmed = clickedButtonIndex === 1;
+        if (deleteAllResultsConfirmed) {
+          setResults([]);
 
-    if (deleteAllResultsConfirmed) {
-      setResults([]);
-
-      globalStore.set(storeKeys.RESULTS, []);
-    }
+          globalStore.set(storeKeys.RESULTS, []);
+        }
+      });
   }
 
   return (

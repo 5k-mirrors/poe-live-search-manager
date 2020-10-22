@@ -254,29 +254,29 @@ export default class Searches extends Component {
     );
   }
 
-  // Electron's doc is misleading because showMessageBox() does not return a Promise.
-  // Instead, it returns the clicked button's index based on the button's array.
-  // https://stackoverflow.com/questions/57839415/electron-dialog-showopendialog-not-returning-a-promise
   deleteAll() {
-    const clickedButtonIndex = remote.dialog.showMessageBox({
-      ...deleteAllSearchesMessageBoxOptions,
-    });
+    remote.dialog
+      .showMessageBox({
+        ...deleteAllSearchesMessageBoxOptions,
+      })
+      .then(response => {
+        const clickedButtonIndex = response.response;
+        const deleteAllSearchesConfirmed = clickedButtonIndex === 1;
 
-    const deleteAllSearchesConfirmed = clickedButtonIndex === 1;
+        if (deleteAllSearchesConfirmed) {
+          const {
+            webSocketStore: [...webSocketStore],
+          } = this.state;
 
-    if (deleteAllSearchesConfirmed) {
-      const {
-        webSocketStore: [...webSocketStore],
-      } = this.state;
+          webSocketStore.forEach(connectionDetails => {
+            ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
+          });
 
-      webSocketStore.forEach(connectionDetails => {
-        ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
+          this.setState({
+            webSocketStore: [],
+          });
+        }
       });
-
-      this.setState({
-        webSocketStore: [],
-      });
-    }
   }
 
   render() {
