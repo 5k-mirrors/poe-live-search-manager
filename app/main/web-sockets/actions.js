@@ -200,4 +200,9 @@ export const updateConnections = () => {
 
 export const reconnect = id => disconnect(id);
 
-export const reconnectAll = () => disconnectAll();
+export const reconnectAll = () => {
+  disconnectAll();
+  // Disconnect triggers a re-connect in case the socket was already open.
+  // In case sockets were not open before we also call connect
+  connectAll();
+};
