@@ -3,7 +3,7 @@ import Box from "@material-ui/core/Box";
 import Input from "../../../UI/SimpleHtmlElements/Input/Input";
 import ButtonWithSuccessIcon from "../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
-import GlobalStore from "../../../../../GlobalStore/GlobalStore";
+import GlobalStore from "../../../../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../resources/StoreKeys/StoreKeys";
 
 export default () => {

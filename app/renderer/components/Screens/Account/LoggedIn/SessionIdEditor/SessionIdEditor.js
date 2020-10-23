@@ -2,7 +2,7 @@ import React, { useState, Fragment } from "react";
 import Box from "@material-ui/core/Box";
 import { ipcRenderer } from "electron";
 import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
-import GlobalStore from "../../../../../../GlobalStore/GlobalStore";
+import GlobalStore from "../../../../../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../../resources/StoreKeys/StoreKeys";
 import { ipcEvents } from "../../../../../../resources/IPCEvents/IPCEvents";
 import InfoButton from "./InfoButton/InfoButton";

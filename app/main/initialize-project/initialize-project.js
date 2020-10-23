@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import GlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import socketStates from "../../resources/SocketStates/SocketStates";

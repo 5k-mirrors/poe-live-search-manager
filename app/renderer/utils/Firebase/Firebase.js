@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import RecordNotExists from "../../../errors/record-not-exists";
+import RecordNotExists from "../../../shared/errors/record-not-exists";
 import { devLog } from "../../../utils/JavaScriptUtils/JavaScriptUtils";
 
 export const getApp = () => {

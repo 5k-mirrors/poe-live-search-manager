@@ -10,8 +10,8 @@ import {
 import { asyncFetchReducer, asyncFetchActions } from "../reducers/reducers";
 import { useFactoryContext } from "../utils/ReactUtils/ReactUtils";
 import { useNotify } from "../utils/CustomHooks/CustomHooks";
-import SessionAlreadyExists from "../../errors/session-already-exists";
-import RecordNotExists from "../../errors/record-not-exists";
+import SessionAlreadyExists from "../../shared/errors/session-already-exists";
+import RecordNotExists from "../../shared/errors/record-not-exists";
 import {
   devErrorLog,
   retryIn,

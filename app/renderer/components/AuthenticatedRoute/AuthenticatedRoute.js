@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import GlobalStore from "../../../GlobalStore/GlobalStore";
+import GlobalStore from "../../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 import { useAuthContext, useSubscriptionContext } from "../../contexts";
 

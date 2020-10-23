@@ -1,4 +1,4 @@
-import GlobalStore from "../../../GlobalStore/GlobalStore";
+import GlobalStore from "../../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
 
 export default () => {

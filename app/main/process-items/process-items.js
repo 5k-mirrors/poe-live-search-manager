@@ -3,7 +3,7 @@ import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as poeTrade from "../poe-trade/poe-trade";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import GlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
 import * as electronUtils from "../utils/electron-utils/electron-utils";

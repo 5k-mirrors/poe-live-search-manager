@@ -1,5 +1,5 @@
 import processItems from "./process-items";
-import GlobalStore from "../../GlobalStore/GlobalStore";
+import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import exampleSocketResponse from "../../../doc/example-socket-response.json";
 

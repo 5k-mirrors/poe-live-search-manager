@@ -1,7 +1,7 @@
 import Bottleneck from "bottleneck";
 import fetch from "node-fetch";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
-import MissingXRateLimitAccountHeaderError from "../../errors/missing-x-rate-limit-account-header-error";
+import MissingXRateLimitAccountHeaderError from "../../shared/errors/missing-x-rate-limit-account-header-error";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import {
   devLog,

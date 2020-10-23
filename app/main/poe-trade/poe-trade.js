@@ -7,7 +7,7 @@ import {
   devErrorLog,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
-import ItemFetchError from "../../errors/item-fetch-error";
+import ItemFetchError from "../../shared/errors/item-fetch-error";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";

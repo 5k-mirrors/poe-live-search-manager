@@ -5,7 +5,7 @@ import Button from "../../UI/SimpleHtmlElements/Button/Button";
 import ToggleButton from "../../UI/ToggleButton/ToggleButton";
 import ResultsListLimit from "./Display/ResultsListLimit";
 import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
-import GlobalStore from "../../../../GlobalStore/GlobalStore";
+import GlobalStore from "../../../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
 
 const SettingsPageSection = ({ title, children }) => (
