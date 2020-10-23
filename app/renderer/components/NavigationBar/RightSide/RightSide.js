@@ -6,11 +6,11 @@ import Button from "@material-ui/core/Button";
 import * as electronUtils from "../../../utils/ElectronUtils/ElectronUtils";
 import * as baseUrls from "../../../../resources/BaseUrls/BaseUrls";
 import { useRightSideStyles } from "./RightSide.style";
-import { version } from "../../../../../package.json";
+import packageJson from "../../../../../package.json";
 
 export default () => {
   const classes = useRightSideStyles();
-  const versionNumber = `v${version}`;
+  const versionNumber = `v${packageJson.version}`;
   const displayRevisionTooltip = versionNumber !== process.env.REVISION;
 
   return (

@@ -2,8 +2,8 @@
 /node_modules
 
 # Production versions
-/app/main.prod.js
-/app/renderer.prod.js
+/app/main.prod.js*
+/app/renderer.prod.js*
 
 # Packaged versions
 /release
