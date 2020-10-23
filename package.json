@@ -6,8 +6,8 @@
   "main": "./app/main.prod.js",
   "scripts": {
     "build": "yarn build:main && yarn build:renderer",
-    "build:main": "webpack --mode production --config ./configs/webpack.main.config.js",
-    "build:renderer": "webpack --mode production --config ./configs/webpack.renderer.prod.config.js",
+    "build:main": "webpack --mode production --config ./config/webpack.main.config.js",
+    "build:renderer": "webpack --mode production --config ./config/webpack.renderer.prod.config.js",
     "dev": "cross-env NODE_ENV=development webpack serve --config ./config/webpack.renderer.dev.config.js",
     "dev:main": "cross-env NODE_ENV=development electron --no-sandbox --require @babel/register --require @babel/polyfill ./app/main/app.js",
     "lint": "eslint app",
