@@ -31,7 +31,7 @@ Make changes in the code, then make a new build:
 git add *
 git commit --allow-empty -m "Bump version to $version" --no-verify
 git tag $version
-yarn win:package:win
+yarn package
 ```
 
 Create a new release in the public repo:
