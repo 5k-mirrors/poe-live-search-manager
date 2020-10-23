@@ -2,7 +2,7 @@ import WebSocket from "ws";
 import { Mutex } from "async-mutex";
 import Bottleneck from "bottleneck";
 import Store from "./store";
-import Subscription from "../../shared/Subscription/Subscription";
+import Subscription from "../subscription/Subscription";
 import processItems from "../process-items/process-items";
 import {
   devLog,

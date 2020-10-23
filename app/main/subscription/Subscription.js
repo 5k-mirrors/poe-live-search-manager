@@ -1,5 +1,5 @@
-import User from "../../main/user/user";
-import authenticatedFetch from "../../main/utils/authenticated-fetch/authenticated-fetch";
+import User from "../user/user";
+import authenticatedFetch from "../utils/authenticated-fetch/authenticated-fetch";
 import {
   devErrorLog,
   isDefined,

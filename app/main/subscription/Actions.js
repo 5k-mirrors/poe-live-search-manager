@@ -1,8 +1,8 @@
 import Subscription from "./Subscription";
-import * as webSocketActions from "../../main/web-sockets/actions";
-import { send as sendEvent } from "../../main/utils/electron-utils/electron-utils";
-import { ipcEvents } from "../resources/IPCEvents/IPCEvents";
-import { windows } from "../resources/Windows/Windows";
+import * as webSocketActions from "../web-sockets/actions";
+import { send as sendEvent } from "../utils/electron-utils/electron-utils";
+import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
+import { windows } from "../../shared/resources/Windows/Windows";
 import {
   devErrorLog,
   randomInt,
