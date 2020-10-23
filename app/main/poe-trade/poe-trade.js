@@ -9,7 +9,6 @@ import {
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../shared/errors/item-fetch-error";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
-import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { windows } from "../../resources/Windows/Windows";
 
@@ -83,20 +82,6 @@ export const getPrice = itemDetails => {
   if (amount === null || currency === null) return "";
 
   return `${amount} ${currency}`;
-};
-
-export const getPriceFromWhisper = whisperMessage => {
-  const currencies = currencyNames.join("|");
-  const pattern = ` \\d+\\.?\\d* (${currencies}){1} `;
-  const regexp = new RegExp(pattern);
-  const matchDetails = whisperMessage.match(regexp);
-
-  // => `match` returns `null` if there's no corresponding item in the string.
-  if (!isDefined(matchDetails)) {
-    return "";
-  }
-
-  return `~b/o ${matchDetails[0].trim()}`;
 };
 
 export const notifyUser = (itemName, price) => {

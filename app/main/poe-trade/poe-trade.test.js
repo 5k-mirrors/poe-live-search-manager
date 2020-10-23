@@ -3,7 +3,6 @@ import * as poeTrade from "./poe-trade";
 import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../shared/errors/item-fetch-error";
-import { currencyNames } from "../../resources/CurrencyNames/CurrencyNames";
 import exampleSocketResponse from "../../../doc/example-socket-response.json";
 
 jest.mock("node-fetch", () => jest.fn());
@@ -128,84 +127,6 @@ describe("poeTrade", () => {
       it("return empty string", () => {
         expect(poeTrade.getPrice({})).toEqual("");
       });
-    });
-  });
-
-  describe("getPriceFromWhisper", () => {
-    describe("when the message matches with the `RegEx` pattern", () => {
-      it("returns the price with the right currency", () => {
-        currencyNames.forEach(currency => {
-          const whisperMessage = `@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 20 ${currency} in Legion (stash tab "6"; position: left 4, top 7)`;
-          const expectedString = `~b/o 20 ${currency}`;
-
-          const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
-
-          expect(actualString).toEqual(expectedString);
-        });
-      });
-    });
-
-    describe("when the message does not match with the `RegEx` pattern", () => {
-      const whisperMessage =
-        "@TestUser Hi this is not a whisper message but contains numbers 34 and some currency name: chaos, exa.";
-
-      it("returns an empty string", () => {
-        const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
-
-        expect(actualString).toEqual("");
-      });
-    });
-
-    it("matches decimal places", () => {
-      const whisperMessage =
-        '@TestUser Hi, I would like to buy your Tabula Rasa Simple Robe listed for 2.0 chaos in Legion (stash tab "6"; position: left 4, top 7)';
-      const expectedString = "~b/o 2.0 chaos";
-
-      const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
-
-      expect(actualString).toEqual(expectedString);
-    });
-
-    it("matches non-english messages", () => {
-      const whisperMessage =
-        '@TestUser Здравствуйте, хочу купить у вас Табула раса Матерчатая безрукавка за 40 chaos в лиге Легион (секция "Торг"; позиция: 11 столбец, 6 ряд)';
-      const expectedString = "~b/o 40 chaos";
-
-      const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
-
-      expect(actualString).toEqual(expectedString);
-    });
-
-    describe("when the stash tab name also matches the regex", () => {
-      describe("when the tab price is higher", () => {
-        it("recognizes the correct price", () => {
-          const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 1 chaos in Standard (stash tab "~b/o 2 chaos"; position: left 7, top 1)`;
-          const expectedString = "~b/o 1 chaos";
-
-          const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
-
-          expect(actualString).toEqual(expectedString);
-        });
-      });
-
-      describe("when the tab price is lower", () => {
-        it("recognizes the correct price", () => {
-          const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 3 chaos in Standard (stash tab "~b/o 2 chaos"; position: left 7, top 1)`;
-          const expectedString = "~b/o 3 chaos";
-
-          const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
-
-          expect(actualString).toEqual(expectedString);
-        });
-      });
-    });
-
-    it("doesn't match concatenated currency names", () => {
-      const whisperMessage = `@Heist_Connor Hi, I would like to buy your Windripper Imperial Bow listed for 1 mirrorchaos in Standard (stash tab "SHOP"; position: left 7, top 1)`;
-
-      const actualString = poeTrade.getPriceFromWhisper(whisperMessage);
-
-      expect(actualString).toEqual("");
     });
   });
 });
