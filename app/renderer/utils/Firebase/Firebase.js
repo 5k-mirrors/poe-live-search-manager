@@ -1,6 +1,6 @@
 import firebase from "firebase";
 import RecordNotExists from "../../../shared/errors/record-not-exists";
-import { devLog } from "../../../utils/JavaScriptUtils/JavaScriptUtils";
+import { devLog } from "../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 export const getApp = () => {
   // https://stackoverflow.com/a/41005100/9599137

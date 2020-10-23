@@ -6,7 +6,7 @@ import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
 import {
   devLog,
   devErrorLog,
-} from "../../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../shared/resources/HeaderKeys/HeaderKeys";
 
 export default class HttpRequestLimiter {

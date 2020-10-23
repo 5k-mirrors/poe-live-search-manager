@@ -1,14 +1,14 @@
 import moment from "moment";
 import NotificationsLimiter from "../notification-limiter/notification-limiter";
-import { uniqueIdGenerator } from "../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import { uniqueIdGenerator } from "../../shared/utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as poeTrade from "../poe-trade/poe-trade";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
 import { windows } from "../../shared/resources/Windows/Windows";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
-import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
-import { devErrorLog } from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import * as storeUtils from "../../shared/utils/StoreUtils/StoreUtils";
+import { devErrorLog } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 const updateResults = args => {
   const globalStore = GlobalStore.getInstance();

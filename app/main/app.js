@@ -14,7 +14,7 @@ import {
   envIs,
   devErrorLog,
   devLog,
-} from "../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 require("electron-unhandled")({
   showDialog: envIs("development"),

@@ -7,12 +7,12 @@ import yaml from "js-yaml";
 import fs from "fs";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
-import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
+import { uniqueIdGenerator } from "../../../../shared/utils/UniqueIdGenerator/UniqueIdGenerator";
 import * as regExes from "../../../../shared/resources/RegExes/RegExes";
 import {
   devErrorLog,
   isDefined,
-} from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 
 export default class Searches extends Component {

@@ -1,4 +1,4 @@
-import { cloneDeep } from "../../utils/JavaScriptUtils/JavaScriptUtils";
+import { cloneDeep } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 export const asyncFetchActions = {
   SEND_REQUEST: "sendRequest",

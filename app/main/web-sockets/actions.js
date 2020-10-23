@@ -11,7 +11,7 @@ import {
   isDefined,
   randomInt,
   retryIn,
-} from "../../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";

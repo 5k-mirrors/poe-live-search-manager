@@ -1,7 +1,7 @@
 import { Notification, BrowserWindow, clipboard } from "electron";
-import * as storeUtils from "../../../utils/StoreUtils/StoreUtils";
+import * as storeUtils from "../../../shared/utils/StoreUtils/StoreUtils";
 import { storeKeys } from "../../../shared/resources/StoreKeys/StoreKeys";
-import * as javaScriptUtils from "../../../utils/JavaScriptUtils/JavaScriptUtils";
+import * as javaScriptUtils from "../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 export const doNotify = ({ title, body }) => {
   new Notification({

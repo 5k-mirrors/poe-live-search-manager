@@ -5,7 +5,7 @@ import {
   safeJsonResponse,
   isDefined,
   devErrorLog,
-} from "../../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../shared/errors/item-fetch-error";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";

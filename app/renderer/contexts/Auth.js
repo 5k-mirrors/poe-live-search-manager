@@ -15,7 +15,7 @@ import RecordNotExists from "../../shared/errors/record-not-exists";
 import {
   devErrorLog,
   retryIn,
-} from "../../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import packageJson from "../../../package.json";
 
 const AuthContext = createContext(null);

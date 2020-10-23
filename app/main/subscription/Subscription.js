@@ -4,7 +4,7 @@ import {
   devErrorLog,
   isDefined,
   safeJsonResponse,
-} from "../../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 export default class Subscription {
   static data = {

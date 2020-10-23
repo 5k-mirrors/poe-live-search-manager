@@ -8,7 +8,7 @@ import Announcements from "../../../resources/Announcements/Announcements";
 import {
   devErrorLog,
   safeJsonResponse,
-} from "../../../../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 export default () => {
   const classes = useNewsStyles();

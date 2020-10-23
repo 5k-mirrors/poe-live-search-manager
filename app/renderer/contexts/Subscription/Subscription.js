@@ -3,7 +3,7 @@ import { ipcRenderer } from "electron";
 
 import { ipcEvents } from "../../../shared/resources/IPCEvents/IPCEvents";
 import { useFactoryContext } from "../../utils/ReactUtils/ReactUtils";
-import { cloneDeep } from "../../../utils/JavaScriptUtils/JavaScriptUtils";
+import { cloneDeep } from "../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 const SubscriptionContext = createContext();
 SubscriptionContext.displayName = "SubscriptionContext";

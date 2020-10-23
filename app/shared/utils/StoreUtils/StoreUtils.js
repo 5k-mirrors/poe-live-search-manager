@@ -1,4 +1,4 @@
-import GlobalStore from "../../shared/GlobalStore/GlobalStore";
+import GlobalStore from "../../GlobalStore/GlobalStore";
 
 export const clear = storeKey => {
   const globalStore = GlobalStore.getInstance();

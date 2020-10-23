@@ -3,7 +3,7 @@ import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
 import socketStates from "../web-sockets/socket-states";
-import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
+import * as storeUtils from "../../shared/utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
 import * as subscriptionActions from "../subscription/Actions";

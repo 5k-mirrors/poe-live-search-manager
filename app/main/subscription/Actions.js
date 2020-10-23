@@ -6,7 +6,7 @@ import { windows } from "../../shared/resources/Windows/Windows";
 import {
   devErrorLog,
   randomInt,
-} from "../../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 let refreshInterval;
 
