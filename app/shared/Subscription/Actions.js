@@ -1,12 +1,12 @@
 import Subscription from "./Subscription";
-import * as webSocketActions from "../main/web-sockets/actions";
-import { send as sendEvent } from "../main/utils/electron-utils/electron-utils";
-import { ipcEvents } from "../resources/IPCEvents/IPCEvents";
-import { windows } from "../resources/Windows/Windows";
+import * as webSocketActions from "../../main/web-sockets/actions";
+import { send as sendEvent } from "../../main/utils/electron-utils/electron-utils";
+import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+import { windows } from "../../resources/Windows/Windows";
 import {
   devErrorLog,
   randomInt,
-} from "../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 let refreshInterval;
 

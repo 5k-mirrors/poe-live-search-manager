@@ -1,10 +1,10 @@
-import User from "../main/user/user";
-import authenticatedFetch from "../main/utils/authenticated-fetch/authenticated-fetch";
+import User from "../../main/user/user";
+import authenticatedFetch from "../../main/utils/authenticated-fetch/authenticated-fetch";
 import {
   devErrorLog,
   isDefined,
   safeJsonResponse,
-} from "../utils/JavaScriptUtils/JavaScriptUtils";
+} from "../../utils/JavaScriptUtils/JavaScriptUtils";
 
 export default class Subscription {
   static data = {
