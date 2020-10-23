@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 import { app, BrowserWindow } from "electron";
 import fs from "fs";
 import path from "path";
@@ -51,6 +50,7 @@ autoUpdater.setFeedURL({
 });
 
 const setupDevelopmentWorkflow = () => {
+  // eslint-disable-next-line global-require
   require("electron-debug")();
 
   installExtension(REACT_DEVELOPER_TOOLS)

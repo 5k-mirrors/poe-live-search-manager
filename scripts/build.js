@@ -3,6 +3,9 @@
 
 const { execSync } = require("child_process");
 
+// For local builds
+require("dotenv").config({ path: `${process.cwd()}/.env` });
+
 const env = Object.create(process.env);
 
 env.REVISION = execSync("git describe --always --tags --dirty")

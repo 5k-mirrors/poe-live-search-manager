@@ -111,34 +111,6 @@
   "resolutions": {
     "@babel/runtime": "^7.12.1"
   },
-  "build": {
-    "productName": "PoE Live Search Manager",
-    "appId": "com.5k-mirrors.poe-sniper",
-    "files": [
-      "app/index.html",
-      "app/main.prod.js",
-      "app/renderer.prod.js",
-      "package.json"
-    ],
-    "win": {
-      "target": [
-        "nsis"
-      ]
-    },
-    "nsis": {
-      "artifactName": "poe-live-search-manager-${env.REVISION}-setup.${ext}"
-    },
-    "directories": {
-      "output": "release"
-    },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "5k-mirrors",
-        "repo": "poe-live-search-manager"
-      }
-    ]
-  },
   "jest": {
     "setupFiles": [
       "<rootDir>/app/renderer/SetupEnzymeTests/SetupEnzymeTests.js"
