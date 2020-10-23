@@ -2,7 +2,7 @@ import { ipcMain } from "electron";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
-import socketStates from "../../resources/SocketStates/SocketStates";
+import socketStates from "../web-sockets/socket-states";
 import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";

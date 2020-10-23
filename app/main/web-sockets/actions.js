@@ -18,7 +18,7 @@ import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
 import { windows } from "../../resources/Windows/Windows";
-import socketStates from "../../resources/SocketStates/SocketStates";
+import socketStates from "./socket-states";
 import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import { socketOrigin } from "../../resources/BaseUrls/BaseUrls";
