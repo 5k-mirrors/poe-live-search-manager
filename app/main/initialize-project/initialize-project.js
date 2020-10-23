@@ -65,10 +65,12 @@ const setupAuthenticationIpcListeners = () => {
       jwt: idToken,
     });
 
-    // A small delay is needed for Firebase triggers to create the user object
+    // A small delay is needed for:
+    // - Firebase triggers to create the user object upon registration
+    // - the renderer process to be ready to receive messages upon app start
     setTimeout(() => {
       subscriptionActions.startRefreshInterval();
-    }, 1000);
+    }, 2000);
   });
 
   ipcMain.on(ipcEvents.USER_LOGOUT, () => {

@@ -37,10 +37,7 @@ const refreshAndNotify = () => {
 };
 
 export const startRefreshInterval = () => {
-  // A small delay is needed otherwise the renderer process is not ready to receive the message
-  setTimeout(() => {
-    refreshAndNotify();
-  }, 1000);
+  refreshAndNotify();
 
   const minutes = 60 * 1000;
   // The delay is randomly set because the authenticated ID tokens are hourly refreshed as well and requests with expired tokens cannot be fulfilled.
