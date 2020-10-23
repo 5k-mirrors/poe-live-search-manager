@@ -53,7 +53,7 @@
     "electron-store": "^4.0.0",
     "electron-unhandled": "^3.0.0",
     "electron-updater": "^4.0.14",
-    "firebase": "^7.24.0",
+    "firebase": "^6.6.2",
     "js-yaml": "^3.13.1",
     "material-table": "1.62.0",
     "moment": "^2.24.0",
@@ -105,10 +105,12 @@
     "webpack-obfuscator": "^0.24.6"
   },
   "//resolutions": {
-    "javascript-obfuscator": "The version is explicitly set because of incompatibility issues with higher versions of node, see https://github.com/javascript-obfuscator/javascript-obfuscator/issues/452."
+    "javascript-obfuscator": "The version is explicitly set because of incompatibility issues with higher versions of node, see https://github.com/javascript-obfuscator/javascript-obfuscator/issues/452.",
+    "grpc": "Comes from Firebase v6. Has issues building native dependency on older versions. Firebase v7 had other issues."
   },
   "resolutions": {
-    "javascript-obfuscator": "^0.18.8"
+    "javascript-obfuscator": "^0.18.8",
+    "grpc": "1.24.3"
   },
   "build": {
     "productName": "PoE Live Search Manager",
