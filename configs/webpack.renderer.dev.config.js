@@ -1,5 +1,5 @@
 const path = require("path");
-const merge = require("webpack-merge");
+const { merge } = require("webpack-merge");
 const { spawn } = require("child_process");
 
 const webpackBaseConfigurations = require("./webpack.base.config");

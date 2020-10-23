@@ -22,7 +22,7 @@ import socketStates from "../../resources/SocketStates/SocketStates";
 import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import { socketOrigin } from "../../resources/BaseUrls/BaseUrls";
-import { version } from "../../../package.json";
+import packageJson from "../../../package.json";
 
 class WsRequestLimiter {
   static bottleneck = new Bottleneck({
@@ -84,7 +84,7 @@ const connect = id =>
           headers: {
             Cookie: getCookieHeader(),
             Origin: socketOrigin,
-            "User-Agent": `PoE Live Search Manager/${version}`,
+            "User-Agent": `PoE Live Search Manager/${packageJson.version}`,
           },
         });
 

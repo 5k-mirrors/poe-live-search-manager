@@ -38,7 +38,7 @@ jobs:
 
   build:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     needs: [lint, test]
     steps:
     - name: Show current ref

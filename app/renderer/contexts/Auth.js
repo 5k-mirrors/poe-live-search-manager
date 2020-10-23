@@ -16,7 +16,7 @@ import {
   devErrorLog,
   retryIn,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
-import { version } from "../../../package.json";
+import packageJson from "../../../package.json";
 
 const AuthContext = createContext(null);
 AuthContext.displayName = "AuthContext";
@@ -150,7 +150,7 @@ const useUpdateLastActiveVersion = (authenticated, userId) => {
             .collection("users")
             .doc(userId)
             .update({
-              last_active_version: `v${version}`,
+              last_active_version: `v${packageJson.version}`,
             })
         )
         .catch(err => {

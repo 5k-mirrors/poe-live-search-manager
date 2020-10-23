@@ -15,7 +15,7 @@ const revision = require("child_process")
 
 module.exports = {
   mode: isProduction ? "production" : "development",
-  devtool: isProduction ? "" : "eval-source-map",
+  devtool: isProduction ? false : "eval-source-map",
   module: {
     rules: [
       {

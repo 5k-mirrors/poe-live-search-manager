@@ -8,7 +8,7 @@
     "build": "yarn build:main && yarn build:renderer",
     "build:main": "webpack --mode production --config ./configs/webpack.main.config.js",
     "build:renderer": "webpack --mode production --config ./configs/webpack.renderer.prod.config.js",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./configs/webpack.renderer.dev.config.js",
+    "dev": "cross-env NODE_ENV=development webpack serve --config ./configs/webpack.renderer.dev.config.js",
     "dev:main": "cross-env NODE_ENV=development electron --no-sandbox --require @babel/register --require @babel/polyfill ./app/main/app.js",
     "lint": "eslint app",
     "package": "cross-env NODE_ENV=production yarn build && electron-builder",
@@ -53,7 +53,7 @@
     "electron-store": "^4.0.0",
     "electron-unhandled": "^3.0.0",
     "electron-updater": "^4.0.14",
-    "firebase": "^6.6.2",
+    "firebase": "^7.24.0",
     "js-yaml": "^3.13.1",
     "material-table": "1.62.0",
     "moment": "^2.24.0",
@@ -81,7 +81,7 @@
     "dotenv": "^8.2.0",
     "electron": "^10.1.4",
     "electron-builder": "^20.44.4",
-    "electron-debug": "^3.0.1",
+    "electron-debug": "^3.1.0",
     "electron-devtools-installer": "^3.1.1",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
@@ -95,22 +95,21 @@
     "eslint-plugin-react-hooks": "^1.6.1",
     "file-loader": "^4.0.0",
     "identity-obj-proxy": "^3.0.0",
+    "javascript-obfuscator": "^2.6.1",
     "jest": "^24.8.0",
     "prettier": "^1.18.2",
     "style-loader": "^0.23.1",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.5",
-    "webpack-dev-server": "^3.7.2",
-    "webpack-merge": "^4.2.1",
-    "webpack-obfuscator": "^0.24.6"
+    "webpack": "^5.2.0",
+    "webpack-cli": "^4.1.0",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.2.0",
+    "webpack-obfuscator": "^2.6.0"
   },
   "//resolutions": {
-    "javascript-obfuscator": "The version is explicitly set because of incompatibility issues with higher versions of node, see https://github.com/javascript-obfuscator/javascript-obfuscator/issues/452.",
-    "grpc": "Comes from Firebase v6. Has issues building native dependency on older versions. Firebase v7 had other issues."
+    "@babel/runtime": "https://github.com/webpack/webpack/issues/11467#issuecomment-708648622"
   },
   "resolutions": {
-    "javascript-obfuscator": "^0.18.8",
-    "grpc": "1.24.3"
+    "@babel/runtime": "^7.12.1"
   },
   "build": {
     "productName": "PoE Live Search Manager",
