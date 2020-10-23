@@ -14,14 +14,14 @@ import {
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
-import { windows } from "../../resources/Windows/Windows";
+import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
+import { windows } from "../../shared/resources/Windows/Windows";
 import socketStates from "./socket-states";
 import stateIs from "../utils/state-is/state-is";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
-import { socketOrigin } from "../../resources/BaseUrls/BaseUrls";
+import { socketOrigin } from "../../shared/resources/BaseUrls/BaseUrls";
 import packageJson from "../../../package.json";
 
 class WsRequestLimiter {

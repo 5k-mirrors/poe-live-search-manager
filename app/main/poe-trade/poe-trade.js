@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
 import {
   safeGet,
   safeJsonResponse,
@@ -9,8 +9,8 @@ import {
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../shared/errors/item-fetch-error";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import { windows } from "../../resources/Windows/Windows";
+import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
+import { windows } from "../../shared/resources/Windows/Windows";
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import GlobalStore from "../../../shared/GlobalStore/GlobalStore";
-import { storeKeys } from "../../../resources/StoreKeys/StoreKeys";
+import { storeKeys } from "../../../shared/resources/StoreKeys/StoreKeys";
 import { useAuthContext, useSubscriptionContext } from "../../contexts";
 
 export default ({ ...restProps }) => {

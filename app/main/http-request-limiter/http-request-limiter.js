@@ -2,12 +2,12 @@ import Bottleneck from "bottleneck";
 import fetch from "node-fetch";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import MissingXRateLimitAccountHeaderError from "../../shared/errors/missing-x-rate-limit-account-header-error";
-import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
 import {
   devLog,
   devErrorLog,
 } from "../../utils/JavaScriptUtils/JavaScriptUtils";
-import headerKeys from "../../resources/HeaderKeys/HeaderKeys";
+import headerKeys from "../../shared/resources/HeaderKeys/HeaderKeys";
 
 export default class HttpRequestLimiter {
   static config = {

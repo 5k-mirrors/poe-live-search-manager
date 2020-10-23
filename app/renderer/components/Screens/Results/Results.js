@@ -4,9 +4,9 @@ import { remote, clipboard, ipcRenderer } from "electron";
 import Box from "@material-ui/core/Box";
 import MaterialTable from "material-table";
 import { Link } from "react-router-dom";
-import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
+import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
 import GlobalStore from "../../../../shared/GlobalStore/GlobalStore";
-import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
+import { storeKeys } from "../../../../shared/resources/StoreKeys/StoreKeys";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { deleteAllResults as deleteAllResultsMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 

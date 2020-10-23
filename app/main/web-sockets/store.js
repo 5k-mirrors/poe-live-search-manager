@@ -1,5 +1,5 @@
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
 
 export default class Store {
   static sockets = [];

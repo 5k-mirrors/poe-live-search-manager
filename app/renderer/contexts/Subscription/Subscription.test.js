@@ -4,7 +4,7 @@ import { ipcRenderer } from "electron";
 
 import { useSubscriptionContext, SubscriptionProvider } from "./Subscription";
 
-import { ipcEvents } from "../../../resources/IPCEvents/IPCEvents";
+import { ipcEvents } from "../../../shared/resources/IPCEvents/IPCEvents";
 
 jest.mock("electron", () => {
   return {

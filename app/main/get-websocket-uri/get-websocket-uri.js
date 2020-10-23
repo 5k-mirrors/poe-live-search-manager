@@ -1,5 +1,5 @@
-import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
-import * as regExes from "../../resources/RegExes/RegExes";
+import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
+import * as regExes from "../../shared/resources/RegExes/RegExes";
 
 const getWebSocketUri = url => {
   const matchDetails = url.match(regExes.searchUrlLeagueAndIdMatcher);

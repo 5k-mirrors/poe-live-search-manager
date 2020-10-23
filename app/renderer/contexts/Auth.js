@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useEffect, useRef } from "react";
 import firebase from "firebase";
 import { ipcRenderer } from "electron";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
+import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import {
   getApp as getFirebaseApp,
   ensureUserSession,

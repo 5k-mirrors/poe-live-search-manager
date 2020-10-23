@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import * as poeTrade from "./poe-trade";
-import * as baseUrls from "../../resources/BaseUrls/BaseUrls";
+import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../shared/errors/item-fetch-error";
 import exampleSocketResponse from "../../../doc/example-socket-response.json";

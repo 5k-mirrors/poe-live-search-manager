@@ -9,7 +9,7 @@ import {
   initListeners,
   initRateLimiter,
 } from "./initialize-project/initialize-project";
-import { windows } from "../resources/Windows/Windows";
+import { windows } from "../shared/resources/Windows/Windows";
 import {
   envIs,
   devErrorLog,

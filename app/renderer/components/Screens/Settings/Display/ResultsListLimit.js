@@ -4,7 +4,7 @@ import Input from "../../../UI/SimpleHtmlElements/Input/Input";
 import ButtonWithSuccessIcon from "../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
 import GlobalStore from "../../../../../shared/GlobalStore/GlobalStore";
-import { storeKeys } from "../../../../../resources/StoreKeys/StoreKeys";
+import { storeKeys } from "../../../../../shared/resources/StoreKeys/StoreKeys";
 
 export default () => {
   const globalStore = GlobalStore.getInstance();

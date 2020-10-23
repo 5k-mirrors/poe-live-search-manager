@@ -4,9 +4,9 @@ import { Box, Typography } from "@material-ui/core";
 import Button from "../../UI/SimpleHtmlElements/Button/Button";
 import ToggleButton from "../../UI/ToggleButton/ToggleButton";
 import ResultsListLimit from "./Display/ResultsListLimit";
-import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
+import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
 import GlobalStore from "../../../../shared/GlobalStore/GlobalStore";
-import { storeKeys } from "../../../../resources/StoreKeys/StoreKeys";
+import { storeKeys } from "../../../../shared/resources/StoreKeys/StoreKeys";
 
 const SettingsPageSection = ({ title, children }) => (
   <Box mt={2} mb={2}>

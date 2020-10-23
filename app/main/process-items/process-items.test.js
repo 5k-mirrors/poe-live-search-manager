@@ -1,6 +1,6 @@
 import processItems from "./process-items";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
 import exampleSocketResponse from "../../../doc/example-socket-response.json";
 
 jest.mock("../poe-trade/poe-trade", () => {

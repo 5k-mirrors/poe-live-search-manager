@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
-import { ipcEvents } from "../../resources/IPCEvents/IPCEvents";
-import { storeKeys } from "../../resources/StoreKeys/StoreKeys";
+import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
+import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
 import socketStates from "../web-sockets/socket-states";
 import * as storeUtils from "../../utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
@@ -12,7 +12,7 @@ import Subscription from "../../shared/Subscription/Subscription";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import stateIs from "../utils/state-is/state-is";
-import { windows } from "../../resources/Windows/Windows";
+import { windows } from "../../shared/resources/Windows/Windows";
 import User from "../user/user";
 
 const setupStoreIpcListeners = () => {

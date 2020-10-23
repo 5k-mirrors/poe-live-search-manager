@@ -6,9 +6,9 @@ import Alert from "@material-ui/lab/Alert";
 import yaml from "js-yaml";
 import fs from "fs";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
-import { ipcEvents } from "../../../../resources/IPCEvents/IPCEvents";
+import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
 import { uniqueIdGenerator } from "../../../../utils/UniqueIdGenerator/UniqueIdGenerator";
-import * as regExes from "../../../../resources/RegExes/RegExes";
+import * as regExes from "../../../../shared/resources/RegExes/RegExes";
 import {
   devErrorLog,
   isDefined,
