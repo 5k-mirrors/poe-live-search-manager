@@ -8,7 +8,7 @@
     "build": "yarn build:main && yarn build:renderer",
     "build:main": "webpack --mode production --config ./configs/webpack.main.config.js",
     "build:renderer": "webpack --mode production --config ./configs/webpack.renderer.prod.config.js",
-    "dev": "cross-env NODE_ENV=development webpack serve --config ./configs/webpack.renderer.dev.config.js",
+    "dev": "cross-env NODE_ENV=development webpack serve --config ./config/webpack.renderer.dev.config.js",
     "dev:main": "cross-env NODE_ENV=development electron --no-sandbox --require @babel/register --require @babel/polyfill ./app/main/app.js",
     "lint": "eslint app",
     "package": "cross-env ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true node scripts/build.js",
