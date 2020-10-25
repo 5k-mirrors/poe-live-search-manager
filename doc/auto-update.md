@@ -5,6 +5,7 @@ The app is automatically updated from https://github.com/5k-mirrors/poe-live-sea
 Known issues:
 - https://github.com/electron-userland/electron-builder/issues/4233 (`publish` config must be set)
 - https://github.com/electron-userland/electron-builder/issues/4469
+- https://github.com/electron-userland/electron-builder/issues/5365
 
 Other resources:
 - https://github.com/electron-userland/electron-builder/issues/3053
