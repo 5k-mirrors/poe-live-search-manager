@@ -223,14 +223,14 @@ export default class Searches extends Component {
   }
 
   import() {
-    remote.dialog.showOpenDialog(
-      {
+    remote.dialog
+      .showOpenDialog({
         properties: ["openFile"],
         filters: [{ name: "YAML", extensions: ["yml", "yaml"] }],
-      },
-      files => {
-        if (files) {
-          fs.readFile(files[0], "utf8", (err, data) => {
+      })
+      .then(result => {
+        if (result.filePaths) {
+          fs.readFile(result.filePaths[0], "utf8", (err, data) => {
             try {
               if (err) throw err;
               const input = yaml.safeLoad(data);
@@ -250,8 +250,10 @@ export default class Searches extends Component {
             }
           });
         }
-      }
-    );
+      })
+      .catch(error => {
+        devErrorLog(error);
+      });
   }
 
   deleteAll() {
