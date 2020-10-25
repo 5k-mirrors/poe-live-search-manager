@@ -6,7 +6,21 @@ Known issues:
 - https://github.com/electron-userland/electron-builder/issues/4233 (`publish` config must be set)
 - https://github.com/electron-userland/electron-builder/issues/4469
 
+Other resources:
+- https://github.com/electron-userland/electron-builder/issues/3053
+- https://stackoverflow.com/questions/51003995/how-can-i-test-electron-builder-auto-update-flow
+
 ## Testing
+
+### Download and install test in dev mode
+
+Customize steps in `app.js`.
+
+```sh
+yarn dev:update
+```
+
+### End-to-end test
 
 Setup 2 repos:
 - public one for hosting releases (e.g. fork of https://github.com/5k-mirrors/poe-live-search-manager)
@@ -18,8 +32,6 @@ Setup steps:
   - test install and uninstall one more time, clear registry if needed: https://github.com/5k-mirrors/poe-live-search-manager/issues/53#issuecomment-537375953
 - Code repo:
   - set `autoUpdater.setFeedURL()` to the public repo
-  - add env vars from `.env.example` temporarily to scripts/`build.js`
-  - [optional] update `scripts/build.js` to use `yarn package:win:local` to speed up build
   - [optional] empty `release/` if exists
   - build and install the app locally
 

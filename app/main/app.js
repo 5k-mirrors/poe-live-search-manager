@@ -49,6 +49,32 @@ autoUpdater.setFeedURL({
   repo: "poe-live-search-manager",
 });
 
+if (envIs("development") && process.env.UPDATE) {
+  autoUpdater.updateConfigPath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "dev-app-update.yml"
+  );
+  autoUpdater.on("update-available", () => {
+    devLog("update available");
+  });
+  autoUpdater.on("update-not-available", () => {
+    devLog("update not available");
+  });
+
+  devLog(
+    "Checking for updates, you should see update related messages below",
+    autoUpdater.getFeedURL()
+  );
+
+  // Customize the test by toggling these lines
+  // autoUpdater.autoDownload = false
+  autoUpdater.autoInstallOnAppQuit = false;
+
+  autoUpdater.checkForUpdates();
+}
+
 const setupDevelopmentWorkflow = () => {
   // eslint-disable-next-line global-require
   require("electron-debug")();
