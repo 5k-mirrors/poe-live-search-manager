@@ -43,6 +43,9 @@ if (envIs("production")) {
   }
 }
 
+const logger = require("electron-log");
+
+autoUpdater.logger = logger;
 autoUpdater.setFeedURL({
   provider: "github",
   owner: "5k-mirrors",

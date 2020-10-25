@@ -1,5 +1,4 @@
 const webpack = require("webpack");
-const JavaScriptObfuscator = require("webpack-obfuscator");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -34,7 +33,6 @@ module.exports = {
   ].concat(
     isProduction
       ? [
-          new JavaScriptObfuscator(),
           new webpack.EnvironmentPlugin([
             "FIREBASE_API_KEY",
             "FIREBASE_API_URL",
