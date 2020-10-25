@@ -63,10 +63,7 @@ if (envIs("development") && process.env.UPDATE) {
     devLog("update not available");
   });
 
-  devLog(
-    "Checking for updates, you should see update related messages below",
-    autoUpdater.getFeedURL()
-  );
+  devLog("Checking for updates, you should see update related messages below");
 
   // Customize the test by toggling these lines
   // autoUpdater.autoDownload = false
