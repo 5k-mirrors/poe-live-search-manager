@@ -101,6 +101,7 @@ const connect = id =>
         });
 
         ws.socket.on("message", response => {
+          devLog(`SOCKET MESSAGE - ${ws.searchUrl} / ${ws.id} - ${response}`);
           const parsedResponse = JSON.parse(response);
 
           const itemIds = safeGet(parsedResponse, ["new"]);
