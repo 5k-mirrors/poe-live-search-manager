@@ -11,6 +11,7 @@ import ItemFetchError from "../../shared/errors/item-fetch-error";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import { windows } from "../../shared/resources/Windows/Windows";
+import packageJson from "../../../package.json";
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
@@ -34,7 +35,12 @@ export const fetchItemDetails = id =>
   HttpRequestLimiter.schedule(() => {
     const itemUrl = `${baseUrls.poeFetchAPI + id}`;
 
-    return fetch(itemUrl)
+    return fetch(itemUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": `PoE Live Search Manager/${packageJson.version}`,
+      },
+    })
       .then(data => safeJsonResponse(data))
       .then(parsedData =>
         HttpRequestLimiter.currentReservoir().then(currentReservoir => {
