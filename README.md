@@ -10,6 +10,13 @@ Supported trade sites:
 
 Featured in:
 - [POE: Easy Money Making - AUTO WHISPER - 5 Exalts PER HOUR - Multi-live search - Auto Whisper](https://youtu.be/dBqJ8-N5Ygs?t=1903) by Tripolar Bear
+- [🔨 Exile's Toolkit 🔨 - How Live Search Manager Boosts League Start And Makes You Rich On The Fly](https://www.youtube.com/watch?v=KVgP5ZGZITc) by PoE Academy
+- [Aura Stacker Build Diary: #24 (FREE Exalts w/ this 3rd Party TOOL)](https://youtu.be/DxHyKtJs-2Y?t=514) by KOBEBLACKMAMBA
+- [[3.11] PoE: How To Trade EASY MODE - 87 LIVE SEARCHES - AUTO WHISPER - TRADE SETUP READY FOR USE](https://www.youtube.com/watch?v=8PDjzG5ZkcQ) by Tripolar Bear
+- [[3.10] POE: Double Your Money - Multi-live search - Auto Whisper - 20 Live trade searches](https://www.youtube.com/watch?v=ArAKOWXZtU0) by Tripolar Bear
+- [EASY EXALTED ORBS WITH ONLY TRADING // currency tipp // POE LURKER + POE LIVE SEARCH MANAGE](https://www.youtube.com/watch?v=O3oRpEdLTmY) by Justarockstarr
+- [Path of Exile 3.10 Delirium - Как фармить валюту - микрогайд по флипу(50+екзов в день)](https://www.youtube.com/watch?v=Nw7ZDnLabkg) by poe bota
+- and many more...
 
 [According to GGG](https://www.poe-vault.com/news/2019/05/03/improvements-to-trading-in-path-of-exile-on-pc-are-they-coming), the current form of trading is not going to change. Still, it can be improved. We've been improving it [since Legacy league](/../../releases/tag/v0.1.0). Settle in for simpler, faster, in-game trading.
 
