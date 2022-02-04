@@ -66,31 +66,31 @@ export default class HttpRequestLimiter {
   }
 
   static initialFetch() {
-    console.log("Skipping rate limit reading for now.");
-    throw new MissingXRateLimitAccountHeaderError();
-    // return fetch(`${baseUrls.poeFetchAPI}1`, {
-    //   headers: {
-    //     Cookie: getCookieHeader(),
-    //   },
-    // })
-    //   .then(response => {
-    //     if (response.headers.has(headerKeys.XRateLimitAccount)) {
-    //       const xRateLimitAccountValues = response.headers
-    //         .get(headerKeys.XRateLimitAccount)
-    //         .split(":");
+    const dummyId = "1";
+    return fetch(`${baseUrls.poeFetchAPI}/${dummyId}`, {
+      headers: {
+        Cookie: getCookieHeader(),
+      },
+    }).then(response => {
+      if (response.status > 299) {
+        devErrorLog(
+          `Error response while fetching rate limit headers: ${response.status}`
+        );
+      }
 
-    //       return {
-    //         requestLimit: Number(xRateLimitAccountValues[0]),
-    //         interval: Number(xRateLimitAccountValues[1]),
-    //       };
-    //     }
+      if (response.headers.has(headerKeys.XRateLimitAccount)) {
+        const xRateLimitAccountValues = response.headers
+          .get(headerKeys.XRateLimitAccount)
+          .split(":");
 
-    //     throw new MissingXRateLimitAccountHeaderError();
-    //   })
-    //   .catch(error => {
-    //     devErrorLog(error);
-    //     throw error;
-    //   });
+        return {
+          requestLimit: Number(xRateLimitAccountValues[0]),
+          interval: Number(xRateLimitAccountValues[1]),
+        };
+      }
+
+      throw new MissingXRateLimitAccountHeaderError();
+    });
   }
 
   static incrementReservoir(incrementBy) {

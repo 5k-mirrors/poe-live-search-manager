@@ -33,7 +33,7 @@ const startReservoirIncreaseListener = () => {
 
 export const fetchItemDetails = id =>
   HttpRequestLimiter.schedule(() => {
-    const itemUrl = `${baseUrls.poeFetchAPI + id}`;
+    const itemUrl = `${baseUrls.poeFetchAPI}/${id}`;
 
     return fetch(itemUrl, {
       headers: {

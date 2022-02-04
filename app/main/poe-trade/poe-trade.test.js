@@ -58,7 +58,7 @@ describe("poeTrade", () => {
         });
 
         it("rejects with `ItemFetchError`", () => {
-          const itemUrl = `${baseUrls.poeFetchAPI + id}`;
+          const itemUrl = `${baseUrls.poeFetchAPI}/${id}`;
 
           const expectedErrorMessage = `Item details not found for ${itemUrl}`;
 
