@@ -1,5 +1,4 @@
 import { app, BrowserWindow } from "electron";
-import fs from "fs";
 import path from "path";
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
