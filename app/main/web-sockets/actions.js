@@ -2,7 +2,6 @@ import WebSocket from "ws";
 import { Mutex } from "async-mutex";
 import Bottleneck from "bottleneck";
 import Store from "./store";
-import Subscription from "../subscription/Subscription";
 import processItems from "../process-items/process-items";
 import {
   devLog,
@@ -128,21 +127,15 @@ const connect = id =>
         ws.socket.on("close", (code, reason) => {
           devLog(`SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`);
 
-          const globalStore = GlobalStore.getInstance();
-
           updateState(ws.id, ws.socket);
 
-          const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-          if (isLoggedIn && Subscription.active()) {
-            const delay = randomInt(2000, 3000);
-            devLog(
-              `Auto-reconnect to be initiated in ${delay / 1000} seconds - ${
-                ws.searchUrl
-              } / ${ws.id}`
-            );
-            retryIn(() => connect(ws.id), delay);
-          }
+          const delay = randomInt(2000, 3000);
+          devLog(
+            `Auto-reconnect to be initiated in ${delay / 1000} seconds - ${
+              ws.searchUrl
+            } / ${ws.id}`
+          );
+          retryIn(() => connect(ws.id), delay);
         });
 
         return release();
@@ -185,14 +178,7 @@ export const disconnectAll = () =>
   Store.sockets.forEach(connectionDetails => disconnect(connectionDetails.id));
 
 export const updateConnections = () => {
-  const globalStore = GlobalStore.getInstance();
-  const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
-
-  const conditionsAreFulfilled =
-    isLoggedIn && poeSessionId && Subscription.active();
-
-  if (conditionsAreFulfilled) {
+  if (GlobalStore.getInstance().get(storeKeys.POE_SESSION_ID)) {
     return connectAll();
   }
 

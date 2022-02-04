@@ -3,17 +3,12 @@ import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
 import socketStates from "../web-sockets/socket-states";
-import * as storeUtils from "../../shared/utils/StoreUtils/StoreUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as webSocketActions from "../web-sockets/actions";
-import * as subscriptionActions from "../subscription/Actions";
 import Store from "../web-sockets/store";
-import Subscription from "../subscription/Subscription";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import stateIs from "../utils/state-is/state-is";
-import { windows } from "../../shared/resources/Windows/Windows";
-import User from "../user/user";
 
 const setupStoreIpcListeners = () => {
   ipcMain.handle(ipcEvents.GET_SOCKETS, () => {
@@ -54,68 +49,12 @@ const setupWebSocketIpcListeners = () => {
   });
 };
 
-const setupAuthenticationIpcListeners = () => {
-  ipcMain.on(ipcEvents.USER_LOGIN, (_, userId, idToken) => {
-    const globalStore = GlobalStore.getInstance();
-
-    globalStore.set(storeKeys.IS_LOGGED_IN, true);
-
-    User.update({
-      id: userId,
-      jwt: idToken,
-    });
-
-    // A small delay is needed for:
-    // - Firebase triggers to create the user object upon registration
-    // - the renderer process to be ready to receive messages upon app start
-    setTimeout(() => {
-      subscriptionActions.startRefreshInterval();
-    }, 2000);
-  });
-
-  ipcMain.on(ipcEvents.USER_LOGOUT, () => {
-    const globalStore = GlobalStore.getInstance();
-
-    subscriptionActions.stopRefreshInterval();
-
-    webSocketActions.disconnectAll();
-
-    globalStore.set(storeKeys.IS_LOGGED_IN, false);
-    User.clear();
-    storeUtils.clear(storeKeys.POE_SESSION_ID);
-    Subscription.clear();
-
-    electronUtils.send(windows.MAIN, ipcEvents.UPDATE_SUBSCRIPTION_DETAILS, {
-      data: Subscription.data,
-    });
-  });
-
-  ipcMain.on(ipcEvents.ID_TOKEN_CHANGED, (_, idToken) => {
-    User.update({
-      jwt: idToken,
-    });
-  });
-};
-
 const setupGeneralIpcListeners = () => {
   ipcMain.on(ipcEvents.TEST_NOTIFICATION, () => {
     electronUtils.doNotify({
       title: "Title",
       body: "Description",
     });
-  });
-
-  ipcMain.handle(ipcEvents.FETCH_SUBSCRIPTION_DETAILS, () => {
-    return subscriptionActions
-      .refresh()
-      .then(subscriptionData => {
-        return {
-          data: { ...subscriptionData },
-        };
-      })
-      .catch(() => {
-        return { isErr: true };
-      });
   });
 
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
@@ -129,8 +68,6 @@ export const initListeners = () => {
   setupStoreIpcListeners();
 
   setupWebSocketIpcListeners();
-
-  setupAuthenticationIpcListeners();
 
   setupGeneralIpcListeners();
 };
