@@ -1,7 +1,7 @@
 {
   "name": "poe-live-search-manager",
   "productName": "PoE Live Search Manager",
-  "version": "1.16.4",
+  "version": "2.0.0",
   "description": "Desktop tool for Path of Exile to make instants offers for listed items without leaving the game",
   "main": "./app/main.prod.js",
   "scripts": {
