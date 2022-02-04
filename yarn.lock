@@ -3375,10 +3375,6 @@ detect-node@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.4.tgz#014ee8f8f669c5c58023da64b8179c083a28c46c"
 
-dialog-polyfill@^0.4.7:
-  version "0.4.10"
-  resolved "https://registry.yarnpkg.com/dialog-polyfill/-/dialog-polyfill-0.4.10.tgz#c4ea68a0deed4abb59a6a2a025c548b278cd532e"
-
 diff-sequences@^24.3.0:
   version "24.3.0"
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-24.3.0.tgz#0f20e8a1df1abddaf4d9c226680952e64118b975"
@@ -4451,12 +4447,6 @@ firebase@^7.24.0:
     "@firebase/remote-config" "0.1.28"
     "@firebase/storage" "0.3.43"
     "@firebase/util" "0.3.2"
-
-firebaseui@^3.2.0:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/firebaseui/-/firebaseui-3.6.1.tgz#b88a59680f55d2d15433cd5f61afee468f5dda60"
-  dependencies:
-    dialog-polyfill "^0.4.7"
 
 flat-cache@^2.0.1:
   version "2.0.1"
@@ -7698,12 +7688,6 @@ react-double-scrollbar@0.0.15:
   version "0.0.15"
   resolved "https://registry.yarnpkg.com/react-double-scrollbar/-/react-double-scrollbar-0.0.15.tgz#e915ab8cb3b959877075f49436debfdb04288fe4"
   integrity sha1-6RWrjLO5WYdwdfSUNt6/2wQoj+Q=
-
-react-firebaseui@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/react-firebaseui/-/react-firebaseui-3.1.2.tgz#a1651713a3dae989b2fb7ccb0c288afd8ae28f30"
-  dependencies:
-    firebaseui "^3.2.0"
 
 react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   version "16.8.6"
