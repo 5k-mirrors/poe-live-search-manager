@@ -2,13 +2,8 @@ import React from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import SessionIdEditor from "./SessionIdEditor/SessionIdEditor";
-import SubscriptionDetails from "./SubscriptionDetails/SubscriptionDetails";
-import Button from "../../../UI/SimpleHtmlElements/Button/Button";
-import { useAuthContext } from "../../../../contexts/Auth";
 
 export default () => {
-  const { state: auth, signOut } = useAuthContext();
-
   return (
     <div>
       <Box
@@ -18,12 +13,10 @@ export default () => {
         justifyContent="space-between"
       >
         <Typography variant="h6" gutterBottom>
-          {`Logged in as ${auth.data.displayName || auth.data.email}`}
+          {`Logged in as anonymus`}
         </Typography>
-        <Button clickEvent={signOut} text="Sign out" />
       </Box>
       <SessionIdEditor />
-      <SubscriptionDetails />
     </div>
   );
 };
