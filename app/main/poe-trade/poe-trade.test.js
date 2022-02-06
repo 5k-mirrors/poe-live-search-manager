@@ -48,7 +48,7 @@ describe("poeTrade", () => {
           text: () =>
             Promise.resolve(
               JSON.stringify({
-                result: [null],
+                result: null,
               })
             ),
         };
@@ -58,9 +58,7 @@ describe("poeTrade", () => {
         });
 
         it("rejects with `ItemFetchError`", () => {
-          const itemUrl = `${baseUrls.poeFetchAPI}/${id}`;
-
-          const expectedErrorMessage = `Item details not found for ${itemUrl}`;
+          const expectedErrorMessage = `Item details not found for ${id}`;
 
           return expect(poeTrade.fetchItemDetails(id)).rejects.toEqual(
             new ItemFetchError(expectedErrorMessage)
@@ -84,9 +82,9 @@ describe("poeTrade", () => {
         });
 
         it("resolves with the details", () => {
-          return expect(poeTrade.fetchItemDetails(id)).resolves.toEqual(
-            "itemDetails"
-          );
+          return expect(poeTrade.fetchItemDetails(id)).resolves.toEqual([
+            "itemDetails",
+          ]);
         });
       });
     });

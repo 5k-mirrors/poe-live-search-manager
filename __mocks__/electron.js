@@ -4,3 +4,7 @@ export const ipcRenderer = {
   sendSync: jest.fn().mockImplementation(() => []),
   on: jest.fn(),
 };
+
+export const BrowserWindow = {
+  getAllWindows: jest.fn().mockImplementation(() => []),
+};

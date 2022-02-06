@@ -29,9 +29,9 @@ const startReservoirIncreaseListener = () => {
   }, 1000);
 };
 
-export const fetchItemDetails = id =>
+export const fetchItemDetails = ids =>
   HttpRequestLimiter.schedule(() => {
-    return itemDetails(id)
+    return itemDetails(ids)
       .then(data => safeJsonResponse(data))
       .then(parsedData =>
         HttpRequestLimiter.currentReservoir().then(currentReservoir => {
@@ -47,13 +47,13 @@ export const fetchItemDetails = id =>
             startReservoirIncreaseListener();
           }
 
-          const itemDetailsResponse = safeGet(parsedData, ["result", 0]);
+          const itemDetailsResponse = safeGet(parsedData, ["result"]);
 
           if (isDefined(itemDetailsResponse)) {
             return itemDetailsResponse;
           }
 
-          throw new ItemFetchError(`Item details not found for ${id}`);
+          throw new ItemFetchError(`Item details not found for ${ids}`);
         })
       )
       .catch(error => {
