@@ -1,5 +1,7 @@
 import Bottleneck from "bottleneck";
 import fetch from "node-fetch";
+
+import { itemDetails } from "../api/api";
 import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
 import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
 import {
@@ -23,7 +25,8 @@ export default class HttpRequestLimiter {
   static requestsExhausted = false;
 
   static initialize() {
-    return this.initialFetch()
+    const dummyId = "1";
+    return itemDetails(dummyId)
       .then(response => {
         return this.rateLimitFromHeaders(response);
       })
