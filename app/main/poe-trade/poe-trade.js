@@ -1,5 +1,4 @@
-import fetch from "node-fetch";
-import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
+import { itemDetails } from "../api/api";
 import {
   safeGet,
   safeJsonResponse,
@@ -11,7 +10,6 @@ import ItemFetchError from "../../shared/errors/item-fetch-error";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import { windows } from "../../shared/resources/Windows/Windows";
-import packageJson from "../../../package.json";
 
 const startReservoirIncreaseListener = () => {
   const intervalId = setInterval(() => {
@@ -31,16 +29,9 @@ const startReservoirIncreaseListener = () => {
   }, 1000);
 };
 
-export const fetchItemDetails = id =>
+export const fetchItemDetails = ids =>
   HttpRequestLimiter.schedule(() => {
-    const itemUrl = `${baseUrls.poeFetchAPI + id}`;
-
-    return fetch(itemUrl, {
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": `PoE Live Search Manager/${packageJson.version}`,
-      },
-    })
+    return itemDetails(ids)
       .then(data => safeJsonResponse(data))
       .then(parsedData =>
         HttpRequestLimiter.currentReservoir().then(currentReservoir => {
@@ -56,13 +47,13 @@ export const fetchItemDetails = id =>
             startReservoirIncreaseListener();
           }
 
-          const itemDetails = safeGet(parsedData, ["result", 0]);
+          const itemDetailsResponse = safeGet(parsedData, ["result"]);
 
-          if (isDefined(itemDetails)) {
-            return itemDetails;
+          if (isDefined(itemDetailsResponse)) {
+            return itemDetailsResponse;
           }
 
-          throw new ItemFetchError(`Item details not found for ${itemUrl}`);
+          throw new ItemFetchError(`Item details not found for ${ids}`);
         })
       )
       .catch(error => {
@@ -71,8 +62,8 @@ export const fetchItemDetails = id =>
       });
   });
 
-export const getWhisperMessage = itemDetails => {
-  const whisperMessage = safeGet(itemDetails, ["listing", "whisper"]);
+export const getWhisperMessage = itemDetailsResponse => {
+  const whisperMessage = safeGet(itemDetailsResponse, ["listing", "whisper"]);
 
   if (!isDefined(whisperMessage)) {
     return "";
@@ -81,9 +72,13 @@ export const getWhisperMessage = itemDetails => {
   return whisperMessage;
 };
 
-export const getPrice = itemDetails => {
-  const amount = safeGet(itemDetails, ["listing", "price", "amount"]);
-  const currency = safeGet(itemDetails, ["listing", "price", "currency"]);
+export const getPrice = itemDetailsResponse => {
+  const amount = safeGet(itemDetailsResponse, ["listing", "price", "amount"]);
+  const currency = safeGet(itemDetailsResponse, [
+    "listing",
+    "price",
+    "currency",
+  ]);
 
   if (amount === null || currency === null) return "";
 

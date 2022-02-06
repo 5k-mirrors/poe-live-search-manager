@@ -1,9 +1,6 @@
 // electron-builder supports file macros
 /* eslint-disable no-template-curly-in-string */
 
-// Set in .env
-const isLocal = process.env.LOCAL === "true";
-
 const config = {
   productName: "PoE Live Search Manager",
   appId: "com.5k-mirrors.poe-sniper",
@@ -14,10 +11,13 @@ const config = {
     "package.json",
   ],
   win: {
-    target: ["nsis"],
+    target: ["nsis", "portable"],
   },
   nsis: {
     artifactName: "poe-live-search-manager-${env.REVISION}-setup.${ext}",
+  },
+  portable: {
+    artifactName: "poe-live-search-manager-${env.REVISION}-standalone.${ext}",
   },
   directories: {
     output: "release",
@@ -30,14 +30,6 @@ const config = {
     },
   ],
 };
-
-if (isLocal) {
-  config.win.target.push("portable");
-  config.portable = {
-    artifactName:
-      "poe-live-search-manager-${env.REVISION}-dev-standalone.${ext}",
-  };
-}
 
 module.exports = config;
 /* eslint-enable no-template-curly-in-string */

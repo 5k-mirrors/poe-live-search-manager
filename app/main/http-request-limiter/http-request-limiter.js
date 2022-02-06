@@ -1,8 +1,6 @@
 import Bottleneck from "bottleneck";
-import fetch from "node-fetch";
-import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
-import MissingXRateLimitAccountHeaderError from "../../shared/errors/missing-x-rate-limit-account-header-error";
-import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
+
+import { itemDetails } from "../api/api";
 import {
   devLog,
   devErrorLog,
@@ -23,7 +21,11 @@ export default class HttpRequestLimiter {
   static requestsExhausted = false;
 
   static initialize() {
-    return this.initialFetch()
+    const dummyId = "1";
+    return itemDetails(dummyId)
+      .then(response => {
+        return this.rateLimitFromHeaders(response);
+      })
       .then(({ requestLimit, interval }) => {
         devLog(
           `Requests are limited to ${requestLimit} requests / ${interval} seconds.`
@@ -40,56 +42,30 @@ export default class HttpRequestLimiter {
           ),
           maxConcurrent: 1,
         });
-      })
-      .catch(err => {
-        devErrorLog("Rate limit init error: ", err);
-
-        devLog(
-          `Requests are limitied to ${this.config.defaultReservoirValues.requestLimit} requests / ${this.config.defaultReservoirValues.interval} seconds.`
-        );
-
-        this.bottleneck.updateSettings({
-          reservoir: this.config.defaultReservoirValues.requestLimit,
-          reservoirRefreshAmount: this.config.defaultReservoirValues
-            .requestLimit,
-          reservoirRefreshInterval:
-            this.config.defaultReservoirValues.interval * 1000,
-          // GGG prohibits bursting requests (even though this is not specified by the rate-limiting headers).
-          minTime: Math.max(
-            this.config.minRequestIntervalMs,
-            this.config.defaultReservoirValues.interval /
-              this.config.defaultReservoirValues.requestLimit
-          ),
-          maxConcurrent: 1,
-        });
       });
   }
 
-  static initialFetch() {
-    return fetch(`${baseUrls.poeFetchAPI}1`, {
-      headers: {
-        Cookie: getCookieHeader(),
-      },
-    })
-      .then(response => {
-        if (response.headers.has(headerKeys.XRateLimitAccount)) {
-          const xRateLimitAccountValues = response.headers
-            .get(headerKeys.XRateLimitAccount)
-            .split(":");
+  static rateLimitFromHeaders = response => {
+    if (response.status > 299) {
+      devErrorLog(
+        `Error response while fetching rate limit headers: ${response.status}`
+      );
+    }
 
-          return {
-            requestLimit: Number(xRateLimitAccountValues[0]),
-            interval: Number(xRateLimitAccountValues[1]),
-          };
-        }
+    if (response.headers.has(headerKeys.XRateLimitAccount)) {
+      const xRateLimitAccountValues = response.headers
+        .get(headerKeys.XRateLimitAccount)
+        .split(":");
 
-        throw new MissingXRateLimitAccountHeaderError();
-      })
-      .catch(error => {
-        devErrorLog(error);
-        throw error;
-      });
-  }
+      return {
+        requestLimit: Number(xRateLimitAccountValues[0]),
+        interval: Number(xRateLimitAccountValues[1]),
+      };
+    }
+
+    devLog(`Account rate limits not found, using defaults.`);
+    return this.config.defaultReservoirValues;
+  };
 
   static incrementReservoir(incrementBy) {
     return this.bottleneck.incrementReservoir(incrementBy);

@@ -45,10 +45,10 @@ const scheduleResult = args => {
 const processItems = (itemIds, ws) => {
   const timestamp = moment().format("YYYY-MM-DD hh:mm:ss");
 
-  return itemIds.forEach(itemId =>
-    poeTrade
-      .fetchItemDetails(itemId)
-      .then(itemDetails => {
+  return poeTrade
+    .fetchItemDetails(itemIds.join(","))
+    .then(itemsDetails => {
+      itemsDetails.forEach(itemDetails => {
         const id = uniqueIdGenerator();
         const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
         const price = poeTrade.getPrice(itemDetails);
@@ -74,11 +74,11 @@ const processItems = (itemIds, ws) => {
         } else {
           electronUtils.copy(whisperMessage);
         }
-      })
-      .catch(err => {
-        devErrorLog(err);
-      })
-  );
+      });
+    })
+    .catch(err => {
+      devErrorLog(err);
+    });
 };
 
 export default processItems;

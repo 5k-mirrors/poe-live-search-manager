@@ -1,9 +1,5 @@
 # Testing
 
-## [Example YML input](example-import-input.yml)
-
-## [Example invalid YML input](invalid-example-import-input.yml)
-
 ## Search IDs
 
 ```js
@@ -121,8 +117,3 @@ const connectToAll = (ids = []) => {
 
 connectToAll(ids);
 ```
-
-Limitations:
-- connection `open`: 1/second
-- connection limit: 80
-- connection `close`: 1/second, 1/minute after some events

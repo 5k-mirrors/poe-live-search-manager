@@ -1,13 +1,13 @@
 import React, { useState, Fragment } from "react";
 import Box from "@material-ui/core/Box";
 import { ipcRenderer } from "electron";
-import * as customHooks from "../../../../../utils/CustomHooks/CustomHooks";
-import GlobalStore from "../../../../../../shared/GlobalStore/GlobalStore";
-import { storeKeys } from "../../../../../../shared/resources/StoreKeys/StoreKeys";
-import { ipcEvents } from "../../../../../../shared/resources/IPCEvents/IPCEvents";
+import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
+import GlobalStore from "../../../../../shared/GlobalStore/GlobalStore";
+import { storeKeys } from "../../../../../shared/resources/StoreKeys/StoreKeys";
+import { ipcEvents } from "../../../../../shared/resources/IPCEvents/IPCEvents";
 import InfoButton from "./InfoButton/InfoButton";
-import Input from "../../../../UI/SimpleHtmlElements/Input/Input";
-import ButtonWithSuccessIcon from "../../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
+import Input from "../../../UI/SimpleHtmlElements/Input/Input";
+import ButtonWithSuccessIcon from "../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 
 export default () => {
   const globalStore = GlobalStore.getInstance();

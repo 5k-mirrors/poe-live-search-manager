@@ -9,7 +9,7 @@ jest.mock("../poe-trade/poe-trade", () => {
 
   return {
     ...jest.requireActual("../poe-trade/poe-trade"),
-    fetchItemDetails: jest.fn(() => Promise.resolve(data.result[0])),
+    fetchItemDetails: jest.fn(() => Promise.resolve(data.result)),
   };
 });
 
@@ -22,11 +22,11 @@ describe("processItems", () => {
     globalStore.set(storeKeys.RESULTS, []);
   });
 
-  it("pushes items to GlobalStore", async () => {
-    await processItems(["id1", "id2"], ws);
+  it("pushes item to GlobalStore", async () => {
+    await processItems(["id1"], ws);
 
     const results = globalStore.get(storeKeys.RESULTS, []);
-    expect(results.length).toEqual(2);
+    expect(results.length).toEqual(1);
   });
 
   it("sets whisper on result", async () => {

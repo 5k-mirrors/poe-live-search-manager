@@ -1,4 +1,4 @@
-export const poeFetchAPI = "https://www.pathofexile.com/api/trade/fetch/";
+export const poeFetchAPI = "https://www.pathofexile.com/api/trade/fetch";
 
 export const poeWsUri = "wss://www.pathofexile.com/api/trade/live";
 

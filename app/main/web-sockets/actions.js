@@ -2,7 +2,6 @@ import WebSocket from "ws";
 import { Mutex } from "async-mutex";
 import Bottleneck from "bottleneck";
 import Store from "./store";
-import Subscription from "../subscription/Subscription";
 import processItems from "../process-items/process-items";
 import {
   devLog,
@@ -20,9 +19,7 @@ import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
 import { windows } from "../../shared/resources/Windows/Windows";
 import socketStates from "./socket-states";
 import stateIs from "../utils/state-is/state-is";
-import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
-import { socketOrigin } from "../../shared/resources/BaseUrls/BaseUrls";
-import packageJson from "../../../package.json";
+import { socketHeaders } from "../api/api";
 
 class WsRequestLimiter {
   static bottleneck = new Bottleneck({
@@ -81,11 +78,7 @@ const connect = id =>
         devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
 
         ws.socket = new WebSocket(webSocketUri, {
-          headers: {
-            Cookie: getCookieHeader(),
-            Origin: socketOrigin,
-            "User-Agent": `PoE Live Search Manager/${packageJson.version}`,
-          },
+          headers: socketHeaders(),
         });
 
         Store.update(ws.id, {
@@ -128,21 +121,15 @@ const connect = id =>
         ws.socket.on("close", (code, reason) => {
           devLog(`SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`);
 
-          const globalStore = GlobalStore.getInstance();
-
           updateState(ws.id, ws.socket);
 
-          const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-
-          if (isLoggedIn && Subscription.active()) {
-            const delay = randomInt(2000, 3000);
-            devLog(
-              `Auto-reconnect to be initiated in ${delay / 1000} seconds - ${
-                ws.searchUrl
-              } / ${ws.id}`
-            );
-            retryIn(() => connect(ws.id), delay);
-          }
+          const delay = randomInt(2000, 3000);
+          devLog(
+            `Auto-reconnect to be initiated in ${delay / 1000} seconds - ${
+              ws.searchUrl
+            } / ${ws.id}`
+          );
+          retryIn(() => connect(ws.id), delay);
         });
 
         return release();
@@ -185,14 +172,7 @@ export const disconnectAll = () =>
   Store.sockets.forEach(connectionDetails => disconnect(connectionDetails.id));
 
 export const updateConnections = () => {
-  const globalStore = GlobalStore.getInstance();
-  const isLoggedIn = globalStore.get(storeKeys.IS_LOGGED_IN, false);
-  const poeSessionId = globalStore.get(storeKeys.POE_SESSION_ID);
-
-  const conditionsAreFulfilled =
-    isLoggedIn && poeSessionId && Subscription.active();
-
-  if (conditionsAreFulfilled) {
+  if (GlobalStore.getInstance().get(storeKeys.POE_SESSION_ID)) {
     return connectAll();
   }
 

@@ -30,18 +30,7 @@ module.exports = {
     new webpack.DefinePlugin({
       "process.env.REVISION": JSON.stringify(revision),
     }),
-  ].concat(
-    isProduction
-      ? [
-          new webpack.EnvironmentPlugin([
-            "FIREBASE_API_KEY",
-            "FIREBASE_API_URL",
-            "FIREBASE_DATABASE_URL",
-            "FIREBASE_PROJECT_ID",
-          ]),
-        ]
-      : []
-  ),
+  ].concat(new webpack.EnvironmentPlugin(["EMAIL"])),
   resolve: {
     // Reason for adding .json
     // => https://github.com/MarshallOfSound/electron-devtools-installer/pull/60#issuecomment-320229210

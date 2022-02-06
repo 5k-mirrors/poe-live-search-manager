@@ -1,5 +1,4 @@
 import { app, BrowserWindow } from "electron";
-import fs from "fs";
 import path from "path";
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
@@ -8,6 +7,7 @@ import { autoUpdater } from "electron-updater";
 import {
   initListeners,
   initRateLimiter,
+  ensureEnv,
 } from "./initialize-project/initialize-project";
 import { windows } from "../shared/resources/Windows/Windows";
 import {
@@ -24,24 +24,7 @@ let win;
 
 // https://stackoverflow.com/a/52195400/9599137, https://www.electron.build/configuration/nsis#guid-vs-application-name
 // => Windows 8/8.1 and 10 notifications.
-app.setAppUserModelId("com.5k-mirrors.poe-sniper");
-
-// https://github.com/c-hive/poe-sniper/issues/287
-// The user data folder is determined based on the app's name. After changing the name this makes sure users with old installation don't lose their data. Their installation will keep using the old user data folder, unless it's explicitly removed.
-// In dev env the app is using the "Electron" folder. Only activate this fix in production so development doesn't interfere with user installations.
-if (envIs("production")) {
-  try {
-    const userDataPathFromPreviousInstallation = `${app.getPath("appData")}${
-      path.sep
-    }PoE Sniper`;
-
-    if (fs.existsSync(userDataPathFromPreviousInstallation)) {
-      app.setPath("userData", userDataPathFromPreviousInstallation);
-    }
-  } catch (err) {
-    devErrorLog(err);
-  }
-}
+app.setAppUserModelId("com.5k-mirrors.poe-live-search-manager");
 
 const logger = require("electron-log");
 
@@ -118,6 +101,8 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
+  ensureEnv();
+
   // Subscribing to the listeners happens even before creating the window to be ready to actively respond to initial events coming from renderer.
   initListeners();
 
@@ -129,10 +114,10 @@ app.whenReady().then(() => {
     devLog("Development setup done");
   }
 
+  initRateLimiter();
+
   win.webContents.on("did-finish-load", () => {
     win.setTitle(windows.MAIN);
-
-    initRateLimiter();
   });
 });
 

@@ -1,6 +1,5 @@
 import fetch from "node-fetch";
 import * as poeTrade from "./poe-trade";
-import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import ItemFetchError from "../../shared/errors/item-fetch-error";
 import exampleSocketResponse from "../../../doc/example-socket-response.json";
@@ -48,7 +47,7 @@ describe("poeTrade", () => {
           text: () =>
             Promise.resolve(
               JSON.stringify({
-                result: [null],
+                result: null,
               })
             ),
         };
@@ -58,9 +57,7 @@ describe("poeTrade", () => {
         });
 
         it("rejects with `ItemFetchError`", () => {
-          const itemUrl = `${baseUrls.poeFetchAPI + id}`;
-
-          const expectedErrorMessage = `Item details not found for ${itemUrl}`;
+          const expectedErrorMessage = `Item details not found for ${id}`;
 
           return expect(poeTrade.fetchItemDetails(id)).rejects.toEqual(
             new ItemFetchError(expectedErrorMessage)
@@ -84,9 +81,9 @@ describe("poeTrade", () => {
         });
 
         it("resolves with the details", () => {
-          return expect(poeTrade.fetchItemDetails(id)).resolves.toEqual(
-            "itemDetails"
-          );
+          return expect(poeTrade.fetchItemDetails(id)).resolves.toEqual([
+            "itemDetails",
+          ]);
         });
       });
     });
