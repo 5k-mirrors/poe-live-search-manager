@@ -30,7 +30,7 @@ module.exports = {
     new webpack.DefinePlugin({
       "process.env.REVISION": JSON.stringify(revision),
     }),
-  ],
+  ].concat(new webpack.EnvironmentPlugin(["EMAIL"])),
   resolve: {
     // Reason for adding .json
     // => https://github.com/MarshallOfSound/electron-devtools-installer/pull/60#issuecomment-320229210

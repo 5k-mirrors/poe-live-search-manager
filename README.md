@@ -10,6 +10,8 @@ Stack: Electron + React based on [minelectreactist](https://github.com/gomorizso
 - Building portable executable: https://github.com/c-hive/poe-sniper/commit/5e15938f741d54206da0d582766513d88146a4bf
 
 ```bash
+cp .env.example .env
+# Fill values in .env file
 yarn install
 yarn dev
 ```

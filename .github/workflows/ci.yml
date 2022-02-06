@@ -69,6 +69,7 @@ jobs:
       run: yarn package ${{ github.ref }}
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        EMAIL: ${{ secrets.EMAIL }}
     - name: Copy deliverables
       run: |
         mkdir deliverables

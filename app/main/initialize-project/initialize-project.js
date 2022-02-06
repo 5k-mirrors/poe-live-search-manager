@@ -9,6 +9,7 @@ import Store from "../web-sockets/store";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import stateIs from "../utils/state-is/state-is";
+import { envIs } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 const setupStoreIpcListeners = () => {
   ipcMain.handle(ipcEvents.GET_SOCKETS, () => {
@@ -60,6 +61,20 @@ const setupGeneralIpcListeners = () => {
   ipcMain.on(ipcEvents.DROP_SCHEDULED_RESULTS, () => {
     NotificationsLimiter.drop();
   });
+};
+
+export const ensureEnv = () => {
+  if (!process.env.EMAIL) {
+    if (envIs("development")) {
+      throw new Error(
+        "Environment variable missing. Did you fill `.env` file?"
+      );
+    } else {
+      throw new Error(
+        "Environment variable missing. Did you fill build environments?"
+      );
+    }
+  }
 };
 
 export const initListeners = () => {

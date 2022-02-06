@@ -7,6 +7,7 @@ import { autoUpdater } from "electron-updater";
 import {
   initListeners,
   initRateLimiter,
+  ensureEnv,
 } from "./initialize-project/initialize-project";
 import { windows } from "../shared/resources/Windows/Windows";
 import {
@@ -100,6 +101,8 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
+  ensureEnv();
+
   // Subscribing to the listeners happens even before creating the window to be ready to actively respond to initial events coming from renderer.
   initListeners();
 

@@ -7,11 +7,10 @@ import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
 
 const userAgent = () => {
-  const dummyDevUserAgent =
-    "only-used-for-development, git.thisismydesign@gmail.com";
+  const dummyDevUserAgent = `only-used-for-development, ${process.env.EMAIL}`;
   return envIs("development")
     ? dummyDevUserAgent
-    : `PoE Live Search Manager/${packageJson.version}`;
+    : `PoE Live Search Manager/${packageJson.version}, ${process.env.EMAIL}`;
 };
 
 const cookieHeader = () => {
