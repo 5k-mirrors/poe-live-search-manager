@@ -1,15 +1,11 @@
 import Bottleneck from "bottleneck";
-import fetch from "node-fetch";
 
 import { itemDetails } from "../api/api";
-import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
-import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
 import {
   devLog,
   devErrorLog,
 } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../shared/resources/HeaderKeys/HeaderKeys";
-import { userAgent } from "../../shared/resources/userAgent";
 
 export default class HttpRequestLimiter {
   static config = {
@@ -69,17 +65,6 @@ export default class HttpRequestLimiter {
 
     devLog(`Account rate limits not found, using defaults.`);
     return this.config.defaultReservoirValues;
-  };
-
-  static initialFetch = () => {
-    const dummyId = "1";
-    return fetch(`${baseUrls.poeFetchAPI}/${dummyId}`, {
-      headers: {
-        Cookie: getCookieHeader(),
-        "Content-Type": "application/json",
-        "User-Agent": userAgent(),
-      },
-    });
   };
 
   static incrementReservoir(incrementBy) {

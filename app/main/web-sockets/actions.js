@@ -19,9 +19,7 @@ import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
 import { windows } from "../../shared/resources/Windows/Windows";
 import socketStates from "./socket-states";
 import stateIs from "../utils/state-is/state-is";
-import getCookieHeader from "../utils/get-cookie-header/get-cookie-header";
-import { socketOrigin } from "../../shared/resources/BaseUrls/BaseUrls";
-import { userAgent } from "../../shared/resources/userAgent";
+import { socketHeaders } from "../api/api";
 
 class WsRequestLimiter {
   static bottleneck = new Bottleneck({
@@ -80,11 +78,7 @@ const connect = id =>
         devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
 
         ws.socket = new WebSocket(webSocketUri, {
-          headers: {
-            Cookie: getCookieHeader(),
-            Origin: socketOrigin,
-            "User-Agent": userAgent(),
-          },
+          headers: socketHeaders(),
         });
 
         Store.update(ws.id, {
