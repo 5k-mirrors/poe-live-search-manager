@@ -40,5 +40,5 @@ export const itemDetails = ids => {
 export const socketHeaders = () => {
   const socketOrigin = "https://www.pathofexile.com";
 
-  return apiHeaders.merge({ Origin: socketOrigin });
+  return Object.assign(apiHeaders(), { Origin: socketOrigin });
 };
