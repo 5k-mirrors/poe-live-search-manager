@@ -1,11 +1,12 @@
 import React from "react";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Screens from "../../components/Screens/Screens";
 
-const theme = createMuiTheme();
+const theme = createTheme();
 
 const app = () => (
   <ThemeProvider theme={theme}>

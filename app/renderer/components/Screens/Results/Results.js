@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { remote, clipboard, ipcRenderer } from "electron";
 import Box from "@mui/material/Box";
-import MaterialTable from "material-table";
+import MaterialTable from "@material-table/core";
 import { Link } from "react-router-dom";
 import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
 import GlobalStore from "../../../../shared/GlobalStore/GlobalStore";
