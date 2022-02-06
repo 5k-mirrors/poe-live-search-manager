@@ -1,6 +1,6 @@
 import React from "react";
-import Done from "@material-ui/icons/Done";
-import Button from "@material-ui/core/Button";
+import Done from "@mui/icons-material/Done";
+import Button from "@mui/material/Button";
 import { useButtonWithSuccessIconStyles } from "./ButtonWithSuccessIcon.style";
 
 export default ({ iconIsVisible, text, clickEvent }) => {

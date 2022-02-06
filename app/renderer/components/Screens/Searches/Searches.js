@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { remote, ipcRenderer } from "electron";
-import MaterialTable from "material-table";
-import { Box, Typography, Snackbar } from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
+import MaterialTable from "@material-table/core";
+import { Box, Typography, Snackbar } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import yaml from "js-yaml";
 import fs from "fs";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
@@ -342,7 +342,7 @@ export default class Searches extends Component {
           }}
           data={webSocketStore}
           editable={{
-            // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/material-table/issues/465#issuecomment-482955841
+            // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
             onRowAdd: this.maxSearchCountReached()
               ? undefined
               : wsConnectionData =>
@@ -388,7 +388,7 @@ export default class Searches extends Component {
               disabled: this.isWebSocketStoreEmpty(),
             },
             {
-              // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/material-table/issues/465#issuecomment-482955841
+              // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
               icon: "add_box",
               tooltip: `Number of searches are limited to ${this.searchCountLimit} by GGG`,
               isFreeAction: true,

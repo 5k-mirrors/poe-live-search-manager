@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import Switch from "@material-ui/core/Switch";
-import { useToggleButtonStyles } from "./ToggleButton.style";
+import Switch from "@mui/material/Switch";
 
-export default ({ defaultState, changed }) => {
-  const classes = useToggleButtonStyles();
-
+const ToggleButton = ({ defaultState, changed }) => {
   const [toggleState, setToggleState] = useState(defaultState);
 
   function handleToggleChange(updatedToggleState) {
@@ -17,13 +14,8 @@ export default ({ defaultState, changed }) => {
     <Switch
       checked={toggleState}
       onChange={e => handleToggleChange(e.target.checked)}
-      classes={{
-        root: classes.root,
-        switchBase: classes.switchBase,
-        thumb: classes.thumb,
-        track: classes.track,
-        checked: classes.checked,
-      }}
     />
   );
 };
+
+export default ToggleButton;

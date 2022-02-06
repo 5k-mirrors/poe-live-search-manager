@@ -1,8 +1,8 @@
 import React from "react";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import Tooltip from "@material-ui/core/Tooltip";
-import Button from "@material-ui/core/Button";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
+import Button from "@mui/material/Button";
 import * as electronUtils from "../../../utils/ElectronUtils/ElectronUtils";
 import * as baseUrls from "../../../../shared/resources/BaseUrls/BaseUrls";
 import { useRightSideStyles } from "./RightSide.style";

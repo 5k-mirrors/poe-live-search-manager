@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, useEffect } from "react";
 import { remote, clipboard, ipcRenderer } from "electron";
-import Box from "@material-ui/core/Box";
-import MaterialTable from "material-table";
+import Box from "@mui/material/Box";
+import MaterialTable from "@material-table/core";
 import { Link } from "react-router-dom";
 import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
 import GlobalStore from "../../../../shared/GlobalStore/GlobalStore";

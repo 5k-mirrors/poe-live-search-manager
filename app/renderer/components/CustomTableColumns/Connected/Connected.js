@@ -1,6 +1,6 @@
 import React from "react";
-import Done from "@material-ui/icons/Done";
-import Cancel from "@material-ui/icons/Cancel";
+import Done from "@mui/icons-material/Done";
+import Cancel from "@mui/icons-material/Cancel";
 
 const connected = ({ ...props }) => {
   const { isConnected } = props;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Box from "@material-ui/core/Box";
+import Box from "@mui/material/Box";
 import Input from "../../../UI/SimpleHtmlElements/Input/Input";
 import ButtonWithSuccessIcon from "../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
 import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
