@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "@material-ui/core/Link";
+import Link from "@mui/material/Link";
 import { openExternalUrl } from "../ElectronUtils/ElectronUtils";
 
 export const Url = ({ ...props }) => {

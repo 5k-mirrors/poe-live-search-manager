@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { remote, ipcRenderer } from "electron";
 import MaterialTable from "material-table";
-import { Box, Typography, Snackbar } from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
+import { Box, Typography, Snackbar } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import yaml from "js-yaml";
 import fs from "fs";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";

@@ -1,5 +1,5 @@
 import React from "react";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { NavLink } from "react-router-dom";
 import { routes } from "../../../resources/Routes/Routes";
 

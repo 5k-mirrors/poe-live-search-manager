@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from "react";
-import Box from "@material-ui/core/Box";
+import Box from "@mui/material/Box";
 import { ipcRenderer } from "electron";
 import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
 import GlobalStore from "../../../../../shared/GlobalStore/GlobalStore";

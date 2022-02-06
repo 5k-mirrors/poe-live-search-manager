@@ -1,6 +1,6 @@
 import React from "react";
 import { ipcRenderer } from "electron";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography } from "@mui/material";
 import Button from "../../UI/SimpleHtmlElements/Button/Button";
 import ToggleButton from "../../UI/ToggleButton/ToggleButton";
 import ResultsListLimit from "./Display/ResultsListLimit";

@@ -1,10 +1,10 @@
 import React from "react";
 import moment from "moment";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 import ReactMarkdown from "react-markdown";
 import breaks from "remark-breaks";
-import Link from "@material-ui/core/Link";
-import Divider from "@material-ui/core/Divider";
+import Link from "@mui/material/Link";
+import Divider from "@mui/material/Divider";
 import { openExternalUrl } from "../../../../utils/ElectronUtils/ElectronUtils";
 import { Url } from "../../../../utils/ReactMarkdown/renderers";
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import Paper from "@mui/material/Paper";
 import fetch from "node-fetch";
 
 import { Announcement, ReleaseNote } from "./Types";

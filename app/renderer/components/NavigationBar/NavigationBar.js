@@ -1,5 +1,5 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
+import Paper from "@mui/material/Paper";
 import NavigationItems from "./NavigationItems/NavigationItems";
 import RightSide from "./RightSide/RightSide";
 import RateLimitFeedback from "./RateLimitFeedback/RateLimitFeedback";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Tooltip from "@material-ui/core/Tooltip";
-import WarningIcon from "@material-ui/icons/Warning";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import Tooltip from "@mui/material/Tooltip";
+import WarningIcon from "@mui/icons-material/Warning";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { ipcRenderer } from "electron";
 import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
 import { useRateLimitFeedbackStyles } from "./RateLimitFeedback.style";
