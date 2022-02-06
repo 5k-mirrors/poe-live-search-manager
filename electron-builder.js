@@ -16,7 +16,9 @@ const config = {
   nsis: {
     artifactName: "poe-live-search-manager-${env.REVISION}-setup.${ext}",
   },
-  portable: "poe-live-search-manager-${env.REVISION}-standalone.${ext}",
+  portable: {
+    artifactName: "poe-live-search-manager-${env.REVISION}-standalone.${ext}",
+  },
   directories: {
     output: "release",
   },
