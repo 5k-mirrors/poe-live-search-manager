@@ -6,7 +6,7 @@ export const useInputStyles = makeStyles({
   },
   label: {
     color: "#FFFFFF",
-    "&$focused": {
+    "&.Mui-focused": {
       color: "#FFFFFF",
     },
   },
