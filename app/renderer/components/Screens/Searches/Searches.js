@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { remote, ipcRenderer } from "electron";
 import MaterialTable from "@material-table/core";
-import { Box, Typography, Snackbar } from "@mui/material";
-import Alert from "@mui/material/Alert";
+import { Box, Typography } from "@mui/material";
 import yaml from "js-yaml";
 import fs from "fs";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
@@ -15,156 +14,118 @@ import {
 } from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 
-export default class Searches extends Component {
-  constructor(props) {
-    super(props);
+const Searches = () => {
+  const [webSocketStore, setWebSocketStore] = useState([]);
+  const [allReconnectsAreDisabled, setAllReconnectsAreDisabled] = useState(
+    false
+  );
 
-    this.state = {
-      importErrorOpen: false,
-      maxSearchCountExceededErrorOpen: false,
-      webSocketStore: [],
-      allReconnectsAreDisabled: false,
+  const disableDurationInMilliseconds = 2000;
+  const searchCountLimit = 20;
+  // Reconnect buttons are disabled for a short period.
+  // This array is tracking active timeout calls so that they can be cleared when the component unmounts.
+  // TODO: maybe this complicates too much?
+  // const [reconnectTimeoutIds, setReconnectTimeoutIds] = useState([]);
+  const reconnectTimeoutIds = useRef([]);
+
+  const socketStateUpdateListener = useCallback((event, socketDetails) => {
+    const update = (id, data) => {
+      setWebSocketStore(oldWebSocketStore => {
+        const webSocketIndex = oldWebSocketStore.findIndex(
+          webSocket => webSocket.id === id
+        );
+
+        if (!isDefined(oldWebSocketStore[webSocketIndex])) {
+          return oldWebSocketStore;
+        }
+
+        return {
+          ...oldWebSocketStore,
+          webSocketIndex: {
+            ...oldWebSocketStore[webSocketIndex],
+            ...data,
+          },
+        };
+      });
     };
 
-    this.reconnectTimeoutIds = [];
-    this.disableDurationInMilliseconds = 2000;
-    this.searchCountLimit = 20;
-  }
+    update(socketDetails.id, {
+      isConnected: socketDetails.isConnected,
+    });
+  }, []);
 
-  componentDidMount() {
+  useEffect(() => {
     ipcRenderer.invoke(ipcEvents.GET_SOCKETS).then(result => {
-      this.setState({
-        webSocketStore: result,
-      });
+      setWebSocketStore(result);
     });
 
-    ipcRenderer.on(
-      ipcEvents.SOCKET_STATE_UPDATE,
-      this.socketStateUpdateListener
-    );
-  }
+    ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, socketStateUpdateListener);
 
-  componentWillUnmount() {
-    ipcRenderer.removeListener(
-      ipcEvents.SOCKET_STATE_UPDATE,
-      this.socketStateUpdateListener
-    );
+    return () => {
+      ipcRenderer.removeListener(
+        ipcEvents.SOCKET_STATE_UPDATE,
+        socketStateUpdateListener
+      );
 
-    this.reconnectTimeoutIds.forEach(timeout => {
-      clearTimeout(timeout);
-    });
-  }
-
-  socketStateUpdateListener = (event, socketDetails) => {
-    if (this.stateHasChanged(socketDetails.id, socketDetails.isConnected)) {
-      this.update(socketDetails.id, {
-        isConnected: socketDetails.isConnected,
+      reconnectTimeoutIds.current.forEach(timeout => {
+        clearTimeout(timeout);
       });
-    }
+    };
+  }, [socketStateUpdateListener]);
+
+  const maxSearchCountReached = () => {
+    return webSocketStore.length === searchCountLimit;
   };
 
-  reconnect = connectionDetails => {
-    this.disableReconnect(connectionDetails.id);
+  const disableAllReconnects = () => {
+    setAllReconnectsAreDisabled(true);
+
+    reconnectTimeoutIds.current.push(
+      setTimeout(() => {
+        setAllReconnectsAreDisabled(false);
+      }, disableDurationInMilliseconds)
+    );
+  };
+
+  const disableReconnect = id => {
+    // TODO set last reconnect time instead?
+    // update(id, {
+    //   reconnectIsDisabled: true,
+    // });
+    // reconnectTimeoutIds.push(
+    //   setTimeout(() => {
+    //     update(id, { reconnectIsDisabled: false });
+    //   }, disableDurationInMilliseconds)
+    // );
+  };
+
+  const reconnect = connectionDetails => {
+    disableReconnect(connectionDetails.id);
 
     ipcRenderer.send(ipcEvents.RECONNECT_SOCKET, connectionDetails);
   };
 
-  reconnectAll = () => {
-    this.disableAllReconnects();
+  const reconnectAll = () => {
+    disableAllReconnects();
 
     ipcRenderer.send(ipcEvents.RECONNECT_ALL);
   };
 
-  stateHasChanged = (id, isConnected) => {
-    const {
-      webSocketStore: [...webSocketStore],
-    } = this.state;
-
-    const searchEl = webSocketStore.find(el => el.id === id);
-
-    return searchEl && searchEl.isConnected !== isConnected;
-  };
-
-  handleImportErrorClose = () => {
-    this.setState({
-      importErrorOpen: false,
-    });
-  };
-
-  handleMaxSearchCountExceededErrorClose = () => {
-    this.setState({
-      maxSearchCountExceededErrorOpen: false,
-    });
-  };
-
-  update(id, data) {
-    const {
-      webSocketStore: [...webSocketStore],
-    } = this.state;
-
-    const webSocketIndex = webSocketStore.findIndex(
-      webSocket => webSocket.id === id
-    );
-
-    if (isDefined(webSocketStore[webSocketIndex])) {
-      webSocketStore[webSocketIndex] = {
-        ...webSocketStore[webSocketIndex],
-        ...data,
-      };
-
-      this.setState({
-        webSocketStore,
-      });
-    }
-  }
-
-  disableReconnect(id) {
-    this.update(id, {
-      reconnectIsDisabled: true,
-    });
-
-    this.reconnectTimeoutIds.push(
-      setTimeout(() => {
-        this.update(id, { reconnectIsDisabled: false });
-      }, this.disableDurationInMilliseconds)
-    );
-  }
-
-  disableAllReconnects() {
-    this.setState({
-      allReconnectsAreDisabled: true,
-    });
-
-    this.reconnectTimeoutIds.push(
-      setTimeout(() => {
-        this.setState({
-          allReconnectsAreDisabled: false,
-        });
-      }, this.disableDurationInMilliseconds)
-    );
-  }
-
-  deleteConnection(connectionDetails) {
+  const deleteConnection = connectionDetails => {
     return new Promise(resolve => {
-      const {
-        webSocketStore: [...webSocketStore],
-      } = this.state;
-
       const updatedWebSocketStore = webSocketStore.filter(
         webSocket => webSocket.id !== connectionDetails.id
       );
 
       ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
 
-      this.setState({
-        webSocketStore: updatedWebSocketStore,
-      });
+      setWebSocketStore(updatedWebSocketStore);
 
       resolve();
     });
-  }
+  };
 
-  addNewConnection(connectionDetails) {
+  const addNewConnection = connectionDetails => {
     return new Promise((resolve, reject) => {
       if (
         !regExes.searchUrlLeagueAndIdMatcher.test(connectionDetails.searchUrl)
@@ -174,15 +135,7 @@ export default class Searches extends Component {
         );
       }
 
-      const {
-        webSocketStore: [...webSocketStore],
-      } = this.state;
-
-      if (this.maxSearchCountReached()) {
-        this.setState({
-          maxSearchCountExceededErrorOpen: true,
-        });
-
+      if (maxSearchCountReached()) {
         return reject(new Error("Maximum search count exceeded"));
       }
 
@@ -198,31 +151,17 @@ export default class Searches extends Component {
         reconnectIsDisabled: false,
       });
 
-      this.setState({
-        webSocketStore,
-      });
+      setWebSocketStore(webSocketStore);
 
       return resolve();
     });
-  }
+  };
 
-  isWebSocketStoreEmpty() {
-    const {
-      webSocketStore: [...webSocketStore],
-    } = this.state;
-
+  const isWebSocketStoreEmpty = () => {
     return webSocketStore.length === 0;
-  }
+  };
 
-  maxSearchCountReached() {
-    const {
-      webSocketStore: [...webSocketStore],
-    } = this.state;
-
-    return webSocketStore.length === this.searchCountLimit;
-  }
-
-  import() {
+  const importFromFile = () => {
     remote.dialog
       .showOpenDialog({
         properties: ["openFile"],
@@ -242,11 +181,8 @@ export default class Searches extends Component {
                   devErrorLog(addNewConnectionErr);
                 });
               }
-            } catch (e) {
-              devErrorLog(e);
-              this.setState({
-                importErrorOpen: true,
-              });
+            } catch (error) {
+              devErrorLog(error);
             }
           });
         }
@@ -254,9 +190,9 @@ export default class Searches extends Component {
       .catch(error => {
         devErrorLog(error);
       });
-  }
+  };
 
-  deleteAll() {
+  const deleteAll = () => {
     remote.dialog
       .showMessageBox({
         ...deleteAllSearchesMessageBoxOptions,
@@ -266,152 +202,96 @@ export default class Searches extends Component {
         const deleteAllSearchesConfirmed = clickedButtonIndex === 1;
 
         if (deleteAllSearchesConfirmed) {
-          const {
-            webSocketStore: [...webSocketStore],
-          } = this.state;
-
           webSocketStore.forEach(connectionDetails => {
             ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
           });
 
-          this.setState({
-            webSocketStore: [],
-          });
+          setWebSocketStore([]);
         }
       });
-  }
+  };
 
-  render() {
-    const {
-      webSocketStore: [...webSocketStore],
-      allReconnectsAreDisabled,
-      importErrorOpen,
-      maxSearchCountExceededErrorOpen,
-    } = this.state;
+  return (
+    <MaterialTable
+      title="Active connections"
+      columns={tableColumns.searchesScreen}
+      components={{
+        Pagination: () => (
+          <Box component="td" padding={2}>
+            <Typography
+              color={maxSearchCountReached() ? "error" : "initial"}
+              variant="subtitle2"
+            >
+              {`Search count: ${webSocketStore.length}`}
+            </Typography>
+          </Box>
+        ),
+      }}
+      data={webSocketStore}
+      editable={{
+        // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
+        onRowAdd: maxSearchCountReached()
+          ? undefined
+          : wsConnectionData =>
+              addNewConnection(wsConnectionData).catch(err => devErrorLog(err)),
+        onRowDelete: wsConnectionData =>
+          deleteConnection(wsConnectionData).catch(err => devErrorLog(err)),
+      }}
+      actions={[
+        webSocket => ({
+          icon: "cached",
+          tooltip: "Reconnect",
+          onClick: (event, connectionDetails) => reconnect(connectionDetails),
+          disabled: webSocket.reconnectIsDisabled || allReconnectsAreDisabled,
+        }),
+        {
+          icon: "cached",
+          tooltip: "Reconnect all",
+          isFreeAction: true,
+          disabled: isWebSocketStoreEmpty() || allReconnectsAreDisabled,
+          onClick: () => reconnectAll(),
+        },
+        {
+          icon: "create_new_folder",
+          tooltip: maxSearchCountReached()
+            ? `Number of searches are limited to ${searchCountLimit} by GGG`
+            : "Import from file",
+          isFreeAction: true,
+          disabled: maxSearchCountReached(),
+          onClick: () => importFromFile(),
+        },
+        {
+          icon: "delete_outline",
+          tooltip: "Delete all",
+          isFreeAction: true,
+          onClick: () => deleteAll(),
+          disabled: isWebSocketStoreEmpty(),
+        },
+        {
+          // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
+          icon: "add_box",
+          tooltip: `Number of searches are limited to ${searchCountLimit} by GGG`,
+          isFreeAction: true,
+          disabled: true,
+          hidden: !maxSearchCountReached(),
+          // An anonymus function needs to be provided to avoid invalid prop errors in the console.
+          onClick: () => {},
+        },
+      ]}
+      options={{
+        showTitle: false,
+        toolbarButtonAlignment: "left",
+        headerStyle: {
+          position: "sticky",
+          top: 0,
+        },
+        maxBodyHeight: "525px",
+        pageSize: 9999,
+        emptyRowsWhenPaging: false,
+        addRowPosition: "first",
+      }}
+    />
+  );
+};
 
-    return (
-      <>
-        <Snackbar
-          open={importErrorOpen}
-          autoHideDuration={4000}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          onClose={this.handleImportErrorClose}
-        >
-          <Alert
-            severity="error"
-            variant="filled"
-            onClose={this.handleImportErrorClose}
-          >
-            Invalid YAML format
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={maxSearchCountExceededErrorOpen}
-          autoHideDuration={4000}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          onClose={this.handleMaxSearchCountExceededErrorClose}
-        >
-          <Alert
-            severity="error"
-            variant="filled"
-            onClose={this.handleMaxSearchCountExceededErrorClose}
-          >
-            {`Number of searches are limited to ${this.searchCountLimit} by GGG.`}
-          </Alert>
-        </Snackbar>
-        <MaterialTable
-          title="Active connections"
-          columns={tableColumns.searchesScreen}
-          components={{
-            Pagination: () => (
-              <Box component="td" padding={2}>
-                <Typography
-                  color={this.maxSearchCountReached() ? "error" : "initial"}
-                  variant="subtitle2"
-                >
-                  {`Search count: ${webSocketStore.length}`}
-                </Typography>
-              </Box>
-            ),
-          }}
-          data={webSocketStore}
-          editable={{
-            // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
-            onRowAdd: this.maxSearchCountReached()
-              ? undefined
-              : wsConnectionData =>
-                  this.addNewConnection(wsConnectionData).catch(err =>
-                    devErrorLog(err)
-                  ),
-            onRowDelete: wsConnectionData =>
-              this.deleteConnection(wsConnectionData).catch(err =>
-                devErrorLog(err)
-              ),
-          }}
-          actions={[
-            webSocket => ({
-              icon: "cached",
-              tooltip: "Reconnect",
-              onClick: (event, connectionDetails) =>
-                this.reconnect(connectionDetails),
-              disabled:
-                webSocket.reconnectIsDisabled || allReconnectsAreDisabled,
-            }),
-            {
-              icon: "cached",
-              tooltip: "Reconnect all",
-              isFreeAction: true,
-              disabled:
-                this.isWebSocketStoreEmpty() || allReconnectsAreDisabled,
-              onClick: () => this.reconnectAll(),
-            },
-            {
-              icon: "create_new_folder",
-              tooltip: this.maxSearchCountReached()
-                ? `Number of searches are limited to ${this.searchCountLimit} by GGG`
-                : "Import from file",
-              isFreeAction: true,
-              disabled: this.maxSearchCountReached(),
-              onClick: () => this.import(),
-            },
-            {
-              icon: "delete_outline",
-              tooltip: "Delete all",
-              isFreeAction: true,
-              onClick: () => this.deleteAll(),
-              disabled: this.isWebSocketStoreEmpty(),
-            },
-            {
-              // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
-              icon: "add_box",
-              tooltip: `Number of searches are limited to ${this.searchCountLimit} by GGG`,
-              isFreeAction: true,
-              disabled: true,
-              hidden: !this.maxSearchCountReached(),
-              // An anonymus function needs to be provided to avoid invalid prop errors in the console.
-              onClick: () => {},
-            },
-          ]}
-          options={{
-            showTitle: false,
-            toolbarButtonAlignment: "left",
-            headerStyle: {
-              position: "sticky",
-              top: 0,
-            },
-            maxBodyHeight: "525px",
-            pageSize: 9999,
-            emptyRowsWhenPaging: false,
-            addRowPosition: "first",
-          }}
-        />
-      </>
-    );
-  }
-}
+export default Searches;
