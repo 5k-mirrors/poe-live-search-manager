@@ -44,11 +44,11 @@ export const useDisplay = () => {
 export const useNotify = () => {
   const [options, setOptions] = useState({
     open: false,
-    text: "Something went wrong.",
-    severity: "error",
+    text: "Notification",
+    severity: "info",
   });
 
-  const showNotification = useCallback(
+  const notify = useCallback(
     (text = options.text, severity = options.severity) => {
       setOptions(prevOptions => ({
         ...prevOptions,
@@ -60,7 +60,7 @@ export const useNotify = () => {
     [options.severity, options.text]
   );
 
-  function renderNotification() {
+  const Notification = () => {
     return (
       <Snackbar
         open={options.open}
@@ -84,10 +84,10 @@ export const useNotify = () => {
         </Alert>
       </Snackbar>
     );
-  }
+  };
 
   return {
-    showNotification,
-    renderNotification,
+    notify,
+    Notification,
   };
 };
