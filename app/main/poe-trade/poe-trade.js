@@ -6,7 +6,6 @@ import {
   devErrorLog,
 } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
-import ItemFetchError from "../../shared/errors/item-fetch-error";
 import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import { windows } from "../../shared/resources/Windows/Windows";
@@ -53,7 +52,7 @@ export const fetchItemDetails = ids =>
             return itemDetailsResponse;
           }
 
-          throw new ItemFetchError(`Item details not found for ${ids}`);
+          throw new Error(`Item details not found for ${ids}`);
         })
       )
       .catch(error => {

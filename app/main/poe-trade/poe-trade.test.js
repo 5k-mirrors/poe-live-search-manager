@@ -1,7 +1,6 @@
 import fetch from "node-fetch";
 import * as poeTrade from "./poe-trade";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
-import ItemFetchError from "../../shared/errors/item-fetch-error";
 import exampleSocketResponse from "../../../doc/example-socket-response.json";
 
 jest.mock("node-fetch", () => jest.fn());
@@ -56,11 +55,11 @@ describe("poeTrade", () => {
           fetch.mockResolvedValueOnce(data);
         });
 
-        it("rejects with `ItemFetchError`", () => {
+        it("rejects with Error", () => {
           const expectedErrorMessage = `Item details not found for ${id}`;
 
           return expect(poeTrade.fetchItemDetails(id)).rejects.toEqual(
-            new ItemFetchError(expectedErrorMessage)
+            new Error(expectedErrorMessage)
           );
         });
       });
