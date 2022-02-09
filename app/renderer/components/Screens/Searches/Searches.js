@@ -1,124 +1,27 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { remote, ipcRenderer } from "electron";
+import React from "react";
+import { remote } from "electron";
 import MaterialTable from "@material-table/core";
 import { Box, Typography } from "@mui/material";
 import yaml from "js-yaml";
 import fs from "fs";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
-import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
-import { uniqueIdGenerator } from "../../../../shared/utils/UniqueIdGenerator/UniqueIdGenerator";
-import * as regExes from "../../../../shared/resources/RegExes/RegExes";
-import {
-  devErrorLog,
-  isDefined,
-} from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
+import { devErrorLog } from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
+import useWebSocketStore from "./useWebSocketStore";
 
 const Searches = () => {
-  const [webSocketStore, setWebSocketStore] = useState([]);
+  const {
+    webSocketStore,
+    reconnect,
+    reconnectAll,
+    deleteConnection,
+    addNewConnection,
+    deleteAll,
+  } = useWebSocketStore();
   const searchCountLimit = 20;
-
-  const socketStateUpdateListener = useCallback((event, socketDetails) => {
-    const update = (id, data) => {
-      setWebSocketStore(oldWebSocketStore => {
-        const webSocketIndex = oldWebSocketStore.findIndex(
-          webSocket => webSocket.id === id
-        );
-
-        if (!isDefined(oldWebSocketStore[webSocketIndex])) {
-          return oldWebSocketStore;
-        }
-
-        const newWebSocketStore = [...oldWebSocketStore];
-        newWebSocketStore[webSocketIndex] = {
-          ...oldWebSocketStore[webSocketIndex],
-          ...data,
-        };
-
-        return newWebSocketStore;
-      });
-    };
-
-    update(socketDetails.id, {
-      isConnected: socketDetails.isConnected,
-    });
-  }, []);
-
-  useEffect(() => {
-    ipcRenderer.invoke(ipcEvents.GET_SOCKETS).then(result => {
-      setWebSocketStore(result);
-    });
-
-    ipcRenderer.on(ipcEvents.SOCKET_STATE_UPDATE, socketStateUpdateListener);
-
-    return () => {
-      ipcRenderer.removeListener(
-        ipcEvents.SOCKET_STATE_UPDATE,
-        socketStateUpdateListener
-      );
-    };
-  }, [socketStateUpdateListener]);
 
   const maxSearchCountReached = () => {
     return webSocketStore.length === searchCountLimit;
-  };
-
-  const reconnect = connectionDetails => {
-    ipcRenderer.send(ipcEvents.RECONNECT_SOCKET, connectionDetails);
-  };
-
-  const reconnectAll = () => {
-    ipcRenderer.send(ipcEvents.RECONNECT_ALL);
-  };
-
-  const deleteConnection = connectionDetails => {
-    return new Promise(resolve => {
-      const updatedWebSocketStore = webSocketStore.filter(
-        webSocket => webSocket.id !== connectionDetails.id
-      );
-
-      ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
-
-      setWebSocketStore(updatedWebSocketStore);
-
-      resolve();
-    });
-  };
-
-  const addNewConnection = connectionDetails => {
-    return new Promise((resolve, reject) => {
-      if (
-        !regExes.searchUrlLeagueAndIdMatcher.test(connectionDetails.searchUrl)
-      ) {
-        return reject(
-          new Error(`Invalid search url: ${connectionDetails.searchUrl}`)
-        );
-      }
-
-      if (maxSearchCountReached()) {
-        return reject(new Error("Maximum search count exceeded"));
-      }
-
-      const connectionDetailsWithUniqueId = {
-        id: uniqueIdGenerator(),
-        ...connectionDetails,
-      };
-
-      ipcRenderer.send(ipcEvents.WS_ADD, connectionDetailsWithUniqueId);
-
-      setWebSocketStore(oldWebSocketStore => {
-        return [
-          ...oldWebSocketStore,
-          {
-            ...connectionDetailsWithUniqueId,
-            isConnected: false,
-            // reconnectIsDisabled: false,
-          },
-        ];
-      });
-
-      return resolve();
-    });
   };
 
   const isWebSocketStoreEmpty = () => {
@@ -138,12 +41,10 @@ const Searches = () => {
               if (err) throw err;
               const input = yaml.safeLoad(data);
               for (const [url, name] of Object.entries(input.pathofexilecom)) {
-                this.addNewConnection({
+                addNewConnection({
                   searchUrl: url,
                   name,
-                }).catch(addNewConnectionErr => {
-                  devErrorLog(addNewConnectionErr);
-                });
+                }).catch(error => devErrorLog(error));
               }
             } catch (error) {
               devErrorLog(error);
@@ -156,7 +57,7 @@ const Searches = () => {
       });
   };
 
-  const deleteAll = () => {
+  const deleteAllCallback = () => {
     remote.dialog
       .showMessageBox({
         ...deleteAllSearchesMessageBoxOptions,
@@ -166,13 +67,17 @@ const Searches = () => {
         const deleteAllSearchesConfirmed = clickedButtonIndex === 1;
 
         if (deleteAllSearchesConfirmed) {
-          webSocketStore.forEach(connectionDetails => {
-            ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
-          });
-
-          setWebSocketStore([]);
+          deleteAll();
         }
       });
+  };
+
+  const onRowAddCallback = wsConnectionData => {
+    return addNewConnection(wsConnectionData).catch(err => devErrorLog(err));
+  };
+
+  const onRowDeleteCallback = wsConnectionData => {
+    return deleteConnection(wsConnectionData).catch(err => devErrorLog(err));
   };
 
   return (
@@ -194,19 +99,15 @@ const Searches = () => {
       data={webSocketStore}
       editable={{
         // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
-        onRowAdd: maxSearchCountReached()
-          ? undefined
-          : wsConnectionData =>
-              addNewConnection(wsConnectionData).catch(err => devErrorLog(err)),
-        onRowDelete: wsConnectionData =>
-          deleteConnection(wsConnectionData).catch(err => devErrorLog(err)),
+        onRowAdd: maxSearchCountReached() ? undefined : onRowAddCallback,
+        onRowDelete: onRowDeleteCallback,
       }}
       actions={[
-        webSocket => ({
+        {
           icon: "cached",
           tooltip: "Reconnect",
           onClick: (event, connectionDetails) => reconnect(connectionDetails),
-        }),
+        },
         {
           icon: "cached",
           tooltip: "Reconnect all",
@@ -227,7 +128,7 @@ const Searches = () => {
           icon: "delete_outline",
           tooltip: "Delete all",
           isFreeAction: true,
-          onClick: () => deleteAll(),
+          onClick: () => deleteAllCallback(),
           disabled: isWebSocketStoreEmpty(),
         },
         {

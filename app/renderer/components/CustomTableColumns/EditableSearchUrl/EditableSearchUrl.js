@@ -6,10 +6,7 @@ const editableSearchUrl = ({ ...props }) => {
   const { value } = props;
 
   return (
-    <MTableEditField
-      error={!regExes.searchUrlLeagueAndIdMatcher.test(value)}
-      {...props}
-    />
+    <MTableEditField error={!regExes.poeTradeUrl.test(value)} {...props} />
   );
 };
 
