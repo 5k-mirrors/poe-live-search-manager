@@ -57,6 +57,7 @@ export const fetchItemDetails = ids =>
       )
       .catch(error => {
         devErrorLog(error);
+        electronUtils.sendError(error.toString());
         throw error;
       });
   });
