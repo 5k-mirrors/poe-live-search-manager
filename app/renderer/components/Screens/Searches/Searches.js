@@ -8,6 +8,7 @@ import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { devErrorLog } from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 import useWebSocketStore from "./useWebSocketStore";
+import { useNotify } from "../../../utils/useNotify";
 
 const Searches = () => {
   const {
@@ -19,6 +20,12 @@ const Searches = () => {
     deleteAll,
   } = useWebSocketStore();
   const searchCountLimit = 20;
+  const { notify, Notification } = useNotify();
+
+  const handleError = error => {
+    devErrorLog(error);
+    notify(error.toString(), "error");
+  };
 
   const maxSearchCountReached = () => {
     return webSocketStore.length === searchCountLimit;
@@ -44,17 +51,15 @@ const Searches = () => {
                 addNewConnection({
                   searchUrl: url,
                   name,
-                }).catch(error => devErrorLog(error));
+                }).catch(handleError);
               }
             } catch (error) {
-              devErrorLog(error);
+              handleError(error);
             }
           });
         }
       })
-      .catch(error => {
-        devErrorLog(error);
-      });
+      .catch(handleError);
   };
 
   const deleteAllCallback = () => {
@@ -73,88 +78,91 @@ const Searches = () => {
   };
 
   const onRowAddCallback = wsConnectionData => {
-    return addNewConnection(wsConnectionData).catch(err => devErrorLog(err));
+    return addNewConnection(wsConnectionData).catch(handleError);
   };
 
   const onRowDeleteCallback = wsConnectionData => {
-    return deleteConnection(wsConnectionData).catch(err => devErrorLog(err));
+    return deleteConnection(wsConnectionData).catch(handleError);
   };
 
   return (
-    <MaterialTable
-      title="Active connections"
-      columns={tableColumns.searchesScreen}
-      components={{
-        Pagination: () => (
-          <Box component="td" padding={2}>
-            <Typography
-              color={maxSearchCountReached() ? "error" : "initial"}
-              variant="subtitle2"
-            >
-              {`Search count: ${webSocketStore.length}`}
-            </Typography>
-          </Box>
-        ),
-      }}
-      data={webSocketStore}
-      editable={{
-        // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
-        onRowAdd: maxSearchCountReached() ? undefined : onRowAddCallback,
-        onRowDelete: onRowDeleteCallback,
-      }}
-      actions={[
-        {
-          icon: "cached",
-          tooltip: "Reconnect",
-          onClick: (event, connectionDetails) => reconnect(connectionDetails),
-        },
-        {
-          icon: "cached",
-          tooltip: "Reconnect all",
-          isFreeAction: true,
-          disabled: isWebSocketStoreEmpty(),
-          onClick: () => reconnectAll(),
-        },
-        {
-          icon: "create_new_folder",
-          tooltip: maxSearchCountReached()
-            ? `Number of searches are limited to ${searchCountLimit} by GGG`
-            : "Import from file",
-          isFreeAction: true,
-          disabled: maxSearchCountReached(),
-          onClick: () => importFromFile(),
-        },
-        {
-          icon: "delete_outline",
-          tooltip: "Delete all",
-          isFreeAction: true,
-          onClick: () => deleteAllCallback(),
-          disabled: isWebSocketStoreEmpty(),
-        },
-        {
+    <>
+      <MaterialTable
+        title="Active connections"
+        columns={tableColumns.searchesScreen}
+        components={{
+          Pagination: () => (
+            <Box component="td" padding={2}>
+              <Typography
+                color={maxSearchCountReached() ? "error" : "initial"}
+                variant="subtitle2"
+              >
+                {`Search count: ${webSocketStore.length}`}
+              </Typography>
+            </Box>
+          ),
+        }}
+        data={webSocketStore}
+        editable={{
           // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
-          icon: "add_box",
-          tooltip: `Number of searches are limited to ${searchCountLimit} by GGG`,
-          isFreeAction: true,
-          disabled: true,
-          hidden: !maxSearchCountReached(),
-          // An anonymus function needs to be provided to avoid invalid prop errors in the console.
-          onClick: () => {},
-        },
-      ]}
-      options={{
-        showTitle: false,
-        toolbarButtonAlignment: "left",
-        headerStyle: {
-          position: "sticky",
-          top: 0,
-        },
-        maxBodyHeight: "525px",
-        pageSize: 9999,
-        emptyRowsWhenPaging: false,
-        addRowPosition: "first",
-      }}
-    />
+          onRowAdd: maxSearchCountReached() ? undefined : onRowAddCallback,
+          onRowDelete: onRowDeleteCallback,
+        }}
+        actions={[
+          {
+            icon: "cached",
+            tooltip: "Reconnect",
+            onClick: (event, connectionDetails) => reconnect(connectionDetails),
+          },
+          {
+            icon: "cached",
+            tooltip: "Reconnect all",
+            isFreeAction: true,
+            disabled: isWebSocketStoreEmpty(),
+            onClick: () => reconnectAll(),
+          },
+          {
+            icon: "create_new_folder",
+            tooltip: maxSearchCountReached()
+              ? `Number of searches are limited to ${searchCountLimit} by GGG`
+              : "Import from file",
+            isFreeAction: true,
+            disabled: maxSearchCountReached(),
+            onClick: () => importFromFile(),
+          },
+          {
+            icon: "delete_outline",
+            tooltip: "Delete all",
+            isFreeAction: true,
+            onClick: () => deleteAllCallback(),
+            disabled: isWebSocketStoreEmpty(),
+          },
+          {
+            // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
+            icon: "add_box",
+            tooltip: `Number of searches are limited to ${searchCountLimit} by GGG`,
+            isFreeAction: true,
+            disabled: true,
+            hidden: !maxSearchCountReached(),
+            // An anonymus function needs to be provided to avoid invalid prop errors in the console.
+            onClick: () => {},
+          },
+        ]}
+        options={{
+          showTitle: false,
+          toolbarButtonAlignment: "left",
+          headerStyle: {
+            position: "sticky",
+            top: 0,
+          },
+          maxBodyHeight: "525px",
+          pageSize: 9999,
+          emptyRowsWhenPaging: false,
+          addRowPosition: "first",
+        }}
+      />
+      <Notification />
+    </>
   );
 };
 
