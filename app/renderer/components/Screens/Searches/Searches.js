@@ -16,17 +16,17 @@ import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../.
 
 const Searches = () => {
   const [webSocketStore, setWebSocketStore] = useState([]);
-  const [allReconnectsAreDisabled, setAllReconnectsAreDisabled] = useState(
-    false
-  );
+  // const [allReconnectsAreDisabled, setAllReconnectsAreDisabled] = useState(
+  //   false
+  // );
 
-  const disableDurationInMilliseconds = 2000;
+  // const disableDurationInMilliseconds = 2000;
   const searchCountLimit = 20;
   // Reconnect buttons are disabled for a short period.
   // This array is tracking active timeout calls so that they can be cleared when the component unmounts.
   // TODO: maybe this complicates too much?
   // const [reconnectTimeoutIds, setReconnectTimeoutIds] = useState([]);
-  const reconnectTimeoutIds = useRef([]);
+  // const reconnectTimeoutIds = useRef([]);
 
   const socketStateUpdateListener = useCallback((event, socketDetails) => {
     const update = (id, data) => {
@@ -39,13 +39,13 @@ const Searches = () => {
           return oldWebSocketStore;
         }
 
-        return {
-          ...oldWebSocketStore,
-          webSocketIndex: {
-            ...oldWebSocketStore[webSocketIndex],
-            ...data,
-          },
+        const newWebSocketStore = [...oldWebSocketStore];
+        newWebSocketStore[webSocketIndex] = {
+          ...oldWebSocketStore[webSocketIndex],
+          ...data,
         };
+
+        return newWebSocketStore;
       });
     };
 
@@ -67,9 +67,9 @@ const Searches = () => {
         socketStateUpdateListener
       );
 
-      reconnectTimeoutIds.current.forEach(timeout => {
-        clearTimeout(timeout);
-      });
+      // reconnectTimeoutIds.current.forEach(timeout => {
+      //   clearTimeout(timeout);
+      // });
     };
   }, [socketStateUpdateListener]);
 
@@ -78,13 +78,12 @@ const Searches = () => {
   };
 
   const disableAllReconnects = () => {
-    setAllReconnectsAreDisabled(true);
-
-    reconnectTimeoutIds.current.push(
-      setTimeout(() => {
-        setAllReconnectsAreDisabled(false);
-      }, disableDurationInMilliseconds)
-    );
+    // setAllReconnectsAreDisabled(true);
+    // reconnectTimeoutIds.current.push(
+    //   setTimeout(() => {
+    //     setAllReconnectsAreDisabled(false);
+    //   }, disableDurationInMilliseconds)
+    // );
   };
 
   const disableReconnect = id => {
@@ -146,12 +145,16 @@ const Searches = () => {
 
       ipcRenderer.send(ipcEvents.WS_ADD, connectionDetailsWithUniqueId);
 
-      webSocketStore.push({
-        ...connectionDetailsWithUniqueId,
-        reconnectIsDisabled: false,
+      setWebSocketStore(oldWebSocketStore => {
+        return [
+          ...oldWebSocketStore,
+          {
+            ...connectionDetailsWithUniqueId,
+            isConnected: false,
+            // reconnectIsDisabled: false,
+          },
+        ];
       });
-
-      setWebSocketStore(webSocketStore);
 
       return resolve();
     });
@@ -242,13 +245,13 @@ const Searches = () => {
           icon: "cached",
           tooltip: "Reconnect",
           onClick: (event, connectionDetails) => reconnect(connectionDetails),
-          disabled: webSocket.reconnectIsDisabled || allReconnectsAreDisabled,
+          // disabled: webSocket.reconnectIsDisabled || allReconnectsAreDisabled,
         }),
         {
           icon: "cached",
           tooltip: "Reconnect all",
           isFreeAction: true,
-          disabled: isWebSocketStoreEmpty() || allReconnectsAreDisabled,
+          disabled: isWebSocketStoreEmpty(), // || allReconnectsAreDisabled,
           onClick: () => reconnectAll(),
         },
         {
