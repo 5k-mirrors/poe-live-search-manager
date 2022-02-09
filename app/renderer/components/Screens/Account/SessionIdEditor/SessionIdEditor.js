@@ -1,7 +1,6 @@
 import React, { useState, Fragment } from "react";
 import Box from "@mui/material/Box";
 import { ipcRenderer } from "electron";
-import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
 import GlobalStore from "../../../../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../shared/resources/StoreKeys/StoreKeys";
 import { ipcEvents } from "../../../../../shared/resources/IPCEvents/IPCEvents";
@@ -15,11 +14,6 @@ export default () => {
   const [poeSessionId, setPoeSessionId] = useState(
     globalStore.get(storeKeys.POE_SESSION_ID)
   );
-  const [
-    successIconIsVisible,
-    displaySuccessIcon,
-    hideSuccessIconAfterMsElapsed,
-  ] = customHooks.useDisplay();
 
   function idIsDefined() {
     return poeSessionId !== "" && typeof poeSessionId !== "undefined";
@@ -31,11 +25,9 @@ export default () => {
       idIsDefined() ? poeSessionId : null
     );
 
-    displaySuccessIcon();
-
     ipcRenderer.send(ipcEvents.RECONNECT_ALL);
 
-    hideSuccessIconAfterMsElapsed(2500);
+    return Promise.resolve();
   }
 
   return (
@@ -50,11 +42,7 @@ export default () => {
         />
         <InfoButton />
       </Box>
-      <ButtonWithSuccessIcon
-        text="Save"
-        clickEvent={onSave}
-        iconIsVisible={successIconIsVisible}
-      />
+      <ButtonWithSuccessIcon text="Save" clickEventHandler={onSave} />
     </Fragment>
   );
 };

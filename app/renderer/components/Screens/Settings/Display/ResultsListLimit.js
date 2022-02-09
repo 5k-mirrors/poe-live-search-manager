@@ -2,21 +2,15 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Input from "../../../UI/SimpleHtmlElements/Input/Input";
 import ButtonWithSuccessIcon from "../../../UI/ButtonWithSuccessIcon/ButtonWithSuccessIcon";
-import * as customHooks from "../../../../utils/CustomHooks/CustomHooks";
 import GlobalStore from "../../../../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../../shared/resources/StoreKeys/StoreKeys";
 
-export default () => {
+const ResultsListLimit = () => {
   const globalStore = GlobalStore.getInstance();
 
   const [limit, setLimit] = useState(
     globalStore.get(storeKeys.RESULTS_LIMIT, 100)
   );
-  const [
-    successIconIsVisible,
-    displaySuccessIcon,
-    hideSuccessIconAfterMsElapsed,
-  ] = customHooks.useDisplay();
 
   function onSave() {
     const parsedLimit = Number(limit);
@@ -31,9 +25,7 @@ export default () => {
       globalStore.set(storeKeys.RESULTS, updatedResults);
     }
 
-    displaySuccessIcon();
-
-    hideSuccessIconAfterMsElapsed(2500);
+    return Promise.resolve();
   }
 
   return (
@@ -45,12 +37,10 @@ export default () => {
         margin="normal"
       />
       <Box>
-        <ButtonWithSuccessIcon
-          text="Save"
-          clickEvent={onSave}
-          iconIsVisible={successIconIsVisible}
-        />
+        <ButtonWithSuccessIcon text="Save" clickEventHandler={onSave} />
       </Box>
     </>
   );
 };
+
+export default ResultsListLimit;
