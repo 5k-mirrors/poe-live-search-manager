@@ -2,6 +2,8 @@ import { Notification, BrowserWindow, clipboard } from "electron";
 import * as storeUtils from "../../../shared/utils/StoreUtils/StoreUtils";
 import { storeKeys } from "../../../shared/resources/StoreKeys/StoreKeys";
 import * as javaScriptUtils from "../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
+import { windows } from "../../../shared/resources/Windows/Windows";
+import { ipcEvents } from "../../../shared/resources/IPCEvents/IPCEvents";
 
 export const doNotify = ({ title, body }) => {
   new Notification({
@@ -22,6 +24,10 @@ export const send = (windowName, event, payload) => {
   if (javaScriptUtils.isDefined(window)) {
     window.webContents.send(event, payload);
   }
+};
+
+export const sendError = message => {
+  send(windows.MAIN, ipcEvents.ERROR, message);
 };
 
 export const copy = text => {

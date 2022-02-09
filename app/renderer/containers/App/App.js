@@ -5,16 +5,18 @@ import Container from "@mui/material/Container";
 
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Screens from "../../components/Screens/Screens";
+import ErrorNotification from "../../components/ErrorNotification";
 
 const theme = createTheme();
 
-const app = () => (
+const App = () => (
   <ThemeProvider theme={theme}>
     <Container>
       <NavigationBar />
       <Screens />
+      <ErrorNotification />
     </Container>
   </ThemeProvider>
 );
 
-export default app;
+export default App;

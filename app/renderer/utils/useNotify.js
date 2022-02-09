@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
@@ -9,9 +9,9 @@ export const useNotify = () => {
     severity: "info",
   });
 
-  const notify = (text, severity) => {
+  const notify = useCallback((text, severity) => {
     setOptions({ text, severity, open: true });
-  };
+  }, []);
 
   const Notification = () => {
     return (

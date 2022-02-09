@@ -6,7 +6,7 @@ import Account from "./Account/Account";
 import Settings from "./Settings/Settings";
 import Results from "./Results/Results";
 
-const screens = () => (
+const Screens = () => (
   <Switch>
     <Route path="/account" component={Account} />
     <Route path="/searches" component={Searches} />
@@ -16,4 +16,4 @@ const screens = () => (
   </Switch>
 );
 
-export default screens;
+export default Screens;

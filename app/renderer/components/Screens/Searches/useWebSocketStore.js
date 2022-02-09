@@ -9,7 +9,7 @@ import { isDefined } from "../../../../shared/utils/JavaScriptUtils/JavaScriptUt
 const useWebSocketStore = () => {
   const [webSocketStore, setWebSocketStore] = useState([]);
 
-  const socketStateUpdateListener = useCallback((event, socketDetails) => {
+  const socketStateUpdateListener = useCallback((_event, socketDetails) => {
     setWebSocketStore(oldWebSocketStore => {
       const webSocketIndex = oldWebSocketStore.findIndex(
         webSocket => webSocket.id === socketDetails.id
