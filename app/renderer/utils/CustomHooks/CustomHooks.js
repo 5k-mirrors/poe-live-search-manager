@@ -1,24 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 
-export const useDisable = seconds => {
-  const timeoutId = useRef();
-  const [isDisabled, setIsDisabled] = useState(false);
-
-  function disable() {
-    setIsDisabled(previousIsDisabled => !previousIsDisabled);
-
-    const oneSecondInMilliseconds = 1000;
-
-    timeoutId.current = setTimeout(() => {
-      setIsDisabled(previousIsDisabled => !previousIsDisabled);
-    }, seconds * oneSecondInMilliseconds);
-  }
-
-  useEffect(() => () => clearTimeout(timeoutId.current), []);
-
-  return [isDisabled, disable];
-};
-
 export const useDisplay = () => {
   const [elementIsVisible, setShowElement] = useState(false);
 

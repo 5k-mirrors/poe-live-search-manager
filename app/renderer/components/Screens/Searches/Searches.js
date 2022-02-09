@@ -8,7 +8,8 @@ import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { devErrorLog } from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
 import useWebSocketStore from "./useWebSocketStore";
-import { useNotify } from "../../../utils/useNotify";
+import useNotify from "../../../utils/useNotify";
+import useTimeout from "../../../utils/useTimeout";
 
 const Searches = () => {
   const {
@@ -20,6 +21,11 @@ const Searches = () => {
     deleteAll,
   } = useWebSocketStore();
   const searchCountLimit = 20;
+  const reconnectTimeout = 4000;
+  const {
+    isTimeout: isReconnectTimeout,
+    timeout: setReconnectTimeout,
+  } = useTimeout(reconnectTimeout);
   const { notify, Notification } = useNotify();
 
   const handleError = error => {
@@ -85,6 +91,16 @@ const Searches = () => {
     return deleteConnection(wsConnectionData).catch(handleError);
   };
 
+  const onReconnectCallback = wsConnectionData => {
+    setReconnectTimeout();
+    return reconnect(wsConnectionData);
+  };
+
+  const onReconnectAllCallback = () => {
+    setReconnectTimeout();
+    return reconnectAll();
+  };
+
   return (
     <>
       <MaterialTable
@@ -112,14 +128,16 @@ const Searches = () => {
           {
             icon: "cached",
             tooltip: "Reconnect",
-            onClick: (event, connectionDetails) => reconnect(connectionDetails),
+            onClick: (_event, connectionDetails) =>
+              onReconnectCallback(connectionDetails),
+            disabled: isReconnectTimeout,
           },
           {
             icon: "cached",
             tooltip: "Reconnect all",
             isFreeAction: true,
-            disabled: isWebSocketStoreEmpty(),
-            onClick: () => reconnectAll(),
+            disabled: isWebSocketStoreEmpty() || isReconnectTimeout,
+            onClick: onReconnectAllCallback,
           },
           {
             icon: "create_new_folder",

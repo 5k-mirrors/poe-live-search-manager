@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
-export const useNotify = () => {
+const useNotify = () => {
   const [options, setOptions] = useState({
     open: false,
     text: "Notification",
@@ -44,3 +44,5 @@ export const useNotify = () => {
     Notification,
   };
 };
+
+export default useNotify;
