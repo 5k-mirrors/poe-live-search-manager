@@ -125,6 +125,13 @@ const connect = id =>
 
           updateState(ws.id, ws.socket);
 
+          if (code === 429) {
+            sendError(
+              `Rate limit exceded! Closing connection for ${ws.searchUrl}. This should not happen, please open an issue.`
+            );
+            return;
+          }
+
           const delay = randomInt(2000, 3000);
           devLog(
             `Auto-reconnect to be initiated in ${delay / 1000} seconds - ${
