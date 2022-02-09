@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { remote, ipcRenderer } from "electron";
 import MaterialTable from "@material-table/core";
 import { Box, Typography } from "@mui/material";
@@ -16,17 +16,7 @@ import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../.
 
 const Searches = () => {
   const [webSocketStore, setWebSocketStore] = useState([]);
-  // const [allReconnectsAreDisabled, setAllReconnectsAreDisabled] = useState(
-  //   false
-  // );
-
-  // const disableDurationInMilliseconds = 2000;
   const searchCountLimit = 20;
-  // Reconnect buttons are disabled for a short period.
-  // This array is tracking active timeout calls so that they can be cleared when the component unmounts.
-  // TODO: maybe this complicates too much?
-  // const [reconnectTimeoutIds, setReconnectTimeoutIds] = useState([]);
-  // const reconnectTimeoutIds = useRef([]);
 
   const socketStateUpdateListener = useCallback((event, socketDetails) => {
     const update = (id, data) => {
@@ -66,10 +56,6 @@ const Searches = () => {
         ipcEvents.SOCKET_STATE_UPDATE,
         socketStateUpdateListener
       );
-
-      // reconnectTimeoutIds.current.forEach(timeout => {
-      //   clearTimeout(timeout);
-      // });
     };
   }, [socketStateUpdateListener]);
 
@@ -77,36 +63,11 @@ const Searches = () => {
     return webSocketStore.length === searchCountLimit;
   };
 
-  const disableAllReconnects = () => {
-    // setAllReconnectsAreDisabled(true);
-    // reconnectTimeoutIds.current.push(
-    //   setTimeout(() => {
-    //     setAllReconnectsAreDisabled(false);
-    //   }, disableDurationInMilliseconds)
-    // );
-  };
-
-  const disableReconnect = id => {
-    // TODO set last reconnect time instead?
-    // update(id, {
-    //   reconnectIsDisabled: true,
-    // });
-    // reconnectTimeoutIds.push(
-    //   setTimeout(() => {
-    //     update(id, { reconnectIsDisabled: false });
-    //   }, disableDurationInMilliseconds)
-    // );
-  };
-
   const reconnect = connectionDetails => {
-    disableReconnect(connectionDetails.id);
-
     ipcRenderer.send(ipcEvents.RECONNECT_SOCKET, connectionDetails);
   };
 
   const reconnectAll = () => {
-    disableAllReconnects();
-
     ipcRenderer.send(ipcEvents.RECONNECT_ALL);
   };
 
@@ -245,13 +206,12 @@ const Searches = () => {
           icon: "cached",
           tooltip: "Reconnect",
           onClick: (event, connectionDetails) => reconnect(connectionDetails),
-          // disabled: webSocket.reconnectIsDisabled || allReconnectsAreDisabled,
         }),
         {
           icon: "cached",
           tooltip: "Reconnect all",
           isFreeAction: true,
-          disabled: isWebSocketStoreEmpty(), // || allReconnectsAreDisabled,
+          disabled: isWebSocketStoreEmpty(),
           onClick: () => reconnectAll(),
         },
         {
