@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import { ipcRenderer } from "electron";
 
-import { useNotify } from "../utils/useNotify";
+import useNotify from "../utils/useNotify";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 
 const ErrorNotification = () => {
