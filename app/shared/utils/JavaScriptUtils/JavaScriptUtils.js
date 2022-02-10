@@ -24,16 +24,6 @@ export const devErrorLog = (...args) => {
   }
 };
 
-export const cloneDeep = obj => {
-  try {
-    return JSON.parse(JSON.stringify(obj));
-  } catch (err) {
-    devErrorLog("Object deep clone error: ", err);
-
-    return {};
-  }
-};
-
 export const safeJsonResponse = response =>
   response.text().then(textResponse => {
     if (response.ok) {

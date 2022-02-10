@@ -10,6 +10,9 @@ export const useNotify = () => {
   });
 
   const notify = useCallback((text, severity) => {
+    if (!["info", "error", "warning", "success"].includes(severity)) {
+      throw new Error("Unsupported severity");
+    }
     setOptions({ text, severity, open: true });
   }, []);
 
