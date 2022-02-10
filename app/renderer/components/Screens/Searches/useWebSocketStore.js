@@ -55,46 +55,40 @@ const useWebSocketStore = () => {
   };
 
   const deleteConnection = connectionDetails => {
-    return new Promise(resolve => {
-      ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
+    ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
 
-      setWebSocketStore(
-        webSocketStore.filter(
-          webSocket => webSocket.id !== connectionDetails.id
-        )
-      );
+    setWebSocketStore(
+      webSocketStore.filter(webSocket => webSocket.id !== connectionDetails.id)
+    );
 
-      return resolve();
-    });
+    return Promise.resolve();
   };
 
   const addNewConnection = connectionDetails => {
-    return new Promise((resolve, reject) => {
-      if (!regExes.poeTradeUrl.test(connectionDetails.searchUrl)) {
-        return reject(
-          new Error(`Invalid search url: ${connectionDetails.searchUrl}`)
-        );
-      }
+    if (!regExes.poeTradeUrl.test(connectionDetails.searchUrl)) {
+      return Promise.reject(
+        new Error(`Invalid search url: ${connectionDetails.searchUrl}`)
+      );
+    }
 
-      const connectionDetailsWithUniqueId = {
-        id: uniqueIdGenerator(),
-        ...connectionDetails,
-      };
+    const connectionDetailsWithUniqueId = {
+      id: uniqueIdGenerator(),
+      ...connectionDetails,
+    };
 
-      ipcRenderer.send(ipcEvents.WS_ADD, connectionDetailsWithUniqueId);
+    ipcRenderer.send(ipcEvents.WS_ADD, connectionDetailsWithUniqueId);
 
-      setWebSocketStore(oldWebSocketStore => {
-        return [
-          ...oldWebSocketStore,
-          {
-            ...connectionDetailsWithUniqueId,
-            isConnected: false,
-          },
-        ];
-      });
-
-      return resolve();
+    setWebSocketStore(oldWebSocketStore => {
+      return [
+        ...oldWebSocketStore,
+        {
+          ...connectionDetailsWithUniqueId,
+          isConnected: false,
+        },
+      ];
     });
+
+    return Promise.resolve();
   };
 
   const deleteAll = () => {

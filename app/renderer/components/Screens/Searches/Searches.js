@@ -20,7 +20,7 @@ const Searches = () => {
     addNewConnection,
     deleteAll,
   } = useWebSocketStore();
-  const searchCountLimit = 20;
+  const SEARCH_COUNT_LIMIT = 20;
   const reconnectTimeout = 4000;
   const {
     isTimeout: isReconnectTimeout,
@@ -34,7 +34,7 @@ const Searches = () => {
   };
 
   const maxSearchCountReached = () => {
-    return webSocketStore.length === searchCountLimit;
+    return webSocketStore.length === SEARCH_COUNT_LIMIT;
   };
 
   const isWebSocketStoreEmpty = () => {
@@ -142,7 +142,7 @@ const Searches = () => {
           {
             icon: "create_new_folder",
             tooltip: maxSearchCountReached()
-              ? `Number of searches are limited to ${searchCountLimit} by GGG`
+              ? `Number of searches are limited to ${SEARCH_COUNT_LIMIT} by GGG`
               : "Import from file",
             isFreeAction: true,
             disabled: maxSearchCountReached(),
@@ -158,7 +158,7 @@ const Searches = () => {
           {
             // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
             icon: "add_box",
-            tooltip: `Number of searches are limited to ${searchCountLimit} by GGG`,
+            tooltip: `Number of searches are limited to ${SEARCH_COUNT_LIMIT} by GGG`,
             isFreeAction: true,
             disabled: true,
             hidden: !maxSearchCountReached(),
