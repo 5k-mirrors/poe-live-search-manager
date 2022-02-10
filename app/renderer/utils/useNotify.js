@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
-export const useNotify = () => {
+const useNotify = () => {
   const [options, setOptions] = useState({
     open: false,
     text: "Notification",
@@ -10,6 +10,9 @@ export const useNotify = () => {
   });
 
   const notify = useCallback((text, severity) => {
+    if (!["info", "error", "warning", "success"].includes(severity)) {
+      throw new Error("Unsupported severity");
+    }
     setOptions({ text, severity, open: true });
   }, []);
 
@@ -44,3 +47,5 @@ export const useNotify = () => {
     Notification,
   };
 };
+
+export default useNotify;
