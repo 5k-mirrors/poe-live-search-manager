@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
+import { useState, useEffect, useRef } from "react";
 
 export const useDisable = seconds => {
   const timeoutId = useRef();
@@ -39,55 +37,4 @@ export const useDisplay = () => {
   };
 
   return [elementIsVisible, displayElement, hideElementAfterMsElapsed];
-};
-
-export const useNotify = () => {
-  const [options, setOptions] = useState({
-    open: false,
-    text: "Something went wrong.",
-    severity: "error",
-  });
-
-  const showNotification = useCallback(
-    (text = options.text, severity = options.severity) => {
-      setOptions(prevOptions => ({
-        ...prevOptions,
-        text,
-        severity,
-        open: true,
-      }));
-    },
-    [options.severity, options.text]
-  );
-
-  function renderNotification() {
-    return (
-      <Snackbar
-        open={options.open}
-        autoHideDuration={4000}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        onClose={() =>
-          setOptions(prevOptions => ({ ...prevOptions, open: false }))
-        }
-      >
-        <Alert
-          severity={options.severity}
-          variant="filled"
-          onClose={() =>
-            setOptions(prevOptions => ({ ...prevOptions, open: false }))
-          }
-        >
-          {options.text}
-        </Alert>
-      </Snackbar>
-    );
-  }
-
-  return {
-    showNotification,
-    renderNotification,
-  };
 };
