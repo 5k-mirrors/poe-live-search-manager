@@ -6,6 +6,7 @@ import {
   devErrorLog,
 } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import headerKeys from "../../shared/resources/HeaderKeys/HeaderKeys";
+import { sendError } from "../utils/electron-utils/electron-utils";
 
 export default class HttpRequestLimiter {
   static config = {
@@ -47,9 +48,9 @@ export default class HttpRequestLimiter {
 
   static rateLimitFromHeaders = response => {
     if (response.status > 299) {
-      devErrorLog(
-        `Error response while fetching rate limit headers: ${response.status}`
-      );
+      const message = `Error response while fetching rate limit headers: ${response.status}`;
+      devErrorLog(message);
+      sendError(message);
     }
 
     if (response.headers.has(headerKeys.XRateLimitAccount)) {

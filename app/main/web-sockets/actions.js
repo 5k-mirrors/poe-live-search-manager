@@ -11,7 +11,7 @@ import {
   randomInt,
   retryIn,
 } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
-import * as electronUtils from "../utils/electron-utils/electron-utils";
+import { send, sendError } from "../utils/electron-utils/electron-utils";
 import getWebSocketUri from "../get-websocket-uri/get-websocket-uri";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
@@ -41,7 +41,7 @@ class ConcurrentConnectionMutex {
 }
 
 const updateState = (id, socket) => {
-  electronUtils.send(windows.MAIN, ipcEvents.SOCKET_STATE_UPDATE, {
+  send(windows.MAIN, ipcEvents.SOCKET_STATE_UPDATE, {
     id,
     isConnected: socket && stateIs(socket, socketStates.OPEN),
   });
@@ -112,6 +112,7 @@ const connect = id =>
 
         ws.socket.on("error", error => {
           devErrorLog(`SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`);
+          sendError(`Connection error: ${error}`);
 
           updateState(ws.id, ws.socket);
 
@@ -120,6 +121,7 @@ const connect = id =>
 
         ws.socket.on("close", (code, reason) => {
           devLog(`SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`);
+          sendError(`Connection lost: ${code} ${reason}`);
 
           updateState(ws.id, ws.socket);
 
