@@ -111,23 +111,43 @@ const connect = id =>
         });
 
         ws.socket.on("error", error => {
-          devErrorLog(`SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error}`);
+          devErrorLog(
+            `SOCKET ERROR - ${ws.searchUrl} / ${ws.id} ${error.message}`
+          );
           sendError(`Connection error: ${error}`);
+
+          const [reason, code] = error.message.split(": ");
+          ws.error = { code: parseInt(code, 10), reason };
 
           updateState(ws.id, ws.socket);
 
           ws.socket.close();
         });
 
-        ws.socket.on("close", (code, reason) => {
-          devLog(`SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${code} ${reason}`);
-          sendError(`Connection lost: ${code} ${reason}`);
+        ws.socket.on("close", () => {
+          devLog(
+            `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${ws.error.code} ${ws.error.reason}`
+          );
 
           updateState(ws.id, ws.socket);
 
-          if (code === 429) {
+          if (ws.error.code === 429) {
             sendError(
               `Rate limit exceded! Closing connection for ${ws.searchUrl}. This should not happen, please open an issue.`
+            );
+            return;
+          }
+
+          if (ws.error.code === 404) {
+            sendError(
+              `Search not found. Closing connection for ${ws.searchUrl}.`
+            );
+            return;
+          }
+
+          if (ws.error.code === 401) {
+            sendError(
+              `Unauthorized. Closing connection for ${ws.searchUrl}. Check Session ID.`
             );
             return;
           }
