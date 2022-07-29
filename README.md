@@ -11,8 +11,7 @@ yarn install
 yarn dev
 ```
 
-- Set up notifications (if on Windows): https://electronjs.org/docs/tutorial/notifications#windows
-- Building portable executable: https://github.com/c-hive/poe-sniper/commit/5e15938f741d54206da0d582766513d88146a4bf
+- Set up notifications on Windows: https://electronjs.org/docs/tutorial/notifications#windows
 
 #### Installation
 
