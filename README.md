@@ -10,6 +10,8 @@ Stack: Electron + React based on [minelectreactist](https://github.com/gomorizso
 cp .env.example .env
 # Fill values in .env file
 yarn install
+yarn lint
+yarn test
 yarn dev
 ```
 
