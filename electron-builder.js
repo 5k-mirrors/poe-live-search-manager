@@ -11,13 +11,10 @@ const config = {
     "package.json",
   ],
   win: {
-    target: ["nsis", "portable"],
-  },
-  nsis: {
-    artifactName: "poe-live-search-manager-${env.REVISION}-setup.${ext}",
+    target: ["portable"],
   },
   portable: {
-    artifactName: "poe-live-search-manager-${env.REVISION}-standalone.${ext}",
+    artifactName: "poe-live-search-manager-${env.REVISION}-portable.${ext}",
   },
   directories: {
     output: "release",
