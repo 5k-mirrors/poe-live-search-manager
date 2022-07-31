@@ -10,7 +10,7 @@
     "build:renderer": "webpack --mode production --config ./config/webpack.renderer.prod.config.js",
     "dev": "cross-env NODE_ENV=development webpack serve --config ./config/webpack.renderer.dev.config.js",
     "dev:update": "cross-env UPDATE=true yarn dev",
-    "dev:main": "cross-env NODE_ENV=development electron --no-sandbox --require @babel/register --require @babel/polyfill ./app/main/app.js",
+    "dev:main": "cross-env NODE_ENV=development electron --no-sandbox --require @babel/register ./app/main/app.js",
     "lint": "eslint app",
     "package": "cross-env ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true node scripts/build.js",
     "package:win": "cross-env NODE_ENV=production yarn build && electron-builder build --win --x64 --publish onTag",

@@ -7,8 +7,7 @@ const webpackBaseConfigurations = require("./webpack.base.config");
 const port = process.env.PORT || 3001;
 
 module.exports = merge(webpackBaseConfigurations, {
-  // => @babel/polyfill https://stackoverflow.com/a/33527883/9599137
-  entry: ["@babel/polyfill", path.resolve("app", "renderer", "index.js")],
+  entry: path.resolve("app", "renderer", "index.js"),
   output: {
     publicPath: `http://localhost:${port}/dist/`,
     filename: "renderer.dev.js",
