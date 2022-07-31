@@ -43,8 +43,9 @@ const createWindow = () => {
     width,
     height: 768,
     webPreferences: {
-      // https://stackoverflow.com/a/55093701/9599137
+      // https://stackoverflow.com/a/66604710/2771889
       nodeIntegration: true,
+      contextIsolation: false,
       // Require by electron-store on electron v10+
       enableRemoteModule: true,
     },
