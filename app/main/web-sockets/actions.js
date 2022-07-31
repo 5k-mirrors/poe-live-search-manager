@@ -125,31 +125,35 @@ const connect = id =>
         });
 
         ws.socket.on("close", () => {
-          devLog(
-            `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id} ${ws.error.code} ${ws.error.reason}`
-          );
-
           updateState(ws.id, ws.socket);
 
-          if (ws.error.code === 429) {
-            sendError(
-              `Rate limit exceded! Closing connection for ${ws.searchUrl}. This should not happen, please open an issue.`
-            );
-            return;
-          }
+          const message = `SOCKET CLOSE - ${ws.searchUrl} / ${ws.id}`;
 
-          if (ws.error.code === 404) {
-            sendError(
-              `Search not found. Closing connection for ${ws.searchUrl}.`
-            );
-            return;
-          }
+          if (ws.error) {
+            devLog(`${message}  ${ws.error.code} ${ws.error.reason}`);
 
-          if (ws.error.code === 401) {
-            sendError(
-              `Unauthorized. Closing connection for ${ws.searchUrl}. Check Session ID.`
-            );
-            return;
+            if (ws.error.code === 429) {
+              sendError(
+                `Rate limit exceded! Closing connection for ${ws.searchUrl}. This should not happen, please open an issue.`
+              );
+              return;
+            }
+
+            if (ws.error.code === 404) {
+              sendError(
+                `Search not found. Closing connection for ${ws.searchUrl}.`
+              );
+              return;
+            }
+
+            if (ws.error.code === 401) {
+              sendError(
+                `Unauthorized. Closing connection for ${ws.searchUrl}. Check Session ID.`
+              );
+              return;
+            }
+          } else {
+            devLog(message);
           }
 
           const delay = randomInt(2000, 3000);
