@@ -1,9 +1,7 @@
 import { app, BrowserWindow } from "electron";
-import path from "path";
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
-import { autoUpdater } from "electron-updater";
 import {
   initListeners,
   initRateLimiter,
@@ -25,38 +23,6 @@ let win;
 // https://stackoverflow.com/a/52195400/9599137, https://www.electron.build/configuration/nsis#guid-vs-application-name
 // => Windows 8/8.1 and 10 notifications.
 app.setAppUserModelId("com.5k-mirrors.poe-live-search-manager");
-
-const logger = require("electron-log");
-
-autoUpdater.logger = logger;
-autoUpdater.setFeedURL({
-  provider: "github",
-  owner: "5k-mirrors",
-  repo: "poe-live-search-manager",
-});
-
-if (envIs("development") && process.env.UPDATE) {
-  autoUpdater.updateConfigPath = path.join(
-    __dirname,
-    "..",
-    "..",
-    "dev-app-update.yml"
-  );
-  autoUpdater.on("update-available", () => {
-    devLog("update available");
-  });
-  autoUpdater.on("update-not-available", () => {
-    devLog("update not available");
-  });
-
-  devLog("Checking for updates, you should see update related messages below");
-
-  // Customize the test by toggling these lines
-  // autoUpdater.autoDownload = false
-  autoUpdater.autoInstallOnAppQuit = false;
-
-  autoUpdater.checkForUpdates();
-}
 
 const setupDevelopmentWorkflow = () => {
   // eslint-disable-next-line global-require
@@ -107,7 +73,6 @@ app.whenReady().then(() => {
   initListeners();
 
   createWindow();
-  autoUpdater.checkForUpdatesAndNotify();
 
   if (envIs("development")) {
     setupDevelopmentWorkflow();
