@@ -1,0 +1,20 @@
+# Node dependencies
+/node_modules
+
+# Production versions
+/app/main.prod.js*
+/app/renderer.prod.js*
+
+# Packaged versions
+/release
+/deliverables
+
+# Test coverage
+/coverage
+
+# Environment variables
+/.env*
+!.env.example
+
+# Yarn error logs
+/yarn-error.log

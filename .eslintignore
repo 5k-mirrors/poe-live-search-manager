@@ -1,0 +1,3 @@
+# Ignore transpiled versions
+/app/main.prod.js
+/app/renderer.prod.js

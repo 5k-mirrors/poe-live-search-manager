@@ -1,0 +1,76 @@
+name: CI
+
+on: [push]
+
+env:
+  node_version: "12.13"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ env.node_version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.node_version }}
+    - uses: c-hive/gha-yarn-cache@v1
+    - name: Install JS dependencies
+      run: yarn install
+    - name: Lint
+      run: yarn lint
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ env.node_version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.node_version }}
+    - uses: c-hive/gha-yarn-cache@v1
+    - name: Install JS dependencies
+      run: yarn install
+    - name: Test
+      run: yarn test
+
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    needs: [lint, test]
+    steps:
+    - name: Show current ref
+      run: echo ${{ github.ref }}
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ env.node_version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.node_version }}
+    - uses: c-hive/gha-yarn-cache@v1
+    - name: Cache Electron dependencies
+      uses: actions/cache@v1
+      with:
+        path: ~\AppData\Local\electron
+        key: ${{ runner.OS }}-electron-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-electron-dependencies-
+    - name: Cache electron-builder dependencies
+      uses: actions/cache@v1
+      with:
+        path: ~\AppData\Local\electron-builder
+        key: ${{ runner.OS }}-electron-builder-dependencies-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-electron-builder-dependencies-
+    - name: Install JS dependencies
+      run: yarn install
+    - name: Build
+      run: yarn package ${{ github.ref }}
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        EMAIL: ${{ secrets.EMAIL }}
+    - uses: actions/upload-artifact@v3
+      with:
+        path: release/*.exe
+        retention-days: 14
