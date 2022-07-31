@@ -29,5 +29,3 @@ yarn package
 - Data location on win10: `%APPDATA%\PoE Live Search Manager`
 - `electron-store` data location on win10: `%APPDATA%\PoE Live Search Manager\config.json`
 - `yarn dev` data on win10: `%APPDATA%\Electron`
-
-## [Auto-update](doc/auto-update.md)
