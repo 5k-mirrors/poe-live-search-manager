@@ -1,7 +1,6 @@
 import fetch from "node-fetch";
 
 import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
-import packageJson from "../../../package.json";
 import { envIs } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
@@ -10,7 +9,7 @@ const userAgent = () => {
   const dummyDevUserAgent = `only-used-for-development, ${process.env.EMAIL}`;
   return envIs("development")
     ? dummyDevUserAgent
-    : `PoE Live Search Manager/${packageJson.version}, ${process.env.EMAIL}`;
+    : `PoE Live Search Manager/${process.env.REVISION}, ${process.env.EMAIL}`;
 };
 
 const cookieHeader = () => {

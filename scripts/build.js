@@ -30,8 +30,6 @@ function isTaggedCommit() {
 if (isTaggedCommit()) {
   // eslint-disable-next-line no-console
   console.log("Tagged commit:", env.REVISION);
-  // We must adapt to electron-builder's static behavior when publishing releases because it heavily depends on env vars.
-  // Setting the `REVISION` to `CI_BUILD_TAG` is mandatory to let electron-builder recognize it's indeed a tagged commit.
   // https://github.com/electron-userland/electron-builder/issues/4469
   env.CI_BUILD_TAG = env.REVISION;
 }
