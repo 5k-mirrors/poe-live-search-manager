@@ -23,9 +23,6 @@ yarn package
 
 - Set up notifications on Windows: https://electronjs.org/docs/tutorial/notifications#windows
 
-## Installation
+## App data
 
-- Install location on win10: `%localappdata%\Programs\PoE Live Search Manager`
-- Data location on win10: `%APPDATA%\PoE Live Search Manager`
-- `electron-store` data location on win10: `%APPDATA%\PoE Live Search Manager\config.json`
-- `yarn dev` data on win10: `%APPDATA%\Electron`
+Data location is within `app.getPath("appData")` (on Win10 `%APPDATA%`, on WSL `/root/.config`). The name of the folder is `PoE Live Search Manager` for the packaged version or `Electron` for the dev version. `electron-store` data is in `config.json`.
