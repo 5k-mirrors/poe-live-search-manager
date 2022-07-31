@@ -70,14 +70,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
         EMAIL: ${{ secrets.EMAIL }}
-    - name: Copy deliverables
-      run: |
-        mkdir deliverables
-        cp release/*.exe deliverables
-        cp release/latest.yml deliverables
-        cp release/*.exe.blockmap deliverables
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
-        name: deliverables
-        path: deliverables
+        path: release/*.exe
         retention-days: 14
