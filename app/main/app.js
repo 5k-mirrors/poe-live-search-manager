@@ -60,34 +60,47 @@ const createWindow = () => {
   });
 };
 
-app.whenReady().then(() => {
-  ensureEnv();
+const gotTheLock = app.requestSingleInstanceLock();
 
-  // Subscribing to the listeners happens even before creating the window to be ready to actively respond to initial events coming from renderer.
-  initListeners();
-
-  createWindow();
-
-  if (envIs("development")) {
-    setupDevelopmentWorkflow();
-    devLog("Development setup done");
-  }
-
-  initRateLimiter();
-
-  win.webContents.on("did-finish-load", () => {
-    win.setTitle(windows.MAIN);
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", () => {
+    if (win) {
+      if (win.isMinimized()) win.restore();
+      win.focus();
+    }
   });
-});
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
+  app.whenReady().then(() => {
+    ensureEnv();
 
-app.on("activate", () => {
-  if (win === null) {
+    // Subscribing to the listeners happens even before creating the window to be ready to actively respond to initial events coming from renderer.
+    initListeners();
+
     createWindow();
-  }
-});
+
+    if (envIs("development")) {
+      setupDevelopmentWorkflow();
+      devLog("Development setup done");
+    }
+
+    initRateLimiter();
+
+    win.webContents.on("did-finish-load", () => {
+      win.setTitle(windows.MAIN);
+    });
+  });
+
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+      app.quit();
+    }
+  });
+
+  app.on("activate", () => {
+    if (win === null) {
+      createWindow();
+    }
+  });
+}
