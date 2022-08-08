@@ -14,10 +14,6 @@ import {
   devLog,
 } from "../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
-require("electron-unhandled")({
-  showDialog: envIs("development"),
-});
-
 let win;
 
 // https://stackoverflow.com/a/52195400/9599137, https://www.electron.build/configuration/nsis#guid-vs-application-name
@@ -25,9 +21,6 @@ let win;
 app.setAppUserModelId("com.5k-mirrors.poe-live-search-manager");
 
 const setupDevelopmentWorkflow = () => {
-  // eslint-disable-next-line global-require
-  require("electron-debug")();
-
   installExtension(REACT_DEVELOPER_TOOLS)
     .then(() => {
       win.webContents.openDevTools();
@@ -43,8 +36,9 @@ const createWindow = () => {
     width,
     height: 768,
     webPreferences: {
-      // https://stackoverflow.com/a/55093701/9599137
+      // https://stackoverflow.com/a/66604710/2771889
       nodeIntegration: true,
+      contextIsolation: false,
       // Require by electron-store on electron v10+
       enableRemoteModule: true,
     },

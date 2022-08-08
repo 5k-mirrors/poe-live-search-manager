@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState, useEffect } from "react";
-import { remote, clipboard, ipcRenderer } from "electron";
+import { clipboard, ipcRenderer } from "electron";
 import Box from "@mui/material/Box";
 import MaterialTable from "@material-table/core";
 import { Link } from "react-router-dom";
@@ -44,10 +44,8 @@ export default () => {
   }
 
   function deleteAll() {
-    remote.dialog
-      .showMessageBox({
-        ...deleteAllResultsMessageBoxOptions,
-      })
+    ipcRenderer
+      .invoke(ipcEvents.MESSAGE_DIALOG, deleteAllResultsMessageBoxOptions)
       .then(response => {
         const clickedButtonIndex = response.response;
         const deleteAllResultsConfirmed = clickedButtonIndex === 1;

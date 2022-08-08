@@ -1,4 +1,4 @@
-import { ipcMain } from "electron";
+import { ipcMain, dialog } from "electron";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
@@ -10,6 +10,16 @@ import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { envIs } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
+
+const setupDialogIpcListeners = () => {
+  ipcMain.handle(ipcEvents.MESSAGE_DIALOG, (_event, args) => {
+    return dialog.showMessageBox(args);
+  });
+
+  ipcMain.handle(ipcEvents.OPEN_DIALOG, (_event, args) => {
+    return dialog.showOpenDialog(args);
+  });
+};
 
 const setupStoreIpcListeners = () => {
   ipcMain.handle(ipcEvents.GET_SOCKETS, () => {
@@ -79,6 +89,8 @@ export const ensureEnv = () => {
 
 export const initListeners = () => {
   Store.load();
+
+  setupDialogIpcListeners();
 
   setupStoreIpcListeners();
 
