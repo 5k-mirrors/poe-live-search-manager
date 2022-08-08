@@ -45,7 +45,7 @@ export default () => {
 
   function deleteAll() {
     ipcRenderer
-      .invoke(ipcEvents.MESSAGE_DIALOG, ...deleteAllResultsMessageBoxOptions)
+      .invoke(ipcEvents.MESSAGE_DIALOG, deleteAllResultsMessageBoxOptions)
       .then(response => {
         const clickedButtonIndex = response.response;
         const deleteAllResultsConfirmed = clickedButtonIndex === 1;
