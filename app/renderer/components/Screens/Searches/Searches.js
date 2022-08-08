@@ -153,7 +153,7 @@ const Searches = () => {
             tooltip: "Delete all",
             isFreeAction: true,
             onClick: () => deleteAllCallback(),
-            // disabled: isWebSocketStoreEmpty(),
+            disabled: isWebSocketStoreEmpty(),
           },
           {
             // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
