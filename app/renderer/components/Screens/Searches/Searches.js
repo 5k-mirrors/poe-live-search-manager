@@ -1,9 +1,11 @@
 import React from "react";
-import { remote } from "electron";
+import { ipcRenderer } from "electron";
 import MaterialTable from "@material-table/core";
 import { Box, Typography } from "@mui/material";
 import yaml from "js-yaml";
 import fs from "fs";
+
+import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
 import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { devErrorLog } from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
@@ -42,8 +44,8 @@ const Searches = () => {
   };
 
   const importFromFile = () => {
-    remote.dialog
-      .showOpenDialog({
+    ipcRenderer
+      .invoke(ipcEvents.OPEN_DIALOG, {
         properties: ["openFile"],
         filters: [{ name: "YAML", extensions: ["yml", "yaml"] }],
       })
@@ -69,10 +71,8 @@ const Searches = () => {
   };
 
   const deleteAllCallback = () => {
-    remote.dialog
-      .showMessageBox({
-        ...deleteAllSearchesMessageBoxOptions,
-      })
+    ipcRenderer
+      .invoke(ipcEvents.MESSAGE_DIALOG, ...deleteAllSearchesMessageBoxOptions)
       .then(response => {
         const clickedButtonIndex = response.response;
         const deleteAllSearchesConfirmed = clickedButtonIndex === 1;

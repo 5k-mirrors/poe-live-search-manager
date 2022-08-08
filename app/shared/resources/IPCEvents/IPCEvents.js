@@ -15,4 +15,6 @@ export const ipcEvents = {
   RATE_LIMIT_STATUS_CHANGE: "rateLimitStatusChange",
   ID_TOKEN_CHANGED: "idTokenChanged",
   ERROR: "error",
+  MESSAGE_DIALOG: "messageDialog",
+  OPEN_DIALOG: "openDialog",
 };
