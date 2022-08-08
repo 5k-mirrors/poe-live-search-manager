@@ -14,6 +14,10 @@ import {
   devLog,
 } from "../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
+require("electron-unhandled")({
+  showDialog: envIs("development"),
+});
+
 let win;
 
 // https://stackoverflow.com/a/52195400/9599137, https://www.electron.build/configuration/nsis#guid-vs-application-name
