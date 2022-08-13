@@ -36,20 +36,16 @@ Featured in:
 - Manage and import searches from YAML files (see [example file](doc/example-import-input.yml))
 - Queues notifications if there are multiple ones
 
-## Installation
+## Usage
 
-- Download and run the latest [release](/../../releases).
-- Windows sometimes warns you about installing unsigned apps. If prompted, click `More info` and `Run anyway`. If the button is missing [Google can help](https://www.google.com/search?&q=windows+SmartScreen+enable+run+anyway+button).
-- The app will install and start.
-- A destop shortcut is created and updates are installed on app start.
+- Download and run the latest portable [release](/../../releases).
+- Add your [Session ID](https://github.com/Stickymaddness/Procurement/wiki/SessionID) in the Account tab.
 - [Windows 10] [Disable Focus Assistant](https://www.howtogeek.com/fyi/windows-10s-next-update-will-hide-notifications-while-you-watch-videos/)
 - Enjoy!
 
-![install](install.gif)
-
-## Usage
-
-The live search functionality requires a [Session ID](https://github.com/Stickymaddness/Procurement/wiki/SessionID). In general, it's not safe to give out your Session ID because it can be used to impersonate your account. In our case, you can provide any Session ID (e.g. one from a new, empty account). The app only stores your Session ID locally and only uses it for live searches.
+Note:
+- For the notifications to show while in-game PoE needs to run in windowed or windowed fullscreen mode
+- Your clipboard will be altered with every new whisper message (can be disabled)
 
 ## Troubleshooting
 
@@ -82,15 +78,6 @@ The live search functionality requires a [Session ID](https://github.com/Stickym
 
 - Windows allows you to [change or turn off notification sounds](https://www.google.com/search?q=windows+notification+sound)
 - Windows allows you to [change notification length](https://www.google.com/search?q=windows+notification+length). This is _not_ supported currently. Changing it from the default 5 seconds will cause the clipboard to be out of sync with the notifications.
-
-#### Installation
-
-- Installer hangs during re-installation: in special cases (e.g. manually touching files) the installation can be left in an inconsistent state and therefore broken. Follow steps [here](/../../issues/53#issuecomment-537375953).
-
-## Caveats
-
-- For the notifications to show while in-game PoE needs to run in windowed or windowed fullscreen mode
-- When enabled, your clipboard will be altered with every new whisper message
 
 ## Development
 
