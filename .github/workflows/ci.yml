@@ -1,6 +1,6 @@
 name: CI
 
-on: [push]
+on: push
 
 env:
   node_version: "16.10.0"
@@ -66,7 +66,7 @@ jobs:
     - name: Install JS dependencies
       run: yarn install
     - name: Build
-      run: yarn package ${{ github.ref }}
+      run: yarn package
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         EMAIL: ${{ secrets.EMAIL }}
