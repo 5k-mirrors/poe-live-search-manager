@@ -50,13 +50,12 @@ Note:
 #### Searches not connecting?
 
 - Make sure `pathofexile.com/trade` live search service works: open search in browser, click `Activate Live Search`, make sure new items are showing up.
-- Your session ID can change. Make sure it's up-to-date.
+- Your session ID can change. Make sure it's up-to-date. Logging in and out re-sets your session ID.
 - There's a limit of 20 simultaneous connections. This is `pathofexile.com/trade` limitation, you can't connect more in the browser either.
 - Restart the app, try reconnecting to all sockets and sockets 1-by-1.
 - Make sure rate limit indicator is green while connecting.
 - Search links can become invalid. If a few searches are not connecting make sure they are valid via checking them in the browser.
 - You can have an IP which is blacklisted by Cloudflare ([1](https://www.reddit.com/r/pathofexile/comments/aw2p9j/trying_to_visit_pathofexilecom_and_i_get_this/), [2](https://www.reddit.com/r/pathofexile/comments/awscxe/anyone_issues_with_poe_website_captcha/)). You'll know this by getting a captcha when visiting `pathofexile.com`. Getting a new IP will resolve the issue.
-- Log out and log in again. This can reset your session ID.
 
 #### Notifications not showing up?
 
