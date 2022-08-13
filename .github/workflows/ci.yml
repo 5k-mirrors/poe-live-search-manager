@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ env.node_version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ env.node_version }}
-    - uses: c-hive/gha-yarn-cache@v1
+        cache: 'yarn'
     - name: Install JS dependencies
       run: yarn install
     - name: Lint
@@ -25,12 +25,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ env.node_version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ env.node_version }}
-    - uses: c-hive/gha-yarn-cache@v1
+        cache: 'yarn'
     - name: Install JS dependencies
       run: yarn install
     - name: Test
@@ -43,12 +43,12 @@ jobs:
     steps:
     - name: Show current ref
       run: echo ${{ github.ref }}
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ env.node_version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ env.node_version }}
-    - uses: c-hive/gha-yarn-cache@v1
+        cache: 'yarn'
     - name: Cache Electron dependencies
       uses: actions/cache@v1
       with:
