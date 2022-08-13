@@ -4,10 +4,6 @@
 
 It is an alternative to keeping several trade site tabs open in the browser and having to leave the game to check new items. It consumes far less resources and lets you message the seller instantly in-game.
 
-Supported trade sites:
-- [pathofexile.com/trade](https://www.pathofexile.com/trade/search/)
-- if you run a search engine that we could use, [reach out to us](mailto:git.thisismydesign@gmail.com)
-
 Featured in:
 - [POE: Easy Money Making - AUTO WHISPER - 5 Exalts PER HOUR - Multi-live search - Auto Whisper](https://youtu.be/dBqJ8-N5Ygs?t=1903) by Tripolar Bear
 - [🔨 Exile's Toolkit 🔨 - How Live Search Manager Boosts League Start And Makes You Rich On The Fly](https://www.youtube.com/watch?v=KVgP5ZGZITc) by PoE Academy
