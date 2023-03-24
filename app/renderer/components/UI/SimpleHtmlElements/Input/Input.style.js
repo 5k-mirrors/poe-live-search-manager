@@ -1,6 +1,4 @@
-import makeStyles from "@mui/styles/makeStyles";
-
-export const useInputStyles = makeStyles({
+export const useInputStyles = {
   input: {
     color: "#FFFFFF",
   },
@@ -11,4 +9,4 @@ export const useInputStyles = makeStyles({
     },
   },
   focused: {},
-});
+};

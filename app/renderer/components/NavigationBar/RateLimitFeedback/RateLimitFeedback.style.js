@@ -1,6 +1,4 @@
-import makeStyles from "@mui/styles/makeStyles";
-
-export const useRateLimitFeedbackStyles = makeStyles({
+export const useRateLimitFeedbackStyles = {
   tooltip: {
     maxWidth: "none",
     fontSize: 14,
@@ -10,5 +8,5 @@ export const useRateLimitFeedbackStyles = makeStyles({
   },
   checkCircleIcon: {
     color: "#228B22",
-  },
-});
+  }
+};

@@ -1,15 +1,13 @@
-import makeStyles from "@mui/styles/makeStyles";
-
-export const useNewsStyles = makeStyles({
+export const useNewsStyles = {
   root: {
     overflow: "auto",
     height: "600px",
-    padding: 20,
+    padding: 2,
     "& > div": {
-      marginBottom: 30,
+      marginBottom: 4,
       "&:last-child": {
         marginBottom: 0,
       },
     },
   },
-});
+};

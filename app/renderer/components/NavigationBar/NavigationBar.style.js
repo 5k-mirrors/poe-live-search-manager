@@ -1,13 +1,11 @@
-import makeStyles from "@mui/styles/makeStyles";
-
-export const useNavigationBarStyles = makeStyles({
+export const useNavigationBarStyles = {
   container: {
     display: "flex",
     position: "relative",
     justifyContent: "space-evenly",
     alignItems: "center",
-    padding: 5,
-    marginBottom: 15,
-    marginTop: 10,
-  },
-});
+    padding: 1,
+    marginBottom: 2,
+    marginTop: 1,
+  }
+};

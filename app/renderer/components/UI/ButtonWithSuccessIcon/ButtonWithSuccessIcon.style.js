@@ -1,10 +1,8 @@
-import makeStyles from "@mui/styles/makeStyles";
-
-export const useButtonWithSuccessIconStyles = makeStyles(theme => ({
+export const useButtonWithSuccessIconStyles = {
   button: {
     fontWeight: "bold",
   },
   extendedIcon: {
-    marginLeft: theme.spacing(1),
+    marginLeft: 1,
   },
-}));
+};

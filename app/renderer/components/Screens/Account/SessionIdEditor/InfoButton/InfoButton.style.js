@@ -1,6 +1,4 @@
-import makeStyles from "@mui/styles/makeStyles";
-
-export const useInfoButtonStyles = makeStyles({
+export const useInfoButtonStyles = {
   iconButton: {
     padding: 0,
     marginLeft: 5,
@@ -9,4 +7,4 @@ export const useInfoButtonStyles = makeStyles({
     color: "#FFFFFF",
     fontSize: "35px",
   },
-});
+};

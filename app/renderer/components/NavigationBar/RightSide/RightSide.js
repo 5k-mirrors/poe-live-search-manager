@@ -7,13 +7,14 @@ import * as baseUrls from "../../../../shared/resources/BaseUrls/BaseUrls";
 import { useRightSideStyles } from "./RightSide.style";
 
 export default () => {
-  const classes = useRightSideStyles();
+  const classes = useRightSideStyles;
+
   return (
     <Box display="flex" alignItems="center">
       <Typography variant="subtitle2">{process.env.REVISION}</Typography>
 
       <Button
-        className={classes.button}
+        sx={classes.button}
         onClick={() => electronUtils.openExternalUrl(baseUrls.reportIssue)}
       >
         Report issue

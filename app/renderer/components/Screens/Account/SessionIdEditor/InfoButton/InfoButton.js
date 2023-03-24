@@ -6,15 +6,15 @@ import * as baseUrls from "../../../../../../shared/resources/BaseUrls/BaseUrls"
 import { useInfoButtonStyles } from "./InfoButton.style";
 
 export default () => {
-  const classes = useInfoButtonStyles();
+  const classes = useInfoButtonStyles;
 
   return (
     <IconButton
-      className={classes.iconButton}
+      sx={classes.iconButton}
       onClick={() => electronUtils.openExternalUrl(baseUrls.sessionIdWiki)}
       size="large"
     >
-      <HelpOutline className={classes.helpIcon} />
+      <HelpOutline sx={classes.helpIcon} />
     </IconButton>
   );
 };

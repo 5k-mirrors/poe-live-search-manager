@@ -11,7 +11,7 @@ import {
 } from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 export default () => {
-  const classes = useNewsStyles();
+  const classes = useNewsStyles;
   const [githubReleaseNotes, setGithubReleaseNotes] = useState([]);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default () => {
   }, []);
 
   return (
-    <Paper className={classes.root}>
+    <Paper sx={classes.root}>
       {Announcements.map(announcement => {
         return (
           <Announcement

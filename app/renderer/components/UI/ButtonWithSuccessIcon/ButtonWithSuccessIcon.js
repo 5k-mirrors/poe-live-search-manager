@@ -5,7 +5,7 @@ import { useButtonWithSuccessIconStyles } from "./ButtonWithSuccessIcon.style";
 import useTimeout from "../../../utils/useTimeout";
 
 const ButtonWithSuccessIcon = ({ text, clickEventHandler }) => {
-  const classes = useButtonWithSuccessIconStyles();
+  const classes = useButtonWithSuccessIconStyles;
   const {
     isTimeout: isSuccessIconVisible,
     timeout: timeoutSuccessIcon,
@@ -23,10 +23,10 @@ const ButtonWithSuccessIcon = ({ text, clickEventHandler }) => {
       color="primary"
       size="medium"
       onClick={onClick}
-      className={classes.button}
+      sx={classes.button}
     >
       {text}
-      {isSuccessIconVisible ? <Done className={classes.extendedIcon} /> : null}
+      {isSuccessIconVisible ? <Done sx={classes.extendedIcon} /> : null}
     </Button>
   );
 };

@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import { useButtonStyles } from "./Button.style";
 
 export default ({ clickEvent, text, ...props }) => {
-  const classes = useButtonStyles();
+  const classes = useButtonStyles;
 
   return (
     <Button
@@ -11,7 +11,7 @@ export default ({ clickEvent, text, ...props }) => {
       color="primary"
       size="medium"
       onClick={clickEvent}
-      className={classes.button}
+      sx={classes.button}
       {...props}
     >
       {text}

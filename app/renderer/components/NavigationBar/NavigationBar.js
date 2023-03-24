@@ -6,10 +6,8 @@ import RateLimitFeedback from "./RateLimitFeedback/RateLimitFeedback";
 import { useNavigationBarStyles } from "./NavigationBar.style";
 
 export default () => {
-  const classes = useNavigationBarStyles();
-
   return (
-    <Paper className={classes.container}>
+    <Paper sx={useNavigationBarStyles.container}>
       <RateLimitFeedback />
       <NavigationItems />
       <RightSide />

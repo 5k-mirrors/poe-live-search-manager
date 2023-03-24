@@ -7,7 +7,7 @@ import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
 import { useRateLimitFeedbackStyles } from "./RateLimitFeedback.style";
 
 export default () => {
-  const classes = useRateLimitFeedbackStyles();
+  const classes = useRateLimitFeedbackStyles;
 
   const [requestsExhausted, setRequestsExhausted] = useState(false);
 
@@ -37,11 +37,11 @@ export default () => {
   }
 
   return (
-    <Tooltip title={buildMessage()} classes={{ tooltip: classes.tooltip }}>
+    <Tooltip title={buildMessage()} sx={ classes.tooltip }>
       {requestsExhausted ? (
-        <WarningIcon className={classes.warningIcon} />
+        <WarningIcon sx={ classes.warningIcon } />
       ) : (
-        <CheckCircleIcon className={classes.checkCircleIcon} />
+        <CheckCircleIcon sx={ classes.checkCircleIcon } />
       )}
     </Tooltip>
   );

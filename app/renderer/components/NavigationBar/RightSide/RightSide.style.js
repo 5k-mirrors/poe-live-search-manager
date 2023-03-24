@@ -1,8 +1,6 @@
-import makeStyles from "@mui/styles/makeStyles";
-
-export const useRightSideStyles = makeStyles({
+export const useRightSideStyles = {
   button: {
     textTransform: "none",
-    marginLeft: 10,
-  },
-});
+    marginLeft: 1,
+  }
+};

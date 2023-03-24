@@ -1,7 +1,5 @@
-import makeStyles from "@mui/styles/makeStyles";
-
-export const useButtonStyles = makeStyles({
+export const useButtonStyles = {
   button: {
     fontWeight: "bold",
   },
-});
+};
