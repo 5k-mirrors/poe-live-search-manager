@@ -23,11 +23,11 @@ const ReleaseNote = ({ ...details }) => (
       {moment(details.published_at).format("DD.MM.YYYY")}
     </Typography>
     <ReactMarkdown
-      source={details.body}
-      renderers={{
+      children={details.body}
+      components={{
         link: props => <Url {...props} />,
       }}
-      plugins={[breaks]}
+      remarkPlugins={[breaks]}
     />
     <Divider />
   </div>

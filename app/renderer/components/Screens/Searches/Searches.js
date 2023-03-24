@@ -128,16 +128,16 @@ const Searches = () => {
           {
             icon: "cached",
             tooltip: "Reconnect",
+            disabled: isReconnectTimeout,
             onClick: (_event, connectionDetails) =>
               onReconnectCallback(connectionDetails),
-            disabled: isReconnectTimeout,
           },
           {
             icon: "cached",
             tooltip: "Reconnect all",
-            isFreeAction: true,
+            position: 'toolbar',
             disabled: isWebSocketStoreEmpty() || isReconnectTimeout,
-            onClick: onReconnectAllCallback,
+            onClick: () => onReconnectAllCallback(),
           },
           {
             icon: "create_new_folder",
@@ -152,8 +152,8 @@ const Searches = () => {
             icon: "delete_outline",
             tooltip: "Delete all",
             isFreeAction: true,
-            onClick: () => deleteAllCallback(),
             disabled: isWebSocketStoreEmpty(),
+            onClick: () => deleteAllCallback(),
           },
           {
             // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841

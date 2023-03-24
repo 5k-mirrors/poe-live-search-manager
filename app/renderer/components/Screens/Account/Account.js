@@ -13,7 +13,7 @@ export default () => {
         justifyContent="space-between"
       >
         <Typography variant="h6" gutterBottom>
-          {`Logged in as anonymus`}
+          Logged in as anonymous
         </Typography>
       </Box>
       <SessionIdEditor />

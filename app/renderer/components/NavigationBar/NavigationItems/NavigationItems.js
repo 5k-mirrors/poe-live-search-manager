@@ -8,8 +8,7 @@ const navigationItems = () => (
     {routes.map(route => (
       <NavLink
         key={route.displayName}
-        style={{ color: "#000000" }}
-        activeStyle={{ fontWeight: "bold" }}
+        style={({ isActive }) => ({ color: "#000000", fontWeight: isActive ? 'bold' : 'normal' })}
         to={route.path}
       >
         {route.displayName}

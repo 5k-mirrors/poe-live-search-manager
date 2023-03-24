@@ -27,11 +27,11 @@ const Announcement = ({ ...details }) => (
       {moment(details.date).format("DD.MM.YYYY")}
     </Typography>
     <ReactMarkdown
-      source={details.description}
-      renderers={{
+      children={details.description}
+      components={{
         link: props => <Url {...props} />,
       }}
-      plugins={[breaks]}
+      remarkPlugins={[breaks]}
     />
     <Divider />
   </div>

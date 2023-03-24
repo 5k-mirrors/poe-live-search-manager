@@ -210,10 +210,10 @@ export const updateConnections = () => {
 
 export const reconnect = id => {
   disconnect(id);
-  connect(id);
+  connect(id);  // socket close event has auto-reconnect, but abnormal disconnection does not. So force connect when user requests it.
 }
 
 export const reconnectAll = () => {
   disconnectAll();
-  connectAll();
+  connectAll(); // socket close event has auto-reconnect, but abnormal disconnection does not. So force connect when user requests it.
 };

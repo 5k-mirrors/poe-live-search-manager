@@ -4,6 +4,7 @@ const { spawn } = require("child_process");
 
 const webpackBaseConfigurations = require("./webpack.base.config");
 
+const host = process.env.HOST || "127.0.0.1";
 const port = process.env.PORT || 3001;
 
 module.exports = merge(webpackBaseConfigurations, {
@@ -34,10 +35,13 @@ module.exports = merge(webpackBaseConfigurations, {
   },
   target: "electron-renderer",
   devServer: {
+    host,
     port,
-    publicPath: `http://localhost:${port}/dist`,
     liveReload: false,
-    before() {
+    static: {
+      publicPath: `http://localhost:${port}/dist`,
+    },
+    onBeforeSetupMiddleware: function () {
       spawn("npm", ["run", "dev:main"], {
         shell: true,
         env: process.env,
