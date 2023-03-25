@@ -5,6 +5,7 @@ import installExtension, {
 import {
   initListeners,
   initRateLimiter,
+  setDarkMode,
   ensureEnv,
 } from "./initialize-project/initialize-project";
 import { windows } from "../shared/resources/Windows/Windows";
@@ -78,6 +79,7 @@ if (!gotTheLock) {
 
   app.whenReady().then(() => {
     ensureEnv();
+    setDarkMode();
 
     // Subscribing to the listeners happens even before creating the window to be ready to actively respond to initial events coming from renderer.
     initListeners();

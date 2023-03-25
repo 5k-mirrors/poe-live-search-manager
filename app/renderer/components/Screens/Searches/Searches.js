@@ -110,7 +110,7 @@ const Searches = () => {
           Pagination: () => (
             <Box component="td" padding={2}>
               <Typography
-                color={maxSearchCountReached() ? "error" : "initial"}
+                color={maxSearchCountReached() ? "error" : "inherit"}
                 variant="subtitle2"
               >
                 {`Search count: ${webSocketStore.length}`}

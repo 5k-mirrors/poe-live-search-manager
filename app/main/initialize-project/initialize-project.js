@@ -1,4 +1,4 @@
-import { ipcMain, dialog } from "electron";
+import { ipcMain, dialog, nativeTheme } from "electron";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
@@ -104,3 +104,9 @@ export const initRateLimiter = () =>
     // The reservoir's value must be decremented by one because the initialization contains a fetch which already counts towards the rate limit.
     return HttpRequestLimiter.incrementReservoir(-1);
   });
+
+export const setDarkMode = () => {
+  const globalStore = GlobalStore.getInstance();
+
+  globalStore.set(storeKeys.DARK_MODE, nativeTheme.shouldUseDarkColors);
+}

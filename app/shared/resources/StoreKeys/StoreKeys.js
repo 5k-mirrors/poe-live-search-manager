@@ -5,4 +5,5 @@ export const storeKeys = {
   COPY_WHISPER: "copyWhisper",
   RESULTS_LIMIT: "resultsLimit",
   SCHEDULE_RESULTS: "scheduleResults",
+  DARK_MODE: "darkMode",
 };

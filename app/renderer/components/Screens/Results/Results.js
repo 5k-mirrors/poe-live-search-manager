@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { clipboard, ipcRenderer } from "electron";
 import Box from "@mui/material/Box";
 import MaterialTable from "@material-table/core";
-import { Link } from "react-router-dom";
+import { Link as ReactLink } from "react-router-dom";
+import Link from '@mui/material/Link';
 import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
 import GlobalStore from "../../../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../../../shared/resources/StoreKeys/StoreKeys";
@@ -65,7 +66,7 @@ export default () => {
         Pagination: () => (
           <Box component="td" padding={2} fontSize="13px">
             Result count: <b>{results.length}</b>
-            <Link to="/settings" style={{ marginLeft: 3 }}>
+            <Link to="/settings" style={{ marginLeft: 3 }} component={ReactLink}>
               (limit: <b>{resultsLimit}</b>)
             </Link>
           </Box>
