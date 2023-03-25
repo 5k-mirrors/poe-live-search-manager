@@ -101,9 +101,6 @@
     "@babel/runtime": "^7.12.1"
   },
   "jest": {
-    "setupFiles": [
-      "<rootDir>/app/renderer/SetupEnzymeTests/SetupEnzymeTests.js"
-    ],
     "moduleNameMapper": {
       ".+\\.(png|jpg|css|svg)$": "identity-obj-proxy"
     },
