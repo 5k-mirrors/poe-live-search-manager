@@ -4,4 +4,5 @@
 // But in some cases ESLing and Prettier confuse eachother
 module.exports = {
   trailingComma: "es5", // Makes diffs nicer
+  endOfLine: "auto", // To not freak out on Windows
 }
