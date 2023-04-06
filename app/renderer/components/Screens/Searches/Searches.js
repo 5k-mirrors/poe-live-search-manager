@@ -1,19 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
-import MaterialTable from "@material-table/core";
-import { Box, Typography } from "@mui/material";
-import yaml from "js-yaml";
-import fs from "fs";
-
 import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
-import * as tableColumns from "../../../resources/TableColumns/TableColumns";
-import { devErrorLog } from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
-import { deleteAllSearches as deleteAllSearchesMessageBoxOptions } from "../../../resources/MessageBoxOptions/MessageBoxOptions";
+
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+
+import Table from "./Table";
 import useWebSocketStore from "./useWebSocketStore";
 import useNotify from "../../../utils/useNotify";
 import useTimeout from "../../../utils/useTimeout";
 
 const Searches = () => {
+  // Group management logic
+  const [groups, setGroups] = useState(JSON.parse(localStorage.getItem('groupsState') || '[]'));;
+
+  useEffect(() => {
+    localStorage.setItem('groupsState', JSON.stringify(groups))
+  }, [groups])
+
+  const createGroup = (name) => {
+    return {
+      name: name,
+      connected: false,
+    };
+  }
+
+  const addGroupCallback = () => {
+    ipcRenderer
+    .invoke(ipcEvents.INPUT_DIALOG, {
+      title: 'Group Name',
+      label: 'name:',
+      type: 'input',
+    })
+    .then(response => {
+      setGroups(oldGroups => {
+        return [
+          ...oldGroups,
+          createGroup(response),
+        ];
+      });
+    });
+  };
+
+  const deleteGroupCallback = (name) => {
+    setGroups(groups.filter((group) => group.name !== name));
+  };
+
+  // Websocket logic
   const {
     webSocketStore,
     reconnect,
@@ -21,164 +54,67 @@ const Searches = () => {
     deleteConnection,
     addNewConnection,
     deleteAll,
+    addWebsocketGroup
   } = useWebSocketStore();
-  const SEARCH_COUNT_LIMIT = 20;
+
   const reconnectTimeout = 4000;
-  const {
-    isTimeout: isReconnectTimeout,
-    timeout: setReconnectTimeout,
-  } = useTimeout(reconnectTimeout);
   const { notify, Notification } = useNotify();
+  const { isTimeout: isReconnectTimeout, timeout: setReconnectTimeout } = useTimeout(reconnectTimeout);
 
-  const handleError = error => {
-    devErrorLog(error);
-    notify(error.toString(), "error");
-  };
+  const connectGroup = (name, searches) => {
+    disconnectAllGroups()
 
-  const maxSearchCountReached = () => {
-    return webSocketStore.length === SEARCH_COUNT_LIMIT;
-  };
+    setGroups(currentGroups => {
+      currentGroups.find(group => group.name === name).connected = true;
+      return currentGroups;
+    })
 
-  const isWebSocketStoreEmpty = () => {
-    return webSocketStore.length === 0;
-  };
+    setReconnectTimeout();
+    addWebsocketGroup(searches.searchesStore);
+  }
 
-  const importFromFile = () => {
-    ipcRenderer
-      .invoke(ipcEvents.OPEN_DIALOG, {
-        properties: ["openFile"],
-        filters: [{ name: "YAML", extensions: ["yml", "yaml"] }],
+  const disconnectGroup = (name) => {
+    disconnectAllGroups()
+  }
+
+  const disconnectAllGroups = () => {
+    disconnectWebsockets();
+
+    setGroups(currentGroups => {
+      currentGroups.forEach((group) => {
+        group.connected = false;
       })
-      .then(result => {
-        if (result.filePaths) {
-          fs.readFile(result.filePaths[0], "utf8", (err, data) => {
-            try {
-              if (err) throw err;
-              const input = yaml.safeLoad(data);
-              for (const [url, name] of Object.entries(input.pathofexilecom)) {
-                addNewConnection({
-                  searchUrl: url,
-                  name,
-                }).catch(handleError);
-              }
-            } catch (error) {
-              handleError(error);
-            }
-          });
-        }
-      })
-      .catch(handleError);
-  };
 
-  const deleteAllCallback = () => {
-    ipcRenderer
-      .invoke(ipcEvents.MESSAGE_DIALOG, deleteAllSearchesMessageBoxOptions)
-      .then(response => {
-        const clickedButtonIndex = response.response;
-        const deleteAllSearchesConfirmed = clickedButtonIndex === 1;
-
-        if (deleteAllSearchesConfirmed) {
-          deleteAll();
-        }
-      });
-  };
-
-  const onRowAddCallback = wsConnectionData => {
-    return addNewConnection(wsConnectionData).catch(handleError);
-  };
-
-  const onRowDeleteCallback = wsConnectionData => {
-    return deleteConnection(wsConnectionData).catch(handleError);
-  };
+      return currentGroups;
+    })
+  }
 
   const onReconnectCallback = wsConnectionData => {
     setReconnectTimeout();
     return reconnect(wsConnectionData);
   };
 
-  const onReconnectAllCallback = () => {
-    setReconnectTimeout();
-    return reconnectAll();
+  const isWebSocketStoreEmpty = () => {
+    return webSocketStore.length === 0;
+  };
+
+  const disconnectWebsockets = () => {
+    deleteAll();
   };
 
   return (
     <>
-      <MaterialTable
-        title="Active connections"
-        columns={tableColumns.searchesScreen}
-        components={{
-          Pagination: () => (
-            <Box component="td" padding={2}>
-              <Typography
-                color={maxSearchCountReached() ? "error" : "inherit"}
-                variant="subtitle2"
-              >
-                {`Search count: ${webSocketStore.length}`}
-              </Typography>
-            </Box>
-          ),
-        }}
-        data={webSocketStore}
-        editable={{
-          // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
-          onRowAdd: maxSearchCountReached() ? undefined : onRowAddCallback,
-          onRowDelete: onRowDeleteCallback,
-        }}
-        actions={[
-          {
-            icon: "cached",
-            tooltip: "Reconnect",
-            disabled: isReconnectTimeout,
-            onClick: (_event, connectionDetails) =>
-              onReconnectCallback(connectionDetails),
-          },
-          {
-            icon: "cached",
-            tooltip: "Reconnect all",
-            position: 'toolbar',
-            disabled: isWebSocketStoreEmpty() || isReconnectTimeout,
-            onClick: () => onReconnectAllCallback(),
-          },
-          {
-            icon: "create_new_folder",
-            tooltip: maxSearchCountReached()
-              ? `Number of searches are limited to ${SEARCH_COUNT_LIMIT} by GGG`
-              : "Import from file",
-            isFreeAction: true,
-            disabled: maxSearchCountReached(),
-            onClick: () => importFromFile(),
-          },
-          {
-            icon: "delete_outline",
-            tooltip: "Delete all",
-            isFreeAction: true,
-            disabled: isWebSocketStoreEmpty(),
-            onClick: () => deleteAllCallback(),
-          },
-          {
-            // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/@material-table/core/issues/465#issuecomment-482955841
-            icon: "add_box",
-            tooltip: `Number of searches are limited to ${SEARCH_COUNT_LIMIT} by GGG`,
-            isFreeAction: true,
-            disabled: true,
-            hidden: !maxSearchCountReached(),
-            // An anonymus function needs to be provided to avoid invalid prop errors in the console.
-            onClick: () => {},
-          },
-        ]}
-        options={{
-          showTitle: false,
-          toolbarButtonAlignment: "left",
-          headerStyle: {
-            position: "sticky",
-            top: 0,
-          },
-          maxBodyHeight: "525px",
-          pageSize: 9999,
-          emptyRowsWhenPaging: false,
-          addRowPosition: "first",
-        }}
-      />
+      {groups.map((group) => (
+        <Table
+          key={group.name}
+          state={group}
+          onGroupDelete={deleteGroupCallback}
+          onGroupConnect={connectGroup}
+          onGroupDisconnect={disconnectGroup}
+          isReconnectTimeout={isReconnectTimeout}
+        />
+      ))}
+      <Button variant="outlined" startIcon={<AddIcon />} onClick={() => addGroupCallback()}> Add Group</Button>
       <Notification />
     </>
   );

@@ -17,4 +17,5 @@ export const ipcEvents = {
   ERROR: "error",
   MESSAGE_DIALOG: "messageDialog",
   OPEN_DIALOG: "openDialog",
+  INPUT_DIALOG: "inputDialog",
 };

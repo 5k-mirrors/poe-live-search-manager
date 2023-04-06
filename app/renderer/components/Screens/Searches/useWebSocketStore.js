@@ -91,6 +91,15 @@ const useWebSocketStore = () => {
     return Promise.resolve();
   };
 
+  const addWebsocketGroup = (group) => {
+    setWebSocketStore(group);
+
+    group.map((item) => {
+      console.log(item);
+      ipcRenderer.send(ipcEvents.WS_ADD, item);
+    })
+  }
+
   const deleteAll = () => {
     webSocketStore.forEach(connectionDetails => {
       ipcRenderer.send(ipcEvents.WS_REMOVE, connectionDetails);
@@ -106,6 +115,7 @@ const useWebSocketStore = () => {
     deleteConnection,
     addNewConnection,
     deleteAll,
+    addWebsocketGroup
   };
 };
 

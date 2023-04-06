@@ -1,4 +1,4 @@
-import { ipcMain, dialog, nativeTheme } from "electron";
+import { ipcMain, dialog, nativeTheme, session } from "electron";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { ipcEvents } from "../../shared/resources/IPCEvents/IPCEvents";
 import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
@@ -10,6 +10,7 @@ import HttpRequestLimiter from "../http-request-limiter/http-request-limiter";
 import NotificationsLimiter from "../notification-limiter/notification-limiter";
 import stateIs from "../utils/state-is/state-is";
 import { envIs } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
+import prompt from "electron-prompt";
 
 const setupDialogIpcListeners = () => {
   ipcMain.handle(ipcEvents.MESSAGE_DIALOG, (_event, args) => {
@@ -19,6 +20,10 @@ const setupDialogIpcListeners = () => {
   ipcMain.handle(ipcEvents.OPEN_DIALOG, (_event, args) => {
     return dialog.showOpenDialog(args);
   });
+
+  ipcMain.handle(ipcEvents.INPUT_DIALOG, (_event, args) => {
+    return prompt(args);
+  })
 };
 
 const setupStoreIpcListeners = () => {
@@ -109,4 +114,16 @@ export const setDarkMode = () => {
   const globalStore = GlobalStore.getInstance();
 
   globalStore.set(storeKeys.DARK_MODE, nativeTheme.shouldUseDarkColors);
+}
+
+export const setCSP = () => {
+  // Configure CSP headers
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': ["script-src 'self' 'unsafe-inline' localhost"]
+      }
+    })
+  });
 }

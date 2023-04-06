@@ -6,10 +6,10 @@ const connected = ({ ...props }) => {
   const { isConnected } = props;
 
   if (isConnected) {
-    return <Done fontSize="large" />;
+    return <Done fontSize="medium" />;
   }
 
-  return <Cancel fontSize="large" />;
+  return <Cancel fontSize="medium" />;
 };
 
 export default connected;

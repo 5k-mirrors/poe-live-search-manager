@@ -151,14 +151,6 @@ const connect = id =>
             );
             return;
           }
-
-          const delay = randomInt(2000, 3000);
-          devLog(
-            `Auto-reconnect to be initiated in ${delay / 1000} seconds - ${
-              ws.searchUrl
-            } / ${ws.id}`
-          );
-          retryIn(() => connect(ws.id), delay);
         });
 
         return release();
