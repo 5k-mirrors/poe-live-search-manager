@@ -60,14 +60,17 @@ const heartbeat = socket => {
   }, (serverPingTimeframeSeconds + pingAllowedDelaySeconds) * 1000);
 };
 
-const connect = id =>
+export const connect = id =>
   // Socket connections are locked to remove race conditions and avoid duplicated connections.
   // https://gitlab.com/c-hive/poe-sniper-electron/issues/91
   ConcurrentConnectionMutex.acquire()
     .then(release => {
       const ws = Store.find(id);
 
-      if (!ws) return release();
+      if (!ws) {
+        devLog('Connect initiated, but no socket found');
+        return release();
+      }
 
       if (ws.socket && !stateIs(ws.socket, socketStates.CLOSED))
         return release();
@@ -186,7 +189,7 @@ export const disconnect = id => {
   }
 };
 
-const connectAll = () =>
+export const connectAll = () =>
   Store.sockets.forEach(connectionDetails => connect(connectionDetails.id));
 
 export const disconnectAll = () =>
@@ -200,12 +203,14 @@ export const updateConnections = () => {
   return disconnectAll();
 };
 
-export const reconnect = id => {
+export const reconnect = async id => {
   disconnect(id);
+  await new Promise(r => setTimeout(r, 1000));
   connect(id);  // socket close event has auto-reconnect, but abnormal disconnection does not. So force connect when user requests it.
 }
 
-export const reconnectAll = () => {
+export const reconnectAll = async () => {
   disconnectAll();
+  await new Promise(r => setTimeout(r, 1000));
   connectAll(); // socket close event has auto-reconnect, but abnormal disconnection does not. So force connect when user requests it.
 };

@@ -39,11 +39,11 @@ const setupWebSocketIpcListeners = () => {
   ipcMain.on(ipcEvents.WS_ADD, (event, connectionDetails) => {
     const globalStore = GlobalStore.getInstance();
 
-    Store.add(connectionDetails);
+    if (!Store.find(connectionDetails.id)) {
+      Store.add(connectionDetails);
+    }
 
     globalStore.set(storeKeys.WS_CONNECTIONS, Store.sanitized());
-
-    webSocketActions.updateConnections();
   });
 
   ipcMain.on(ipcEvents.WS_REMOVE, (event, connectionDetails) => {
@@ -62,6 +62,14 @@ const setupWebSocketIpcListeners = () => {
 
   ipcMain.on(ipcEvents.RECONNECT_ALL, () => {
     webSocketActions.reconnectAll();
+  });
+
+  ipcMain.on(ipcEvents.CONNECT_SOCKET, (event, connectionDetails) => {
+    webSocketActions.connect(connectionDetails.id);
+  });
+
+  ipcMain.on(ipcEvents.CONNECT_ALL, () => {
+    webSocketActions.connectAll();
   });
 };
 

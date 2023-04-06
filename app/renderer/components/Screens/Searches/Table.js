@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { ipcRenderer } from "electron";
 
 import yaml from "js-yaml";
 import fs from "fs";
-import useNotify from "../../../utils/useNotify";
 
 import MaterialTable from "@material-table/core";
 import { Box, Typography } from "@mui/material";
@@ -13,24 +12,15 @@ import * as tableColumns from "../../../resources/TableColumns/TableColumns";
 import { devErrorLog } from "../../../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import { ipcEvents } from "../../../../shared/resources/IPCEvents/IPCEvents";
 
-import useSearchesStore from "./useSearchesStore";
+import useSearchStore from "./useSearchStore";
 
-const Table = (data) => {
-  const name = data.state.name;
-  const connected = data.state.connected;
+const Table = ({state, onGroupDelete, onGroupConnect, onGroupDisconnect, isReconnectTimeout, searchLimit, connectedCount, notify }) => {
+  const name = state.name;
 
-  const searches = useSearchesStore(name);
-
-  const SEARCH_COUNT_LIMIT = 20;
-
-  const { notify, Notification } = useNotify();
-
-  const getSearchStore = () => {
-    return searches;
-  }
+  const searches = useSearchStore(name);
 
   const maxSearchCountReached = () => {
-    return searches.searchesStore.length === SEARCH_COUNT_LIMIT;
+    return searches.searchStore.length === searchLimit;
   };
 
   const onRowAddCallback = (searchData) => {
@@ -50,7 +40,7 @@ const Table = (data) => {
 
       if (deleteAllSearchesConfirmed) {
         searches.deleteAllSearches();
-        data.onGroupDelete(name);
+        onGroupDelete(name);
       }
     });
   };
@@ -88,6 +78,24 @@ const Table = (data) => {
     notify(error.toString(), "error");
   };
 
+  const connectGroup = () => {
+    searches.connectGroup();
+    onGroupConnect(name, searches); // Call parent;
+  }
+
+  const disconnectGroup = () => {
+    searches.disconnectGroup();
+    onGroupDisconnect(name, searches); // Call parent;
+  }
+
+  const onSearchReconnect = (search) => {
+    searches.reconnectSearch(search);
+  }
+
+  const hasConnectedSearch = () => {
+    return !!searches.searchStore.filter(el => el.isConnected === true).length;
+  }
+
   return (
     <MaterialTable
       key={name}
@@ -100,12 +108,12 @@ const Table = (data) => {
               color={maxSearchCountReached() ? "error" : "inherit"}
               variant="subtitle2"
             >
-              {`Search count: ${searches.searchesStore.length}`}
+              {`Search count: ${searches.searchStore.length}`}
             </Typography>
           </Box>
         ),
       }}
-      data={searches.searchesStore}
+      data={searches.searchStore}
       editable={{
         // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/material-table/issues/465#issuecomment-482955841
         onRowAdd: maxSearchCountReached() ? undefined : newData => onRowAddCallback(newData),
@@ -117,20 +125,20 @@ const Table = (data) => {
           icon: "link",
           tooltip: "Connect all",
           position: 'toolbar',
-          disabled: connected || data.isReconnectTimeout,
-          onClick: () => data.onGroupConnect(name, searches),
+          disabled: hasConnectedSearch() || isReconnectTimeout || connectedCount+searches.searchStore.length > searchLimit,
+          onClick: () => connectGroup(name, searches),
         },
         {
           icon: "link_off",
           tooltip: "Disconnect all",
           position: 'toolbar',
-          disabled: !connected,
-          onClick: () => data.onGroupDisconnect(name),
+          disabled: !hasConnectedSearch(),
+          onClick: () => disconnectGroup(name),
         },
         {
           icon: "create_new_folder",
           tooltip: maxSearchCountReached()
-            ? `Number of searches are limited to ${SEARCH_COUNT_LIMIT} by GGG`
+            ? `Number of searches are limited to ${searchLimit} by GGG`
             : "Import from file",
             position: 'toolbar',
           disabled: maxSearchCountReached(),
@@ -145,7 +153,7 @@ const Table = (data) => {
         {
           // It's an alternative workaround to control the add icon's visibility: https://github.com/mbrn/material-table/issues/465#issuecomment-482955841
           icon: "add_box",
-          tooltip: `Number of searches are limited to ${SEARCH_COUNT_LIMIT} by GGG`,
+          tooltip: `Number of searches are limited to ${searchLimit} by GGG`,
           position: 'toolbar',
           disabled: true,
           hidden: !maxSearchCountReached(),
@@ -154,9 +162,9 @@ const Table = (data) => {
         {
           icon: "cached",
           tooltip: "Reconnect",
-          disabled: data.isReconnectTimeout,
+          disabled: isReconnectTimeout,
           onClick: (_event, connectionDetails) =>
-            onReconnectCallback(connectionDetails),
+            onSearchReconnect(connectionDetails),
         },
       ]}
       options={{
@@ -167,9 +175,12 @@ const Table = (data) => {
           top: 0,
         },
         maxBodyHeight: "525px",
-        pageSize: 9999,
+        pageSize: 20,
         emptyRowsWhenPaging: false,
         addRowPosition: "first",
+      }}
+      style={{
+        marginTop:16
       }}
     />
   );

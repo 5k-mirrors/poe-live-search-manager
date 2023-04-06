@@ -7,6 +7,7 @@ import {
   initRateLimiter,
   setDarkMode,
   ensureEnv,
+  setCSP,
 } from "./initialize-project/initialize-project";
 import { windows } from "../shared/resources/Windows/Windows";
 import {
@@ -80,6 +81,7 @@ if (!gotTheLock) {
   app.whenReady().then(() => {
     ensureEnv();
     setDarkMode();
+    // setCSP();
 
     // Subscribing to the listeners happens even before creating the window to be ready to actively respond to initial events coming from renderer.
     initListeners();

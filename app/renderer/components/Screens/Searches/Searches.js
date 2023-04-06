@@ -6,22 +6,26 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 
 import Table from "./Table";
-import useWebSocketStore from "./useWebSocketStore";
 import useNotify from "../../../utils/useNotify";
 import useTimeout from "../../../utils/useTimeout";
 
 const Searches = () => {
   // Group management logic
-  const [groups, setGroups] = useState(JSON.parse(localStorage.getItem('groupsState') || '[]'));;
+  const createInitialState = () => {
+    return JSON.parse(localStorage.getItem('groupsState') || '[]');
+  }
 
+  const [groups, setGroups] = useState(createInitialState);
+  const [connectedCount, setConnectedCount] = useState(0);
+
+  // Update localStorage when the group state changes.
   useEffect(() => {
     localStorage.setItem('groupsState', JSON.stringify(groups))
   }, [groups])
 
   const createGroup = (name) => {
     return {
-      name: name,
-      connected: false,
+      name: name
     };
   }
 
@@ -47,60 +51,26 @@ const Searches = () => {
   };
 
   // Websocket logic
-  const {
-    webSocketStore,
-    reconnect,
-    reconnectAll,
-    deleteConnection,
-    addNewConnection,
-    deleteAll,
-    addWebsocketGroup
-  } = useWebSocketStore();
-
+  const SEARCH_COUNT_LIMIT = 20;
   const reconnectTimeout = 4000;
   const { notify, Notification } = useNotify();
   const { isTimeout: isReconnectTimeout, timeout: setReconnectTimeout } = useTimeout(reconnectTimeout);
 
   const connectGroup = (name, searches) => {
-    disconnectAllGroups()
-
-    setGroups(currentGroups => {
-      currentGroups.find(group => group.name === name).connected = true;
-      return currentGroups;
-    })
+    // Add to total connected count
+    setConnectedCount(currentCount => {
+      return currentCount + searches.searchStore.length;
+    });
 
     setReconnectTimeout();
-    addWebsocketGroup(searches.searchesStore);
   }
 
-  const disconnectGroup = (name) => {
-    disconnectAllGroups()
+  const disconnectGroup = (name, searches) => {
+    // Add to total connected count
+    setConnectedCount(currentCount => {
+      return currentCount - searches.searchStore.length;
+    });
   }
-
-  const disconnectAllGroups = () => {
-    disconnectWebsockets();
-
-    setGroups(currentGroups => {
-      currentGroups.forEach((group) => {
-        group.connected = false;
-      })
-
-      return currentGroups;
-    })
-  }
-
-  const onReconnectCallback = wsConnectionData => {
-    setReconnectTimeout();
-    return reconnect(wsConnectionData);
-  };
-
-  const isWebSocketStoreEmpty = () => {
-    return webSocketStore.length === 0;
-  };
-
-  const disconnectWebsockets = () => {
-    deleteAll();
-  };
 
   return (
     <>
@@ -112,9 +82,12 @@ const Searches = () => {
           onGroupConnect={connectGroup}
           onGroupDisconnect={disconnectGroup}
           isReconnectTimeout={isReconnectTimeout}
+          searchLimit={SEARCH_COUNT_LIMIT}
+          connectedCount={connectedCount}
+          notify={notify}
         />
       ))}
-      <Button variant="outlined" startIcon={<AddIcon />} onClick={() => addGroupCallback()}> Add Group</Button>
+      <Button variant="outlined" startIcon={<AddIcon />} onClick={() => addGroupCallback()} sx={{marginTop: 1}}> Add Group</Button>
       <Notification />
     </>
   );

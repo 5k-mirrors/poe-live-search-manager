@@ -7,6 +7,8 @@ export const ipcEvents = {
   SOCKET_STATE_UPDATE: "socketStateUpdate",
   RECONNECT_SOCKET: "reconnectSocket",
   RECONNECT_ALL: "reconnectAllSockets",
+  CONNECT_SOCKET: "connectSocket",
+  CONNECT_ALL: "connectAllSockets",
   GET_SOCKETS: "getSockets",
   TEST_NOTIFICATION: "testNotification",
   FETCH_SUBSCRIPTION_DETAILS: "fetchSubscriptionDetails",
