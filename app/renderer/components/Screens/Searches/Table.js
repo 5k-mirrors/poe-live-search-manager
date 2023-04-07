@@ -45,7 +45,6 @@ const Table = ({state, onGroupDelete, onGroupConnect, onGroupDisconnect, isRecon
     });
   };
 
-  // Todo: implement
   const importFromFile = () => {
     ipcRenderer
       .invoke(ipcEvents.OPEN_DIALOG, {
@@ -59,7 +58,7 @@ const Table = ({state, onGroupDelete, onGroupConnect, onGroupDisconnect, isRecon
               if (err) throw err;
               const input = yaml.safeLoad(data);
               for (const [url, name] of Object.entries(input.pathofexilecom)) {
-                addNewConnection({
+                searches.addNewSearch({
                   searchUrl: url,
                   name,
                 }).catch(handleError);
@@ -69,6 +68,30 @@ const Table = ({state, onGroupDelete, onGroupConnect, onGroupDisconnect, isRecon
             }
           });
         }
+      })
+      .catch(handleError);
+  };
+
+  const importFromBetterTrade = (group) => {
+    ipcRenderer
+      .invoke(ipcEvents.INPUT_DIALOG, {
+        title: 'BetterTrade Import',
+        label: 'Import string:',
+        type: 'input',
+      })
+      .then(response => {
+        response = response.slice(2);
+        response = Buffer.from(response, 'base64');
+        response = JSON.parse(response);
+
+        console.log(response);
+
+        response.trs.forEach(el => {
+          if (searches.searchStore.length == 20 || el.loc.startsWith('exchange:')) return;
+
+          const location = el.loc.endsWith('/live', 5) ? el.loc.slice(7) : el.loc.slice(7) + '/live';
+          searches.addNewSearch({name: el.tit, searchUrl: 'https://www.pathofexile.com/trade/search/crucible/' + location}).catch(handleError);
+        });
       })
       .catch(handleError);
   };
@@ -143,6 +166,15 @@ const Table = ({state, onGroupDelete, onGroupConnect, onGroupDisconnect, isRecon
             position: 'toolbar',
           disabled: maxSearchCountReached(),
           onClick: () => importFromFile(),
+        },
+        {
+          icon: "create_new_folder",
+          tooltip: maxSearchCountReached()
+            ? `Number of searches are limited to ${searchLimit} by GGG`
+            : "Import from BetterTrade (20 search per group max, extra will be discarded)",
+            position: 'toolbar',
+          disabled: maxSearchCountReached(),
+          onClick: () => importFromBetterTrade(),
         },
         {
           icon: "delete_outline",

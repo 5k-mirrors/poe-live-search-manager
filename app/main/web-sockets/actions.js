@@ -205,12 +205,12 @@ export const updateConnections = () => {
 
 export const reconnect = async id => {
   disconnect(id);
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise(r => setTimeout(r, 1000)); // We wait for the socket to close before trying to connect.
   connect(id);  // socket close event has auto-reconnect, but abnormal disconnection does not. So force connect when user requests it.
 }
 
 export const reconnectAll = async () => {
   disconnectAll();
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise(r => setTimeout(r, 1000)); // We wait for the socket to close before trying to connect.
   connectAll(); // socket close event has auto-reconnect, but abnormal disconnection does not. So force connect when user requests it.
 };
