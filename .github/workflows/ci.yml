@@ -1,13 +1,21 @@
 name: CI
 
-on: push
+on:
+  push:
+  pull_request:
 
 env:
   node_version: "16.10.0"
+  # Run CI on push to origin or on pull requests from forks
+  run_ci: >
+    github.event_name == 'push' ||
+    (github.event_name == 'pull_request' &&
+    github.event.pull_request.head.repo.full_name != github.repository)
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    if: env.run_ci
     timeout-minutes: 10
     steps:
     - uses: actions/checkout@v3
@@ -23,6 +31,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    if: env.run_ci
     timeout-minutes: 10
     steps:
     - uses: actions/checkout@v3
@@ -38,6 +47,7 @@ jobs:
 
   build:
     runs-on: windows-latest
+    if: env.run_ci
     timeout-minutes: 20
     needs: [lint, test]
     steps:
