@@ -12,7 +12,7 @@ env:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    # if: ${{ env.run_ci }}
+    if: env.run_ci == 'true'
     timeout-minutes: 10
     steps:
     - name: Print env
@@ -30,7 +30,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    # if: ${{ env.run_ci }}
+    if: env.run_ci == 'true'
     timeout-minutes: 10
     steps:
     - uses: actions/checkout@v3
@@ -46,7 +46,7 @@ jobs:
 
   build:
     runs-on: windows-latest
-    # if: ${{ env.run_ci }}
+    if: env.run_ci == 'true'
     timeout-minutes: 20
     needs: [lint, test]
     steps:
