@@ -6,12 +6,11 @@ on:
 
 env:
   node_version: "16.10.0"
-  # Run CI on push to origin or on pull requests from forks
-  run_ci: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    # Run CI on push to origin or on pull requests from forks
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
     timeout-minutes: 10
     steps:
@@ -30,6 +29,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    # Run CI on push to origin or on pull requests from forks
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
     timeout-minutes: 10
     steps:
@@ -46,6 +46,7 @@ jobs:
 
   build:
     runs-on: windows-latest
+    # Run CI on push to origin or on pull requests from forks
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
     timeout-minutes: 20
     needs: [lint, test]
