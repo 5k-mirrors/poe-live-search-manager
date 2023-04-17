@@ -7,10 +7,7 @@ on:
 env:
   node_version: "16.10.0"
   # Run CI on push to origin or on pull requests from forks
-  run_ci: >
-    github.event_name == 'push' ||
-    (github.event_name == 'pull_request' &&
-    github.event.pull_request.head.repo.full_name != github.repository)
+  run_ci: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
 
 jobs:
   lint:
