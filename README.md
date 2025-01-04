@@ -1,8 +1,6 @@
 # PoE Live Search Manager
 
-#### Desktop tool for Path of Exile for managing live item searches and making instant offers without leaving the game.
-
-It is an alternative to keeping several trade site tabs open in the browser and having to leave the game to check new items. It consumes far less resources and lets you message the seller instantly in-game.
+#### Desktop tool for Path of Exile 1 & 2. Manage multiple live searches, get notifications, and send whispers without leaving the game.
 
 Featured in:
 - [POE: Easy Money Making - AUTO WHISPER - 5 Exalts PER HOUR - Multi-live search - Auto Whisper](https://youtu.be/dBqJ8-N5Ygs?t=1903) by Tripolar Bear
