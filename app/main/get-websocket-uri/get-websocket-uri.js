@@ -8,9 +8,8 @@ const getWebSocketUri = url => {
 
   if (game === "trade") {
     return `${baseUrls.poeWsUri}/${league}/${id}`;
-  } else {
-    return `${baseUrls.poe2WsUri}/${league}/${id}`;
   }
+  return `${baseUrls.poe2WsUri}/${league}/${id}`;
 };
 
 export default getWebSocketUri;
