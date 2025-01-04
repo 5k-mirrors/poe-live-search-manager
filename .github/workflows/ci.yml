@@ -49,7 +49,6 @@ jobs:
     # Run CI on push to origin or on pull requests from forks
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
     timeout-minutes: 20
-    needs: [lint, test]
     steps:
     - name: Show current ref
       run: echo ${{ github.ref }}
