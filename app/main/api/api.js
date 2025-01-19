@@ -28,8 +28,11 @@ const apiHeaders = () => {
   };
 };
 
-export const itemDetails = ids => {
-  const itemUrl = `${baseUrls.poeFetchAPI}/${ids}`;
+export const itemDetails = (ids, game) => {
+  const itemUrl =
+    game === "poe2"
+      ? `${baseUrls.poe2FetchAPI}/${ids}`
+      : `${baseUrls.poeFetchAPI}/${ids}`;
 
   return fetch(itemUrl, {
     headers: apiHeaders(),

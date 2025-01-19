@@ -73,6 +73,7 @@ const connect = id =>
 
       return WsRequestLimiter.schedule(() => {
         const webSocketUri = getWebSocketUri(ws.searchUrl);
+        const game = webSocketUri.includes("poe2") ? "poe2" : "poe";
 
         devLog(`Connect initiated - ${webSocketUri} / ${ws.id}`);
 
@@ -99,7 +100,7 @@ const connect = id =>
           const itemIds = safeGet(parsedResponse, ["new"]);
 
           if (isDefined(itemIds)) {
-            processItems(itemIds, ws);
+            processItems(itemIds, ws, game);
           }
         });
 

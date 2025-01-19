@@ -28,9 +28,9 @@ const startReservoirIncreaseListener = () => {
   }, 1000);
 };
 
-export const fetchItemDetails = ids =>
+export const fetchItemDetails = (ids, game) =>
   HttpRequestLimiter.schedule(() => {
-    return itemDetails(ids)
+    return itemDetails(ids, game)
       .then(data => safeJsonResponse(data))
       .then(parsedData =>
         HttpRequestLimiter.currentReservoir().then(currentReservoir => {

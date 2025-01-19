@@ -42,11 +42,11 @@ const scheduleResult = args => {
   });
 };
 
-const processItems = (itemIds, ws) => {
+const processItems = (itemIds, ws, game) => {
   const timestamp = moment().format("YYYY-MM-DD hh:mm:ss");
 
   return poeTrade
-    .fetchItemDetails(itemIds.join(","))
+    .fetchItemDetails(itemIds.join(","), game)
     .then(itemsDetails => {
       itemsDetails.forEach(itemDetails => {
         const id = uniqueIdGenerator();
