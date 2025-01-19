@@ -62,7 +62,6 @@ const heartbeat = socket => {
 
 const connect = id =>
   // Socket connections are locked to remove race conditions and avoid duplicated connections.
-  // https://gitlab.com/c-hive/poe-sniper-electron/issues/91
   ConcurrentConnectionMutex.acquire()
     .then(release => {
       const ws = Store.find(id);
